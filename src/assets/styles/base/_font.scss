@@ -1,0 +1,29 @@
+// ----------------------- google font -----------------------
+// google font
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+TC:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+// ----------------------- 變數設定 -----------------------
+// 字體
+
+
+// -- PC 字體大小
+// 中文
+$pcChFont-small: 14px;
+$pcChFont-p: 18px;
+$pcChFont-H4: 20px;
+$pcChFont-H3: 24px;
+$pcChFont-H2: 32px;
+$pcChFont-H1: 44px;
+// 英文
+$pcEngFont-banner: 160px;
+$pcEngFont-numberTitle: 100px;
+$pcEngFont-title: 76px;
+$pcEngFont-subTitle: 44px;
+
+// -- Mobile 字體大小
+
+// 行距
+$lineHeight-title: 1.2; // 中文標題兩行以上
+$linHeight-p: 1.5; // 段落用
+
+// ----------------------- 樣式設定 -----------------------
