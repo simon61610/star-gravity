@@ -2,7 +2,11 @@
 @import 'base/font';
 @import 'base/color';
 
+// 組件
+@import 'components/btn';
+
+//讓font awesome正常使用
 .fa, .fa-solid, .fas, .fa-regular, .fa-brands {
   font-family: "Font Awesome 6 Free" !important;
   font-weight: 900 !important;
-}  //讓font awesome正常使用
+} 
