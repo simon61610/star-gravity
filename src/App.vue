@@ -1,38 +1,62 @@
+<!-- 
+	App.vue 規範
+	1. 各自的組件寫在各自的註解下面。
+	2. 每次要 push 前，請把自己的組件註解掉，僅留以下兩項並打開註解
+		<Header />
+		<router-view />
+	3. 等 router 大家都會後，再改成用 router (要盡快學會)
+-->
+
 <script setup>
-//import { RouterLink, RouterView } from 'vue-router'
-import Header from './components/Header.vue';
-//import newsbanner from './components/newsbanner.vue'
+	/* 聖文 */
+
+	/* 阿尼 */
+
+	/* 靜雅 */
+
+	/* 偵瑜 */
+
+	/* 皓竣 */
+	//import { RouterLink, RouterView } from 'vue-router'
+	//import newsbanner from './components/newsbanner.vue'
+
+	/* 以下這一行，每次 push 前請打開，其它 import 請註解 */
+	import Header from './components/Header.vue';
 </script>
 
 <template>
-<Header />
-<router-view />
+	<!-- 聖文 -->
+
+	<!-- 阿尼 -->
+
+	<!-- 靜雅 -->
+
+	<!-- 偵瑜 -->
+
+	<!-- 皓竣 -->
+
+	<!-- 以下每次 push 前請打開，其它 import 請註解 -->
+	<Header />
+	<router-view />
 </template>
 
 <style>
-#app{
-  background-image: url('./assets/images/BGC.png');
-  background-size: cover;           /* 讓圖片填滿且保持比例 */
-  background-position: center;      /* 水平、垂直都置中 */
-  background-repeat: no-repeat;
-  box-sizing: border-box;
-  min-height: 100vh;                /* 至少跟螢幕一樣高 */
-  width: 100vw;            
-}
+	/* 全頁面共用背景圖：待討論如何處理個別頁面不同背景圖 */
+	#app{
+	background-image: url('./assets/images/BGC.png');
+	background-size: cover;           /* 讓圖片填滿且保持比例 */
+	background-position: center;      /* 水平、垂直都置中 */
+	background-repeat: no-repeat;
+	box-sizing: border-box;
+	min-height: 100vh;                /* 至少跟螢幕一樣高 */
+	width: 100vw;            
+	}
 </style>
 
 
 
 
-
-
-
-
-
-
-
-
-
+<!------------------------ 以下勿動，最後會刪除 ------------------------>
 
 
 
