@@ -1,11 +1,50 @@
+<script setup>
+//import { RouterLink, RouterView } from 'vue-router'
+import Header from './components/Header.vue';
+//import newsbanner from './components/newsbanner.vue'
+</script>
+
 <template>
+<Header />
+<router-view />
+</template>
+
+<style>
+#app{
+  background-image: url('./assets/images/BGC.png');
+  background-size: cover;           /* 讓圖片填滿且保持比例 */
+  background-position: center;      /* 水平、垂直都置中 */
+  background-repeat: no-repeat;
+  box-sizing: border-box;
+  min-height: 100vh;                /* 至少跟螢幕一樣高 */
+  width: 100vw;            
+}
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!------<template>
 	<Test></Test>
 </template>
 
 <script setup>
 	import Test from './components/Test.vue';
-</script>
-
+</script>-------->
 
 
 

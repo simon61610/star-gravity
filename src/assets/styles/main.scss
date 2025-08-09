@@ -1,3 +1,8 @@
 @import 'base/reset';
 @import 'base/font';
 @import 'base/color';
+
+.fa, .fa-solid, .fas, .fa-regular, .fa-brands {
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+}  //讓font awesome正常使用
