@@ -1,0 +1,163 @@
+// 包含button按鈕, 天文快訊標籤, 活動標籤
+// 每個class 都尚缺字形~ 
+
+.button{
+    // 商城按鈕
+    &--goToPay {   //前往結帳
+        border: none;
+        text-align: center;
+        width: 356px;
+        height: 44px;
+        font-size: 20px;
+        line-height: 100%;
+        border-radius: 999px;
+        background-color: $secondaryColor-orange;
+        color: #FFFFFF;
+    }
+    &--goToPay:hover{
+        background-color: #b66600;
+    }
+    &--goShopping {   //繼續購物
+        text-align: center;
+        width: 356px;
+        height: 44px;
+        font-size: 20px;
+        line-height: 100%;
+        border-radius: 999px;
+        border: 1px solid #888888;
+        background-color: transparent;
+        color: #888888;
+    }
+    &--goShopping:hover{
+        background-color: #888888;
+        border: none;
+        color: #FFFFFF;
+    }
+
+    //活動報名按鈕
+    &--apply{  
+        border: none;
+        text-align: center;
+        width: 200px;
+        height: 60px;
+        font-size: 28px;
+        line-height: 100%;
+        border-radius: 999px;
+        background-color: $secondaryColor-orange;
+        color: #FFFFFF;
+    }
+    &--apply:hover{
+        background-color: #b66600;
+    }
+    
+    //一般頁面的按鈕
+    &--normal{
+        border: none;
+        text-align: center;
+        width: 216px;
+        height: 60px;
+        font-size: 24px;
+        line-height: 100%;
+        border-radius: 999px;
+        background-color: $primaryColor-500;
+        color: $primaryColor-900;
+    }
+    &--normal:hover{
+        background-color: $primaryColor-100;
+        color: $primaryColor-500;
+    }
+
+    //地圖專用
+    &--map{
+        border: none;
+        text-align: center;
+        width: 200px;
+        height: 70px;
+        font-size: 24px;
+        line-height: 100%;
+        border-radius: 999px;
+        background-color: $primaryColor-100;
+        color: $primaryColor-500;
+    }
+    &--map:hover{
+        border: 1px solid $primaryColor-100;
+        background-color: transparent;
+        color: $primaryColor-100;
+    }
+}
+
+//天文快訊標籤
+.label{
+    &--blue {
+        border: none;
+        width: 86px;
+        height: 30px;
+        line-height: 100%;
+        border-radius: 999px;
+        font-size: 14px;
+        background-color: #6c89bd;
+        color: $primaryColor-900;
+    }
+    &--orange {
+        border: none;
+        width: 86px;
+        height: 30px;
+        line-height: 100%;
+        border-radius: 999px;
+        font-size: 14px;
+        background-color: $secondaryColor-orange;
+        color: $primaryColor-900;
+    }
+    &--yellow {
+        border: none;
+        width: 86px;
+        height: 30px;
+        line-height: 100%;
+        border-radius: 999px;
+        font-size: 14px;
+        background-color: #EDD848;
+        color: $primaryColor-900;
+    }
+    &--yellow {
+        border: none;
+        width: 86px;
+        height: 30px;
+        line-height: 100%;
+        border-radius: 999px;
+        font-size: 14px;
+        background-color: $primaryColor-500;
+        color: $primaryColor-900;
+    }
+       
+}
+
+//活動標籤
+.activity{
+    &--normal{
+        border: 1px solid #ffffff;
+        text-align: center;
+        height: 32px;
+        width: 100px;
+        line-height: 100%;
+        border-radius: 999px;
+        background-color: transparent;
+        color: #ffffff;
+        font-size: 16px;
+    }
+    &--normal:hover{
+        border: none;
+        background-color: $secondaryColor-orange;
+        color: $primaryColor-900;
+    }
+    &--choice{
+        border: none;
+        text-align: center;
+        height: 32px;
+        width: 100px;
+        line-height: 100%;
+        border-radius: 999px;
+        background-color: $secondaryColor-orange;
+        color: $primaryColor-900;
+        font-size: 16px;
+    }
+}
