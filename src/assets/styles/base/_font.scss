@@ -4,7 +4,8 @@
 
 // ----------------------- 變數設定 -----------------------
 // 字體
-
+$chFont: 'Noto Sans TC';
+$enFont: 'Bebas Neue';
 
 // -- PC 字體大小
 // 中文
@@ -27,3 +28,53 @@ $lineHeight-title: 1.2; // 中文標題兩行以上
 $linHeight-p: 1.5; // 段落用
 
 // ----------------------- 樣式設定 -----------------------
+.decTitle {      // 裝飾字英文
+    &--big {
+        font-family: $enFont;
+        font-size: 160px;
+    }
+    &--medium {
+        font-family: $enFont;
+        font-size: 105px;
+    }
+    &--sm {
+        font-family: $chFont;
+        font-size: 48px;
+    }
+}
+
+.cnTitle {   // 標題中文
+    &--h1 {
+        font-family: $chFont;
+        font-size: 44px;
+    }
+    &--h2 {
+        font-family: $chFont;
+        font-size: 32px;
+    }
+    &--h5 {
+        font-family: $chFont;
+        font-size: 24px;
+    }
+}
+
+.cnContent {   // 中文段落
+    &--20px {
+        font-family: $chFont;
+        font-size: 20px;
+        line-height: 150%;
+        letter-spacing: 5%;
+    }
+     &--18px {
+        font-family: $chFont;
+        font-size: 18px;
+        line-height: 150%;
+        letter-spacing: 5%;
+    }
+     &--14px {
+        font-family: $chFont;
+        font-size: 14px;
+        line-height: 150%;
+        letter-spacing: 5%;
+    }
+}
