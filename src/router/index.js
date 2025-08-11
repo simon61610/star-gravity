@@ -4,11 +4,17 @@ import { createRouter, createWebHistory } from 'vue-router'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    {
-      path: '/newpage',    // 在vue裡面 / = http://localhost:5173/ 也就是本機的意思
-      name: 'Newpage',     //網頁的id
-      component: () => import('../views/Newpage.vue'), //採用官方建議lazy-loaded(非同步載入)
+   /* {
+      path: '/NewpageView',    // 在vue裡面 / = http://localhost:5173/ 也就是本機的意思
+      name: 'NewpageView',     //網頁的id
+      component: () => import('../views/NewpageView.vue'), //採用官方建議lazy-loaded(非同步載入)
     },
+
+    {
+      path: '/article/:id',    // 在vue裡面 / = http://localhost:5173/ 也就是本機的意思
+      name: 'ArticleDetailView',     //網頁的id
+      component: () => import('../views/ArticleDetailView.vue'), //採用官方建議lazy-loaded(非同步載入)
+    },*/
     
     {
       path: '/about',
@@ -21,4 +27,4 @@ const router = createRouter({
   ],
 })
 
-export default router
+export default router 
