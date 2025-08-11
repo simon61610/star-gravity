@@ -1,5 +1,5 @@
 <script setup>
-import  Logo from '@/assets/images/logo.svg'
+import  logo from '@/assets/logos/logo.svg'
 </script>
 
 
@@ -10,7 +10,7 @@ import  Logo from '@/assets/images/logo.svg'
             <section class="footer-left-box">  
 
                 <div class="footer-left-Logo">
-                    <img :src='Logo' height="90"  alt="logo">
+                    <img :src='logo' height="90"  alt="logo">
                 </div>
 
                 <div class="footer-left-email">

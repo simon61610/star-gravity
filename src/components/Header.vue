@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import  Logo from '@/assets/images/logo.svg'
+import  logo from '@/assets/logos/logo.svg'
 const active = ref(false)
 
 function toggleMenu() {
@@ -14,11 +14,11 @@ function toggleMenu() {
     <nav class="navbar">
         <div class="wrapper" :class="{active:active}">
             <div class="logo">
-                <router-link to="/"><img :src="Logo" alt="星引力logo" width="120" height="50"/></router-link>
+                <router-link to="/"><img :src="logo" alt="星引力logo" width="120" height="50"/></router-link>
             </div>
             <ul>
                 <li><router-link to="/">觀星初學指南</router-link></li>
-                <li><router-link :to="{ name: 'Newpage' }">天文快訊</router-link></li>
+                <li><router-link :to="{ name: 'NewpageView' }">天文快訊</router-link></li>
                 <li><router-link to="/">星視野</router-link></li>
                 <li><router-link to="/">星據點</router-link></li>
                 <li><router-link to="/">星遊戲</router-link></li>
