@@ -18,7 +18,7 @@ function toggleMenu() {
             </div>
             <ul>
                 <li><router-link to="/">觀星初學指南</router-link></li>
-                <li><router-link to="/">天文快訊</router-link></li>
+                <li><router-link :to="{ name: 'Newpage' }">天文快訊</router-link></li>
                 <li><router-link to="/">星視野</router-link></li>
                 <li><router-link to="/">星據點</router-link></li>
                 <li><router-link to="/">星遊戲</router-link></li>
@@ -83,12 +83,8 @@ function toggleMenu() {
                     text-decoration: none;
                     color: $FontColor-white;
                 }
-
             }
-
-
         }
-        
     }
 }
 

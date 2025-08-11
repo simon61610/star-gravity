@@ -22,6 +22,7 @@
 
 	/* 以下這一行，每次 push 前請打開，其它 import 請註解 */
 	import Header from './components/Header.vue';
+  import Footer from './components/Footer.vue';
 </script>
 
 <template>
@@ -38,19 +39,22 @@
 	<!-- 以下每次 push 前請打開，其它 import 請註解 -->
 	<Header />
 	<router-view />
+  <Footer />
 </template>
 
 <style>
 	/* 全頁面共用背景圖：待討論如何處理個別頁面不同背景圖 */
-	#app{
+
+  /*找到解法了 這個我先註解掉 會影響全局app 後面就可以刪了不需要 */
+  /*	#app{
 	background-image: url('./assets/images/BGC.png');
-	background-size: cover;           /* 讓圖片填滿且保持比例 */
-	background-position: center;      /* 水平、垂直都置中 */
+	background-size: cover;        
+  background-position: center;     
 	background-repeat: no-repeat;
 	box-sizing: border-box;
-	min-height: 100vh;                /* 至少跟螢幕一樣高 */
+	min-height: 100vh;               
 	width: 100vw;            
-	}
+	}*/
 </style>
 
 
