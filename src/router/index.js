@@ -1,14 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+//import Newpage from '../views/Newpage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: HomeView,
+      path: '/newpage',    // 在vue裡面 / = http://localhost:5173/ 也就是本機的意思
+      name: 'Newpage',     //網頁的id
+      component: () => import('../views/Newpage.vue'), //採用官方建議lazy-loaded(非同步載入)
     },
+    
     {
       path: '/about',
       name: 'about',

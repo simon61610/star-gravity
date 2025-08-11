@@ -6,7 +6,13 @@
 @import 'components/btn';
 
 //讓font awesome正常使用
-.fa, .fa-solid, .fas, .fa-regular, .fa-brands {
+.fa-solid,
+.fa-regular {
   font-family: "Font Awesome 6 Free" !important;
   font-weight: 900 !important;
-} 
+}
+
+.fa-brands {
+  font-family: "Font Awesome 6 Brands" !important;
+  font-weight: 900 !important;
+}
