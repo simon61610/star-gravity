@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_圖層_1" data-name="圖層 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1473 765.68">
+  <defs>
+    <style>
+      .cls-1 {
+        clip-path: url(#clippath);
+      }
+
+      .cls-2 {
+        fill: none;
+      }
+
+      .cls-2, .cls-3, .cls-4 {
+        stroke-width: 0px;
+      }
+
+      .cls-3 {
+        fill: url(#linear-gradient);
+      }
+
+      .cls-5 {
+        clip-path: url(#clippath-1);
+      }
+
+      .cls-6 {
+        clip-path: url(#clippath-5);
+      }
+
+      .cls-4 {
+        fill: #080d27;
+      }
+    </style>
+    <clipPath id="clippath">
+      <rect class="cls-2" y="-2279.32" width="1473" height="1441"/>
+    </clipPath>
+    <clipPath id="clippath-1">
+      <rect class="cls-2" y="0" width="1473" height="765.68"/>
+    </clipPath>
+    <linearGradient id="linear-gradient" x1="-34.03" y1="-68.13" x2="1531.96" y2="-68.13" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0c0e27"/>
+      <stop offset="1" stop-color="#1a2651"/>
+    </linearGradient>
+    <clipPath id="clippath-5">
+      <rect class="cls-2" x="-1671.73" y=".26" width="1473" height="765.68"/>
+    </clipPath>
+  </defs>
+  <g class="cls-1">
+    <path class="cls-4" d="m1853.97,2065.5H-139.03V-1674.5c652.31,64.29,1317.18,61.44,1993,0v3740Z"/>
+    <rect class="cls-2" x="-27.3" y="-2353" width="1500.9" height="4418.5"/>
+  </g>
+  <g class="cls-5">
+    <g>
+      <rect class="cls-3" x="-34.03" y="-154.76" width="1566" height="173.26"/>
+      <polygon class="cls-4" points="1531.97 -260.93 1454.68 -296.12 1381.57 -229.88 1303.85 -206.19 1270.94 -221.6 1193.88 -219.54 1094.17 -178.14 1005.68 -92.47 874.17 -47.74 693.37 -.13 600.46 18.5 1531.96 18.5 1531.97 -260.93"/>
+    </g>
+    <path class="cls-4" d="m1853.97,3669.5H-139.03V-70.5c652.31,64.29,1317.18,61.44,1993,0v3740Z"/>
+    <rect class="cls-2" x="-27.3" y="-749" width="1500.9" height="4418.5"/>
+  </g>
+  <g class="cls-6">
+    <path class="cls-4" d="m181.97,4389.5h-1993V649.5c652.31,64.29,1317.18,61.44,1993,0v3740Z"/>
+  </g>
+</svg>
