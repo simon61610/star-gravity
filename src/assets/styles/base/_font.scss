@@ -28,6 +28,11 @@ $lineHeight-title: 1.2; // 中文標題兩行以上
 $linHeight-p: 1.5; // 段落用
 
 // ----------------------- 樣式設定 -----------------------
+body {
+    font-family: $chFont;
+}
+
+
 .decTitle {      // 裝飾字英文
     &--big {
         font-family: $enFont;

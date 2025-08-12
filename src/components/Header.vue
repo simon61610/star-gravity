@@ -23,7 +23,7 @@ function toggleMenu() {
                 <li><router-link to="/">星據點</router-link></li>
                 <li><router-link to="/">星遊戲</router-link></li>
                 <li><router-link to="/">星星活動</router-link></li>
-                <li><router-link to="/">星空小舖</router-link></li>
+                <li><router-link to="/shop">星空小舖</router-link></li>
                 <li><router-link to="/"><i class="fa-solid fa-user fa-lg"></i></router-link></li>
                 <li><router-link to="/"><i class="fa-solid fa-arrow-right-from-bracket"></i></router-link></li>
                 <li><router-link to="/"><i class="fa-solid fa-cart-shopping fa-lg"></i></router-link></li>
