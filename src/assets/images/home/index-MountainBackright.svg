@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_圖層_1" data-name="圖層 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1225.04 417.42">
+  <defs>
+    <style>
+      .cls-1 {
+        clip-path: url(#clippath);
+      }
+
+      .cls-2 {
+        fill: none;
+      }
+
+      .cls-2, .cls-3, .cls-4 {
+        stroke-width: 0px;
+      }
+
+      .cls-3 {
+        fill: url(#linear-gradient);
+      }
+
+      .cls-4 {
+        fill: #080d27;
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="0" y1="208.71" x2="1225.04" y2="208.71" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1d2b55"/>
+      <stop offset=".78" stop-color="#253584"/>
+      <stop offset="1" stop-color="#283993"/>
+    </linearGradient>
+    <clipPath id="clippath">
+      <rect class="cls-2" x="1297.07" y="-1053.82" width="1473" height="1441"/>
+    </clipPath>
+  </defs>
+  <polygon class="cls-3" points="1225.04 0 1139.17 0 1057.37 82.1 919.82 142.12 821.23 142.12 703.25 208.71 569.59 208.71 468.14 208.71 337.8 244.16 192.7 327.67 0 417.42 1225.04 417.42 1225.04 0"/>
+  <g class="cls-1">
+    <path class="cls-4" d="m3151.04,3291h-1993V-449c652.31,64.29,1317.18,61.44,1993,0v3740Z"/>
+  </g>
+</svg>
