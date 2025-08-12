@@ -39,6 +39,8 @@
 
     .prod-cate {
         // border: 1px solid yellow;
+        max-width: 1200px;
+        margin: 0 auto;
         padding: 60px 0;
         display: flex;
         flex-direction: column;

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 // --- Shop 星空小舖 ---
 import ShopHomePage from '@/views/shop/ShopHomePage.vue'
+import ShopCategoryPage from '@/views/shop/ShopCategoryPage.vue'
 
 
 //import Newpage from '../views/Newpage.vue'
@@ -16,6 +17,7 @@ const routes = [
 
     // --- Shop 星空小舖 ---
     {path: '/shop', component: ShopHomePage},
+    {path: '/category', component: ShopCategoryPage},
 
 
 

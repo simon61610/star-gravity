@@ -1,8 +1,6 @@
-<!-- 單一商品頁 -->
 <script setup>
 
 </script>
-
 
 <template>
     
