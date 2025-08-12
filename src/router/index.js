@@ -1,19 +1,29 @@
 import { createRouter, createWebHistory } from 'vue-router'
+
+// --- Shop 星空小舖 ---
+import ShopHomePage from '@/views/shop/ShopHomePage.vue'
+
+
 //import Newpage from '../views/Newpage.vue'
+
+
 
 // routes 口訣：在哪個路徑下，render 哪個組件
 // {path: '路徑', component: 組件},
 const routes = [
-  // 這邊放 routes！
+    // 這邊放 routes！
 
+
+    // --- Shop 星空小舖 ---
+    {path: '/shop', component: ShopHomePage},
 
 
 
 ]
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes, // 等同 routes: routes
+    history: createWebHistory(import.meta.env.BASE_URL),
+    routes, // 等同 routes: routes
 })
 
 export default router
