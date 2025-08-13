@@ -44,18 +44,7 @@
 </template>
 
 <style>
-	/* 全頁面共用背景圖：待討論如何處理個別頁面不同背景圖 */
 
-  /*找到解法了 這個我先註解掉 會影響全局app 後面就可以刪了不需要 */
-  /*	#app{
-	background-image: url('./assets/images/BGC.png');
-	background-size: cover;        
-  background-position: center;     
-	background-repeat: no-repeat;
-	box-sizing: border-box;
-	min-height: 100vh;               
-	width: 100vw;            
-	}*/
 </style>
 
 
@@ -74,8 +63,6 @@
 <script setup>
 	import Test from './components/Test.vue';
 </script>-------->
-
-
 
 
 

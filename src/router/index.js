@@ -3,8 +3,11 @@ import { createRouter, createWebHistory } from 'vue-router'
 // --- Shop 星空小舖 ---
 import ShopHomePage from '@/views/shop/ShopHomePage.vue'
 import ShopCategoryPage from '@/views/shop/ShopCategoryPage.vue'
+// --- Article 文章----
+import Newpage from '@/views/new/Newpage.vue'
 
 
+//import { createRouter, createWebHistory } from 'vue-router'
 //import Newpage from '../views/Newpage.vue'
 
 
@@ -13,12 +16,25 @@ import ShopCategoryPage from '@/views/shop/ShopCategoryPage.vue'
 // {path: '路徑', component: 組件},
 const routes = [
     // 這邊放 routes！
+//const routes = [
+  // 這邊放 routes！
 
 
     // --- Shop 星空小舖 ---
     {path: '/shop', component: ShopHomePage},
     {path: '/category', component: ShopCategoryPage},
 
+    // --- Article 文章 ---
+    {
+      path: '/Newpage',    // 
+      name: 'Newpage',     //
+      component: Newpage
+    },
+    {
+      path: '/article/:id',    // 在vue裡面 / = http://localhost:5173/ 也就是本機的意思
+      name: 'ArticleDetailpage',     //網頁的id
+      component: () => import('../views/new/ArticleDetailpage.vue'), 
+    },
 
 
 ]
@@ -30,24 +46,6 @@ const router = createRouter({
 
 export default router
 
-
-// ----------------------- 以下放還沒確定好的 Routes，確定好再放到陣列裡 ------------------------
-// 另外要討論是否子物件要用 lazy-loading 的寫法
-
-
-/* 
-{
-  path: '/NewpageView',    // 在vue裡面 / = http://localhost:5173/ 也就是本機的意思
-  name: 'NewpageView',     //網頁的id
-  component: () => import('../views/NewpageView.vue'), //採用官方建議lazy-loaded(非同步載入)
-},
-
-{
-  path: '/article/:id',    // 在vue裡面 / = http://localhost:5173/ 也就是本機的意思
-  name: 'ArticleDetailView',     //網頁的id
-  component: () => import('../views/ArticleDetailView.vue'), //採用官方建議lazy-loaded(非同步載入)
-},
-*/
 
 
 // -----------------------------------------------
