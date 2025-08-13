@@ -74,7 +74,7 @@ import  logo from '@/assets/logos/logo.svg'
 </template>
 
 <style scoped lang="scss">
-@import '../../src/assets/styles/main.scss';
+@import '@/assets/styles/main.scss';
 
 .footer{
     color: white;

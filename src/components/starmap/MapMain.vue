@@ -99,10 +99,10 @@
                              <!--以下兩個點擊後才顯示-->
                             <!-- <img src="image/tainan.jpg" alt=""> -->
 
-                            <a class="seeMore" href="#">
+                            <!-- <a class="seeMore" href="#">
                                 <p>更多資訊</p>
-                                <!-- <img src="image/arrow.svg" alt=""> -->
-                            </a>
+                                <img src="image/arrow.svg" alt="">
+                            </a> -->
 
                             <!----------------------->
                             <div class="map-decorateLine"></div> <!-------裝飾線-------->
@@ -134,7 +134,7 @@
                                 <img src="image/arrow.svg" alt="">
                             </div> -->
                             <!----------------------->
-                            <div class="decorateLine"></div> <!-------裝飾線-------->
+                            <div class="map-decorateLine"></div> <!-------裝飾線-------->
                         </li>
 
                         <li>
@@ -163,7 +163,7 @@
                                 <img src="image/arrow.svg" alt="">
                             </div> -->
                             <!----------------------->
-                            <div class="decorateLine"></div> <!-------裝飾線-------->
+                            <div class="map-decorateLine"></div> <!-------裝飾線-------->
                         </li>
 
 
@@ -189,11 +189,13 @@
 
 
 <style scoped lang="scss">
-@import '../../assets/styles/main.scss';
+@import '@/assets/styles/main.scss';
 
-body{
+.wrapper{
+    padding: 12px 0;
     background-color: $primaryColor-900;
 }
+
 /*右下裝飾字體*/
 .map-decorate{
     color: $FontColor-white;
@@ -231,9 +233,10 @@ body{
 
 /* 左半邊 */
 .map-leftBlock{
-    /* border: 1px solid red; */
+    border: 2px solid red;
     box-sizing: border-box;
     max-width: 430px;
+    max-height: calc(100vh - 74px);
     font-family: $chFont ;
 
     display: flex;
@@ -241,7 +244,7 @@ body{
     align-items: center;
     gap: 12px;
 
-    margin: 24px 0 0 160px;
+    margin-left:160px;
 }
 
 /*上方篩選區*/
@@ -317,7 +320,6 @@ input{
 /*地點列表*/
 .locatinList{
     width: 100%;
-    height: 620px;
     border: 2px solid $primaryColor-100;
     box-sizing: border-box;
     

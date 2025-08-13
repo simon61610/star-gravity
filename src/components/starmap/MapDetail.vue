@@ -205,7 +205,9 @@
 // 地點彈窗
 .map-contentBox {
     width: 1200px;
-    height: 820px;
+    height: calc( 100vh - 80px);
+    overflow-y: auto;
+    // height: 820px;
 
     border: 2px solid $primaryColor-500;
     background-color:$bgColor-white ;
@@ -213,7 +215,7 @@
 
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: 24px;
 
     position: fixed;
     margin: auto;

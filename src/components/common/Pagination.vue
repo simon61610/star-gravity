@@ -1,11 +1,11 @@
 <script setup>
-const props = defineProps({
-    total:  { type: Number, default: 1 }, //總數
-    pageSize : {type: Number,default: 5},  // defaul 預設值 沒有傳入這個 props  每頁頁數 
-    modelValue: {type: Number, default: 1 } // defaul 預設值 沒有傳入這個 props 現在第幾頁
-})
+const props = defineProps({  //用來接受父層回傳的訊息
+        total:  { type: Number, default: 1 }, //總數
+        pageSize : {type: Number,default: 5},  // defaul 預設值 沒有傳入這個 props  每頁頁數 
+        modelValue: {type: Number, default: 1 } // defaul 預設值 沒有傳入這個 props 現在第幾頁
+    })
 
-const emit = defineEmits(['update:modelValue','update:pageSize'])
+const emit = defineEmits(['update:modelValue','update:pageSize']) //負責回傳 現在頁數 跟 每頁頁數 給父層
 
 function changePage(newpage){
     emit('update:modelValue',newpage)
@@ -13,17 +13,17 @@ function changePage(newpage){
 </script>
 
 
-
 <template>
     <div class="elementbox">
-        <el-pagination 
+        <el-pagination              
         background layout="prev, pager, next" 
         :total = "props.total" 
-        :page-size = "props.pageSize" 
+        :page-size = "props.pageSize"   
         :current-page="props.modelValue"
         :hide-on-single-page="false"
         @current-change="changePage"/>
-    </div>
+    </div>           
+         
 </template>
 
 
@@ -44,7 +44,7 @@ function changePage(newpage){
 
 
 <style scoped lang="scss">
-@import '../../src/assets/styles/main.scss';
+@import '@/assets/styles/main.scss';
 
 .elementbox{
    margin-top: 36px;
