@@ -18,12 +18,12 @@ function toggleMenu() {
             </div>
             <ul>
                 <li><router-link to="/">觀星初學指南</router-link></li>
-                <li><router-link to="/">天文快訊</router-link></li>       <!--<li><router-link :to="{ name: 'NewpageView' }">天文快訊</router-link></li>--->
+                <li><router-link to="/Newpage">天文快訊</router-link></li>       <!--<li><router-link :to="{ name: 'NewpageView' }">天文快訊</router-link></li>--->
                 <li><router-link to="/">星視野</router-link></li>
                 <li><router-link to="/">星據點</router-link></li>
                 <li><router-link to="/">星遊戲</router-link></li>
                 <li><router-link to="/">星星活動</router-link></li>
-                <li><router-link to="/shop">星空小舖</router-link></li>
+                <li><router-link to="/shop">星空小舖</router-link></li>               
                 <li><router-link to="/"><i class="fa-solid fa-user fa-lg"></i></router-link></li>
                 <li><router-link to="/"><i class="fa-solid fa-arrow-right-from-bracket"></i></router-link></li>
                 <li><router-link to="/"><i class="fa-solid fa-cart-shopping fa-lg"></i></router-link></li>
@@ -41,7 +41,7 @@ function toggleMenu() {
 
 
 <style scoped lang="scss">
-@import '../../src/assets/styles/main.scss';
+@import '@/assets/styles/main.scss';
 
 .navbar{
     width: 100%;
