@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-// --- Shop 星空小舖 ---
+// --- Shop 星空小舖 聖文---
 import ShopHomePage from '@/views/shop/ShopHomePage.vue'
 import ShopCategoryPage from '@/views/shop/ShopCategoryPage.vue'
 // --- Article 文章----
@@ -45,7 +45,7 @@ export default router
 
 
 
-// -----------------------------------------------
+// --------------------- 以下先不刪除，因為有範例 --------------------------
 
 
 /* 
