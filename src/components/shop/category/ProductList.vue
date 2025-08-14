@@ -6,9 +6,19 @@
     // 方法
     import { makeProductsMock } from '@/data/productsMock'
 
-    // ----------------------------------------------------------
-    const items = ref(makeProductsMock(4)) // 生成假資料
+    // ------------------------ 生成假資料 ------------------------
+    const items = ref(makeProductsMock(220)) 
     // console.log(items)
+
+    // ------------------------ Pagination 的變數 ------------------------
+    const currentPage = ref(1) // 預設第一頁
+    const pageSize= ref(16) // 每頁顯示幾筆
+
+    // 切分頁
+    const showItems = computed (() => {
+        const start = (currentPage.value - 1) * pageSize.value // 從第幾筆開始
+        return items.value.slice(start, start + pageSize.value) // 顯示的商品陣列
+    })
 
 
 </script>
@@ -16,7 +26,7 @@
 <template>
     <section>
         <div class="product-items">
-            <div class="item__card" v-for="( item, index ) in items">
+            <div class="item__card" v-for="( item, index ) in showItems"> <!-- 用顯示的商品陣列跑 v-for -->
                 <img :src="item.image" alt="商品假圖" class="item__card__img">
                 <div class="item__card__text">
                     <h1 class="item__card__text--name">{{ item.name }}</h1>
@@ -28,7 +38,11 @@
             </div>
         </div>
         <div>  
-            <Pagination/>
+            <Pagination
+                v-model="currentPage"
+                v-model:pageSize="pageSize"
+                :total="items.length"
+            />
         </div>
     </section>
 </template>
