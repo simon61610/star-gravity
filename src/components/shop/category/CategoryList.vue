@@ -47,6 +47,7 @@
     @import '@/assets/styles/main.scss';
 
     .cate-list {
+        flex-shrink: 0;
         width: 176px; // 暫定，要刪除
         color: $FontColor-white;
 
