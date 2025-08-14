@@ -13,7 +13,7 @@
         <Breadcrumbs />
         <section class="product-section">
             <CategoryToolbar />
-            <div>            
+            <div class="main-section">            
                 <CategoryList />
                 <ProductList />
             </div>
@@ -35,6 +35,12 @@
             margin: 0 auto;
             max-width: 1200px;
             padding: 40px 16px 60px;
+
+            .main-section {
+                display: flex;
+                justify-content: center;
+                gap: 60px;
+            }
         }
     }
 </style>
