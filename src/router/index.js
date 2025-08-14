@@ -6,6 +6,12 @@ import ShopCategoryPage from '@/views/shop/ShopCategoryPage.vue'
 // --- Article 文章----
 import Newpage from '@/views/new/Newpage.vue'
 
+// --- member 會員中心----
+import LoginFirstPage from '../views/member/LoginFirstPage.vue'
+// import SignUp from '@/components/member/login/SignUp.vue'
+// import ForgetPassword from '@/components/member/login/ForgetPassword.vue'
+import ForgetPasswordTwo from '@/components/member/login/ForgetPasswordTwo.vue'
+
 
 //import { createRouter, createWebHistory } from 'vue-router'
 //import Newpage from '../views/Newpage.vue'
@@ -30,6 +36,13 @@ const routes = [
       name: 'Newpage',     //
       component: Newpage
     },
+
+    // --- member 會員中心----
+    {path: '/member', component: LoginFirstPage}, // 登入畫面
+    // {path: '/login', component: SignUp},       // 註冊畫面
+    // {path: '/login', component: ForgetPassword},  // 忘記密碼1
+    {path: '/login', component: ForgetPasswordTwo},  // 忘記密碼2
+
     {
       path: '/article/:id',    // 在vue裡面 / = http://localhost:5173/ 也就是本機的意思
       name: 'ArticleDetailpage',     //網頁的id
