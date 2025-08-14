@@ -10,6 +10,8 @@ import Newpage from '@/views/new/Newpage.vue'
 // import GameHomePage from '@/views/game/GameHomePage.vue'
 import GameCardPage from '@/views/game/GameCardPage.vue'
 
+//  ---Admin後台-----
+import AdminLoginPage from '@/views/admin/AdminLoginPage.vue'
 
 //import { createRouter, createWebHistory } from 'vue-router'
 //import Newpage from '../views/Newpage.vue'
@@ -23,10 +25,28 @@ const routes = [
   //const routes = [
   // 這邊放 routes！
 
+  // --- Shop 星空小舖 聖文---
+  { path: '/shop', name: 'shop', component: ShopHomePage },
+  { path: '/category', name: 'category', component: ShopCategoryPage },
 
-  // --- Shop 星空小舖 ---
-  { path: '/shop', component: ShopHomePage },
-  { path: '/category', component: ShopCategoryPage },
+  // --- Article 文章 ---
+  {
+    path: '/Newpage',    // 
+    name: 'Newpage',     //
+    component: Newpage
+  },
+  {
+    path: '/article/:id',    // 在vue裡面 / = http://localhost:5173/ 也就是本機的意思
+    name: 'ArticleDetailpage',     //網頁的id
+    component: () => import('../views/new/ArticleDetailpage.vue'),
+  },
+  //  ---Admin後台-----
+  {
+    path: '/AdminLoginPage',    // 
+    name: 'AdminLoginPage',     //
+    component: AdminLoginPage
+  },
+
 
   // --- Article 文章 ---
   {
