@@ -6,6 +6,8 @@ import ShopCategoryPage from '@/views/shop/ShopCategoryPage.vue'
 // --- Article 文章----
 import Newpage from '@/views/new/Newpage.vue'
 
+//  ---Admin後台-----
+import AdminLoginPage from '@/views/admin/AdminLoginPage.vue'
 
 //import { createRouter, createWebHistory } from 'vue-router'
 //import Newpage from '../views/Newpage.vue'
@@ -32,6 +34,13 @@ const routes = [
       name: 'ArticleDetailpage',     //網頁的id
       component: () => import('../views/new/ArticleDetailpage.vue'), 
     },
+    //  ---Admin後台-----
+    {
+      path: '/AdminLoginPage',    // 
+      name: 'AdminLoginPage',     //
+      component: AdminLoginPage
+    },
+
 
 
 ]
