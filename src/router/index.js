@@ -6,6 +6,10 @@ import ShopCategoryPage from '@/views/shop/ShopCategoryPage.vue'
 // --- Article 文章----
 import Newpage from '@/views/new/Newpage.vue'
 
+// --- Map 觀星地圖----
+import MapFirstPage from '@/views/map/MapFirstPage.vue';
+import MapMainPage from '@/views/map/MapMainPage.vue';
+
 
 //import { createRouter, createWebHistory } from 'vue-router'
 //import Newpage from '../views/Newpage.vue'
@@ -32,6 +36,10 @@ const routes = [
       name: 'ArticleDetailpage',     //網頁的id
       component: () => import('../views/new/ArticleDetailpage.vue'), 
     },
+
+    // --- Map 觀星地圖----
+    {path:'/map', name:'map', component: MapFirstPage},
+    {path:'/starmap', name:'starmap', component: MapMainPage},
 
 
 ]

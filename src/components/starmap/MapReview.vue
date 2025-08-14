@@ -118,77 +118,22 @@
 <style scoped lang="scss">
 @import '../../assets/styles/main.scss';
 
-//評論攔
-.mapreview-writePlace{
-    position: fixed;
-    z-index: 100;
-
-    border: 2px solid $primaryColor-100;
-    width: 430px;
-    height: 680px;
-    background-color: #ffffff;
-    border-radius: 20px;
-    box-sizing: border-box;
-}
 
 
-//評論列表
-.mapreview-list{
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-
-    border-top: 1px solid $primaryColor-100;
-
-    overflow-y: auto;
-    
-}   
-.mapreview-list li{
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-
-    padding: 10px 20px;
-    border: 1px solid $primaryColor-100;
-    box-sizing: border-box;
-
-}  
-.mapreview-list h4{
-    font-size: $pcChFont-H4 ;
-}
-
-.review-score{
-    display: flex;
-    gap: 4px;
-}
-.review-score img{
-    width: 20px;
-}
-.mapreview-list p{
-    font-size: $pcChFont-p;
-}
-.review-photo{
-    width: 180px;
-    height: 135px;
-}
-.mapreview-list h6{
-    font-size:$pcChFont-small ;
-    align-self: flex-end;
-}
-
-
+//評論彈窗
 .map-reviewBox {
     width: 1200px;
-    height: 820px;
+    // height: 820px;
+    height: 90vh;
 
     // border: 2px solid $primaryColor-500;
     background-color:$bgColor-white ;
     border-radius: 20px;
     overflow: hidden;
 
-    position: fixed;
+    position: absolute;
     margin: auto;
-    top: 64px;
+    top: 60px;
     right: 0;
     left: 0;
     box-sizing: border-box;
@@ -226,16 +171,15 @@
 .mapreview-left{
     width: 400px;
     height: 100%;
-    padding-bottom: 60px ;
+    padding: 100px 0 60px 0 ;
     box-sizing: border-box;
 
     display: flex;
     flex-direction: column;
-    gap: 480px;
-    justify-content:end;
     align-items: center;
+     justify-content: space-between;
 
-    background-image: url(../../assets/images/map-reviewleft.jpg);
+    background-image: url(../../assets/images/map/map-reviewleft.jpg);
 }
 
 .mapreview-title{
@@ -272,7 +216,7 @@
 //右半邊
 .mapreview-right{
     font-family:$chFont ;
-    border: 1px solid red;
+    // border: 1px solid red;
 
     width: 800px;
     height: 100%;
@@ -317,14 +261,65 @@
     padding: 4px;
     border-bottom: 1px solid $primaryColor-100;
 
-    display: none;
+    // display: none;
 }
+    
+    //評論攔
+.mapreview-writePlace{
+    position: fixed;
+    z-index: 100;
+
+    border: 2px solid $primaryColor-100;
+    width: 430px;
+    height: 680px;
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-sizing: border-box;
+}
+
+
     //評論列表
+.mapreview-list{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    border-top: 1px solid $primaryColor-100;
+
+    overflow-y: auto;
+    
+}   
+.mapreview-list li{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    padding: 10px 20px;
+    border: 1px solid $primaryColor-100;
+    box-sizing: border-box;
+
+}  
+.mapreview-list h4{
+    font-size: $pcChFont-H4 ;
+}
+
 .review-score{
     display: flex;
     gap: 4px;
 }
 .review-score img{
-    width: 16px;
+    width: 20px;
 }
+.mapreview-list p{
+    font-size: $pcChFont-p;
+}
+.review-photo{
+    width: 180px;
+    height: 135px;
+}
+.mapreview-list h6{
+    font-size:$pcChFont-small ;
+    align-self: flex-end;
+}
+
 </style>

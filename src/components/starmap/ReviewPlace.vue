@@ -39,7 +39,8 @@
 
 .mapreview-writePlace{
     width: 430px;
-    border: 1px solid $primaryColor-100;
+    max-height: 680px;
+    border: 2px solid $primaryColor-100;
     border-radius: 20px;
 
     display: flex;
@@ -51,6 +52,14 @@
     box-sizing: border-box;
 
     font-family: $chFont;
+    background-color: $FontColor-white;
+
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
 }
 .mapreview-writePlace h3{
     font-size: $pcChFont-H3;

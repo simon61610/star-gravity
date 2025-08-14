@@ -97,12 +97,12 @@
                             <h5>台南市大內區34-2號</h5>
 
                              <!--以下兩個點擊後才顯示-->
-                            <!-- <img src="image/tainan.jpg" alt=""> -->
+                            <img src="" alt="">
 
-                            <!-- <a class="seeMore" href="#">
+                            <a class="seeMore" href="#">
                                 <p>更多資訊</p>
-                                <img src="image/arrow.svg" alt="">
-                            </a> -->
+                                <img src="../../assets/icons/closed-eyes.svg" alt="">
+                            </a>
 
                             <!----------------------->
                             <div class="map-decorateLine"></div> <!-------裝飾線-------->
@@ -176,7 +176,7 @@
             
         </div>
         
-        <!-- 左半邊台灣 -->
+        <!-- 右半邊台灣 -->
          <div class="map-rightBlock"></div>
 
         <!-- 右下裝飾字 -->
@@ -194,6 +194,9 @@
 .wrapper{
     padding: 12px 0;
     background-color: $primaryColor-900;
+
+    display: flex;
+    justify-content: center;
 }
 
 /*右下裝飾字體*/
@@ -233,10 +236,12 @@
 
 /* 左半邊 */
 .map-leftBlock{
-    border: 2px solid red;
+    // border: 2px solid red;
     box-sizing: border-box;
     max-width: 430px;
-    max-height: calc(100vh - 74px);
+    // max-height: calc(100vh - 74px);
+    height: 90vh;
+
     font-family: $chFont ;
 
     display: flex;
@@ -414,9 +419,21 @@ input{
 
     margin-bottom: 24px;
 }
+.seeMore img{
+    height: 16px;
+}
+
 /*裝飾線*/
 .map-decorateLine{
     height: 2px;
     background-color: $primaryColor-100;
+}
+
+/*右半邊台灣*/
+.map-rightBlock{
+    width: 60vw;
+    height: 90vh;
+    background-image: url(../../assets/images/map/starmap-taiwan.svg);
+    background-size: cover;
 }
 </style>
