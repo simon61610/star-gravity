@@ -19,6 +19,7 @@ onMounted(()=>{
     if (likedStatus) {
         liked.value = likedStatus === 'true'
     }
+    
     function toglike(){   //點擊+1方程式
         liked.value = !liked.value  //如果點擊了表是true
         likeCount.value += liked.value ? 1 : -1; // 如果是true就+1 反之-1}

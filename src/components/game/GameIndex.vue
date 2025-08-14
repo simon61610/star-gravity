@@ -1,21 +1,14 @@
-<template>
+<template> 
     <div class="test-box">這是測試元件</div>
 	<input type="text">這是input
-</template>
+</template> 
 
 
-
-
-<script setup>
+<script setup>//放js
 
 </script>
 
-
-
-
-
-
-<style scoped lang="scss">
+<style scoped lang="scss">//放css
 @import '@/assets/styles/main';
 
 .test-box {

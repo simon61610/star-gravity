@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-// --- Shop 星空小舖 ---
+// --- Shop 星空小舖 聖文---
 import ShopHomePage from '@/views/shop/ShopHomePage.vue'
 import ShopCategoryPage from '@/views/shop/ShopCategoryPage.vue'
 // --- Article 文章----
@@ -12,6 +12,8 @@ import LoginFirstPage from '../views/member/LoginFirstPage.vue'
 // import ForgetPassword from '@/components/member/login/ForgetPassword.vue'
 import ForgetPasswordTwo from '@/components/member/login/ForgetPasswordTwo.vue'
 
+//  ---Admin後台-----
+import AdminLoginPage from '@/views/admin/AdminLoginPage.vue'
 
 //import { createRouter, createWebHistory } from 'vue-router'
 //import Newpage from '../views/Newpage.vue'
@@ -22,13 +24,10 @@ import ForgetPasswordTwo from '@/components/member/login/ForgetPasswordTwo.vue'
 // {path: '路徑', component: 組件},
 const routes = [
     // 這邊放 routes！
-//const routes = [
-  // 這邊放 routes！
 
-
-    // --- Shop 星空小舖 ---
-    {path: '/shop', component: ShopHomePage},
-    {path: '/category', component: ShopCategoryPage},
+    // --- Shop 星空小舖 聖文---
+    {path: '/shop', name: 'shop' ,component: ShopHomePage},
+    {path: '/category', name: 'category', component: ShopCategoryPage},
 
     // --- Article 文章 ---
     {
@@ -48,6 +47,13 @@ const routes = [
       name: 'ArticleDetailpage',     //網頁的id
       component: () => import('../views/new/ArticleDetailpage.vue'), 
     },
+    //  ---Admin後台-----
+    {
+      path: '/AdminLoginPage',    // 
+      name: 'AdminLoginPage',     //
+      component: AdminLoginPage
+    },
+
 
 
 ]
@@ -61,7 +67,7 @@ export default router
 
 
 
-// -----------------------------------------------
+// --------------------- 以下先不刪除，因為有範例 --------------------------
 
 
 /* 
