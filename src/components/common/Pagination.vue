@@ -9,6 +9,11 @@ const emit = defineEmits(['update:modelValue','update:pageSize']) //負責回傳
 
 function changePage(newpage){
     emit('update:modelValue',newpage)
+
+    window.scrollTo({ 
+            top: 0, 
+            behavior: 'smooth' // 平滑滾動 
+        })
 }
 </script>
 
