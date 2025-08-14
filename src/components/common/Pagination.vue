@@ -1,7 +1,7 @@
 <script setup>
 const props = defineProps({  //用來接受父層回傳的訊息
         total:  { type: Number, default: 1 }, //總數
-        pageSize : {type: Number,default: 5},  // defaul 預設值 沒有傳入這個 props  每頁頁數 
+        pageSize : {type: Number,default: 5},  // defaul 預設值 沒有傳入這個 props  每頁幾個
         modelValue: {type: Number, default: 1 } // defaul 預設值 沒有傳入這個 props 現在第幾頁
     })
 
@@ -26,22 +26,7 @@ function changePage(newpage){
          
 </template>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<!-- ------------------------------------------ -->
 
 <style scoped lang="scss">
 @import '@/assets/styles/main.scss';

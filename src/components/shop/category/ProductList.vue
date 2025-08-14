@@ -1,14 +1,14 @@
 <script setup>
-// Vue
-import { ref } from 'vue'
-// 組件
-import Pagination from '@/components/common/Pagination.vue';
-// 方法
-import { makeProductsMock } from '@/data/productsMock'
+    // Vue
+    import { ref, computed } from 'vue'
+    // 組件
+    import Pagination from '@/components/common/Pagination.vue';
+    // 方法
+    import { makeProductsMock } from '@/data/productsMock'
 
-// ----------------------------------------------------------
-const items = ref(makeProductsMock(16)) // 生成假資料
-console.log(items)
+    // ----------------------------------------------------------
+    const items = ref(makeProductsMock(4)) // 生成假資料
+    // console.log(items)
 
 
 </script>
@@ -21,7 +21,7 @@ console.log(items)
                 <div class="item__card__text">
                     <h1 class="item__card__text--name">{{ item.name }}</h1>
                     <h2 class="item__card__text--price">NT$ {{ item.price }}</h2>
-                    <div class="item__card__text--icon">
+                    <div class="item__card__text--cart-btn">
                         <i class="fa-solid fa-cart-shopping"></i>
                     </div>
                 </div>
@@ -45,7 +45,8 @@ console.log(items)
         .item__card {
             cursor: pointer;
             text-align: center;
-            
+            padding: 4px;
+
             &__img {
                 margin-bottom: 16px;
                 display: block;
@@ -60,13 +61,15 @@ console.log(items)
                     font-size: $pcChFont-p;
                     margin-bottom: 16px;
                 }
-                &--icon {
+                // 購物車按鈕
+                &--cart-btn {
                     border: 2px solid white;
                     border-radius: 8px;
                     font-size: 16px;
                     padding: 6px 0;
                     transition: all 0.3s ease;
 
+                    // 購物車按鈕 hover 效果
                     &:hover {
                         border: 2px solid $primaryColor-500;
                         color: $primaryColor-500;
