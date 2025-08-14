@@ -5,7 +5,7 @@ import { useRoute } from 'vue-router'  //取得目前「路由資訊」資料 {}
 import { articles } from '@/data/articles.js' //抓物件資料
 
 const router = useRoute(); //回傳當前路由物件
-const id = Number(router.params.id) //params 可以字串轉數字
+const id = Number(router.params.id) //params useRoute的參數之一 裡面存放動態路由 Number()字串轉數字
 const article = articles.find(a => a.id === id)  //文章ID對應
 
 
