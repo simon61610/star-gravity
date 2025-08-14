@@ -67,36 +67,36 @@ const routes = [
   //--- Game 遊戲 ---
   // { path: '/game', component: GameHomePage }, //遊戲入口
   { path: '/game', component: GameCardPage }, //卡片遊戲
-    // 這邊放 routes！
+  // 這邊放 routes！
 
-    // --- Shop 星空小舖 聖文---
-    {path: '/shop', name: 'shop' ,component: ShopHomePage},
-    {path: '/category', name: 'category', component: ShopCategoryPage},
+  // --- Shop 星空小舖 聖文---
+  { path: '/shop', name: 'shop', component: ShopHomePage },
+  { path: '/category', name: 'category', component: ShopCategoryPage },
 
-    // --- Article 文章 ---
-    {
-      path: '/Newpage',    // 
-      name: 'Newpage',     //
-      component: Newpage
-    },
+  // --- Article 文章 ---
+  {
+    path: '/Newpage',    // 
+    name: 'Newpage',     //
+    component: Newpage
+  },
 
-    // --- member 會員中心----
-    {path: '/member', component: LoginFirstPage}, // 登入畫面
-    // {path: '/login', component: SignUp},       // 註冊畫面
-    // {path: '/login', component: ForgetPassword},  // 忘記密碼1
-    {path: '/login', component: ForgetPasswordTwo},  // 忘記密碼2
+  // --- member 會員中心----
+  { path: '/member', component: LoginFirstPage }, // 登入畫面
+  // {path: '/login', component: SignUp},       // 註冊畫面
+  // {path: '/login', component: ForgetPassword},  // 忘記密碼1
+  { path: '/login', component: ForgetPasswordTwo },  // 忘記密碼2
 
-    {
-      path: '/article/:id',    // 在vue裡面 / = http://localhost:5173/ 也就是本機的意思
-      name: 'ArticleDetailpage',     //網頁的id
-      component: () => import('../views/new/ArticleDetailpage.vue'), 
-    },
-    //  ---Admin後台-----
-    {
-      path: '/AdminLoginPage',    // 
-      name: 'AdminLoginPage',     //
-      component: AdminLoginPage
-    },
+  {
+    path: '/article/:id',    // 在vue裡面 / = http://localhost:5173/ 也就是本機的意思
+    name: 'ArticleDetailpage',     //網頁的id
+    component: () => import('../views/new/ArticleDetailpage.vue'),
+  },
+  //  ---Admin後台-----
+  {
+    path: '/AdminLoginPage',    // 
+    name: 'AdminLoginPage',     //
+    component: AdminLoginPage
+  },
 
 
 
@@ -104,7 +104,7 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes, // 等同 routes: routes
+  routes, // 等同 routes: routes 1
 })
 
 export default router
