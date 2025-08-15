@@ -214,12 +214,19 @@
     background-color:$bgColor-white ;
     border-radius: 20px;
 
-    padding: 40px 50px 40px;
+    // padding: 40px 50px 40px;
     box-sizing: border-box;
+
+    //讓內容物在任何螢幕尺寸都能置中
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
 
     position: absolute;
     margin: auto;
-    top: 60px;
+    top: 54px;
+    bottom: 0;
     right: 0;
     left: 0;
 }
@@ -234,7 +241,7 @@
 
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    justify-content: space-around;
 
 }
 .mapbox-close{

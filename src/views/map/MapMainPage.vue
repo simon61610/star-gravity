@@ -10,7 +10,7 @@
         <!-- <MapReview/> -->
 
         <!-- 評論填寫框 -->
-        <ReviewPlace/>
+        <!-- <ReviewPlace/> -->
 
         
     </div>
@@ -22,3 +22,9 @@ import MapDetail from '@/components/starmap/MapDetail.vue';
 import MapReview from '@/components/starmap/MapReview.vue';
 import ReviewPlace from '@/components/starmap/ReviewPlace.vue';
 </script>
+
+<style scoped>
+.wrapper{
+    height: calc( 100vh - 50px) ;
+}  
+</style>
