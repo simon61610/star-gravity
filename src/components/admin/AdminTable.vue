@@ -1,17 +1,23 @@
 <script setup>
 import  Pagination from '@/components/common/Pagination.vue'
 import {ref,computed} from 'vue'
- 
 const search = ref('')
 
 const currentPage = ref(1);  //目前所在頁面
 const pageSize = ref(10);  //每頁顯示數量 
 
+const props = defineProps({                       //定義props接其他表格傳的資料
+  data: { type: Array,default: () => [], required: true },
+  columns: { type: Array,default: () => [], required: true },
+  search:  { type: String, default: '' }
+
+})
+
 const filterTableData = computed(() => //這是用來過濾搜尋的table結果
-  tableData.filter(
+  props.data.filter(
     (data) =>
-      !search.value ||
-      data.id.toLowerCase().includes(search.value.toLowerCase())
+      !props.search ||
+      String(data.id ?? '').includes(String(props.search))
   )
 )
 
@@ -28,75 +34,15 @@ const showATable = computed(()=>{   // 這裡是計算過後的頁數 所以要�
 
 
 
-const tableData = [
-  {
-    id: '01',
-    member_account: 'cks558x',
-    member_name: '很大偉',
-    account_status: '正常',
-    created_at:'2025-08-15'
-  },
-  {
-    id: '02',
-    member_account: 'cks558x',
-    member_name: '很大偉',
-    account_status: '正常',
-    created_at:'2025-08-15'
-  },
-  {
-    id: '03',
-    member_account: 'cks558x',
-    member_name: '很大偉',
-    account_status:'正常',
-    created_at:'2025-08-15'
-  },
-  {
-    id: '04',
-    member_account: 'cks558x',
-    member_name: '很大偉',
-    account_status:'正常',
-    created_at:'2025-08-15'
-  },
-  {
-    id: '05',
-    member_account: 'cks558x',
-    member_name: '很大偉',
-    account_status:'正常',
-    created_at:'2025-08-15'
-  },
-  {
-    id: '06',
 
-  },
-  {
-    id: '07',
-
-  },
-  {
-    id: '08',
-
-  },
-  {
-    id: '09',
-
-  },
-  {
-    id: '10',
-
-  },
-  {
-    id: '11',
-
-  },
-]
 
 </script>
 
 <template>
   <div class="admin-table-wrapper">
-      <section class="admin-table-box" :filterTableData="showATable">
+      <section class="admin-table-box" >
 
-                  <div class="admin-table-header">
+                  <!-- <div class="admin-table-header">
                     <div class="admin-table-title">
                         <h1>會員管理</h1>
                     </div>
@@ -110,21 +56,24 @@ const tableData = [
                         <button>搜尋</button>
                     </div>
                   </div>
-                  <hr>
+                  <hr> -->
 
                 <el-table :data="showATable">
-                    <el-table-column label="編號" prop="id"/>
-                    <el-table-column label="會員帳號" prop="member_account" />
-                    <el-table-column label="會員姓名" prop="member_name" />
-                    <el-table-column label="帳號狀態" prop="account_status" />
-                    <el-table-column label="創建日期" prop="created_at" />
-                    <el-table-column label="編輯" align="right"> 
+                    <el-table-column v-for = "col in columns" :key="col.prop" :label="col.label" :align="col.align|| 'right' "
+                    :prop="col.prop">
+                    <!-- <el-table-column label="會員帳號" prop="member_account" /> -->
+                    <!-- <el-table-column label="會員姓名" prop="member_name" /> -->
+                    <!-- <el-table-column label="帳號狀態" prop="account_status" /> -->
+                    <!-- <el-table-column label="創建日期" prop="created_at" /> -->
+                    <!-- <el-table-column label="編輯" align="right">  -->
                             <template #default="scope">
-                                <el-button size="small" @click="handleEdit(scope.$index, scope.row)">
-                                    編輯查看
-                                </el-button>
+                              <slot v-if='col.slot' :name="col.slot" v-bind="scope"></slot>
+                                <!-- <el-button size="small" @click="handleEdit(scope.$index, scope.row)"> -->
+                                    <!-- 編輯查看 -->
+                                <!-- </el-button> -->
+                                 <span v-else>{{ scope.row[col.prop] }}</span>
                             </template>
-                    </el-table-column>
+                    </el-table-column> 
               
                 </el-table>
       </section>
@@ -164,49 +113,7 @@ const tableData = [
     width: 100%;
     margin: 0 auto;
         
-    .admin-table-header{
-      display: flex;
-      justify-content: space-between;
-      align-items:last baseline;
-      margin-bottom: 20px;
-
-        .admin-table-title{
-          width: 144px;
-          height: 40px;
-          line-height: 40px;
-          text-align: center;
-          background-color: #6C89BD;
-          border-radius: 10px;
-          font-weight: bold;
-          
-                
-        }
-
-          .admin-table-input{
-            
-            max-width: 300px;
-            width: 100%;
-            display: flex;
-            gap: 20px;
-
-                
-              ::v-deep(.el-input__wrapper){
-                background-color: rgb(233, 236, 239);
-                width: 150px;
-              }
-
-              ::v-deep(.el-input__inner){
-                width: 150px;
-              }
-
-              button{
-                width: 80px;
-                background-color: #9187B9;
-                border-radius: 10px;
-                border: none;
-              }
-          }
-    }
+    
   }
   
   ::v-deep(.el-pagination) {
