@@ -6,7 +6,7 @@
 
         <div class="tabs">
             <button class="tabs-btn-active button--normal" data-tab="login">登入</button>
-            <button class="tabs-btn button--normal"  data-tab="register">註冊</button>
+            <button class="tabs-btn button--normal"  data-tab="register">註冊</button>    <!----連結到註冊畫面----->
         </div>
 
         <div class="area">
@@ -14,14 +14,20 @@
                 <div class="email-area">
                     <input type="email" class="email-1" placeholder="請輸入信箱" v-model="email" required />
                 </div>
-                <!----可帶入element寫(暫時還沒)----->
+                <!----輸入密碼----->
                 <div class="password-area">
-                    <input type="password" class="password-1" placeholder="請輸入密碼" v-model='password' required>
-                    <!-- <span class="toggle" id="togglePassword">👁️</span> -->
-                </div>
+                    <el-input
+                      v-model="pwd1"
+                      class="custom-placeholder"
+                      style="width: 578px; height: 50px; font-size: 14px;"
+                      type="password"
+                      placeholder="請輸入密碼"
+                      show-password
+                    />
+                </div> 
                         
                 <div class="captcha-group">
-                    <!-- 輸入驗證碼框 -->
+                    <!-- 輸入驗證碼框 -->         
                     <input v-model="captcha" type="text" class="captcha-1" placeholder="輸入驗證碼" required />
             
                     <!-- 灰色驗證碼格子 -->
@@ -29,14 +35,14 @@
             
                     <!-- 刷新按鈕 -->
                     <button class="refresh-btn" @click="captchaCode = genCode()">
-                    🔄
+                        <img src="@/assets/icons/refresh.svg" alt="">
                     </button>
                 </div>
                 <div class="forget-area">
                     <!--登入按鈕 -->
                     <button class="login-btn" type="submit">登入</button>
     
-                    <!--忘記密碼 -->
+                    <!--忘記密碼 --> <!----連結到忘記密碼forget畫面----->
                     <div class="forgot">
                         <router-link to="/ ">忘記密碼?</router-link>
                     </div>
@@ -48,7 +54,7 @@
                 <span>OR</span>
             </div>
 
-            <!--社群登入 -->   <!----暫時先放要詢問---->
+            <!--社群登入 -->   
             <div class="social-login">
                 <button class="google">
                     <img src="@/assets/images/member/login-google.png" alt="Google">
@@ -63,24 +69,6 @@
         </div> 
     </div>
 </template>
-
-
-<script setup>
-
-    import { ref } from 'vue'
-
-    const tab = ref('login')
-    const email = ref('')
-    const password = ref('')
-    const captcha = ref('')
-    const showPassword = ref(false)
-    const captchaCode = ref('TJD102')
-
-    const handleSubmit = () => {
-    alert('登入成功！（假資料測試）')
-    }
-
-</script>
 
 <style scoped lang="scss">
 @import '@/assets/styles/main.scss';
@@ -120,14 +108,12 @@
     font-size: $pcChFont-H4;
     color: $FontColor-white;
 }
-
 .area{
     width: 600px;
     margin: 0 auto;
     margin-top: 20px;
     padding-left: 16px;
 }
-
 // 信箱
 .email-area{
    margin-top: 20px;
@@ -146,6 +132,10 @@
     font-size: $pcChFont-small;
     padding-left: 14px;
 }
+.custom-placeholder ::v-deep(.el-input__inner::placeholder) {
+    color: #000; 
+    opacity: 0.5; 
+}
 // 驗證碼
 .captcha-group{
     display: flex;
@@ -159,7 +149,8 @@
     font-size: $pcChFont-small;
     padding-left: 12px;
 }
-.captcha-code{   // 灰色驗證碼
+// 灰色驗證碼
+.captcha-code{   
     background-color: $FontColor-gray;
     font-size: $pcChFont-small;
     width: 100px;
@@ -168,7 +159,11 @@
     line-height: 50px;
 }
 .refresh-btn{
-    background: $FontColor-white;
+    background-color: transparent;
+    border: none;
+}
+.refresh-btn img{
+    width: 30px;
 }
 .forget-area{
     display: flex;
@@ -208,7 +203,7 @@
 .or::before, .or::after {
     content: "";
     flex: 1;
-    border-top: 1px solid #ccc; /* 線的樣式 */
+    border-top: 1px solid #ccc;
     margin: 20px 10px;
 }
 .social-login{
@@ -240,9 +235,22 @@
     width: 35px;
     height: 35px;
 }
-
-
-
-
-
 </style>
+
+<script setup>
+
+    import { ref } from 'vue'
+
+    const email = ref('')
+    const pwd1 = ref('')
+    const captcha = ref('')
+
+    const captchaCode = ref('TJD102')
+    const genCode = () => Math.random().toString(36).slice(2, 8).toUpperCase()
+
+    const handleSubmit = () => {
+    // if (captcha.value !== captchaCode.value) return;
+    alert('登入成功！')
+    }
+
+</script>

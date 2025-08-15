@@ -20,9 +20,10 @@
 @import '@/assets/styles/main.scss';
 
 .admin-sidebar-aside{
-   width: 100%;
+   width: 150px;
+   height: 340px;
     .admin-sidebar-wapper{
-        border: 1px red solid;
+        
         max-width: 150px;
         width: 100%;
         

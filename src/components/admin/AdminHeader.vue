@@ -22,7 +22,6 @@ import  logo from '@/assets/logos/logo-admin.svg'
     .admin-header-navbar{
         width: 100%;
         background-color: black;
-        border:  1px red solid;
         .admin-header-wrapper{
             margin: 0 auto;
             max-width: 1200px;
