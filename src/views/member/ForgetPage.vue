@@ -10,7 +10,7 @@
             </div>
 
             <div class="button-forger">
-                <button class="btn" @click="goLogin">回到登入畫面</button>
+                <button class="btn" @click="goLogin">回到登入畫面</button>  <!--連結到LoginFirstPage--->
                 <button class="btn" @click="sendData">傳送</button>
             </div>
         </div>

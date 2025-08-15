@@ -1,8 +1,5 @@
 <template>      <!----註冊畫面----->
     <div class="register-all">
-        <!-- <div class="login-one decTitle--medium" >
-            <h2>LOGIN</h2>
-        </div> -->
 
         <div class="tabs">
             <button class="tabs-btn-active button--normal" data-tab="login">登入</button>
@@ -39,15 +36,29 @@
                <div class="email">
                     <input type="email" class="email-2" placeholder="請輸入信箱" v-model="email" required />
                 </div>
-                <!----可帶入element寫(暫時還沒)----->
-                <div class="password">
-                    <input type="password" class="password-2" placeholder="請輸入密碼" v-model='password' required>
-                    <!-- <span class="toggle" id="togglePassword">👁️</span> -->
-                </div>
-                <div class="password">
-                    <input type="password" class="password-2" placeholder="請再次輸入密碼" v-model='password' required>
-                    <!-- <span class="toggle" id="togglePassword">👁️</span> -->
-                </div>
+                <!----密碼----->
+                <div class="password-area">
+                    <div class="area1">
+                        <el-input
+                          v-model="pwd1"
+                          class="custom-placeholder"
+                          style="width: 578px; height: 50px; font-size: 14px;"
+                          type="password"
+                          placeholder="請輸入密碼"
+                          show-password
+                        />
+                    </div>
+                    <div class="area2">
+                        <el-input
+                          v-model="pwd2"
+                          class="custom-placeholder"
+                          style="width: 578px; height: 50px; font-size: 14px;"
+                          type="password"
+                          placeholder="請再次輸入密碼"
+                          show-password
+                        />
+                    </div>
+                </div> 
                 
                 <div class="captcha-group-1">
                     <!-- 輸入驗證碼框 -->
@@ -58,7 +69,7 @@
             
                     <!-- 刷新按鈕 -->
                     <button class="refresh-btn-1" @click="captchaCode = genCode()">
-                        <img src="../../assets/icons/refresh.svg" alt="">
+                        <img src="@/assets/icons/refresh.svg" alt="">
                     </button>
                 </div>
                 <!-- 送出按鈕 -->
@@ -88,13 +99,7 @@
     justify-content: center;
     text-align: center;
     padding-top: 40px;
-    
 }
-// .login-one h2{
-//     color: $primaryColor-500;
-//     text-align: center;
-//     padding-top: 15px;
-// }
 .tabs-btn-active{    // 登入鈕
     border: none;
     width: 280px;
@@ -167,15 +172,13 @@
     font-size: $pcChFont-small;
     padding-left: 14px;
 }
-.password{
+// 密碼
+.area2{
     margin-top: 20px;
-    margin-bottom: 20px;
 }
-.password-2{
-    width: 558px;
-    height: 50px;
-    font-size: $pcChFont-small;
-    padding-left: 14px;
+.custom-placeholder ::v-deep(.el-input__inner::placeholder) {
+    color: #000; 
+    opacity: 0.5; 
 }
 .captcha-group-1{
     display: flex;
@@ -219,22 +222,31 @@
 </style>
 
 <script setup>
-    import { ref } from 'vue'
-    
-    // 勾選性別
-    const gender = ref('')
-    
+    import { ref, computed } from 'vue'
 
-    const tab = ref('login')
-    const email = ref('')
-    const password = ref('')
-    const captcha = ref('')
-    const showPassword = ref(false)
+    // 密碼
+    const pwd1 = ref('')  
+    const pwd2 = ref('')
+    // 判斷密碼同樣才可以送出
+    const canSubmit = computed(() => {    
+    return pwd1.value.length > 0 &&
+           pwd2.value.length > 0 &&
+           pwd1.value === pwd2.value
+    })
+    // 驗證碼
     const captchaCode = ref('TJD102')
-
+    const genCode = () => Math.random().toString(36).slice(2, 8).toUpperCase()
+    // 欄位
+    const name = ref('')
+    const phone = ref('')
+    const gender = ref('')
+    const address = ref('')      
+    const email = ref('')
+    const captcha = ref('')
+    // 送出
     const handleRegister = () => {
+    if (!canSubmit.value) return
     alert('註冊成功！（假資料測試）')
     }
-
 </script>
 

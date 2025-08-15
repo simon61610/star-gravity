@@ -35,7 +35,7 @@
             
                     <!-- 刷新按鈕 -->
                     <button class="refresh-btn" @click="captchaCode = genCode()">
-                    🔄
+                        <img src="@/assets/icons/refresh.svg" alt="">
                     </button>
                 </div>
                 <div class="forget-area">
@@ -69,25 +69,6 @@
         </div> 
     </div>
 </template>
-
-
-<script setup>
-
-    import { ref } from 'vue'
-    const pwd1 = ref('')   // 輸入密碼
-
-    const tab = ref('login')
-    const email = ref('')
-    const password = ref('')
-    const captcha = ref('')
-    const showPassword = ref(false)
-    const captchaCode = ref('TJD102')
-
-    const handleSubmit = () => {
-    alert('登入成功！（假資料測試）')
-    }
-
-</script>
 
 <style scoped lang="scss">
 @import '@/assets/styles/main.scss';
@@ -168,7 +149,8 @@
     font-size: $pcChFont-small;
     padding-left: 12px;
 }
-.captcha-code{   // 灰色驗證碼
+// 灰色驗證碼
+.captcha-code{   
     background-color: $FontColor-gray;
     font-size: $pcChFont-small;
     width: 100px;
@@ -177,7 +159,11 @@
     line-height: 50px;
 }
 .refresh-btn{
-    background: $FontColor-white;
+    background-color: transparent;
+    border: none;
+}
+.refresh-btn img{
+    width: 30px;
 }
 .forget-area{
     display: flex;
@@ -217,7 +203,7 @@
 .or::before, .or::after {
     content: "";
     flex: 1;
-    border-top: 1px solid #ccc; /* 線的樣式 */
+    border-top: 1px solid #ccc;
     margin: 20px 10px;
 }
 .social-login{
@@ -249,9 +235,22 @@
     width: 35px;
     height: 35px;
 }
-
-
-
-
-
 </style>
+
+<script setup>
+
+    import { ref } from 'vue'
+
+    const email = ref('')
+    const pwd1 = ref('')
+    const captcha = ref('')
+
+    const captchaCode = ref('TJD102')
+    const genCode = () => Math.random().toString(36).slice(2, 8).toUpperCase()
+
+    const handleSubmit = () => {
+    // if (captcha.value !== captchaCode.value) return;
+    alert('登入成功！')
+    }
+
+</script>
