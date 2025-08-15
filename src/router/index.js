@@ -53,11 +53,15 @@ import RegisterPage from '@/views/member/RegisterPage.vue'
 import ResetPasswordPage from '@/views/member/ResetPasswordPage.vue'
 
 
+
 // ------------------ 以下是王牌浩竣的 VIP 區，閒雜人等請勿靠近  ------------------
 
+//--------------------文章 Article -----------------------
+import Newpage from '@/views/new/Newpage.vue'
 
-
-
+//--------------------後台 Admin -------------------------
+import AdminLoginPage from '@/views/admin/AdminLoginPage.vue'
+import AdminHomePage from '@/views/admin/AdminHomePage.vue'
 
 
 
@@ -120,6 +124,30 @@ const routes = [
 
 
 // ------------------ 以下是王牌浩竣的 VIP 區，閒雜人等請勿靠近  ------------------
+  // --- Article 文章 ---
+    {
+      path: '/Newpage',    // 
+      name: 'Newpage',     //
+      component: Newpage
+    },
+    {
+      path: '/article/:id',    // 在vue裡面 / = http://localhost:5173/ 也就是本機的意思
+      name: 'ArticleDetailpage',     //網頁的id
+      component: () => import('../views/new/ArticleDetailpage.vue'), 
+    },
+    //  ---Admin後台-----
+    {
+      path: '/AdminLoginPage',    // 
+      name: 'AdminLoginPage',     //
+      component: AdminLoginPage
+    },
+
+    {
+      path: '/AdminHomePage',    // 
+      name: 'AdminHomePage',     //
+      component: AdminHomePage
+    }
+
 
 
 

@@ -23,7 +23,7 @@ function changePage(newpage){
         <el-pagination              
         background layout="prev, pager, next" 
         :total = "props.total" 
-        :page-size = "props.pageSize"   
+        :page-size = "props.pageSize"  
         :current-page="props.modelValue"
         :hide-on-single-page="false"
         @current-change="changePage"/>
@@ -39,7 +39,6 @@ function changePage(newpage){
 .elementbox{
    margin-top: 36px;
    padding-bottom: 40px;
-   
 }
 
 :deep(.el-pagination ){
@@ -71,6 +70,7 @@ function changePage(newpage){
         }
 
     }
+    
 
     
 }

@@ -4,7 +4,7 @@ import AdminLogin from '@/components/admin/AdminLogin.vue';
 
 <template>
     <div class="Admin-Login-wapper">
-    <AdminLogin/>
+        <AdminLogin/>
     </div>
 </template>
 
