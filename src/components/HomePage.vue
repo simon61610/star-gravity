@@ -9,7 +9,7 @@
             <img class="firstBlock-star1" src="../assets/images/home/index-star01.svg" alt="星座A">
             <img class="firstBlock-star2" src="../assets/images/home/index-star02.svg" alt="星座B">
             <!-- 海與背景山 -->
-            <img class="firstBlock-sea" src="../assets/images/home/index-sea.svg" alt="海">
+            <div class="firstBlock-sea"></div>
             <img class="firstBlock-backMontain1" src="../assets/images/home/index-MountainBackLeft.svg" alt="左山景">
             <img class="firstBlock-backMontain2" src="../assets/images/home/index-MountainBackright.svg" alt="右山景">
             <!-- 前景燈塔與山 -->
@@ -52,18 +52,123 @@
 
 
     <!-- 大div 包裹四區塊-->
-    <div class="home-bigBox">
-        <!-- 第一區About?? -->
-        <div class="home-about"></div>
+    <div class="home-contentBlock">
+        <!-- 第一區 觀星指南?? -->
+        <div class="home-guide">
+            <!-- 標題 -->
+            <div class="home-guileTitle">
+                <h1 class="guileTitle-en decTitle--medium">GUILD</h1>
+                <h2 class="guileTitle-cn cnTitle--h2 ">觀星指南</h2>
+            </div>
+            <!-- 指南三項 -->
+            <div class="home-guildExtract">
+                <ul class="guildExtract-block">
+                    <li>
+                        <img src="../assets/images/home/index_bigIcon1.svg" alt="指南1">
+                    </li>
+                    <li>
+                        <h2 class=" cnTitle--h2">觀星指南1</h2>
+                    </li>
+                    <li>
+                        <p class="cnContent--18px">這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述</p>
+                    </li>
+                </ul>
+                <ul class="guildExtract-block">
+                    <li>
+                        <img src="../assets/images/home/index_bigIcon2.svg" alt="指南2">
+                    </li>
+                    <li>
+                        <h2 class=" cnTitle--h2">觀星指南1</h2>
+                        
+                    </li>
+                    <li>
+                        <p class="cnContent--18px">這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述</p>
+                    </li>
+                </ul>
+                <ul class="guildExtract-block">
+                    <li>
+                        <img src="../assets/images/home/index_bigIcon3.svg" alt="指南3">
+                    </li>
+                     <li>
+                        <h2 class=" cnTitle--h2">觀星指南1</h2>
+                    </li>
+                    <li>
+                        <p class="cnContent--18px">這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
         <!-- 天文快訊 -->
-        <div class="home-news"></div>
+        <div class="home-news">
+            <!-- 左邊照片 -->
+             <img class="home-news-photo" src="../assets/images/aboutstar/lunar eclipse.png" alt="">
+            <!-- 右邊描述 -->
+            <div class="home-news-rightSide">
+                <h1 class="news-rightSide-title decTitle--medium">NEWS</h1>
+                <h2 class="news-rightSide-title2 cnTitle--h2">天文快訊</h2>
+                <p class="news-rightSide-text cnContent--18px">天文快訊內容天文快訊內容天文快訊內容天文快訊內容天文快訊內容天文快訊內容天文快訊內容天文快訊內容天文快訊內容天文快訊內容</p>
+                <button class="news-rightSide-button button--normal">查看更多</button>
+            </div>
+        </div>
 
         <!-- 星空模擬 -->
-        <div class="home-sky"></div>
+        <div class="home-sky">
+            <!-- 左邊描述 -->
+            <div class="home-sky-leftSide">
+                <h1 class="sky-leftSide-title decTitle--medium">FOUR SEASONS</h1>
+                <h2 class="sky-leftSide-title2 cnTitle--h2">四季星空模擬圖</h2>
+                <p class="sky-leftSide-text cnContent--18px">星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹</p>
+                <button class="sky-leftSide-button button--normal">查看更多</button>
+            </div>
+            <!-- 右邊圖片 -->
+            <img class="home-sky-photo" src="../assets/images/aboutstar/constellation-4.png" alt="">
+
+        </div>
 
         <!-- 活動資訊 -->
-        <div class="home-activity"></div>
-
+        <div class="home-activity">
+            <!-- 英文字 -->
+            <h1 class="activity-title decTitle--medium">EVENT  INFORMATION</h1>
+            <!-- 中文字 -->
+            <h2 class="activity-title2 cnTitle--h2">活動資訊</h2>
+            <!-- 下方左右選單 -->
+            <div class="activity-content">
+                <a class="activity-a" href="#">
+                    <img class="activity-a-img" src="../assets/images/news/article-content-back.svg" alt="">
+                </a>
+                <!-- 近日活動清單 -->
+                <div class="activity-list">
+                    <a class="list-singleInfo" href="#">
+                        <img class="singleInfo-photo" src="../assets/images/aboutstar/star space.png" alt="活動資訊圖">
+                        <div class="singleInfo-content">
+                            <h3 class="activity-list-datetime">2025.05.20</h3>
+                            <h3 class="activity-list-activityName">活動名稱</h3>
+                            <p class="activity-list-info cnConten--18px">這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述</p>
+                        </div>
+                    </a>
+                    <a class="list-singleInfo" href="#">
+                        <img class="singleInfo-photo" src="../assets/images/aboutstar/star space.png" alt="活動資訊圖">
+                        <div class="singleInfo-content">
+                            <h3 class="activity-list-datetime">2025.05.20</h3>
+                            <h3 class="activity-list-activityName">活動名稱</h3>
+                            <p class="activity-list-info cnConten--18px">這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述</p>
+                        </div>
+                    </a>
+                    <a class="list-singleInfo" href="#">
+                        <img class="singleInfo-photo" src="../assets/images/aboutstar/star space.png" alt="活動資訊圖">
+                        <div class="singleInfo-content">
+                            <h3 class="activity-list-datetime">2025.05.20</h3>
+                            <h3 class="activity-list-activityName">活動名稱</h3>
+                            <p class="activity-list-info cnConten--18px">這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述</p>
+                        </div>
+                    </a>
+                </div>
+                <a class="activity-a" href="#">
+                    <img class="activity-a-img2" src="../assets/images/news/article-content-back.svg" alt="">
+                </a>
+            </div>
+        </div>
 
     </div>
 
@@ -72,7 +177,9 @@
 
 <style scoped lang="scss">
 @import '../assets/styles/main.scss';
-//視差滾動區
+
+
+//視差滾動特效區
 .home-firstBlock{
     background-image: url(../assets/images/home/index-bgp1.png);
     background-size: cover;
@@ -95,17 +202,49 @@
     position: absolute;
     right: 20%;
     top: 8%;
+
+    animation: star1 5s linear infinite;
 }
+@keyframes star1{
+    0%{
+        transform: skew(0deg, 0deg);
+    }
+    50%{
+        transform: skew(15deg, 0deg);
+    }
+    100%{
+        transform: skew(0deg, 0deg);
+    }
+}
+
 .firstBlock-star2{
     height: 15vh;
 
     position: absolute;
     left: 25%;
     top: 45%;
+
+    animation: star2 4s linear infinite;
 }
+@keyframes star2{
+    0%{
+        transform: skew(0deg, 0deg);
+    }
+    50%{
+        transform: skew(-10deg, 0deg);
+    }
+    100%{
+        transform: skew(0deg, 0deg);
+    }
+}
+
     //遠景
 .firstBlock-sea{
+    width: 100%;
     height: 20vh;
+
+    background-image: url(../assets/images/home/index-sea.svg);
+    background-size: cover;
 
     position: absolute;
     bottom: 0;
@@ -157,6 +296,7 @@
     left: 50%;
     top: 30%;
     translate: -50% 0;
+    z-index: 50;
 }
 .firstBlock-texth1{
     display: flex;
@@ -324,6 +464,197 @@
         transform: scale(1.2);
         opacity: 1;
     }
+}
+
+//--------------------------------------------------
+
+//包裹四大區
+.home-contentBlock{
+    background-color: $bgColor-shop;
+}
+
+// 第一區 觀星指南
+.home-guide{
+    padding: 36px  0;
+    background-color: $bgColor-shop;
+
+}
+    //標題
+.home-guileTitle{
+    display: flex;
+    gap: 24px;
+    align-items: end;
+    justify-content: center;
+}
+.guileTitle-en{
+    color: $primaryColor-500;
+    line-height: 105px;
+}
+.guileTitle-cn{
+    padding-bottom: 20px;
+    color: $FontColor-white;
+}
+    //指南三項
+.home-guildExtract{
+    // border: 1px solid yellow;
+    padding: 0 60px;
+
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+
+    color: $FontColor-white;
+}
+.guildExtract-block{
+    // border: 1px solid red;
+    max-width: 400px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+}
+.guildExtract-block img {
+    width: 80%;
+    display:block;
+    margin: 0 auto;
+}
+.guildExtract-block h2{
+    text-align: center;
+}
+
+//第二區 天文快訊
+.home-news{
+    max-width: 85vw;
+    background-color: $bgColor-shop;
+    display: flex;
+    justify-content: center;
+    gap: 10vw;
+    // border: 1px solid yellow;
+    margin: 0 auto;
+
+    padding: 100px 0;
+    
+}
+.home-news-photo{
+    max-height: 420px;
+    border-radius: 20px;
+}
+.home-news-rightSide{
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    color: $FontColor-white;
+}
+.news-rightSide-title{
+    color: $primaryColor-500;
+}
+
+// 第三區 觀星指南
+.home-sky{
+    max-width: 85vw;
+    background-color: $bgColor-shop;
+    display: flex;
+    justify-content: center;
+    gap: 10vw;
+    // border: 1px solid orange;
+    margin: 0 auto;
+
+    padding: 100px 0;
+}
+.home-sky-leftSide{
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    color: $FontColor-white;
+}
+.home-sky-photo{
+    width: 450px;
+    height: 450px;
+    border-radius: 999px;
+}
+.sky-leftSide-title{
+    color: $primaryColor-500;
+}
+
+// 第四區 活動資訊
+.home-activity{
+    // border: 1px solid red;
+    max-width: 85vw;
+    color: $FontColor-white;
+    margin: 0  auto;
+    padding: 100px 0;
+}
+.activity-title{
+    color: $primaryColor-500;
+    text-align: right;
+    
+}
+.activity-title2{
+    text-align: right;
+    margin-bottom: 24px;
+    
+}
+.activity-content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+
+.activity-a{
+    display: block;
+    width: 28px;
+    height: 28px;
+}
+.activity-a-img{
+    display: block;
+    width: 28px;
+    height: 28px;
+    transform: scaleX(-1);
+}
+.activity-a-img2{
+    display: block;
+    width: 28px;
+    height: 28px;
+}
+    // 精選活動清單
+.activity-list{
+    display: flex;
+    // border: 1px solid green;
+}
+    //單一活動說明
+.list-singleInfo{
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 36px;
+    box-sizing: border-box;
+    text-decoration: none;
+    color: $FontColor-white;
+}
+    //活動hover效果
+.list-singleInfo:hover {
+    background-color: #9187b98d;
+}
+
+.singleInfo-photo{
+    width: 100%;
+    border-radius: 20px;
+}
+.list-singleInfo h3{
+    font-size: $pcChFont-H3;
+}
+.singleInfo-content{
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 </style>
