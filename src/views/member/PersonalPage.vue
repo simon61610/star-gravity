@@ -3,7 +3,7 @@
        <!-----左邊頭像+選單-------->
         <aside class="sidebar">
             <!-- 頭像 -->
-            <img class="avatar" :src="avatar" alt="頭像" />
+            <img class="photo" :src="photo" alt="頭像" />
 
             <!-- 帳號 -->
             <p class="username">{{ username }}</p>
@@ -26,9 +26,35 @@
                     <button class="menu-btn" type="button" @click="selectItem('reviews')">我的評論</button>
                 </li>
             </ul>
-
         </aside>
 
+        <!-----右側內容-------->
+        <div class="content">
+
+           <section v-if="activeKey === 'profile'">
+                <div class="row">
+                    <input v-model="f.name" type="text" placeholder="我的名字" />
+                </div>
+
+                <div class="row">
+                    <input v-model="f.phone" type="tel" placeholder="我的電話" />
+                </div>
+
+
+
+
+
+
+
+
+            </section>
+
+
+
+
+
+            
+        </div>
 
 
 
@@ -63,37 +89,44 @@
 .personal{
     width: 100%;
     height: calc(100vh - 50px);
-    // background-image: url(@/assets/images/member/login-bgi.png);
-    // background-size: cover;
+    background-image: url(@/assets/images/member/login-bgi.png);
+    background-size: cover;
 }
-.avatar{
+.sidebar{
+    border: 1px solid red;
+    width: 150px;
+    // margin: 0 auto;
+    // margin-left: 480px;
+    padding-top: 20px;
+    color: $secondaryColor-yellow;
+}
+.photo{
     width: 80px;
     height: 80px;
+    margin: 0 auto;
+    padding-left: 30px;
 }
-// .profile{
-//     border: 1px solid red;
-//     width: 224px;
-// }
-// .sidebar p{
-//     padding-top: 12px;
-//     font-size: $pcChFont-H3;
-//     color: $secondaryColor-yellow;
-// }
-// .menu{
-//     padding-top: 20px;
-//     width: 158px;
-// }
+.username{
+    font-size: $pcChFont-H4;
+    color: $FontColor-white;
+    padding-top: 20px;
+    padding-left: 30px;
+}
 .menu{
-    border: 1px solid red;
+    padding: 10px 10px;
     width: 150px;
 }
 .menu-btn{
     border: none;
     background-color: transparent;
     padding-top: 10px;
-    
+    font-size: $pcChFont-H4;
+    color: $secondaryColor-yellow;
+    cursor: pointer;
 }
-
+.menu-btn:hover, .menu li.active .menu-btn {   /* hover 與 active 都變色 */
+    color: $secondaryColor-orange;
+}
 
 </style>
 
@@ -101,8 +134,8 @@
     import { ref, onMounted } from 'vue'
 
     const props = defineProps({
-    username: { type: String, default: '徐小姐' },
-    avatar:   { type: String, default: '/src/assets/icons/account.svg' }
+    username: { type: String, default: '小姐/先生' },
+    photo:   { type: String, default: '/src/assets/icons/account.svg' }
     })
 
     const emit = defineEmits(['select'])
@@ -119,4 +152,5 @@
     emit('select', key)
     }
 
+    
 </script>
