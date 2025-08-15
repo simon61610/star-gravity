@@ -1,5 +1,7 @@
 <!-- 分類列表頁 -->
 <script setup>
+    // 組件
+    import ShopBanner from '@/components/shop/ShopBanner.vue';
     import Breadcrumbs from '@/components/shop/Breadcrumbs.vue';
     import CategoryToolbar from '@/components/shop/category/CategoryToolbar.vue';
     import CategoryList from '@/components/shop/category/CategoryList.vue';
@@ -9,7 +11,7 @@
 
 <template>
     <section class="shop-category">
-        <div class="shop-banner"></div>
+        <ShopBanner />
         <Breadcrumbs />
         <section class="product-section">
             <CategoryToolbar />
@@ -25,12 +27,7 @@
     @import '@/assets/styles/main.scss';
     .shop-category {
         background-color: $bgColor-shop;
-        .shop-banner {
-            aspect-ratio: 6 / 1;
-            background-image: url(@/assets/images/shop/shop-banner.jpg);
-            background-size: cover;
-            background-position: center;
-        }
+        
         .product-section {
             margin: 0 auto;
             max-width: 1200px;

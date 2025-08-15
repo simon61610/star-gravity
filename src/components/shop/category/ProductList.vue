@@ -1,10 +1,12 @@
 <script setup>
-    // Vue
-    import { ref, computed } from 'vue'
     // 組件
     import Pagination from '@/components/common/Pagination.vue';
+    
     // 方法
+    import { ref, computed } from 'vue'
     import { makeProductsMock } from '@/data/productsMock'
+
+    
 
     // ------------------------ 生成假資料 ------------------------
     const items = ref(makeProductsMock(220)) 
