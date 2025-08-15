@@ -76,13 +76,14 @@
         font-size: 24px;
         line-height: 100%;
         border-radius: 999px;
-        background-color: $primaryColor-100;
-        color: $primaryColor-500;
-    }
-    &--map:hover{
+        
         border: 1px solid $primaryColor-100;
         background-color: transparent;
         color: $primaryColor-100;
+    }
+    &--map:hover{
+        background-color: $primaryColor-100;
+        color: $primaryColor-500;
     }
 }
 
