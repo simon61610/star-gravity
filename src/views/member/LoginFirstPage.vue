@@ -6,7 +6,7 @@
 
         <div class="tabs">
             <button class="tabs-btn-active button--normal" data-tab="login">登入</button>
-            <button class="tabs-btn button--normal"  data-tab="register">註冊</button>
+            <button class="tabs-btn button--normal"  data-tab="register">註冊</button>    <!----連結到註冊畫面----->
         </div>
 
         <div class="area">
@@ -14,14 +14,20 @@
                 <div class="email-area">
                     <input type="email" class="email-1" placeholder="請輸入信箱" v-model="email" required />
                 </div>
-                <!----可帶入element寫(暫時還沒)----->
+                <!----輸入密碼----->
                 <div class="password-area">
-                    <input type="password" class="password-1" placeholder="請輸入密碼" v-model='password' required>
-                    <!-- <span class="toggle" id="togglePassword">👁️</span> -->
-                </div>
+                    <el-input
+                      v-model="pwd1"
+                      class="custom-placeholder"
+                      style="width: 578px; height: 50px; font-size: 14px;"
+                      type="password"
+                      placeholder="請輸入密碼"
+                      show-password
+                    />
+                </div> 
                         
                 <div class="captcha-group">
-                    <!-- 輸入驗證碼框 -->
+                    <!-- 輸入驗證碼框 -->         
                     <input v-model="captcha" type="text" class="captcha-1" placeholder="輸入驗證碼" required />
             
                     <!-- 灰色驗證碼格子 -->
@@ -36,7 +42,7 @@
                     <!--登入按鈕 -->
                     <button class="login-btn" type="submit">登入</button>
     
-                    <!--忘記密碼 -->
+                    <!--忘記密碼 --> <!----連結到忘記密碼forget畫面----->
                     <div class="forgot">
                         <router-link to="/ ">忘記密碼?</router-link>
                     </div>
@@ -48,7 +54,7 @@
                 <span>OR</span>
             </div>
 
-            <!--社群登入 -->   <!----暫時先放要詢問---->
+            <!--社群登入 -->   
             <div class="social-login">
                 <button class="google">
                     <img src="@/assets/images/member/login-google.png" alt="Google">
@@ -68,6 +74,7 @@
 <script setup>
 
     import { ref } from 'vue'
+    const pwd1 = ref('')   // 輸入密碼
 
     const tab = ref('login')
     const email = ref('')
@@ -120,14 +127,12 @@
     font-size: $pcChFont-H4;
     color: $FontColor-white;
 }
-
 .area{
     width: 600px;
     margin: 0 auto;
     margin-top: 20px;
     padding-left: 16px;
 }
-
 // 信箱
 .email-area{
    margin-top: 20px;
@@ -145,6 +150,10 @@
     height: 50px;
     font-size: $pcChFont-small;
     padding-left: 14px;
+}
+.custom-placeholder ::v-deep(.el-input__inner::placeholder) {
+    color: #000; 
+    opacity: 0.5; 
 }
 // 驗證碼
 .captcha-group{
