@@ -13,6 +13,7 @@
     // 組件
     import ShopBanner from '@/components/shop/ShopBanner.vue';
     import Breadcrumbs from '@/components/shop/Breadcrumbs.vue';
+    import AccordionItem from '@/components/common/AccordionItem.vue';
 
     // 資料
     const productDetail = reactive({
@@ -80,9 +81,16 @@
                 </div>
                 
                 <div>
-                    <p>付款方式</p>
-                    <p>送貨方式</p>
+                    <AccordionItem title="付款方式" :default-open="false" class="accordion">
+                        <p>可選擇以 信用卡付款（支援 Visa、MasterCard、JCB 等主要信用卡）快速完成結帳，亦可選擇 貨到付款，於商品送達時再付款，讓您購物更安心便利。</p>
+                    </AccordionItem>
+    
+                    <AccordionItem title="送貨方式" :default-open="false" class="accordion">
+                        <p>商品將以宅配方式配送至您指定的地址，全台灣地區皆可送達。完成訂單後，我們將於 2–3 個工作天內安排出貨（不含例假日），並提供物流追蹤編號，讓您即時掌握配送進度。若遇特殊活動或偏遠地區，配送時間可能會有所調整，敬請見諒。</p>
+                    </AccordionItem>
                 </div>
+
+                
             </div>
 
         </div>
@@ -230,6 +238,12 @@
                             font-weight: 100 !important; // 因為被 main.scss 的全域影響，待處理
                         }
                     }
+                }
+
+                // 付款與送貨方式
+                .accordion {
+                    font-size: 20px;
+                    line-height: 1.5;
                 }
             }
         }
