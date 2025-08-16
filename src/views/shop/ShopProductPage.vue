@@ -28,6 +28,12 @@
     })
 
 
+    // 收藏愛心切換
+    const isFollow = ref(false)
+    const followProduct = () => {
+        isFollow.value = !isFollow.value
+    }
+
 </script>
 
 
@@ -74,12 +80,13 @@
                         <i class="fa-solid fa-cart-shopping"></i>
                         加入購物車
                     </p>
-                    <p class="product-detail__btn__follow">
-                        <span class="heart-icon">
-                            <i class="fa-regular fa-heart"></i> <!-- 空心 -->
-                            <!-- <i class="fa-solid fa-heart"></i> --> <!-- 實心 -->
+                    <p class="product-detail__btn__follow" @click="followProduct">
+                        <span class="add-follow" v-show="!isFollow">
+                           <i class="fa-regular fa-heart"></i> 加入商品收藏<!-- 空心 -->
                         </span>
-                        加入追蹤清單
+                        <span class="cancel-follow" v-show="isFollow">
+                            <i class="fa-solid fa-heart"></i> 取消商品收藏<!-- 實心 -->
+                        </span>
                     </p>
                 </div>
                 
@@ -119,7 +126,7 @@
     
             // ---------- 左：商品圖片 ----------
             .product-gallery {
-                border: 1px solid green;
+                // border: 1px solid green;
                 
                 // 商品照片
                 &__pic {
@@ -135,7 +142,7 @@
     
                 // 商品縮圖
                 &__thumbs {
-                    border: 1px solid red;
+                    // border: 1px solid red;
                     display: flex;
                     gap: 20px;
 
@@ -250,7 +257,6 @@
         .product-info {
             max-width: 1200px;
             margin: 0 auto;
-            border: 1px solid red;
         }
     }
 
