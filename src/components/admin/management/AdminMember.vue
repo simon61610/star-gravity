@@ -1,6 +1,6 @@
 <script setup>
 import {ref} from 'vue'
-import AdminTable from './AdminTable.vue';
+import AdminTable from '@/components/admin/AdminTable.vue';
 
 const props = defineProps({
   search: { type: String, default: '' }
@@ -13,7 +13,7 @@ const columns = [
     {label:'會員姓名',prop:'member_name'},
     {label:'帳號狀態',prop:'account_status'},
     {label:'創建日期',prop:'created_at'},
-    {label:'編輯',prop:'action' , slot:'編輯', align:'right' },]
+    {label:'編輯',prop:'action' , slot:'編輯', align:'right' }]
 
 const membertable = ref([ 
     {
@@ -22,27 +22,27 @@ const membertable = ref([
     member_name: '很大偉',
     account_status: '正常',
     created_at:'2025-08-15'},
+    {
+    id: '02',
+    },
      {
     id: '02',
-   },
+    },
      {
     id: '02',
-   },
+    },
      {
     id: '02',
-   },
+    },
      {
     id: '02',
-   },
+    },
      {
     id: '02',
-   },
+    },
      {
     id: '02',
-   },
-     {
-    id: '02',
-   },
+    },
      {
     id: '02',
    },

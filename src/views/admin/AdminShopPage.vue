@@ -2,8 +2,8 @@
     import {ref} from 'vue'
     import AdminHeader from '@/components/admin/AdminHeader.vue';
     import AdminToolbar from '@/components/admin/AdminToolbar.vue';
-    import AdminMember from '@/components/admin/AdminMember.vue';
     import AdminSidebar from '@/components/admin/AdminSidebar.vue';
+    import AdminShop from '@/components/admin/management/AdminShop.vue';
     const search = ref('')
     
 </script>
@@ -20,13 +20,13 @@
                 
                     <AdminToolbar
                     v-model:search="search"
-                    title="會員管理">
-                         <template #add>
-                            <el-button type="primary" size="small"  style="width: 144px">新增</el-button> <!---template如果有具名(例如#add)就一定要被外層包起來--->
-                        </template>             
+                    title="商城管理">
+                        <template #add>
+                            <el-button type="warning" size="small"  style="font-size: 16px ; color:black ;width: 144px; height:40px; border-radius:10px">新增</el-button> <!---template如果有具名(例如#add)就一定要被外層包起來--->
+                        </template>          
                     </AdminToolbar>
                
-                <AdminMember :search="search"/>
+                <AdminShop :search="search"/>
 
             </div>
 

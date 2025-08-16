@@ -60,8 +60,12 @@ import ResetPasswordPage from '@/views/member/ResetPasswordPage.vue'
 import Newpage from '@/views/new/Newpage.vue'
 
 //--------------------後台 Admin -------------------------
-import AdminLoginPage from '@/views/admin/AdminLoginPage.vue'
-import AdminHomePage from '@/views/admin/AdminHomePage.vue'
+import AdminLoginPage from '@/views/admin/AdminLoginPage.vue';
+import AdminMemberPage from '@/views/admin/AdminMemberPage.vue';
+import AdminActivityPage from '@/views/admin/AdminActivityPage.vue';
+import AdminOrderPage from '@/views/admin/AdminOrderPage.vue';
+import AdminShopPage from '@/views/admin/AdminShopPage.vue';
+import AdminNewsPage from '@/views/admin/AdminNewsPage.vue';
 
 
 
@@ -143,10 +147,30 @@ const routes = [
     },
 
     {
-      path: '/AdminHomePage',    // 
-      name: 'AdminHomePage',     //
-      component: AdminHomePage
-    }
+      path: '/AdminMemberPage',    // 
+      name: 'AdminMemberPage',     //
+      component: AdminMemberPage
+    },
+    {
+      path: '/AdminActivityPage',    // 
+      name: 'AdminActivityPage',     //
+      component: AdminActivityPage
+    },
+    {
+      path: '/AdminOrderPage',    // 
+      name: 'AdminOrderPage',     //
+      component: AdminOrderPage
+    },
+    {
+      path: '/AdminShopPage',    // 
+      name: 'AdminShopPage',     //
+      component: AdminShopPage
+    },
+     {
+      path: '/AdminNewsPage',    // 
+      name: 'AdminNewsPage',     //
+      component: AdminNewsPage
+    },
 
 
 
