@@ -61,7 +61,8 @@ import Newpage from '@/views/new/Newpage.vue'
 
 //--------------------後台 Admin -------------------------
 import AdminLoginPage from '@/views/admin/AdminLoginPage.vue'
-import AdminHomePage from '@/views/admin/AdminHomePage.vue'
+import AdminMemberPage from '@/views/admin/AdminMemberPage.vue'
+import AdminActivityPage from '@/views/admin/AdminActivityPage.vue';
 
 
 
@@ -143,10 +144,15 @@ const routes = [
     },
 
     {
-      path: '/AdminHomePage',    // 
-      name: 'AdminHomePage',     //
-      component: AdminHomePage
-    }
+      path: '/AdminMemberPage',    // 
+      name: 'AdminMemberPage',     //
+      component: AdminMemberPage
+    },
+    {
+      path: '/AdminActivityPage',    // 
+      name: 'AdminActivityPage',     //
+      component: AdminActivityPage
+    },
 
 
 

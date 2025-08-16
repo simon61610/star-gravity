@@ -14,14 +14,14 @@ const props = defineProps({                       //定義props接其他表格�
 })
 
 const filterTableData = computed(() => //這是用來過濾搜尋的table結果
-  props.data.filter(
-    (data) =>
-      !props.search ||
-      String(data.id ?? '').includes(String(props.search))
+  props.data.filter(    //props.data = 原資料 filter()篩選
+    (data) => 
+      !props.search ||  //這邊決定顯示的資料 條件1. (沒回傳=沒搜尋)如果沒搜尋全顯示
+      String(data.id ?? '').includes(String(props.search)) //假設有搜尋執行這段 舉例假設有字串ID叫123 後面搜尋框只要符合其中1或2或3 就顯示
   )
 )
 
-const handleEdit = (index, row) => {
+const handleEdit = (index, row) => { //偵測編輯按鈕編輯哪個資料
   console.log(index, row)
 }
 
@@ -61,16 +61,23 @@ const showATable = computed(()=>{   // 這裡是計算過後的頁數 所以要�
                 <el-table :data="showATable">
                     <el-table-column v-for = "col in columns" :key="col.prop" :label="col.label" :align="col.align|| 'right' "
                     :prop="col.prop">
+ 
                     <!-- <el-table-column label="會員帳號" prop="member_account" /> -->
                     <!-- <el-table-column label="會員姓名" prop="member_name" /> -->
                     <!-- <el-table-column label="帳號狀態" prop="account_status" /> -->
                     <!-- <el-table-column label="創建日期" prop="created_at" /> -->
                     <!-- <el-table-column label="編輯" align="right">  -->
                             <template #default="scope">
-                              <slot v-if='col.slot' :name="col.slot" v-bind="scope"></slot>
-                                <!-- <el-button size="small" @click="handleEdit(scope.$index, scope.row)"> -->
-                                    <!-- 編輯查看 -->
-                                <!-- </el-button> -->
+                               <!-- 如果有 slot，優先交給父層自訂 -->
+                              <slot v-if='col.slot'  
+                              :name="col.slot" 
+                              v-bind="scope"></slot> <!------col.slot 定義欄位------->
+                                  <!-- 如果是 checkbox 欄位 -->
+                                  <el-checkbox
+                                    v-else-if="col.type === 'checkbox'"
+                                    v-model="scope.row[col.prop]"
+                                  />
+                                  <!-- 一般文字欄位 -->
                                  <span v-else>{{ scope.row[col.prop] }}</span>
                             </template>
                     </el-table-column> 
@@ -88,15 +95,15 @@ const showATable = computed(()=>{   // 這裡是計算過後的頁數 所以要�
 <style scoped lang="scss">
 .admin-table-wrapper{
     width: 100%;
-    ::v-deep(.el-table__header th){    //表格頭
+    ::v-deep(.el-table__header th){  //表格頭
       background-color: #9187B9;
       color: white;
       
     }
 
-    ::v-deep(.el-table:not(.el-table--border) .el-table__cell){   //表格全欄位
+    ::v-deep(.el-table:not(.el-table--border) .el-table__cell){  //表格全欄位
       text-align: center;
-      font-size: 16px;
+      font-size: 14px;
     }
 
     ::v-deep(.el-button--small){   //編輯按鈕
@@ -109,7 +116,7 @@ const showATable = computed(()=>{   // 這裡是計算過後的頁數 所以要�
     
   .admin-table-box{
     
-    max-width: 1000px;
+    max-width: 1200px;
     width: 100%;
     margin: 0 auto;
         

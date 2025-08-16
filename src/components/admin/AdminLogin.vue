@@ -30,7 +30,7 @@ const input = ref('')
                     show-password/>
             </div>
             <div class="admin-login-button">
-                <router-link to="/AdminHomePage"><button>登入</button></router-link>
+                <router-link to="/AdminMemberPage"><button>登入</button></router-link>
             </div>
         </div>
     </section>

@@ -21,9 +21,6 @@
                     <AdminToolbar
                     v-model:search="search"
                     title="會員管理">
-                         <template #add>
-                            <el-button type="primary" size="small"  style="width: 144px">新增</el-button> <!---template如果有具名(例如#add)就一定要被外層包起來--->
-                        </template>             
                     </AdminToolbar>
                
                 <AdminMember :search="search"/>

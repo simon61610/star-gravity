@@ -52,8 +52,8 @@ const clearinput = () => emit('update:search','') //清空search
       justify-content: space-between;
       align-items:last baseline;
       margin-bottom: 20px;
-      width: 1000px;
-      padding: 0 30px;
+      width: 1030px;
+      
 
         .admin-table-title{
           width: 250px;
@@ -66,6 +66,7 @@ const clearinput = () => emit('update:search','') //清空search
           display: flex;
           justify-content: space-between;
           gap:12px;
+          
           
           
           h1{
