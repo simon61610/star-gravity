@@ -14,6 +14,8 @@
     import ShopBanner from '@/components/shop/ShopBanner.vue';
     import Breadcrumbs from '@/components/shop/Breadcrumbs.vue';
     import AccordionItem from '@/components/common/AccordionItem.vue';
+    import QtyControl from '@/components/shop/product/QtyControl.vue';
+    import ProdIntro from '@/components/shop/product/ProdIntro.vue';
 
     // 資料
     const productDetail = reactive({
@@ -63,8 +65,9 @@
                         <p class="product-price__special">NT$ {{ productDetail.specialprice }}</p>
                         <p class="product-price__nospecial">NT$ {{ productDetail.price }}</p>
                     </div>
-                    <p class="stock">尚有庫存</p>
-                    <!-- 數量點擊增加的組件 -->
+                    <div class="qty-control">
+                        <QtyControl />
+                    </div>
                 </div>
                 <div class="product-detail__btn">
                     <p class="product-detail__btn__add">
@@ -89,16 +92,13 @@
                         <p>商品將以宅配方式配送至您指定的地址，全台灣地區皆可送達。完成訂單後，我們將於 2–3 個工作天內安排出貨（不含例假日），並提供物流追蹤編號，讓您即時掌握配送進度。若遇特殊活動或偏遠地區，配送時間可能會有所調整，敬請見諒。</p>
                     </AccordionItem>
                 </div>
-
-                
             </div>
-
         </div>
 
 
         <!-- 下方商品介紹 -->
         <div class="product-info">
-
+            <ProdIntro />
         </div>
     </section>
 </template>
@@ -108,6 +108,7 @@
     .product-page {
         background-color: $bgColor-shop;
 
+        // ------------------- 上方 -------------------
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -199,10 +200,6 @@
                     }
                 }
 
-                .stock {
-                    font-size: $pcChFont-H4;
-                }
-
                 // 購物車 & 追蹤按鈕
                 &__btn {
                     display: flex;
@@ -246,6 +243,14 @@
                     line-height: 1.5;
                 }
             }
+        }
+
+
+        // ------------------- 下方 -------------------
+        .product-info {
+            max-width: 1200px;
+            margin: 0 auto;
+            border: 1px solid red;
         }
     }
 
