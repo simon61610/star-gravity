@@ -2,16 +2,18 @@
 import { ref, computed, nextTick } from 'vue'
 
 // ===== 圖片（示意路徑，請改成你的實際檔案）=====
-
-import backSvg  from '../../assets/images/games/GameCardPage/game_card01.svg'
-import front01  from '../../assets/images/games/GameCardPage/game_card02.svg'
+import backSvg  from '@/assets/images/games/GameCardPage/game_card01.svg'
+import front01  from '@/assets/images/games/GameCardPage/game_card02.svg'
 // 如果每張不同：改成 [front01, front02, ... front12]
-const fronts = Array(12).fill(front01)
+
+const fronts = Array(total).fill(front01)
+
 
 // ===== 舞台/卡片位置（px）=====
-const STAGE = { w: 1440, h: 700 }   // 你的背景實際尺寸（高度請改成你的）
-const DECK  = { y: 500, cardW: 132, cardH: 200, gap: 12 } // 底部直線列
-const SLOTS = { y: 360, gap: 220, tilt: [-8, 0, 8] }      // 上方三槽
+const STAGE = { w: 1400, h: 800}   // 你的背景實際尺寸（高度請改成你的）
+const DECK  = { y:600, cardW: 180, cardH: 320, gap: -80} // 底部直線列
+const SLOTS = { y: 200, gap: 250, tilt: [-8, 0, 8] }      // 上方三槽
+const CENTER = { offsetX: 0 } 
 
 const total = 12
 const cards = ref(
@@ -30,17 +32,17 @@ const canPickMore = computed(() => usedSlots.value.length < 3)
 const deckPos = (idx) => {
   const span = DECK.cardW + DECK.gap
   const center = (total - 1) / 2
-  const x = (idx - center) * span
+  const x = (idx - center) * span+ (CENTER.offsetX || -90) //CENTER.offsetX調整背景對齊基線
   const y = DECK.y
   return { x, y, rot: 0, z: idx + 1 }
 }
 
 // 上方槽位（水平置中三等分）
 const slotPos = (slotIndex) => {
-  const x = (slotIndex - 1) * SLOTS.gap
+  const x = (slotIndex - 1) * SLOTS.gap+ (CENTER.offsetX || -90) //CENTER.offsetX調整背景對齊基線
   const y = SLOTS.y
   const rot = SLOTS.tilt[slotIndex] != null ? SLOTS.tilt[slotIndex] : 0
-  return { x, y, rot, z: 100 + slotIndex }
+  return { x, y, rot, z: 80 + slotIndex }
 }
 
 const styleFor = (c, idx) => {
@@ -79,7 +81,9 @@ const onPick = async (idx) => {
         backgroundImage: `url(${bgStage})`
       }"
     >
-      <button class="cta" type="button" :disabled="!canPickMore">
+      <button class="cta" 
+      :style="{ '--center-offset': CENTER.offsetX + 'px' }"
+>
         請依直覺抽出三張牌
         <span v-if="!canPickMore">（已抽滿 3 張）</span>
       </button>
@@ -109,7 +113,11 @@ const onPick = async (idx) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #0f0e1f; /* 舞台外底色，可改 */
+  background-image: url(/src/assets/images/games/GameCardPage/game_card-bg.svg);
+  background-repeat: no-repeat;    /* 不重複 */
+  background-size: cover;          /* 填滿容器 */
+  background-position: center;     /* 置中對齊 */
+
 }
 
 /* 舞台固定寬高、背景鋪滿 */
@@ -123,13 +131,13 @@ const onPick = async (idx) => {
 .cta {
   position: absolute;
   left: 50%;
-  top: 90px;
-  transform: translateX(-50%);
+  top:60px;
+  transform: translateX(calc(-50% + var(--center-offset, 0px)));
   padding: 12px 20px;
   border-radius: 999px;
   font-size: 18px;
   font-weight: 700;
-  color: #fff;
+  color: #fff;  
   background: #26264b;
   border: none;
   box-shadow: 0 6px 16px rgba(0, 0, 0, .25);
@@ -169,7 +177,7 @@ const onPick = async (idx) => {
   display: block;
   object-fit: cover;
   backface-visibility: hidden;
-  border-radius: 12px; /* 你的 SVG 若無圓角可移除 */
+  border-radius: 12px; /*  SVG 圓角 */
 }
 .card-front { transform: rotateY(180deg); }
 </style>
