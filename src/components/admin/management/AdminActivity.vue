@@ -1,6 +1,6 @@
 <script setup>
 import {ref} from 'vue'
-import AdminTable from './AdminTable.vue';
+import AdminTable from '@/components/admin/AdminTable.vue';
 
 const props = defineProps({
   search: { type: String, default: '' }
@@ -20,7 +20,7 @@ const columns = [
 ]
 
 //欄位資料
-const membertable = ref([ 
+const Activitytable = ref([ 
     {
     id: '01',
     activity_name: '綠島觀星旅',
@@ -69,7 +69,7 @@ const membertable = ref([
 
 </script>
 <template>
-    <AdminTable :columns="columns" :data="membertable" :search="props.search">
+    <AdminTable :columns="columns" :data="Activitytable" :search="props.search">
         <template #編輯="{ row, $index }">
             <el-button size="small" @click="handleEdit(row, $index)"> 
             編輯 

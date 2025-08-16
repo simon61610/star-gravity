@@ -63,6 +63,8 @@ import Newpage from '@/views/new/Newpage.vue'
 import AdminLoginPage from '@/views/admin/AdminLoginPage.vue'
 import AdminMemberPage from '@/views/admin/AdminMemberPage.vue'
 import AdminActivityPage from '@/views/admin/AdminActivityPage.vue';
+import AdminOrderPage from '@/views/admin/AdminOrderPage.vue';
+import AdminShopPage from '@/views/admin/AdminShopPage.vue'
 
 
 
@@ -152,6 +154,16 @@ const routes = [
       path: '/AdminActivityPage',    // 
       name: 'AdminActivityPage',     //
       component: AdminActivityPage
+    },
+    {
+      path: '/AdminOrderPage',    // 
+      name: 'AdminOrderPage',     //
+      component: AdminOrderPage
+    },
+    {
+      path: '/AdminShopPage',    // 
+      name: 'AdminShopPage',     //
+      component: AdminShopPage
     },
 
 

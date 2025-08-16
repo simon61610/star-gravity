@@ -1,6 +1,6 @@
 <script setup>
 import {ref} from 'vue'
-import AdminTable from './AdminTable.vue';
+import AdminTable from '@/components/admin/AdminTable.vue';
 
 const props = defineProps({
   search: { type: String, default: '' }

@@ -2,7 +2,7 @@
     import {ref} from 'vue'
     import AdminHeader from '@/components/admin/AdminHeader.vue';
     import AdminToolbar from '@/components/admin/AdminToolbar.vue';
-    import AdminMember from '@/components/admin/AdminMember.vue';
+    import AdminMember from '@/components/admin/management/AdminMember.vue';
     import AdminSidebar from '@/components/admin/AdminSidebar.vue';
     const search = ref('')
     
