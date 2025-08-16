@@ -3,7 +3,7 @@
     import AdminHeader from '@/components/admin/AdminHeader.vue';
     import AdminToolbar from '@/components/admin/AdminToolbar.vue';
     import AdminSidebar from '@/components/admin/AdminSidebar.vue';
-    import AdminShop from '@/components/admin/management/AdminShop.vue';
+    import AdminNews from '@/components/admin/management/AdminNews.vue';
     const search = ref('')
     
 </script>
@@ -20,13 +20,13 @@
                 
                     <AdminToolbar
                     v-model:search="search"
-                    title="商城管理">
-                        <template #add>
+                    title="文章管理">
+                         <template #add>
                             <el-button type="warning" size="small"  style="font-size: 16px ; color:black ;width: 144px; height:40px; border-radius:10px">新增</el-button> <!---template如果有具名(例如#add)就一定要被外層包起來--->
-                        </template>          
+                        </template>             
                     </AdminToolbar>
                
-                <AdminShop :search="search"/>
+                <AdminNews :search="search"/>
 
             </div>
 
