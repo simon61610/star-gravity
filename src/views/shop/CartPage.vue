@@ -1,13 +1,21 @@
 <script setup>
 
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useRoute } from 'vue-router'
 
 // 組件
 import CartBanner from '@/components/shop/cart/CartBanner.vue';
 import CheckoutStepper from '@/components/shop/cart/CheckoutStepper.vue';
 
 // 進度條: 傳屬性值讓子組件接收並套用
-const step = ref(1) // 目前步驟
+const route = useRoute()
+
+const step = computed(() => { // 控制 process
+  if (route.name == 'cartform') return 2
+  if (route.name == 'cartsuccess') return 3
+  return 1
+})
+
 const steps = ['準備結帳', '填寫資料', '完成訂單'] // 步驟內容
 
 </script>
@@ -21,15 +29,16 @@ const steps = ['準備結帳', '填寫資料', '完成訂單'] // 步驟內容
         </div>
 
 
+        <router-view />
 
-
-
-
-
-
+        <!-- 用 v-if 控制出現哪些 -->
+        <p><router-link to="/cartpage/cart">跳到購物車頁</router-link></p>
+        <p><router-link to="/cartpage/cartform">跳到表單頁</router-link></p>
+        <p><router-link to="/cartpage/cartsuccess">跳到完成頁面</router-link></p>
     </section>
-</template>
+    
 
+</template>
 
 <style scoped lang="scss">
 @import '@/assets/styles/main.scss';
