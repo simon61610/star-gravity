@@ -30,11 +30,14 @@
                     兩次輸入的密碼不一致
                 </div> -->
               
-              <div class="confirmto">    <!------- 確認完會直接導入登入畫面 ------->
-                  <button class="confirm" :disabled="!canSubmit" @click="submit">
+                <div class="confirmto">    <!------- 確認完會直接導入登入畫面 ------->
+                  <!-- <button class="confirm" :disabled="!canSubmit" @click="submit">
                     確認
-                  </button>
-              </div>
+                  </button> -->
+                    <button class="confirm" :disabled="!canSubmit || loading" @click="submit">
+                        {{ loading ? '處理中…' : '確認' }}
+                    </button>
+                </div>
 
             </div>
         </div>
@@ -48,7 +51,7 @@
 
 .reset-all{
     width: 100%;
-    height: calc(100vh - 320px);
+    min-height: calc(100vh - 320px);
     background-image: url(@/assets/images/member/login-bgi.png);  
     background-size: cover;
     margin-top: 0;
@@ -97,10 +100,14 @@
 </style>
 
 <script setup>
+    import { ElMessage } from 'element-plus'  // 新增
+    const loading = ref(false)                // 新增
 
     import { ref, computed } from 'vue'
+
     const pwd1 = ref('')
     const pwd2 = ref('')
+
 
     // 判斷密碼同樣才可以送出
     const canSubmit = computed(() => {    
@@ -111,8 +118,28 @@
     // const isMatch = computed(() => pwd1.value === pwd2.value) 
 
     // 送出動作
-    const submit = () => {
-    console.log('送出的密碼:', pwd1.value)
+    // const submit = () => {
+    // console.log('送出的密碼:', pwd1.value)
+    // }
+
+    // 送出動作
+    const submit = async () => {
+        if (!canSubmit.value || loading.value) return
+        loading.value = true
+        try {
+            // TODO: 這裡改成你的實際 API 呼叫，例如：
+            // await axios.post('/api/reset-password', { password: pwd1.value })
+            await new Promise(r => setTimeout(r, 600)) // 模擬呼叫
+
+            ElMessage.success('密碼重設成功')
+            // 有使用 vue-router 可改：router.push('/login')
+            setTimeout(() => { window.location.href = '/loginfirst' }, 800)    // 按送出後就可直接到登入頁
+        } catch (e) {
+            ElMessage.error('重設失敗，請稍後再試')
+        } finally {
+            loading.value = false
+        }
     }
+
 
 </script>

@@ -30,7 +30,7 @@
 
 .forget-all2{
     width: 100%;
-    height: calc(100vh - 350px);
+    min-height: calc(100vh - 350px);
     background-image: url(@/assets/images/member/login-bgi.png);  
     background-size: cover;
     margin-top: 0;
@@ -89,6 +89,7 @@
 </style>
 
 <script setup>
+    
     import { ref } from 'vue'
 
     // 定義響應式變數，預設空字串

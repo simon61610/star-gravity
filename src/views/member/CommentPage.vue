@@ -76,7 +76,7 @@
 
 .commentall{
     width: 100%;
-    height: calc(100vh - 20px);
+    min-height: calc(100vh - 20px);
     background-image: url(@/assets/images/member/login-bgi.png);    
     background-size: cover;
 }

@@ -23,7 +23,7 @@
 
 .forget-all{
     width: 100%;
-    height: calc(100vh - 350px);
+    min-height: calc(100vh - 350px);
     background-image: url(@/assets/images/member/login-bgi.png);  
     background-size: cover;
     margin-top: 0;
@@ -73,19 +73,57 @@
 </style>
 
 <script setup>
+    // 新增
+    import { useRouter } from 'vue-router'
+    import { ElMessage } from 'element-plus' 
+
+    const router = useRouter()
+    const email = ref('')
+    const loading = ref(false)
+
+    const isValidEmail = (v) => /\S+@\S+\.\S+/.test(v)
+
+    function goLogin() {
+        router.push('/login') // 直接到登入頁
+    }
+    async function sendData() {
+    if (!isValidEmail(email.value)) {
+        ElMessage ? ElMessage.error('請輸入有效的 Email') : alert('請輸入有效的 Email')
+        return
+    }
+    loading.value = true
+    try {
+        // TODO: 換成真的 API
+        // await axios.post('/api/auth/forgot', { email: email.value })
+        await new Promise(r => setTimeout(r, 500)) // 模擬呼叫
+
+        // 帶著參數到 ForgotPage，進頁後會彈出「驗證碼已發送」
+        router.push({ path: '/forgot', query: { sent: '1', email: email.value } })
+    } catch (e) {
+        ElMessage ? ElMessage.error('傳送失敗，請稍後再試') : alert('傳送失敗，請稍後再試')
+    } finally {
+        loading.value = false
+    }
+    }
+
+
+
+
+
+
     import { ref } from 'vue'
 
     // 定義一個響應式變數 email
-    const email = ref('')
+    // const email = ref('')
 
-    function goLogin() {
-    console.log("回到登入畫面");
-    // 這裡可以加上路由跳轉，例如：
-    // router.push('/login')
-    }
+    // function goLogin() {
+    // console.log("回到登入畫面");
+    // // 這裡可以加上路由跳轉，例如：
+    // // router.push('/login')
+    // }
 
-    function sendData() {
-    console.log("資料已送出");
-    // 這裡可以觸發送資料的 API
-    }
+    // function sendData() {
+    // console.log("資料已送出");
+    // // 這裡可以觸發送資料的 API
+    // }
 </script>

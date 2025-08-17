@@ -54,7 +54,7 @@
 
 .eventall{
     width: 100%;
-    height: calc(100vh - 100px);
+    min-height: calc(100vh - 100px);
     background-image: url(@/assets/images/member/login-bgi.png);    
     background-size: cover;
 }
@@ -96,6 +96,7 @@
 }
 .menu-btn:hover, .menu li.active .menu-btn {   /* hover 與 active 都變色 */
     color: $secondaryColor-orange;
+    text-decoration: underline;
 }
 // 右側表格
 .event-table-wrapper{
