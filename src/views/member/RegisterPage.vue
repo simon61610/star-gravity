@@ -27,8 +27,21 @@
                    </label>
                </div>
                <!------選擇縣市--------->
+                <div class="join-city">
+                    <div class="select">
+                        <select v-model="member.city" class="select-city">
+                        <option value="">縣市</option>
+                        <option v-for="c in cities" :key="c" :value="c">{{ c }}</option>
+                        </select>
+                    </div>
+                    <div class="select">
+                        <select v-model="member.district" class="select-city">
+                        <option value="">鄉鎮</option>
+                        <option v-for="d in districtOptions" :key="d" :value="d">{{ d }}</option>
+                        </select>
+                    </div>
+                </div>
                <!------選擇區域--------->
-               <!------地址--------->
                <div class="adress">
                     <input type="adress" class="adress-2" placeholder="請輸入地址" v-model="adress" required />
                 </div>
@@ -88,7 +101,9 @@
 
 .register-all{
     width: 100%;
-    height: calc(100vh + 50px);
+    min-height: calc(100vh + 100px);
+    // overflow-y: auto;           /* 把捲動限制在這個容器 */
+    // box-sizing: border-box;
     background-image: url(../../assets/images/member/login-bgi.png);  
     background-size: cover;
     margin-top: 0;
@@ -162,6 +177,22 @@
     font-size: $pcChFont-small;
     padding-left: 14px;
 }
+// 縣市區域大小
+.join-city{
+    margin-top: 20px;
+    display: flex;
+    gap: 24px;
+}
+.select-city{
+    width: 277px;
+    height: 50px;
+}
+// 縣市區域字體大小
+.personal-city .select-city, .personal-city .select-city option {
+    padding-left: 14px;
+    font-family: $chFont;
+    font-size: $pcChFont-p; 
+}
 .email{
     margin-top: 20px;
     margin-bottom: 20px;
@@ -222,7 +253,7 @@
 </style>
 
 <script setup>
-    import { ref, computed } from 'vue'
+    import { ref, onMounted, reactive, computed, watch } from 'vue'
 
     // 密碼
     const pwd1 = ref('')  
@@ -248,5 +279,44 @@
     if (!canSubmit.value) return
     alert('註冊成功！（假資料測試）')
     }
+
+    /* ---- 假後端：取會員註冊資料 ---- */
+    function fetchMember() {
+        return new Promise(resolve => {
+            setTimeout(() => {
+            resolve({
+                name: '王小明',                // 先顯示
+                phone: '0912-345-678',
+                city: '台北市',
+                district: '大安區',
+                address: '仁愛路三段 123 號'
+            })
+            }, 300)
+        })
+        }
+        function updateMember(payload) {
+        return new Promise(resolve => setTimeout(() => resolve({ ok: true }), 500))
+    }
+
+    /* ---- 狀態 ---- */
+    const member = reactive({
+        city: '',
+        district: '',
+    })
+
+    const saving = ref(false)
+    const savedAt = ref('')
+    /* ---- 縣市 / 鄉鎮選單 ---- */
+    const DISTRICTS = {
+        台北市: ['中正區', '大安區', '信義區', '士林區'],
+        新北市: ['板橋區', '新店區', '三重區', '永和區'],
+        桃園市: ['桃園區', '中壢區', '龜山區', '八德區']
+    }
+    const cities = Object.keys(DISTRICTS)
+    const districtOptions = computed(() => DISTRICTS[member.city] || [])
+        watch(() => member.city, () => {
+        if (!districtOptions.value.includes(member.district)) member.district = ''
+    })
+
 </script>
 
