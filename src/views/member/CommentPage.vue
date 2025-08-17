@@ -30,20 +30,40 @@
             </aside>
             <!-----右邊評論-------->
             <div class="comment-area">
-                <h3>陽明山</h3>
-                <span class="review-score">  <!--到時候img 用v-for跑 評論幾分跑幾次---->
-                    <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                    <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                    <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                    <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                    <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                </span>
-                <p class="review-text">
-                    新手友善，剛好是天文館，可以先在天文館學習新知後，留到晚上用天文望遠鏡看星星。
-                </p>
-                <img class="review-photo" src="../../assets/images/aboutstar/star space.png" alt="">
-                <h4>刪除</h4>
+                <div class="comment-1">
+                    <h3>陽明山</h3>
+                    <span class="review-score">  <!--到時候img 用v-for跑 評論幾分跑幾次---->
+                        <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
+                        <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
+                        <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
+                        <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
+                        <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
+                    </span>
+                    <p class="review-text">
+                        新手友善，剛好是天文館，可以先在天文館學習新知後，留到晚上用天文望遠鏡看星星。
+                    </p>
+                    <img class="review-photo" src="../../assets/images/aboutstar/star space.png" alt="照片">
+                    <button class="delete">刪除</button>
 
+                    <div class="comment-1">
+                        <h3>陽明山</h3>
+                        <span class="review-score">  <!--到時候img 用v-for跑 評論幾分跑幾次---->
+                            <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
+                            <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
+                            <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
+                            <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
+                            <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
+                        </span>
+                        <p class="review-text">
+                            新手友善，剛好是天文館，可以先在天文館學習新知後，留到晚上用天文望遠鏡看星星。
+                        </p>
+                        <img class="review-photo" src="../../assets/images/aboutstar/star space.png" alt="照片">
+                        <button class="delete">刪除</button>
+                    </div>
+                </div>
+                <!-- <div class="pager">
+                    <el-pagination background layout="prev, pager, next" :total="24" />
+                </div> -->
             </div>
         </div>
 
@@ -56,7 +76,7 @@
 
 .commentall{
     width: 100%;
-    height: calc(100vh - 100px);
+    height: calc(100vh - 20px);
     background-image: url(@/assets/images/member/login-bgi.png);    
     background-size: cover;
 }
@@ -69,7 +89,7 @@
 }
 .sidebar{
     width: 150px;
-    padding-top: 20px;
+    padding-top: 50px;
     padding-left: 30px;
     color: $secondaryColor-yellow;
 }
@@ -98,27 +118,27 @@
 }
 .menu-btn:hover, .menu li.active .menu-btn {   /* hover 與 active 都變色 */
     color: $secondaryColor-orange;
+    text-decoration: underline;
 }
 // 右邊評論
 .comment-area{
-    border: 1px solid red;
-    padding-left: 16px;
+    margin-top: -28px;
+    padding-left: 10px;
     padding-top: 10px;
-    height: 271px;
-    color: $FontColor-white;
+    // height: 550px;
+    color: $FontColor-black;
+    background-color: white;
 }
 .comment-area h3{
-    font-size: $pcChFont-H4;
+    font-size: $pcChFont-p;
 }
 .review-score{
     padding-top: 10px;
     display: flex;
     gap: 4px;
-    
 }
 .review-score img{
     width: 20px;
-    color: $secondaryColor-yellow;
 }
 .review-text{
     padding-top: 10px;
@@ -129,19 +149,40 @@
     width: 150px;
     height: 150px;
 }
-.comment-area h4{
+// 刪除建
+.delete{
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
     font-size: $pcChFont-p;
-    padding-top: 9px;
-    width: 800px;
-    display: flex;
-    justify-content: flex-end;
+    // width: 800px;
+    // display: flex;
+    // justify-content: flex-end;
     text-decoration: underline;
-    padding-right: 5px;
+    padding-right: 10px;
+    display: block;            /* 讓它是區塊元素 */
+    text-align: right;         /* 父層非 flex 也能靠右 */
+    margin-left: auto;         /* 若父層是 flex 可改 align-self: flex-end */
 }
-
+.delete:hover{
+    color: $inputColor-focus;
+}
+// 分頁
+// .pager{
+    // border: 1px solid red;
+    // width: 700px;
+    // height: 50px;
+    // display: flex;
+    // margin-top: 20px;
+    // justify-content: flex-end;  /* 靠最右邊 */
+    // padding-right: 4px; 
+// }
 </style>
 
 <script setup>
+    // 組件
+    // import Pagination from '@/components/common/Pagination.vue';
+    // 方法
     import { ref, computed, onMounted } from 'vue'
 
     // 定義 props（照你原本：photo 路徑暫時不動）
@@ -165,14 +206,16 @@
     }
 
     // 之後想開分頁再把 showATable 改成用 slice
-    const showATable = computed(() => {
+    const slice = computed(() => {
     const start = (currentPage.value - 1) * pageSize.value
     return dataSource.value.slice(start, start + pageSize.value)
     })
 
 
 
-
+    // ------------------------ Pagination 的變數 ------------------------
+    // const currentPage = ref(1) // 預設第一頁
+    // const pageSize= ref(2) // 每頁顯示幾筆
 
 
 
