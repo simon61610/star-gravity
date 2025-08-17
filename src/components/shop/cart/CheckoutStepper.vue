@@ -16,7 +16,7 @@
     <section class="checkout-stepper">
         <!-- 步驟 -->
         <div class="steps">
-            <div class="step" v-for="(title, index) in steps">
+            <div class="step" v-for="(title, index) in steps" :class="{ active: index + 1 <= current}">
                 <div class="step-number" :class="{ active: index + 1 <= current}">{{ index + 1 }}</div>
                 <p class="step-title">{{ title }}</p>
             </div>
@@ -51,6 +51,7 @@
                 flex-direction: column;
                 align-items: center;
                 gap: 12px;
+                transition: all .5s ease;
                 .step-number {
                     font-size: 16px;
                     font-weight: bold;
@@ -62,12 +63,16 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
+
+                    transition: all .5s ease;
                 }
                 .step-number.active { // 用屬性值 trus false 判斷是否加上
                     border: 3px solid $primaryColor-900;
-                    color: $primaryColor-900;
                 }
                 .step-title {}
+            }
+            .step.active {
+                color: $primaryColor-900;
             }
         }
 
@@ -83,6 +88,7 @@
                 height: 100%;
                 background-color: $primaryColor-900;
                 border-radius: 999px;
+                transition: all .3s ease;
             }
         }
     }

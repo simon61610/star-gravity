@@ -35,9 +35,9 @@ import EventRegistrationSuccessPage from '@/views/starevent/EventRegistrationSuc
 import ShopHomePage from '@/views/shop/ShopHomePage.vue'
 import ShopCategoryPage from '@/views/shop/ShopCategoryPage.vue'
 import ShopProductPage from '@/views/shop/ShopProductPage.vue'
-import CartCheckoutPage from '@/views/shop/CartCheckoutPage.vue'
-import CartFormPage from '@/views/shop/CartFormPage.vue'
-import CartSuccessPage from '@/views/shop/CartSuccessPage.vue'
+import CartCheckoutPage from '@/components/shop/cart/CartCheckout.vue'
+import CartFormPage from '@/components/shop/cart/CartForm.vue'
+import CartSuccessPage from '@/components/shop/cart/CartSuccess.vue'
 
 
 // ------------------ 會員 member  ------------------
@@ -107,12 +107,18 @@ const routes = [
 
 
 // ------------------ 星空小舖 shop ------------------
-{path: '/shop', name: 'shop', component: ShopHomePage},
-{path: '/shopcategory', name: 'shopcategory', component: ShopCategoryPage},
-{path: '/product', name: 'product', component: ShopProductPage},
-{path: '/cart', name: 'cart', component: CartCheckoutPage},
-{path: '/cartform', name: 'cartform', component: CartFormPage},
-{path: '/cartsuccess', name: 'cartsuccess', component: CartSuccessPage},
+{ path: '/shop', name: 'shop', component: ShopHomePage},
+{ path: '/shopcategory', name: 'shopcategory', component: ShopCategoryPage},
+{ path: '/product', name: 'product', component: ShopProductPage},
+{ path: '/cartpage',  // 購物車與步驟頁面
+  name: 'cartpage', 
+  component: () => import('@/views/shop/CartPage.vue'),
+  children: [
+    {path: 'cart', name: 'cart', component: () => import('@/components/shop/cart/CartCheckout.vue')},
+    {path: 'cartform', name: 'cartform', component: () => import('@/components/shop/cart/CartForm.vue')},
+    {path: 'cartsuccess', name: 'cartsuccess', component: () => import('@/components/shop/cart/CartSuccess.vue')},
+  ]
+},
 
 
 // ------------------ 會員 member  ------------------
