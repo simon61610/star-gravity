@@ -10,7 +10,7 @@ import  logo from '@/assets/logos/logo-admin.svg'
             </div>
            
             <div class="admin-header-logout">
-                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <router-link to="/AdminLoginPage"><i class="fa-solid fa-arrow-right-from-bracket"></i></router-link>
             </div>
         </div>
     </nav>
@@ -34,7 +34,11 @@ import  logo from '@/assets/logos/logo-admin.svg'
                 justify-content: center;
                 align-items: center;
                 .fa-solid.fa-arrow-right-from-bracket{
+                    color: white;
                     font-size: 30px;
+                    &:hover{
+                        color: blueviolet;
+                    }
                 }
             }
         }

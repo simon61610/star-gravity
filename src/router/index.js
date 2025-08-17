@@ -66,6 +66,7 @@ import AdminActivityPage from '@/views/admin/AdminActivityPage.vue';
 import AdminOrderPage from '@/views/admin/AdminOrderPage.vue';
 import AdminShopPage from '@/views/admin/AdminShopPage.vue';
 import AdminNewsPage from '@/views/admin/AdminNewsPage.vue';
+import AdminCommentPage from'@/views/admin/AdminCommentPage.vue';
 
 
 
@@ -171,6 +172,12 @@ const routes = [
       name: 'AdminNewsPage',     //
       component: AdminNewsPage
     },
+    {
+      path: '/AdminCommentPage',    // 
+      name: 'AdminCommentPage',     //
+      component: AdminCommentPage
+    },
+
 
 
 
