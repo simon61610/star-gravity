@@ -50,7 +50,7 @@ const clearinput = () => emit('update:search','') //清空search
  .admin-table-header{
       display: flex;
       justify-content: space-between;
-      align-items:last baseline;
+      align-items:flex-end;
       margin-bottom: 20px;
       width: 1030px;
       

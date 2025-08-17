@@ -5,12 +5,12 @@
     <aside class="admin-sidebar-aside">
         <div class="admin-sidebar-wapper">
             <ul class="admin-sider-ul">
-                <li>會員管理</li>
-                <li>訂單管理</li>
-                <li>活動資訊管理</li>
-                <li>商城管理</li>
-                <li>天文快訊管理</li>
-                <li>地點管理</li>
+                <li><router-link to="/AdminMemberPage">會員管理</router-link></li>
+                <li><router-link to="/AdminOrderPage">訂單管理</router-link></li>
+                <li><router-link to="/AdminActivityPage">活動資訊管理</router-link></li>
+                <li><router-link to="/AdminShopPage">商城管理</router-link></li>
+                <li><router-link to="/AdminNewsPage">天文快訊管理</router-link></li>
+                <li><router-link to="/AdminCommentPage">評論管理</router-link></li>
             </ul>
         </div>
     </aside>
@@ -44,10 +44,16 @@
                 border-radius: 10px;
                 background-color:$primaryColor-500;
                 font-weight: bold;
-                color: black;
-                &:hover{
+                
+                
+                a{  
+                    color: black;
+                    text-decoration: none;
+                    &:hover{
                     color: azure;
                 }
+                }
+                
             }
         }
     }
