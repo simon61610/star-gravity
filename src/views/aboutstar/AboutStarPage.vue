@@ -1,18 +1,16 @@
 <template>
-    <div class="banner">
-        <div class="banner-left">
-            <h1>NEWBIE</h1>
-            <h2>觀星初學指南</h2>
-        </div>
-        <div class="banner-right">
-            
-        </div>
-    </div>
+    
 
 
 </template>
 
 <script setup>
+    // 組件
+    import AboutStarTitle from '@/components/aboutstar/AboutStarTitle.vue';
+    // import AboutStarFirst from '@/components/aboutstar/AboutStarFirst.vue';
+    // import AboutStarSecond from '@/components/aboutstar/AboutStarSecond.vue';
+    // import AboutStarForm from '@/components/aboutstar/AboutStarForm.vue';
+    // import AboutStarLast from '@/components/aboutstar/AboutStarLast.vue';
 </script>
 
 <style scoped lang="scss">
