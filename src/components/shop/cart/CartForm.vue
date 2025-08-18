@@ -1,3 +1,8 @@
+<!-- 
+1. 表單待補上驗證
+2. 表單補上 name 和 value 
+-->
+
 <script setup>
     import { ref, onMounted } from 'vue'
     import $ from 'jquery'
@@ -66,7 +71,7 @@
         <!-- ---------------- 訂單明細 ---------------- -->
         <section class="cart-list">
 
-            <h1>訂單明細</h1>
+            <h1 class="common-title">訂單明細</h1>
 
             <!-- 收合標題 -->
             <div class="toggle-total">
@@ -112,7 +117,67 @@
 
         </section>
 
+        <!-- ---------------- 表單 ---------------- -->
+        <form method="post" action="#">
+            <!-- ---------------- 付款方式 ---------------- -->
+             <section class="payment-method">
+                <h1 class="common-title">付款方式</h1>
+                <div class="payment-method__radio">
+                    <label>
+                        <input type="radio" name="gender" value="貨到付款"> 貨到付款
+                    </label>
+                    <label>
+                        <input type="radio" name="gender" value="線上刷卡"> 線上刷卡
+                    </label>
+                </div>
+             </section>
 
+            <!-- ---------------- 收件資料 ---------------- -->
+            <section class="receipt-info">
+                <h1 class="common-title">收件資料</h1>
+                <div class="receipt-info__form">
+                    <div class="input-box">
+                        <h3>送貨方式：宅配（台灣本島地區適用）</h3>
+                        <label>
+                            <input type="checkbox"> 收件人資料與會員資料相同
+                        </label>
+                    </div>
+                    <div class="input-box">
+                        <h3>*收件人名稱</h3>
+                        <input type="text">
+                    </div>
+                    <div class="input-box">
+                        <h3>電話</h3>
+                        <input type="text">
+                    </div>
+                    <div class="input-box">
+                        <h3>*行動電話</h3>
+                        <input type="text">
+                    </div>
+                    <div class="input-box">
+                        <h3>*地址</h3>
+                        <input type="text">
+                    </div>
+                    <div class="input-box">
+                        <h3>發票抬頭</h3>
+                        <input type="text">
+                    </div>
+                    <div class="input-box">
+                        <h3>統一編號</h3>
+                        <input type="text">
+                    </div>
+                    <div class="input-box">
+                        <h3>訂單備註</h3>
+                        <textarea></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ---------------- 按鈕區 ---------------- -->
+            <section class="btn-box">
+            </section>
+
+        </form>
     </section>
 </template>
 
@@ -120,19 +185,22 @@
 <style scoped lang="scss">
     @import '@/assets/styles/main.scss';
 
+    // 共用標題樣式
+    .common-title {
+        font-size: $pcChFont-H4;
+        font-weight: bold;
+        background-color: #f0f0f0;
+        color: #888;
+        text-align: center;
+        padding: 16px 0;
+        margin-bottom: 12px;
+    }
+
     .checkout-section {
-        // --------- 上方: 購物清單 ---------
+        // --------- 訂單明細 ---------
         .cart-list {
-            padding-bottom: 60px;
-            h1 {
-                font-size: $pcChFont-H4;
-                font-weight: bold;
-                background-color: #f0f0f0;
-                color: #888;
-                text-align: center;
-                padding: 16px 0;
-                margin-bottom: 12px;
-            }
+            margin-bottom: 28px;
+            h1 {}
 
             .toggle-total {
                 border: 1px solid #ccc;
@@ -278,6 +346,30 @@
                 }
             }
         }
+
+        // --------- 付款方式 ---------
+        .payment-method {
+            margin-bottom: 28px;
+            h1 {}
+            &__radio {
+                padding: 16px 24px 0;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                font-size: $pcChFont-H4;
+                label {
+                    cursor: pointer;
+                    input {}
+                }
+            }
+
+        }
+
+        // --------- 收件資料 ---------
+        .receipt-info {}
+
+        // --------- 按鈕區 ---------
+        .btn-box {}
     }
 
 </style>
