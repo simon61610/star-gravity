@@ -52,8 +52,7 @@ const Activitytable = ref([
 
 
 const selectedPerson = ref(null)
-const showpeople = ref(false);
-const showActivity = ref(false);
+
 /*----------------參加者編輯按鈕+資料渲染------------------*/
 const peopleEdit = (row, index) => { //偵測編輯按鈕編輯哪個資料
     console.log(index, row)
@@ -111,7 +110,8 @@ function savepeople(table,selected) {                                           
 }
 
 /*---------------彈窗關閉----------------*/
-
+const showpeople = ref(false);
+const showActivity = ref(false);
 function close(type) {
   if (type === 'activity') showActivity.value = false
   if (type === 'people') showpeople.value = false
