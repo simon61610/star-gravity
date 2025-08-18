@@ -1,6 +1,7 @@
 <!-- 
 1. 表單待補上驗證
 2. 表單補上 name 和 value 
+3. 地址下拉選單
 -->
 
 <script setup>
@@ -138,25 +139,36 @@
                 <div class="receipt-info__form">
                     <div class="input-box">
                         <h3>送貨方式：宅配（台灣本島地區適用）</h3>
-                        <label>
+                        <label class="same-info">
                             <input type="checkbox"> 收件人資料與會員資料相同
                         </label>
                     </div>
                     <div class="input-box">
-                        <h3>*收件人名稱</h3>
-                        <input type="text">
+                        <h3><span>*</span>收件人名稱</h3>
+                        <div class="receiver">
+                            <input type="text">
+                            <p>（請填入真實姓名，以確保順利收件）</p>
+                        </div>
                     </div>
                     <div class="input-box">
                         <h3>電話</h3>
-                        <input type="text">
+                        <input type="text" placeholder="02 1234 5678">
                     </div>
                     <div class="input-box">
-                        <h3>*行動電話</h3>
-                        <input type="text">
+                        <h3><span>*</span>行動電話</h3>
+                        <input type="text" placeholder="0912 345 678">
                     </div>
                     <div class="input-box">
-                        <h3>*地址</h3>
-                        <input type="text">
+                        <h3><span>*</span>地址</h3>
+                        <div class="address">
+                            <select name="" id="">
+                                <option value=""></option>
+                            </select>
+                            <select name="" id="">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <input type="text" placeholder="請輸入真實地址">
                     </div>
                     <div class="input-box">
                         <h3>發票抬頭</h3>
@@ -168,13 +180,15 @@
                     </div>
                     <div class="input-box">
                         <h3>訂單備註</h3>
-                        <textarea></textarea>
+                        <textarea rows="4" placeholder="有什麼想告訴賣家嗎？"></textarea>
                     </div>
                 </div>
             </section>
 
             <!-- ---------------- 按鈕區 ---------------- -->
             <section class="btn-box">
+                <p class="previous-btn">< 返回上一步</p>
+                <p class="next-btn">完成訂單</p>
             </section>
 
         </form>
@@ -366,10 +380,95 @@
         }
 
         // --------- 收件資料 ---------
-        .receipt-info {}
+        .receipt-info {
+            h1 {}
+            &__form {
+                margin-bottom: 28px;
+                font-size: $pcChFont-H4;
+                padding: 16px 24px;
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                .input-box {
+                    // border: 1px solid green;
+                    
+
+                    // ----------------- 共用 -----------------
+                    input[type="text"], textarea {
+                        padding: 16px 20px;
+                        font-size: $pcChFont-H4;
+                        width: 100%;
+                        box-sizing: border-box;
+                        border: 1px solid #888;
+                        border-radius: 8px;
+                        font-family: $chFont;
+                    }
+                    input[type="text"]::placeholder, textarea::placeholder {
+                        color: #ccc;
+                    }
+                    input[type="text"]:focus, textarea:focus  {
+                        outline: 1px solid $primaryColor-800;
+                    }
+                    h3 {
+                        margin-bottom: 16px;
+                        span {
+                            color: $secondaryColor-orange;
+                            font-weight: bold;
+                        }
+                    }
+
+                    // ----------------- 個別 -----------------
+                    .same-info {
+                        color: #888;
+                        cursor: pointer;
+                    }
+                    .receiver {
+                        input {}
+                        p {
+                            padding-top: 8px;
+                            color: #888;
+                        }
+                    }
+                    .address {
+                        select {
+                            option {
+                                
+                            }    
+                        }
+                    }
+                }
+            }
+        }
 
         // --------- 按鈕區 ---------
-        .btn-box {}
+        .btn-box {
+            font-size: $pcChFont-H4;
+            display: flex;
+            justify-content: space-between;
+            padding-top: 32px;
+            border-top: 1px solid #ccc;
+
+            .previous-btn, .next-btn {
+                cursor: pointer;
+            }
+            .previous-btn {
+                color: #888;
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+            .next-btn {
+                width: 320px;
+                padding: 12px;
+                border-radius: 999px;
+                color: white;
+                background-color: $secondaryColor-orange;
+                text-align: center;
+                &:hover {
+                    background-color: $primaryColor-900;
+                }
+            }
+        }
     }
 
 </style>
