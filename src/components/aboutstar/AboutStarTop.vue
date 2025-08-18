@@ -155,7 +155,7 @@
     color: $primaryColor-500;
 }
 .idx{
-    font-size: $pcEngFont-numberTitle;
+    font-size: $pcEngFont-title;
 }
 .container-one h2{   // 差上下線
     font-size: $pcChFont-H2;
