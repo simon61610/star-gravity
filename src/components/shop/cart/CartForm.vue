@@ -1,5 +1,6 @@
 <script setup>
-    import { ref } from 'vue'
+    import { ref, onMounted } from 'vue'
+    import $ from 'jquery'
     
     // 商品假資料 => 要改用 storage 傳入
     const productDetail = ref(
@@ -27,6 +28,32 @@
 
     const products = productDetail.value
 
+
+    // 引用 jQuery 做 toggle
+    onMounted(() => {
+
+        // 預設關起來
+        $('.toggle-content').hide()
+
+        // 上方標題點擊 => 展開 or 收合
+        $('.toggle-total').on('click', function(){
+            if($('.toggle-content').is(':visible')){
+                $('.toggle-content').slideUp(600)
+                $('#cartCount').removeClass('open')
+            }else{
+                $('.toggle-content').slideDown(600)
+                $('#cartCount').addClass('open')
+            }
+        })
+
+        // 內容箭頭點擊 => 收合
+        $('.toggle-inside').on('click', function(){
+            if($('.toggle-content').is(':visible')){
+                $('.toggle-content').slideUp(800)
+                $('#cartCount').removeClass('open')
+            }
+        })
+    })
     
 </script>
 
@@ -44,7 +71,7 @@
             <!-- 收合標題 -->
             <div class="toggle-total">
                 <p class="total">合計：NT$6,060</p>
-                <p class="count">購物車(3件)</p>
+                <p class="count" id="cartCount">購物車(3件)</p>
             </div>
 
             <div class="toggle-content">
@@ -135,12 +162,18 @@
                         border-right: 3px solid #888;
                         transform: rotate(-45deg);
                         transform-origin: center center;
-                        transition: all .3s ease;
+                        transition: all .6s ease;
                         position: relative;
                         top: 2px;
                         
                     }
 
+                }
+
+                .count.open {
+                    &::after {
+                        transform: rotate(135deg);
+                    }
                 }
 
                 // 箭頭旋轉模擬
