@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div class="wrapper layout">
         <!-- 列表與地圖 -->
         <MapMain />
 
@@ -26,5 +26,19 @@ import ReviewPlace from '@/components/starmap/ReviewPlace.vue';
 <style scoped>
 .wrapper{
     height: calc( 100vh - 50px) ;
-}  
+    position: relative;
+    box-sizing: border-box;
+}
+/* .layout::before{
+    content: "";
+    width: 100%;
+    height: calc( 100vh - 50px);
+    background-color: #080d27ad;
+
+    position: absolute;
+    top: 0;
+    z-index: 5;
+    評論彈窗跳出時z-index要改成300
+    z-index: 300;
+}   */
 </style>

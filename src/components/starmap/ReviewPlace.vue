@@ -60,6 +60,7 @@
     left: 0;
     right: 0;
     margin: auto;
+    z-index: 300;
 }
 .mapreview-writePlace h3{
     font-size: $pcChFont-H3;
