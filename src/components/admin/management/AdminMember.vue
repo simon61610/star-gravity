@@ -65,10 +65,11 @@ const membertable = ref([
 /*---------------設定響應式資料-----------------*/
 /* 存放當前選中的那筆資料 */
 const selectedMember = ref(null)
-
+const show = ref(false);
 /*----------------編輯按鈕+資料渲染------------------*/
 const handleEdit = (row, index) => { //偵測編輯按鈕編輯哪個資料
     console.log(index, row)
+    
     selectedMember.value = {
     id: row.id,
     member_account: row.member_account,
@@ -80,10 +81,10 @@ const handleEdit = (row, index) => { //偵測編輯按鈕編輯哪個資料
     member_gender: row.member_gender
   }
 /*打開燈箱*/
-const show = ref(false);
   show.value = true;
 }
 
+/*儲存功能-*/
 function save() {                                                                //findIndex()是JS函數 找不到就回傳 -1
   const idx = membertable.value.findIndex(m => m.id === selectedMember.value.id) //找更改資料的那筆資料對於 membertable[idx] 是在第idx位置
   if (idx !== -1) {                                       //如果idx不是-1 表示有這筆資料
@@ -92,7 +93,7 @@ function save() {                                                               
   show.value = false
 }
 
-/*---------------彈窗開啟關閉----------------*/
+/*---------------彈窗關閉----------------*/
 function close(){
     show.value = false;
 }
@@ -110,6 +111,7 @@ function close(){
         </template>
     </AdminTable>
     <div v-if="show" class="Admin-member-modal"  @click.self="close">
+
         <form  action="" class="Admin-member-form">
             <div class="Admin-member-h1">
                 <h1>編輯查看</h1>
