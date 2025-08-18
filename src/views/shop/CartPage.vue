@@ -47,9 +47,6 @@ const steps = ['準備結帳', '填寫資料', '完成訂單'] // 步驟內容
         max-width: 1200px;
         margin: 0 auto;
         padding: 40px 16px;
-
-
-
     }
 
 
