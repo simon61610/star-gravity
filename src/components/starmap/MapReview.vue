@@ -52,7 +52,7 @@
                     <p class="cnContent--18px">
                         新手友善，剛好是天文館，可以先在天文館學習新知後，留到晚上用天文望遠鏡看星星。
                     </p>
-                    <img class="review-photo" src="" alt="">
+                    <img class="review-photo" src="../../assets/images/map/map-reviewleft.jpg" alt="">
                     <h6>2025/07/25</h6>
                 </li>  
                 
@@ -85,7 +85,7 @@
                     <p class="cnContent--18px">
                         帶小孩來，光害少，車位是路邊白線，滿天星空真的美！
                     </p>
-                    <img class="review-photo" src="" alt="">
+                    <img class="review-photo" src="../../assets/images/map/map-reviewleft.jpg" alt="">
                     <h6>2025/07/25</h6>
                 </li> 
 
@@ -133,10 +133,12 @@
 
     position: absolute;
     margin: auto;
-    top: 60px;
+    top: 0px;
+    bottom: 0;
     right: 0;
     left: 0;
     box-sizing: border-box;
+    z-index: 200;
 
     display: flex;
 }
@@ -162,7 +164,6 @@
 }
 .mapbox-backTo{
     height: 32px;
-    background-color: #ffffff;
     border-radius: 999px;
 }
 
@@ -240,6 +241,8 @@
 
     position: relative;
 
+    cursor: pointer;
+
 }
 .review-select-title{
     display: flex;
@@ -316,6 +319,7 @@
 .review-photo{
     width: 180px;
     height: 135px;
+    cursor: pointer;
 }
 .mapreview-list h6{
     font-size:$pcChFont-small ;
