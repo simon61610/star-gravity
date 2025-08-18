@@ -28,8 +28,9 @@ const steps = ['準備結帳', '填寫資料', '完成訂單'] // 步驟內容
             <CheckoutStepper :current="step" :steps="steps"/>
         </div>
 
-
-        <router-view />
+        <div class="page-change-box">
+            <router-view />
+        </div>
 
         <!-- 用 v-if 控制出現哪些 -->
         <p><router-link to="/cartpage/cart">跳到購物車頁</router-link></p>
@@ -47,6 +48,10 @@ const steps = ['準備結帳', '填寫資料', '完成訂單'] // 步驟內容
         max-width: 1200px;
         margin: 0 auto;
         padding: 40px 16px;
+
+        .page-change-box {
+            padding: 20px 0;
+        }
     }
 
 

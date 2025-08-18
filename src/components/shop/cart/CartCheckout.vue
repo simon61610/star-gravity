@@ -1,8 +1,6 @@
 <script setup>
     import { ref } from 'vue'
 
-    // 組件
-    import QtyControl from '../product/QtyControl.vue'
 
     // 商品假資料 => 要改用 storage 傳入
     const productDetail = ref(
@@ -54,7 +52,7 @@
                     <!-- 商品資訊和計算 -->
                     <div class="item__info">
                         <h2 class="item__info__name">{{ product.name }}</h2>
-                        <div class=item__info__price>
+                        <div class="item__info__price">
                             <div class="price-per-item">
                                 <p class="price">NT${{ product.price }}</p>
                                 <p class="spe-price">NT${{ product.specialprice }}</p>
@@ -98,12 +96,12 @@
 
 
 <style scoped lang="scss">
-@import '@/assets/styles/main.scss';
+    @import '@/assets/styles/main.scss';
 
     .checkout-section {
         // --------- 上方: 購物清單 ---------
         .cart-list {
-            padding: 20px 0 60px;
+            padding-bottom: 60px;
             h1 {
                 font-size: $pcChFont-H4;
                 font-weight: bold;
