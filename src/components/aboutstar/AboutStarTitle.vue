@@ -31,7 +31,7 @@
     justify-content: center;
     padding-left: 20px;
     display: flex;
-    gap: 10px;
+    gap: 30px;
 }
 .banner-left-one{
     height: 200px;
@@ -47,7 +47,7 @@
     // width: 200px;   
 }
 .banner-right img{
-    width: 700px;
+    width:550px;
     height: auto;
 }
 
