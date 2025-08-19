@@ -1,7 +1,7 @@
 <script setup>
 import {ref} from 'vue'
 import AdminTable from '@/components/admin/AdminTable.vue';
-import img from '@/assets/images/news/news-article-a1.jpg'
+import img from '@/assets/images/news/news-article-a1.jpg';
 
 const props = defineProps({
   search: { type: String, default: '' }
@@ -93,9 +93,9 @@ function close(){
                     <label for="">審核狀態:
                         <br></br>
                         <br></br>
-                        <input type="radio" value="審核中"  name="staus" id="review_pending" v-model="selectedComment.review_status"><span style="font-weight: 400;">審核中</span>
-                        <input type="radio" value="顯示中" name="staus" id="review_visible" v-model="selectedComment.review_status"><span style="font-weight: 400;">顯示中</span>
-                        <input type="radio" value="隱藏中" name="staus" id="review_hidden" v-model="selectedComment.review_status"><span style="font-weight: 400;">隱藏中</span>
+                        <input type="radio" value="審核中"  name="status" id="review_pending" v-model="selectedComment.review_status"><span style="font-weight: 400;">審核中</span>
+                        <input type="radio" value="顯示中" name="status" id="review_visible" v-model="selectedComment.review_status"><span style="font-weight: 400;">顯示中</span>
+                        <input type="radio" value="隱藏中" name="status" id="review_hidden" v-model="selectedComment.review_status"><span style="font-weight: 400;">隱藏中</span>
                     </label>
                 
                 </div>

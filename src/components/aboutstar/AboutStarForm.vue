@@ -50,6 +50,7 @@
 }
 .magnitude{
     // margin-top: 30px;    // 如果有加別的檔案再打開
+    // padding-top: 30px;
     margin-left: 40px;
     width: 1100px;
     background-color: $primaryColor-900;
@@ -58,7 +59,11 @@
     justify-content: center;
     align-items: center;
     gap: 40px;
+     /* 新增：置中 + 與上方間距 */
+    margin: clamp(24px, 5vw, 64px) auto 0; /* 上間距24~64px 自適應、左右auto置中 */
 }
+
+
 .magnitude-left{
     width: 290px;
     padding-top: 10px;
