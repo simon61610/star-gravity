@@ -213,40 +213,38 @@ function close(type) {
                         
                 </div>
                 <div class="Admin-Activity-tag">
-                    <h1>活動tag</h1>
+                  <h1>活動tag</h1>
+                  <label>
+                    <input type="radio" name="activitytag" value="流星雨">流星雨
+                  </label>
+                  <label>
+                    <input type="radio" name="activitytag" value="月相">月相
+                  </label>
                     <label>
-                        <input type="radio" name="activitytag" value="流星雨">流星雨
-                    </label>
-                    <label>
-                        <input type="radio" name="activitytag" value="月相">月相
-                    </label>
-                    <label>
-                        <input type="radio" name="activitytag" value="星座">星座
-                    </label>
-                    <label>
-                        <input type="radio" name="activitytag" value="銀河">銀河
-                    </label>
+                    <input type="radio" name="activitytag" value="星座">星座
+                  </label>
+                  <label>
+                    <input type="radio" name="activitytag" value="銀河">銀河
+                  </label>
                 </div>
                 <div class="Admin-Activity-fee">
-                    <h1>費用</h1>
-                    <input type="text">
+                  <h1>費用</h1>
+                  <input type="text">
                 </div>
                 <div class="Admin-Activity-deadline">
-                    <h1>報名截止日</h1>
-                    <div>
-                        <el-date-picker v-model="deadline" type="date"/>
-                        
-                    </div>
+                  <h1>報名截止日</h1>
+                  <div>
+                    <el-date-picker v-model="deadline" type="date"/>
+                  </div>
                 </div>
                 <div class="Admin-Activity-content">
-                    <h1>活動內容</h1>
-                    <textarea name="" id="">
-                    </textarea>
+                  <h1>活動內容</h1>
+                  <textarea name="" id=""></textarea>
                 </div>
             </div>
-             <div class='Admin-people-button'>
-                <button type="button" @click="close('activity')">關閉</button>
-                <button type="button" @click="savepeople(people, selectedPerson.id)">儲存</button>
+            <div class='Admin-people-button'>
+              <button type="button" @click="close('activity')">關閉</button>
+              <button type="button" @click="savepeople(people, selectedPerson.id)">儲存</button>
             </div>       
 
         </form>
@@ -524,7 +522,7 @@ form{
 
 
 
-
+/*用來消除table上面搜尋列的左側標題扭*/
 :deep(.admin-table-title) {
   opacity: 0 !important;
 
