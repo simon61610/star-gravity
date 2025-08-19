@@ -1,39 +1,69 @@
 <script setup>
-import {ref, onMounted} from 'vue'
+import {ref, onMounted, computed, watch, defineProps} from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import taiwanMap from '@/assets/images/map/starmap-taiwan.svg'
 
+onMounted(()=>{
+    region.value = '全台'
+    placeholder.value = ''
+    setMap()
+})
+
+const {locationList} = defineProps(["locationList"])
 //假數據
-const locationList = ref([
-  { region: '南部', scene: '市郊', name:'南瀛天文館', img: '../../assets/images/map/map-tainanPhoto.jpg',score:4.7, address:"台南市大內區34-2號" ,coords:[ 385 , 380] },
-  { region: '北部', scene: '山區', name:'陽明山',img: '../../assets/images/map/map-taipeiPhoto.jpg' ,score:4.5, address:"台北市士林區竹子湖" ,coords:[ 880 , 630]},
-  { region: '中部', scene: '平原', name:'杉林溪',img: '../../assets/images/map/map-taichungPhoto.jpg' ,score:4.3, address:"南投縣溪頭" ,coords:[ 510 , 470]},
-  { region: '東部', scene: '海邊', name:'三仙台',img: '../../assets/images/map/map-taichungPhoto.jpg' ,score:4.2, address:"台東縣" ,coords:[ 385 , 595]},
-  { region: '離島', scene: '海邊', name:'蘭嶼',img: '../../assets/images/map/map-taichungPhoto.jpg' ,score:4.0, address:"台東縣蘭嶼" ,coords:[ 122 , 635]},
-])
+// const locationList = ref([
+//   { region: '南部', scene: '市郊', name:'南瀛天文館', img: '../../assets/images/map/map-tainanPhoto.jpg',score:4.7, address:"台南市大內區34-2號" ,coords:[ 385 , 380] },
+//   { region: '北部', scene: '山間', name:'陽明山',img: '../../assets/images/map/map-taipeiPhoto.jpg' ,score:4.5, address:"台北市士林區竹子湖" ,coords:[ 880 , 630]},
+//   { region: '中部', scene: '山間', name:'杉林溪',img: '../../assets/images/map/map-taichungPhoto.jpg' ,score:4.3, address:"南投縣溪頭" ,coords:[ 510 , 470]},
+//   { region: '東部', scene: '海邊', name:'三仙台',img: '../../assets/images/map/map-taichungPhoto.jpg' ,score:4.2, address:"台東縣" ,coords:[ 385 , 595]},
+//   { region: '離島', scene: '海邊', name:'蘭嶼',img: '../../assets/images/map/map-taichungPhoto.jpg' ,score:4.0, address:"台東縣蘭嶼" ,coords:[ 122 , 635]},
+// ])
 
 
 const activeIndex = ref(-1)
 
 //li查看更多
 const showMore = (index) => {
-    activeIndex.value = (activeIndex.value === index ? -1 : index)  //這句三元運算子是判斷該li是不是被二次點擊 點兩次activeIndex變成-1 html內的v-show判斷要關起來
-    goToMarker(index)
+    //             ↑這是篩選過後的列表的索引 不是原始locationList的索引
+    const originalIndex = locationList.findIndex(item => item === filteredLocationList.value[index])
+    activeIndex.value = (activeIndex.value === originalIndex ? -1 : originalIndex) //這句三元運算子是判斷該li是不是被二次點擊 點兩次activeIndex變成-1 html內的v-show判斷要關起來
+    goToMarker(originalIndex)
     scrollToListItem(index)
+    
 }
 
 const placeholder =ref(' ')
 const region = ref('') 
+const selectedScenes = ref([]) // 篩選後的新陣列
+const searchText = ref('') 
 
-onMounted(()=>{
-    region.value = '全台'
-    placeholder.value = ''
+const filteredLocationList = computed(()=>{
+    let newList = locationList
 
-    setMap()
+    //地區篩選
+    if( region.value != '全台' ){
+        newList = newList.filter(item => item.region  === region.value)
+    }
+    //場景篩選
+    if( selectedScenes.value.length >0 ){
+        newList = newList.filter(item => selectedScenes.value.includes(item.scene))
+    }
+    if( searchText.value.trim() !== '' ){
+        newList = newList.filter(item => 
+            item.name.includes(searchText.value) ||    // 搜尋地點名稱
+            item.address.includes(searchText.value)    // 搜尋地址
+        )
+    }
+
+    return newList
 })
 
-
+// 監聽篩選變化，呼叫更新marker
+watch(filteredLocationList, (newFilteredList) => {
+    updateMapMarkers(newFilteredList)
+    activeIndex.value = -1 // 關閉see more
+}, { deep: true })
 
 
 
@@ -52,19 +82,8 @@ function setMap(){
     map.fitBounds(bounds)
     map.setMaxBounds(bounds)
 
-    //marker
-    for (let i = 0; i < locationList.value.length; i++) {
-        const location = locationList.value[i]
-        const marker = L.marker([location.coords[0], location.coords[1]]).addTo(map)
-        marker.bindPopup(location.name)
-        marklist.push(marker)
-
-        //對marker綁定點擊事件
-        marker.on('click', ()=>{
-            activeIndex.value = i
-            scrollToListItem(i)
-        })
-    }    
+    // 初始化標記
+    updateMapMarkers(locationList)  
 
     //滑鼠座標 確認地點座標用 寫進croods用
     const coordsDiv = L.control({position:'bottomleft'})
@@ -82,37 +101,102 @@ function setMap(){
     })
 
 }
+//更新標記
+function updateMapMarkers(locations){
+    //移除標記
+    marklist.forEach(marker => {
+        map.removeLayer(marker)
+    })
+    marklist = []
+
+    //重新添加標記
+    for (let i = 0; i < locations.length; i++) {
+        const location = locations[i]
+        const marker = L.marker([location.coords[0], location.coords[1]]).addTo(map)
+        marker.bindPopup(location.name)
+        marklist.push(marker)
+
+        //找到原始列表索引
+        const originalIndex = locationList.findIndex(item => item === location)
+
+        //對marker綁定點擊事件
+        marker.on('click', ()=>{
+            // 篩選列表中的索引來滾動
+            const filteredIndex = filteredLocationList.value.findIndex(item => item === location)
+            scrollToListItem(filteredIndex)
+        })
+    }    
+}
+
 
 function goToMarker(idx) {
-  const location = locationList.value[idx]
+  const location = locationList[idx]
   map.flyTo([location.coords[0], location.coords[1]], 1, { duration: 1.2 })
-  marklist[idx].openPopup()
+
+  const filteredIndex = filteredLocationList.value.findIndex(item => item === location)
+  if(filteredIndex !== -1 && marklist[filteredIndex]) {
+      marklist[filteredIndex].openPopup()
+  }
 }
 
 function scrollToListItem(index){
     //因為li摺疊有動畫時間 所以設定計時器延遲幾秒後再做這函數
     setTimeout(() => {
-        const locatinListBox = document.querySelector('.locatinList')
-        const locationItem = document.querySelectorAll('.locatinList ul li')
+        const locationListBox = document.querySelector('.locationList')
+        const locationItem = document.querySelectorAll('.locationList ul li')
         const targetItem = locationItem[index]
         
-        const locatinListBoxRect = locatinListBox.getBoundingClientRect()
+        const locationListBoxRect = locationListBox.getBoundingClientRect()
         const itemRect = targetItem.getBoundingClientRect()
         const topPadding = 20
-        const newScrollTop = locatinListBox.scrollTop + itemRect.top - locatinListBoxRect.top - topPadding //itemRect.top - divRect.top 是li距離容器頂部的距離
+        const newScrollTop = locationListBox.scrollTop + itemRect.top - locationListBoxRect.top - topPadding //itemRect.top - divRect.top 是li距離容器頂部的距離
 
-        locatinListBox.scrollTo({
+        locationListBox.scrollTo({
             top: newScrollTop,
             behavior: 'smooth'
             })
     }, 100)     
 }
 
+// 地點下拉選單
+const placeList = ref(false)
+function focusLocation(index){
+    const originalIndex = locationList.findIndex(item => item === filteredLocationList.value[index])
+    activeIndex.value =  originalIndex 
+    goToMarker(originalIndex)
+    scrollToListItem(index)
+    placeList.value = false
+
+}
+function handleFocus(e){
+    placeList.value = true
+    e.target.style.borderRadius= '10px 10px 0px 0px'
+}
+function handleBlur(e){
+    setTimeout(()=>{
+        placeList.value = false
+        e.target.style.borderRadius= '10px 10px 10px 10px'
+    },300)
+   
+}
+
+//場景checkedbox
+function handleSceneChange(scene, event) {
+    if (event.target.checked) {
+        selectedScenes.value.push(scene)
+    } else {
+        const index = selectedScenes.value.indexOf(scene)
+        if (index > -1) {
+            selectedScenes.value.splice(index, 1)
+        }
+    }
+}
 
 
 
 
 </script>
+
 
 
 
@@ -164,19 +248,19 @@ function scrollToListItem(index){
                     <h5>場景：</h5>
                     <ul class="checkboxList">
                         <li>
-                            <input type="checkbox" id="shan" value="山間">
+                            <input type="checkbox" id="shan" value="山間" @change="handleSceneChange('山間' ,$event )">
                             <label for="shan">山間</label>
                         </li>
                         <li>
-                            <input type="checkbox" id="beach" value="海邊">
+                            <input type="checkbox" id="beach" value="海邊" @change="handleSceneChange('海邊' ,$event )">
                             <label for="beach">海邊</label>
                         </li>
                         <li>
-                            <input type="checkbox" id="city" value="市區">
+                            <input type="checkbox" id="city" value="市區" @change="handleSceneChange('市區' ,$event )">
                             <label for="city">市區</label>
                         </li>
                         <li>
-                            <input type="checkbox" id="suburbs" value="市郊">
+                            <input type="checkbox" id="suburbs" value="市郊" @change="handleSceneChange('市郊' ,$event )">
                             <label for="suburbs">市郊</label>
                         </li>                                      
                      </ul>
@@ -186,18 +270,12 @@ function scrollToListItem(index){
                 <div class="locationSection">
                     <div class="location-search">
                         <img class="map-search-icon" src="../../assets/icons/icon-map-search.svg" alt="">
-                        <input type="text" id="" class="inputPlace" :disabled="region !== '全台'" :placeholder="region !== '全台' ? '選擇全台,才可輸入' : '請輸入地點名稱'">
+                        <input type="text" id="" class="inputPlace" :disabled=" region !== '全台'" :placeholder="region !== '全台' ? '選擇全台,才可輸入' : '請輸入地點名稱'" v-model="searchText" @focus="handleFocus" @blur="handleBlur">
                         <!-- 動態生成選項 -->
-                        <ul v-if="false" class="starPlace-list">
-                            <li>士林天文館</li>
-                            <li>陽明山竹子湖</li>
-                            <li>平溪嶺腳寮觀星點</li>
-                            <li>合歡山武嶺</li>
-                            <li>鯉魚潭</li>
-                            <li>高美濕地觀景台</li>
-                            <li>杉林溪森林生態渡假園區</li>
-                            <li>南瀛天文館</li>
-                            <li>台南關子嶺大凍山</li>
+                        <ul v-if="placeList" class="starPlace-list">
+                            <li v-if="filteredLocationList.length > 0" v-for="(location, index) in filteredLocationList  " :key="index" @click="focusLocation(index)">{{location.name}}</li>
+                            <!-- 無結果時顯示 -->
+                            <li v-if="filteredLocationList.length === 0" class="no-result">查無資訊</li>
                         </ul>
                     </div>
                     
@@ -206,16 +284,16 @@ function scrollToListItem(index){
 
             </div>
                 <!-- 地點列表 -->
-                <div class="locatinList"> <!--這要動態生成-->
+                <div class="locationList"> <!--這要動態生成-->
                     <ul>
-                        <li v-for="(location, index) in locationList" :key="index" @click="showMore(index)">
-                            <div class="tag">
+                        <li v-for="(location, index) in filteredLocationList " :key="index">
+                            <div class="tag" @click="showMore(index)">
                                 <span>{{location.region}}</span>
                                 <span>{{location.scene}}</span>
                             </div>
                             
 
-                            <div class="title">
+                            <div class="title" @click="showMore(index)">
                                 <h2>{{location.name}}</h2>
                                 <div class="score">
                                     <!-- 之後路徑要改成  :src="location.img" -->
@@ -225,12 +303,12 @@ function scrollToListItem(index){
                            
                             </div>
 
-                            <h5>{{location.address}}</h5>
+                            <h5 @click="showMore(index)">{{location.address}}</h5>
 
                              <!--以下點擊後才顯示-->
                             <transition name="accordion">
-                                <div v-show="activeIndex === index" class="location-singlePlace-more" >
-                                    <img class="location-singlePlace-photo" src="../../assets/images/map/map-tainanPhoto.jpg" alt="">
+                                <div v-show="activeIndex === locationList.findIndex(item => item === location)" class="location-singlePlace-more" >
+                                    <img class="location-singlePlace-photo" src="../../assets/images/map/map-tainanPhoto.jpg" alt="" @click="showMore(index)">
 
                                     <a class="seeMore" href="#">
                                         <p>更多資訊</p>
@@ -271,10 +349,10 @@ function scrollToListItem(index){
 
 //地點列表點擊後的展開的動畫
 .accordion-enter-active {
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
 }
 .accordion-leave-active{
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
 }
 
 .accordion-enter-from, .accordion-leave-to {
@@ -472,7 +550,7 @@ input[type="text"]:disabled {
 
 
 /*地點列表*/
-.locatinList{
+.locationList{
     // flex-grow: 0.5;
 
     width: 100%;
@@ -485,7 +563,7 @@ input[type="text"]:disabled {
 
     overflow-y: auto;
 }
-.locatinList ul{
+.locationList ul{
     
     display: flex;
     gap: 24px;
@@ -493,7 +571,7 @@ input[type="text"]:disabled {
     padding: 24px;
     margin-bottom: 24px;    
 }
-.locatinList ul li{
+.locationList ul li{
     /* border: 1px solid blue; */
     max-height: 355px;
     display: flex;
@@ -505,7 +583,7 @@ input[type="text"]:disabled {
 
     margin-bottom: 8px;
 }
-.locatinList ul li span{
+.locationList ul li span{
     padding: 0px 10px;
     background-color: $primaryColor-800;
     border-radius: 999px;
@@ -541,7 +619,7 @@ input[type="text"]:disabled {
     width: 24px;
 }
 
-.locatinList h5{
+.locationList h5{
     font-size: $pcChFont-p;
     line-height: 150%;
 
@@ -587,7 +665,7 @@ input[type="text"]:disabled {
     width: 50vw;
     height: 90vh;
     // background-color: #ccc;
-    // z-index: 2;
+    z-index: 2;
     // background-image: url(../../assets/images/map/starmap-taiwan.svg);
     // background-size: cover;
 }
