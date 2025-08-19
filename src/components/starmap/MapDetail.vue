@@ -49,38 +49,35 @@
                     <div class="weather-now">
                         <h5>即時天氣</h5>
                         <div class="live-weather">
-                            <img src="../../assets/logo.svg" alt="">
+                            <img src="../../assets/icons/icon-map-cloudy.svg" alt="">
                             <div>32°C</div>
                         </div>
                     </div>
                     <!-- 五天預報 -->
                     <div class="weather-5days">  <!--共五個div排列-->
-                        <div>
+                        <div class="daily-weather">
                             <h5>週五</h5>
-                            <div class="weather-icon">
-                                <img src="../../assets/images/shoppingcart.svg" alt=""></img>
-                            </div>
-                            
+                            <img class="weather-icon" src="../../assets/icons/icon-map-cloudy.svg"></img>
                         </div>
 
-                        <div>
+                        <div class="daily-weather">
                             <h5>週六</h5>
-                            <img src="" alt="">
+                            <img class="weather-icon" src="../../assets/icons/icon-map-rainy.svg" alt="">
                         </div>
 
-                        <div>
+                        <div class="daily-weather">
                             <h5>週日</h5>
-                            <img src="" alt="">
+                            <img class="weather-icon" src="../../assets/icons/icon-map-rainy.svg" alt="">
                         </div>
 
-                        <div>
+                        <div class="daily-weather">
                             <h5>週一</h5>
-                            <img src="" alt="">
+                            <img class="weather-icon" src="../../assets/icons/icon-map-thunder.svg" alt="">
                         </div>
 
-                        <div>
+                        <div class="daily-weather">
                             <h5>週二</h5>
-                            <img src="" alt="">
+                            <img class="weather-icon" src="../../assets/icons/icon-map-rainy.svg" alt="">
                         </div>
                 </div>
                 </div>
@@ -124,7 +121,7 @@
                         </div>
                         <!-- 右邊照片 -->
                         <div class="singleReview-rightPhoto">
-                            <img src="" alt="">
+                            <img src="../../assets/images/map/map-reviewleft.jpg" alt="">
                         </div>
                     </div>
 
@@ -143,7 +140,7 @@
                         </div>
                         <!-- 右邊照片 -->
                         <div class="singleReview-rightPhoto">
-                            <img src="" alt="">
+                            <img src="../../assets/images/map/map-reviewleft.jpg" alt="">
                         </div>
                     </div>
 
@@ -162,7 +159,7 @@
                         </div>
                         <!-- 右邊照片 -->
                         <div class="singleReview-rightPhoto">
-                            <img src="" alt="">
+                            <img src="../../assets/images/map/map-reviewleft.jpg" alt="">
                         </div>
                     </div>
 
@@ -181,7 +178,7 @@
                         </div>
                         <!-- 右邊照片 -->
                         <div class="singleReview-rightPhoto">
-                            <img src="" alt="">
+                            <img src="../../assets/images/map/map-reviewleft.jpg" alt="">
                         </div>
                     </div>
 
@@ -221,11 +218,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 100;
 
 
     position: absolute;
     margin: auto;
-    top: 54px;
+    top: 0px;
     bottom: 0;
     right: 0;
     left: 0;
@@ -347,11 +345,13 @@
     justify-content:space-around;
     align-items: center;
     font-size:$pcChFont-H1 ;
-    background-color: $primaryColor-800;
-    color: $FontColor-white;
+    border: 2px solid $primaryColor-500;
+    // background-color: $primaryColor-800;
+    border-radius: 0 0 10px 10px ;
+    color: $primaryColor-800;
 }
 .live-weather img {
-    width: 50px;
+    width: 65px;
 }
     //五天預報
 .weather-5days{
@@ -365,13 +365,16 @@
     color:$FontColor-white;
     padding: 0 4px;
 }
-.weather-icon {
-    // border: 1px solid red ;
-
-    height: 38px;
+.daily-weather{
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+
+}
+.weather-icon{
+    width: 36px;
+    display: block;
+    margin: 0 auto;
 }
 .weather-icon img{
     width: 36px;
@@ -380,13 +383,14 @@
 
     //google 地圖
 .map-detail-googleMap{
+    width: 100%;
     justify-items: center;
     align-self: center;
 }
 .map-detail-googleMap iframe{
     display: block;
 
-    width: 450px;
+    width: 100%;
     height: 170px;
 
     
@@ -477,6 +481,7 @@
 //查看更多
 .mapbox-seeMore{
     align-self: self-end;
+    cursor: pointer;
 
     margin: 10px 10px 0 0;
     display: flex;

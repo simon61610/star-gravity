@@ -74,8 +74,11 @@
 @import '@/assets/styles/main.scss';
 
 .login-all{
+    font-family: $chFont;
     width: 100%;
     height: calc(100vh - 50px);
+    overflow-y: auto;           /* 把捲動限制在這個容器 */
+    box-sizing: border-box;
     background-image: url(@/assets/images/member/login-bgi.png);
     background-size: cover;
     margin-top: 0;

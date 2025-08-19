@@ -1,6 +1,7 @@
 <!-- 
 1. 控制輸入框只能輸入數字
 2. 有 bug，數字輸入有問題
+3. 庫存不足時 → 可以讓「立即購買」或「加入購物車」直接 disabled
 -->
 <script setup>
 import {ref} from 'vue'

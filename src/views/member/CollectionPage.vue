@@ -70,7 +70,7 @@
 
 .collectionwrapper{
     width: 100%;
-    height: calc(100vh - 50px);
+    min-height: calc(100vh - 50px);
     background-image: url(@/assets/images/member/login-bgi.png);
     background-size: cover;
 }
@@ -114,6 +114,7 @@
 }
 .menu-btn:hover, .menu li.active .menu-btn {   /* hover 與 active 都變色 */
     color: $secondaryColor-orange;
+    text-decoration: underline;
 }
 // 右邊開始
 .products{

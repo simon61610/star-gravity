@@ -15,7 +15,7 @@ const props = defineProps({                       //定義props接其他表格�
   search:  { type: String, default: '' }
 })
 
-const showATable = computed(()=>{   // 這裡是計算過後的頁數 所以要用分頁器都應該綁定此參數
+const showTable = computed(()=>{   // 這裡是計算過後的頁數 所以要用分頁器都應該綁定此參數
         const start = (currentPage.value - 1) * pageSize.value  //從第X頁的第X筆開始 例如:第一頁會從(1-1)*4 第0筆資料開始 
         const end = start + pageSize.value //一共幾筆
         console.log(` 目前第${currentPage.value}頁 顯示${start} 到 ${end-1}筆`) //驗證用而已
@@ -68,7 +68,7 @@ const handleEdit = (index, row) => { //偵測編輯按鈕編輯哪個資料
                   </div>
                   <hr> -->
 
-                <el-table :data="showATable">
+                <el-table :data="showTable">
                     <el-table-column v-for = "col in columns" :key="col.prop" :label="col.label" :align="col.align|| 'right' "
                     :prop="col.prop">
  
