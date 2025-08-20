@@ -50,7 +50,7 @@
 }
 .magnitude{
     // margin-top: 30px;    // 如果有加別的檔案再打開
-    padding-top: 30px;
+    // padding-top: 30px;
     margin-left: 40px;
     width: 1100px;
     background-color: $primaryColor-900;

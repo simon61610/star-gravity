@@ -190,8 +190,6 @@ function save() {                                                               
             }
             
             
-           
-            
         }
         .Admin-Order-button{
             margin-top: 30px;
@@ -211,6 +209,8 @@ function save() {                                                               
             }
         }
     }
+
+    /*燈箱*/
     .Admin-Order-modal{
         position: fixed;
         z-index: 9999;
