@@ -1,5 +1,29 @@
 <script setup>
 import testimg from '@/assets/images/news/news-article-a1.jpg';
+import {articles as articlesDate} from '@/data/articles'
+import { ref, computed, watch } from 'vue' 
+import { useRoute } from 'vue-router'
+const articles = ref(articlesDate) 
+const route = useRoute()
+// const id = Number(route.params.id)
+const article = computed(() => {
+  return articles.value.find(a => a.id === Number(route.params.id))
+})
+
+
+
+// 固定三種 tag
+const tags = ['天象事件', '知識新知', '生活應用']
+
+const relatedArticles = computed(() => {
+  if (!article.value) return []
+  return tags.map(tag => {
+    return articles.value.find(a => a.tag === tag && a.id !== article.value.id)
+  }).filter(Boolean)
+})
+
+
+
 </script>
 
 <template>
@@ -10,20 +34,21 @@ import testimg from '@/assets/images/news/news-article-a1.jpg';
 
         <div class="article-aside-wapper">
             <ul class="article-aside-ul">
-                <li class="article-aside-li">
-                    <header class="article-aside-h3">
-                        <h3 class="label--blue">天象事件</h3>
-                    </header>
-                    <figure class="article-aside-img">
-                        <img :src=testimg alt="">
-                    </figure>
-                    <div class="article-aside-h5">
-                        <h5>5/24 下午1600 日全蝕發生! 百年無地震發生 世界末日!
-                        </h5>
-                    </div>
-                </li>
-
-                <li class="article-aside-li">
+                
+                    <router-link :to= "{ name: 'ArticleDetailpage', params: { id: a.id } }" class="article-aside-li"  v-for="a in relatedArticles"   
+                        :key="a.id "  >
+                        <header class="article-aside-h3">
+                            <h3 class="label--blue">{{ a.tag}}</h3>
+                        </header>
+                        <figure class="article-aside-img">
+                            <img :src="a.img" alt="">
+                        </figure>
+                        <div class="article-aside-h5">
+                            <h5>{{ a.title }}</h5>
+                        </div>
+                    </router-link>
+                
+                <!-- <li class="article-aside-li">
                     <header class="article-aside-h3">
                         <h3 class="label--blue">知識新知</h3>
                     </header>
@@ -45,7 +70,7 @@ import testimg from '@/assets/images/news/news-article-a1.jpg';
                     <div class="article-aside-h5">
                         <h5>5/24 下午1600 日全蝕發生!</h5>
                     </div>
-                </li>
+                </li> -->
             </ul>
         </div>
     </aside>
@@ -78,12 +103,13 @@ aside{
         margin: 0 auto;
        
         .article-aside-ul{
-           
+            
             display: flex;
             flex-direction: column;
             gap: 80px;
 
             .article-aside-li{
+                text-decoration: none;
                 background-color: $primaryColor-900;
                 display: flex;
                 flex-direction: column;
@@ -119,6 +145,7 @@ aside{
 
                 }
                 .article-aside-h5{
+                    color: $FontColor-white;
                     padding: 10px;
                     text-align: center;
                     font-size: $pcChFont-H4;
