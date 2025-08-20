@@ -9,18 +9,17 @@
       <header class="card__hd">
         <div class="card__thumb">
           <!-- 換成你的縮圖 -->
-          <img src="/src/assets/images/games/GameSkyPage/gmasky_card-aries.svg" alt="星座圖示" />
+          <img src="/src/assets/images/games/GameSkyPage/zodiac-cardPic/gmasky_card-aries.png" alt="星座圖示" />
         </div>
-        <div class="card__title">
+      </header>
+     <div class="card__title">
           <div class="card_icon">
-             <img src="/src/assets/images/games/GameSkyPage/gamesky_virgo-icon.svg" alt="星座圖示" />
+             <img src="/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_aries-icon.png" alt="星座圖示" />
           </div>
           <div class="card__name">
             牡羊座 Aries
           </div>
         </div>
-      </header>
-
       <nav class="tabs" aria-label="卡片分頁（靜態）">
         <button class="tabs__btn tabs__btn--on" type="button">星座介紹</button>
         <button class="tabs__btn" type="button">星點位置</button>
@@ -38,7 +37,7 @@
     <div class="canvas">
       <div class="sky">
         <!-- 星座輪廓示意（靜態顯示） -->
-        <img class="figure" src="/src/assets/images/games/GameSkyPage/gamesky_aries.svg" alt="牡羊座輪廓" />
+        <img class="figure" src="/src/assets/images/games/GameSkyPage/zodiac-sky/gamesky_aries.png" alt="牡羊座輪廓" />
       </div>
     </div>
 
@@ -46,23 +45,27 @@
 </template>
 
 <style>
+
 /* 版面 */
 .scene {
-  border: 2px solid red;
   position: relative;
   width: 100%;
-  min-height: 720px;
+  min-height: 588px;
   overflow: hidden;
-  background: #081429;
 }
 .bg {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
+  position: absolute; 
+  inset: 0;
+  width: 100%; 
+  height: 100%;
   object-fit: cover;
   z-index: 0;
 }
 .hill {
-  position: absolute; left: 0; right: 0; bottom: 0;
+  position: absolute; 
+  left: 0; 
+  right: 0; 
+  bottom: 0;
   width: 100%;
   object-fit: cover;
   z-index: 1;
@@ -70,29 +73,34 @@
 
 /* 左側卡片 */
 .card {
-  border: 2px solid red;
-  position: absolute; left: 50px; top: 50px;
+  position: absolute; 
+  left: 168px; 
+  top: 55px;
   width: 280px;
-  height: 500px;
+  height: 450px;
   background: rgba(15,22,46,.7);
-  border: 1px solid rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.25);
   border-radius: 16px;
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(2px);
   color: #fff;
   z-index: 3;
-  padding: 16px;
+  padding: 24px;
     
 }
 
 .card__hd{ 
   margin-bottom:8px;
-  padding: 10px 40px;
-  margin: auto;
+  padding: 10px 20px;
+  margin: 0 auto;
+  display: flex;
+  align-items:center;
+  justify-content: center;
 }
+
 .card__thumb{ 
   width:200px;
-  height:200px;
-  border-radius:12px;
+  height:220px;
+
 }
 
 .card__glyph{ 
@@ -101,8 +109,8 @@
 }
 
 .card__name{ 
-  margin:0 auto; 
-  font-size:32px; 
+  font-size:36px; 
+  
 }
 
 .tabs{ display:flex;
@@ -127,17 +135,16 @@
 .card__body{ 
   font-size:13px; 
   line-height:1.6;
-  color:#dbe4ff; 
 }
 
 .card__title{
 display: flex;
-align-items:center
+align-items:center;
+justify-content: center;
 }
 
 /* 右側舞台（寬高固定，便於放 PNG） */
 .stage{
-  border: 2px solid rgb(150, 181, 74);
   position:absolute; left: 320px; right: 24px; top: 72px; bottom: 48px;
   z-index: 2;
   width: min(1200px, 100%);
@@ -148,16 +155,15 @@ align-items:center
 
 .figure{
   position:absolute; inset:0;
-  width: 100%; height: 100%;
+  width: 80%; height: 80%;
   object-fit: contain;
-  filter: drop-shadow(0 0 8px rgba(79,177,255,.35));
+  padding-left: 350px;
+  padding-top: 67px;
 }
 
 /* 星點（PNG，先手動定位） */
 .star{
-  position:absolute; width: 12px; height: 12px;
-  transform: translate(-50%, -50%);
-  filter: drop-shadow(0 0 6px rgba(255,255,255,.8));
+
 }
 
 /* 控制鈕（純樣式） */
@@ -166,10 +172,10 @@ align-items:center
   display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;
 }
 .ctrls__btn{
-  display:inline-flex; align-items:center; gap:6px;
-  padding:8px 12px; font-size:13px; color:#fff;
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.18);
+  display:inline-flex; 
+  align-items:center; gap:6px;
+  padding:8px 12px; 
+  font-size:13px; color:#fff;
   border-radius: 999px;
   backdrop-filter: blur(4px);
 }
