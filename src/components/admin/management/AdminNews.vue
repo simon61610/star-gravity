@@ -7,6 +7,8 @@
     search: { type: String, default: '' }
   })
 
+  
+
   //欄位定義
   const columns = [
       {label:'文章編號',prop:'id'},
@@ -23,7 +25,7 @@
   //欄位資料
   const Newstable = ref([ 
       {
-      id: '01',
+      id: '1',
       publishDate: '2025/08/16',
       title: '什麼是血色月亮!?',
       status: '上架',
@@ -51,10 +53,19 @@
 
   /*----------------文章列表---------------------------*/
   const articleEdit = (row, index) => { //偵測編輯按鈕編輯哪個資料
-    
+      console.log(' 子層 addArticle 被呼叫了！')
       console.log(row, index)
       console.log('傳進來的 row:', row)
       selected_article.value = {
+        id:Newstable.value.length + 1,
+        publishDate:'',
+        updatedAt:'',
+        category:'',
+        status:'',
+        title:'',
+        img:'',
+        content:''}
+      /*selected_article.value = {
         id:row.id,
         publishDate:row.publishDate,
         updatedAt:row.updatedAt,
@@ -64,12 +75,12 @@
         img:row.img,
         content:row.content
 
-      }
+      }*/
   /*打開燈箱*/
     showarticle.value = true;
   }
 
-
+  defineExpose({ articleEdit })
 
   /*---------------彈窗關閉----------------*/
   const showtag = ref(false);
@@ -81,15 +92,14 @@
 
   /*---------------儲存功能------------------*/
   function save(table,selected) {
-    console.log('Newstable:', Newstable)
-    console.log('Newstable.value:', Newstable.value)
-    console.log('table:', table)
-    console.log('table.value:', table.value)                                                        //findIndex()是JS函數 找不到就回傳 -1
+                                                         //findIndex()是JS函數 找不到就回傳 -1
     const idx = table.findIndex(a => String(a.id) === String(selected.id) )
     
     console.log(idx) //找更改資料的那筆資料對於 membertable[idx] 是在第idx位置
     if (idx !== -1) {                                       //如果idx不是-1 表示有這筆資料
       table[idx] = {...selected }  //membertable.value[idx] 這是整個資料陣列  = {}　→資料的值
+    }else{
+      table.push({...selected})
     }
     showarticle.value = false
   }
@@ -107,7 +117,7 @@
   const showInput = () => {
     inputVisible.value = true
     nextTick(() => {
-      InputRef.value?.focus() // 不是 TS，直接 focus()
+      InputRef.value?.focus() // 直接 focus()
     })
   }
 

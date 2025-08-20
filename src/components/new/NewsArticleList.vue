@@ -1,31 +1,35 @@
 <script setup>
 //import testimg from '@/assets/images/110093480_m.jpg'; // Assuming the image is in the assets folder
 import { onMounted, ref, } from 'vue'
-const liked = ref(false);  //預設沒點讚是false 
-const likeCount = ref(0)   //記錄讚的數字
 
 //function toglike(){   //點擊+1方程式
     //liked.value = !liked.value  //如果點擊了表是true
   //  likeCount.value += liked.value ? 1 : -1; // 如果是true就+1 反之-1}
 
-onMounted(()=>{
-    const count = localStorage.getItem('likeCount') //讀取localStorage讚數
-    if(count){
-        likeCount.value = parseInt(count)
-     }
-    })
+    onMounted(()=>{
+        props.articles.forEach(article => {   // ← 用 forEach，把每篇文章跑一遍
+        const count = localStorage.getItem(`likeCount_${article.id}`)
+        if (count) {
+        article.likeCount = parseInt(count)
+        } else {
+        article.likeCount = 0 // 預設 0
+        }
 
-    const likedStatus = localStorage.getItem('liked') //讀取有沒有按過
-    if (likedStatus) {
-        liked.value = likedStatus === 'true'
-    }
-    
-    function toglike(){   //點擊+1方程式
-        liked.value = !liked.value  //如果點擊了表是true
-        likeCount.value += liked.value ? 1 : -1; // 如果是true就+1 反之-1}
-        localStorage.setItem('likeCount', likeCount.value)   
-        localStorage.setItem('liked', liked.value) 
-    }
+        const likedStatus = localStorage.getItem(`liked_${article.id}`)
+        if (likedStatus) {
+        article.liked = likedStatus === 'true'
+        } else {
+        article.liked = false
+        }
+            })
+        })
+        
+        function toglike(article){   //點擊+1方程式
+            article.liked = !article.liked  //如果點擊了表是true
+            article.likeCount += article.liked ? 1 : -1; // 如果是true就+1 反之-1}
+            localStorage.setItem(`likeCount_${article.id}`, article.likeCount ) //儲存讚到localstorage
+            localStorage.setItem(`liked_${article.id}`,article.liked) //儲存點讚狀態到localStorage
+        }
 
 
 
@@ -83,10 +87,8 @@ const props = defineProps({
     </div>------->
         <div class="news-article-wrapper">
 
-            <div class="news-article-list" v-for="article in articles" :key="article.id">
+            <div class="news-article-list" v-for="article in props.articles" :key="article.id">
 
-                
-                
 
                     <div class="news-article-img">    <!--抓陣列資料前者article陣列裡的物品,後者是整個陣列-->
                         <img :src=article.img alt=""/>  
@@ -109,9 +111,9 @@ const props = defineProps({
                             </div>
                         
                             <div>
-                                <button @click="toglike">
+                                <button @click="toglike(article)">
                                     <p><i :class='["fa-regular fa-star", liked ? "fa-duotone fa-solid fa-star":"fa-regular fa-star"]'></i></p> 
-                                    <span>{{ likeCount }}</span>
+                                    <span>{{ article.likeCount }}</span>
                                 </button>                     
                             </div>
 

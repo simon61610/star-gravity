@@ -11,68 +11,29 @@ const articles = ref(articlesDate)  //幫 articles 加上響應式變化ref
 const currentPage = ref(1);  //目前所在頁面
 const pageSize = ref(4);  //每頁顯示數量 
 
-/* 不需要了
-const articles = ref([
-      
-        {
-            id:1,
-            img:testimg,
-            tag:'天象事件',
-            title: '5/24 下午1600日全蝕發生!',
-            time:'2025/5/23',
-            content:'6月21日,台灣將迎來難得一見的天文奇景——日環蝕，也被譽為「上帝的金戒指」。在日月精準交會的剎那，太陽被月亮遮掩，只留下一道璨的金環，彷彿宇宙為地球戴上的神聖指環。錯過，將是一生遺憾。'
-
-        }
-        ,
-        {
-            id:2,
-            img:testimg,
-            tag:'天象事件',
-            title: '5/24 下午1600日全蝕發生!',
-            time:'2025/5/23',
-            content:'6月21日,台灣將迎來難得一見的天文奇景——日環蝕，也被譽為「上帝的金戒指」。在日月精準交會的剎那，太陽被月亮遮掩，只留下一道璨的金環，彷彿宇宙為地球戴上的神聖指環。錯過，將是一生遺憾。'
-        }
-       
-       ,
-       
-        {
-            id:3,
-            img:testimg,
-            tag:'天象事件',
-            title: '5/24 下午1600日全蝕發生!',
-            time:'2025/5/23',
-            content:'6月21日,台灣將迎來難得一見的天文奇景——日環蝕，也被譽為「上帝的金戒指」。在日月精準交會的剎那，太陽被月亮遮掩，只留下一道璨的金環，彷彿宇宙為地球戴上的神聖指環。錯過，將是一生遺憾。'
+/*文章分類*/
+const categories = ref(['全部文章','天象事件','知識新知','生活應用'])
+const selectedCategory = ref('全部文章')  //選擇的分類
 
 
-        }
-        ,
-        {
-            id:4,
-            img:testimg,
-            tag:'天象事件',
-            title: '5/24 下午1600日全蝕發生!',
-            time:'2025/5/23',
-            content:'6月21日,台灣將迎來難得一見的天文奇景——日環蝕，也被譽為「上帝的金戒指」。在日月精準交會的剎那，太陽被月亮遮掩，只留下一道璨的金環，彷彿宇宙為地球戴上的神聖指環。錯過，將是一生遺憾。'
-        }
-        ,
-         {
-            id:5,
-            img:testimg,
-            tag:'天象事件',
-            title: '5/24 下午1600日全蝕發生!',
-            time:'2025/5/23',
-            content:'6月21日,台灣將迎來難得一見的天文奇景——日環蝕，也被譽為「上帝的金戒指」。在日月精準交會的剎那，太陽被月亮遮掩，只留下一道璨的金環，彷彿宇宙為地球戴上的神聖指環。錯過，將是一生遺憾。'
-        }
+/*文章過濾切換 */
+const filterArticles = computed(()=>{ 
+    if(selectedCategory.value === '全部文章'){   //如果點全部文章顯示全部
+        return articles.value
+    }else{
+        return articles.value.filter(a => a.tag === selectedCategory.value)  //如果點其他分類 把tag分類過濾出來
+    }
+})
+function changeCategory(cat){
+    selectedCategory.value = cat  //選擇到的分類存到變數cat
+}
 
-
-    ])*/
-
-
+/*---分頁器筆數計算--*/
     const showArticles = computed(()=>{
         const start = (currentPage.value - 1) * pageSize.value  //從第X頁的第X筆開始 例如:第一頁會從(1-1)*4 第0筆資料開始 
         const end = start + pageSize.value //一共幾筆
         console.log(` 目前第${currentPage.value}頁 顯示${start} 到 ${end-1}筆`) //驗證用而已
-        return articles.value.slice(start, start + pageSize.value)  // 保險使用 slice複製陣列 [開始,結束] 確保資料不會因為切頁被刪除回不去
+        return filterArticles.value.slice(start, start + pageSize.value)  // 保險使用 slice複製陣列 [開始,結束] 確保資料不會因為切頁被刪除回不去
     })
     
 </script>
@@ -81,12 +42,17 @@ const articles = ref([
   <div class="news-article-box">  
     <NewsBanner/>
       <main>
-        <NewsBar/>
+        <NewsBar
+        :categories= "categories"
+        :selectedCategory="selectedCategory"
+        @changeCategory="changeCategory"
+        
+        />
         <NewsArticleList :articles="showArticles"/>
         <Pagination 
          v-model="currentPage"
-         v-model:pageSize="pageSize"
-        :total="articles.length"
+         v-model:pageSize="pageSize"  
+        :total="filterArticles.length"
          />   
 
       </main>

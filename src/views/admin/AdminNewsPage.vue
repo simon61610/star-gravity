@@ -4,7 +4,11 @@
     import AdminToolbar from '@/components/admin/AdminToolbar.vue';
     import AdminSidebar from '@/components/admin/AdminSidebar.vue';
     import AdminNews from '@/components/admin/management/AdminNews.vue';
+    const articleRef = ref(null)  //建立一個ref放子層資料
     const search = ref('')
+    function openadd(){
+        articleRef.value.articleEdit() //呼叫子層的addArticle方法
+    }
     
 </script>
 
@@ -21,12 +25,12 @@
                     <AdminToolbar
                     v-model:search="search"
                     title="文章管理">
-                         <template #add>
-                            <el-button type="warning" size="small"  style="font-size: 16px ; color:black ;width: 144px; height:40px; border-radius:10px">新增</el-button> <!---template如果有具名(例如#add)就一定要被外層包起來--->
+                        <template #add>
+                            <el-button @click="openadd"  type="warning" size="small"  style="font-size: 16px ; color:black ;width: 144px; height:40px; border-radius:10px">新增</el-button> <!---template如果有具名(例如#add)就一定要被外層包起來--->
                         </template>             
                     </AdminToolbar>
                
-                <AdminNews :search="search"/>
+                <AdminNews :search="search" ref="articleRef"/>
 
             </div>
 
