@@ -41,13 +41,13 @@ import CartSuccessPage from '@/components/shop/cart/CartSuccess.vue'
 
 
 // ------------------ 會員 member  ------------------
-import CollectionPage from '@/views/member/CollectionPage.vue'
-import CommentPage from '@/views/member/CommentPage.vue'
-import EventListPage from '@/views/member/EventListPage.vue'
+// import CollectionPage from '@/views/member/CollectionPage.vue'
+// import CommentPage from '@/views/member/CommentPage.vue'
+// import EventListPage from '@/views/member/EventListPage.vue'
 import ForgetPage from '@/views/member/ForgetPage.vue'
 import ForgotPage from '@/views/member/ForgotPage.vue'
 import LoginFirstPage from '@/views/member/LoginFirstPage.vue'
-import OrderPage from '@/views/member/OrderPage.vue'
+// import OrderPage from '@/views/member/OrderPage.vue'
 import PersonalPage from '@/views/member/PersonalPage.vue'
 import RegisterPage from '@/views/member/RegisterPage.vue'
 import ResetPasswordPage from '@/views/member/ResetPasswordPage.vue'
@@ -122,14 +122,22 @@ const routes = [
 
 
 // ------------------ 會員 member  ------------------
-{path: '/collection', name: 'collection', component: CollectionPage},
-{path: '/membercomment', name: 'membercomment', component: CommentPage},
-{path: '/eventlist', name: 'eventlist', component: EventListPage},
+// {path: '/collection', name: 'collection', component: CollectionPage},
+// {path: '/membercomment', name: 'membercomment', component: CommentPage},
+// {path: '/eventlist', name: 'eventlist', component: EventListPage},
 {path: '/forget', name: 'forget', component: ForgetPage},
 {path: '/forgot', name: 'forgot', component: ForgotPage},
 {path: '/loginfirst', name: 'loginfirst', component: LoginFirstPage},
-{path: '/memberorder', name: 'memberorder', component: OrderPage},
-{path: '/personal', name: 'personal', component: PersonalPage},
+// {path: '/memberorder', name: 'memberorder', component: OrderPage},
+{path: '/membercenter', name: 'membercenter', component: PersonalPage,
+  children: [
+    {path: 'personal', component: () => import('../components/member/profile/Personal.vue')},
+    {path: 'order', component: () => import('../components/member/profile/Order.vue')},
+    {path: 'eventlist', component: () => import('../components/member/profile/EventList.vue')},
+    {path: 'collection', component: () => import('../components/member/profile/Collection.vue')},
+    {path: 'comment', component: () => import('../components/member/profile/Comment.vue')},
+  ]
+},
 {path: '/register', name: 'register', component: RegisterPage},
 {path: '/resetpassword', name: 'resetpassword', component: ResetPasswordPage},
 
