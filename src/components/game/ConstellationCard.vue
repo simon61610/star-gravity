@@ -1,0 +1,192 @@
+<script setup>
+
+</script>
+
+<template>
+ <main class="scene" aria-label="星空互動場景">
+    <!-- 抽屜卡片：目前純排版靜態，沒有 v-model 行為 -->
+    <aside class="card" aria-live="polite">
+      <header class="card__hd">
+        <div class="card__thumb">
+          <!-- 換成你的縮圖 -->
+          <img src="/src/assets/images/games/GameSkyPage/zodiac-cardPic/gmasky_card-aries.png" alt="星座圖示" />
+        </div>
+      </header>
+     <div class="card__title">
+          <div class="card_icon">
+             <img src="/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_aries-icon.png" alt="星座圖示" />
+          </div>
+          <div class="card__name">
+            牡羊座 Aries
+          </div>
+        </div>
+      <nav class="tabs" aria-label="卡片分頁（靜態）">
+        <button class="tabs__btn tabs__btn--on" type="button">星座介紹</button>
+        <button class="tabs__btn" type="button">星點位置</button>
+        <button class="tabs__btn" type="button">神話故事</button>
+      </nav>
+
+      <section class="card__body">
+        <p class="card__text">
+          很久很久以前的遙遠國度，國王和皇后離婚了。國王很快娶了一名為新皇后，新皇后嫉妒國王疼愛前妻生的一對兄妹，於是想出了一條惡計想殺死這對孩子。。
+        </p>
+      </section>
+    </aside>
+
+    <!-- 畫布區：目前只放背景圖與幾顆假星點，沒有互動 -->
+    <div class="canvas">
+      <div class="sky">
+        <!-- 星座輪廓示意（靜態顯示） -->
+        <img class="figure" src="/src/assets/images/games/GameSkyPage/zodiac-sky/gamesky_aries.png" alt="牡羊座輪廓" />
+      </div>
+    </div>
+
+  </main>
+</template>
+
+<style>
+
+/* 版面 */
+.scene {
+  position: relative;
+  width: 100%;
+  min-height: 588px;
+  overflow: hidden;
+}
+.bg {
+  position: absolute; 
+  inset: 0;
+  width: 100%; 
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+.hill {
+  position: absolute; 
+  left: 0; 
+  right: 0; 
+  bottom: 0;
+  width: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+/* 左側卡片 */
+.card {
+  position: absolute; 
+  left: 168px; 
+  top: 55px;
+  width: 280px;
+  height: 450px;
+  background: rgba(15,22,46,.7);
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 16px;
+  backdrop-filter: blur(2px);
+  color: #fff;
+  z-index: 3;
+  padding: 24px;
+    
+}
+
+.card__hd{ 
+  margin-bottom:8px;
+  padding: 10px 20px;
+  margin: 0 auto;
+  display: flex;
+  align-items:center;
+  justify-content: center;
+}
+
+.card__thumb{ 
+  width:200px;
+  height:220px;
+
+}
+
+.card__glyph{ 
+  font-size:20px; 
+  opacity:.8;
+}
+
+.card__name{ 
+  font-size:36px; 
+  
+}
+
+.tabs{ display:flex;
+  gap:8px;
+  margin:8px 0 12px; 
+}
+
+.tabs__btn{
+  flex:1; padding:6px 8px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.06);
+  color:#fff; font-size:12px;
+}
+
+
+.tabs__btn--on{
+  background:#7a6cff;
+  border-color:#7a6cff; 
+}
+
+.card__body{ 
+  font-size:13px; 
+  line-height:1.6;
+}
+
+.card__title{
+display: flex;
+align-items:center;
+justify-content: center;
+}
+
+/* 右側舞台（寬高固定，便於放 PNG） */
+.stage{
+  position:absolute; left: 320px; right: 24px; top: 72px; bottom: 48px;
+  z-index: 2;
+  width: min(1200px, 100%);
+  height: 600px;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.figure{
+  position:absolute; inset:0;
+  width: 80%; height: 80%;
+  object-fit: contain;
+  padding-left: 350px;
+  padding-top: 67px;
+}
+
+/* 星點（PNG，先手動定位） */
+.star{
+
+}
+
+/* 控制鈕（純樣式） */
+.ctrls{
+  position:absolute; right: 24px; top: 24px; z-index:4;
+  display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;
+}
+.ctrls__btn{
+  display:inline-flex; 
+  align-items:center; gap:6px;
+  padding:8px 12px; 
+  font-size:13px; color:#fff;
+  border-radius: 999px;
+  backdrop-filter: blur(4px);
+}
+.ctrls__btn img{ width:16px; height:16px; object-fit:contain; }
+.ctrls__btn--ghost{ background:transparent; }
+
+/* RWD */
+@media (max-width: 750px) {
+  .card{ left: 12px; right: 12px; width:auto; top: 12px; }
+  .stage{ left: 12px; right: 12px; top: 220px; height: 420px; }
+  .ctrls{ right: 12px; top: 12px; }
+  .star{ width: 10px; height: 10px; }
+}
+</style>

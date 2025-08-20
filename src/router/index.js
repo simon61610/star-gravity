@@ -98,7 +98,6 @@ const routes = [
 {path: '/gamewish', name: 'gamewish', component: GameWishPage},
 {path: '/gamesky', name: 'gamesky', component: GameSkyPage},
 
-
 // ------------------ 星星活動 starevent ------------------
 {path: '/events', name: 'events', component: EventsPage},
 {path: '/eventdetail', name: 'eventdetail', component: EventDetailPage},
