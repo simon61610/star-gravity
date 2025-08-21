@@ -1,11 +1,27 @@
 <!-- 分類列表頁 -->
 <script setup>
+    import { ref } from 'vue'
+    
     // 組件
     import ShopBanner from '@/components/shop/ShopBanner.vue';
     import Breadcrumbs from '@/components/shop/Breadcrumbs.vue';
     import CategoryToolbar from '@/components/shop/category/CategoryToolbar.vue';
     import CategoryList from '@/components/shop/category/CategoryList.vue';
     import ProductList from '@/components/shop/category/ProductList.vue';
+
+
+
+    // =====================================================
+    // ==================== 商品類型篩選 ====================
+    // =====================================================
+    const selectedCate = ref(null)
+
+    // 接收事件的處理函數
+    const selected = (selectedObj) => {
+        selectedCate.value = selectedObj
+        console.log(selectedCate.value) // Proxy(Object) {main: '天文望遠鏡', sub: '基礎入門型'}
+    }
+    // 下方用 selected-cate 當作屬性，準備傳值給子
 </script>
 
 
@@ -16,8 +32,8 @@
         <section class="product-section">
             <CategoryToolbar />
             <div class="main-section">            
-                <CategoryList />
-                <ProductList />
+                <CategoryList @select="selected" />
+                <ProductList :selected-cate = "selectedCate"/>
             </div>
         </section>
     </section>

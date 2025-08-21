@@ -20,7 +20,7 @@ function toggleMenu() {
                 <li><router-link to="/">觀星初學指南</router-link></li>
                 <li><router-link to="/Newpage">天文快訊</router-link></li>       <!--<li><router-link :to="{ name: 'NewpageView' }">天文快訊</router-link></li>--->
                 <li><router-link to="/">星視野</router-link></li>
-                <li><router-link to="/">星據點</router-link></li>
+                <li><router-link to="/mapfirst">星據點</router-link></li>
                 <li><router-link to="/">星遊戲</router-link></li>
                 <li><router-link to="/">星星活動</router-link></li>
                 <li><router-link to="/shop">星空小舖</router-link></li>               
