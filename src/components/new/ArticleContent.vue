@@ -3,12 +3,37 @@ import testimg from '@/assets/images/news/news-article-a1.jpg';
 import back from '@/assets/images/news/article-content-back.svg'
 import { useRoute } from 'vue-router'  //取得目前「路由資訊」資料 {} → 具名匯出
 import { articles } from '@/data/articles.js' //抓物件資料
+import { ref,onMounted,watch } from 'vue'
 
 const router = useRoute(); //回傳當前路由物件
 const id = Number(router.params.id) //params useRoute的參數之一 裡面存放動態路由 Number()字串轉數字
 const article = articles.find(a => a.id === id)  //文章ID對應
 
+const likeCount = ref(0)   // ← 這樣才有變數可以用
+const liked = ref(false)   // ← 這是點讚狀態
 
+
+
+
+
+/*抓讚數資料*/
+onMounted(() => {
+  // 讀取 localStorage
+  const count = localStorage.getItem(`likeCount_${article.id}`)
+likeCount.value = count ? parseInt(count) : 0
+
+const likedStatus = localStorage.getItem(`liked_${article.id}`)
+liked.value = likedStatus === 'true'
+})
+
+function toglike() {
+  liked.value = !liked.value
+  likeCount.value += liked.value ? 1 : -1
+    localStorage.setItem(`likeCount_${article.id}`, likeCount.value)
+    localStorage.setItem(`liked_${article.id}`, liked.value)
+} 
+
+/*複製網址 */
 async function copyurl(){    // async....await  非同步操作 複製網址程式
     const url = window.location.href  //複製網址
     try{      //try .. catch (try區塊會先執行如果不能執行會跳catch區塊執行)
@@ -19,6 +44,8 @@ async function copyurl(){    // async....await  非同步操作 複製網址程�
         alert('複製失敗，請手動複製')
     }
 }
+
+
 </script>
 
 
@@ -33,7 +60,7 @@ async function copyurl(){    // async....await  非同步操作 複製網址程�
                     <h4>發佈時間:{{article.time}}</h4>
                 </div>
                 <div class="article-subtitle-icon">
-                    <i class="fa-regular fa-star"><span>{{article.like}}</span></i>
+                    <i class="fa-regular fa-star" @click="toglike" ><span>{{likeCount}}</span></i>
                     <i class="fa-solid fa-share-nodes" @click = 'copyurl'></i>
                 </div>
             </div>
@@ -80,7 +107,7 @@ async function copyurl(){    // async....await  非同步操作 複製網址程�
     max-width: 710px;
     width: 100%;
     .article-title-box{
-        
+            
         .article-title-h2{
             padding: 10px;
             margin-bottom: 10px;
@@ -114,6 +141,7 @@ async function copyurl(){    // async....await  非同步操作 複製網址程�
 
 
     .article-content-box{
+        margin-top: 36px !important;
 
          ul{
             margin-top: 30px;
@@ -161,7 +189,34 @@ async function copyurl(){    // async....await  非同步操作 複製網址程�
     }
 
 }
+@media screen and (max-width: 431px){
 
+    .article-content-img{
+        aspect-ratio: 16/9;
+        text-align: center;
+        margin-top: 50px;
+        
+        
+        img{
+            max-width: 350px !important;
+            width: 100% !important;
+            
+        }
+    }
+
+
+    .article-content-box {
+        align-items: center;
+        background-color: $primaryColor-900;
+        display: flex;
+        flex-direction: column;
+         .article-content-back {
+            width: 100%;
+            justify-content: flex-start !important;
+            margin-bottom: 16px;
+            }
+        }
+}   
 
 
 </style>

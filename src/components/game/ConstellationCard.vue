@@ -44,7 +44,7 @@
   </main>
 </template>
 
-<style>
+<style scoped lang="scss">
 
 /* 版面 */
 .scene {
@@ -52,6 +52,7 @@
   width: 100%;
   min-height: 588px;
   overflow: hidden;
+  
 }
 .bg {
   position: absolute; 
@@ -85,6 +86,13 @@
   color: #fff;
   z-index: 3;
   padding: 24px;
+
+  @media (max-width: 750px) {
+    left: 12px; 
+    right: 12px; 
+    width:auto; 
+    top: 12px;
+  }
     
 }
 
@@ -149,8 +157,11 @@ justify-content: center;
   z-index: 2;
   width: min(1200px, 100%);
   height: 600px;
-  margin-left: auto;
-  margin-right: 0;
+  // margin-left: auto;
+  // margin-right: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
 }
 
 .figure{
@@ -184,8 +195,7 @@ justify-content: center;
 
 /* RWD */
 @media (max-width: 750px) {
-  .card{ left: 12px; right: 12px; width:auto; top: 12px; }
-  .stage{ left: 12px; right: 12px; top: 220px; height: 420px; }
+   .stage{ left: 12px; right: 12px; top: 220px; height: 420px; }
   .ctrls{ right: 12px; top: 12px; }
   .star{ width: 10px; height: 10px; }
 }

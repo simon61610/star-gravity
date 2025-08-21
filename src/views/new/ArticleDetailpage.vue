@@ -7,7 +7,7 @@ import ArticleContent from '@/components/new/ArticleContent.vue';
 <template>
     <main>
         <section class="article-page-body">
-            <ArticleContent/>
+            <ArticleContent :id="$route.params.id" :key="$route.params.id"/> <!--id是負責傳給子層資訊對應接收  key是給vue標示已經不頁-->
             <ArticleAside/>
         </section>
     </main>
@@ -39,4 +39,19 @@ main{
     }
    
 }
+@media screen and (max-width: 431px){
+    main{
+        padding:  0 16px;
+        .article-page-body{
+       
+        margin-top: 36px !important;
+        display: flex;
+        flex-direction: column;
+        }
+    }
+   
+}
+
+
+
 </style>

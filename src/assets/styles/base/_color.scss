@@ -17,8 +17,15 @@ $FontColor-black: #000000;
 $FontColor-gray: #c0c0c0;
 $FontColor-white: #ffffff;
 
+// $font-color: (
+//     white:#fff,
+//     gray:#c0c0c0
+// );
+
+// .xxx {
+//     color: map-get($font-color, gray);
+// }
+
 // input 顏色
 $inputColor-border: #666;
 $inputColor-focus: #272D7A;
-
-

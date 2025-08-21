@@ -1,4 +1,9 @@
 <script setup>
+const props = defineProps({
+    categories: Array,    //接收父層所有分類
+    selectedCategory: String  //接受父層目前點擊分類
+})
+const emit = defineEmits(['changeCategory'])  
 
 </script>
 
@@ -13,12 +18,15 @@
 
             
             <ul class="article-category">
-                <li class="label--blue">全部文章</li>
-                <li class="label--blue">天象事件</li>
+                <li v-for="cat in categories" :key="cat" class="label--blue" 
+                    :class="{ active: selectedCategory === cat }"  
+                    @click="emit('changeCategory', cat)"
+                    >{{ cat }}
+                </li>
+                <!-- <li class="label--blue">天象事件</li>
                 <li class="label--blue">知識新知</li>
-                <li class="label--blue">生活應用</li>
+                <li class="label--blue">生活應用</li> -->
             </ul>
-            
         </div>
     </div>
 
@@ -90,12 +98,72 @@
                         color: $primaryColor-100;
                         cursor: pointer;
                     }
+                    &.active{
+                        background-color: $secondaryColor-orange;
+                        color: $primaryColor-100;
+                    }
 
                 }
             }
          }
     
 }
+/*-------------斷點430--------------*/
+@media screen and (max-width: 431px){
+.article-list-wrapper{
+    .article-list{
+        border-bottom: none;
+        justify-content: center;
+        .title{
+            display: none;
+        }
+        .article-category{
+            justify-content: center;
+            width: 250px;
+            flex-wrap: wrap;
+            li{
+                height: 42px;
+                line-height: 42px;
+            
+            }
+
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
 
 
 </style>
