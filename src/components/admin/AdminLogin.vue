@@ -1,8 +1,22 @@
 <script setup>
 import  logoadmin from '@/assets/logos/logo-admin.svg'
 import { ref } from 'vue'
-const inputpass = ref('')
-const input = ref('')
+import { useRouter } from 'vue-router'
+const account = ref('')
+const password = ref('')
+const router = useRouter()
+
+
+function login(){
+    if(account.value === 'tjd102' && password.value === '20250827'){
+        localStorage.setItem('admin_token', 'fake_admin_token=123456789') //設置一個假的token 名字admin_token ,值fake_admin_token=123456789
+        router.push('/AdminMemberPage') //正確就跳轉管理頁面
+    }
+    else{
+        alert('登入失敗請離開')
+    }
+}
+
 </script>
 
 <template>
@@ -18,19 +32,20 @@ const input = ref('')
             </div>
 
             <div class="admin-login-account">
-                <el-input v-model="input" style="width: 460px" placeholder="請輸入帳號" />
+                <el-input v-model= "account" style="width: 460px" placeholder="請輸入帳號" />
             </div>
 
             <div>
                 <el-input class="admin-login-password"
-                    v-model="inputpass"
+                    v-model="password"
                     style="width: 460px"
                     type="password"
                     placeholder="請輸入密碼"
                     show-password/>
             </div>
             <div class="admin-login-button">
-                <router-link to="/AdminMemberPage"><button>登入</button></router-link>
+                <button @click="login">登入</button>
+                <!-- <router-link to="/AdminMemberPage"></router-link> -->
             </div>
         </div>
     </section>

@@ -144,6 +144,7 @@ const routes = [
       path: '/AdminLayoutPage',    
       name: '/AdminLayoutPage',     
       component: () => import('@/views/admin/AdminLayoutPage.vue'),
+      meta: { requiresAuth: true } , //提示路由這個頁面要認證才可以跳轉
       children:[
           {
             path: '/AdminMemberPage',    
@@ -195,11 +196,6 @@ const routes = [
 
 
 
-
-
-
-
-
 ] // routes 的陣列結尾
 
 
@@ -212,6 +208,17 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes, // 等同 routes: routes 1
+})
+
+
+//建立路由守衛 這是一個回呼涵式 
+router.beforeEach((to,from,next) => {
+  const token = localStorage.getItem('admin_token') //定義一個token 到 localStorage 裡面去取出 admin_token 的值
+  if(!token && to.meta.requiresAuth){ 
+    next({name:'AdminLoginPage'}) //如果沒有token,且是需要驗證的頁面,就跳轉到登入頁面 也可以寫{/path: '/AdminloginPage'}
+  } else{
+    next()  //不須驗證頁面依上面設定跳轉畫面
+  }
 })
 
 export default router
