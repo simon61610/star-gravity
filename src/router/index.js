@@ -59,17 +59,6 @@ import ResetPasswordPage from '@/views/member/ResetPasswordPage.vue'
 //--------------------文章 Article -----------------------
 import Newpage from '@/views/new/Newpage.vue'
 
-//--------------------後台 Admin -------------------------
-import AdminLoginPage from '@/views/admin/AdminLoginPage.vue';
-import AdminMemberPage from '@/views/admin/AdminMemberPage.vue';
-import AdminActivityPage from '@/views/admin/AdminActivityPage.vue';
-import AdminOrderPage from '@/views/admin/AdminOrderPage.vue';
-import AdminShopPage from '@/views/admin/AdminShopPage.vue';
-import AdminNewsPage from '@/views/admin/AdminNewsPage.vue';
-import AdminCommentPage from'@/views/admin/AdminCommentPage.vue';
-
-
-
 
 // ||=================================================================||
 // ||                              routes                             ||
@@ -151,50 +140,60 @@ const routes = [
     {
       path: '/article/:id',    // 在vue裡面 / = http://localhost:5173/ 也就是本機的意思
       name: 'ArticleDetailpage',     //網頁的id
-      component: () => import('../views/new/ArticleDetailpage.vue'), 
+      component: () => import('@/views/new/ArticleDetailpage.vue'), 
     },
     //  ---Admin後台-----
     {
-      path: '/AdminLoginPage',    // 
-      name: 'AdminLoginPage',     //
-      component: AdminLoginPage
-    },
-
-    {
-      path: '/AdminMemberPage',    // 
-      name: 'AdminMemberPage',     //
-      component: AdminMemberPage
+      path: '/AdminLoginPage',    
+      name: 'AdminLoginPage',     
+      component: () => import('@/views/admin/AdminLoginPage.vue')
     },
     {
-      path: '/AdminActivityPage',    // 
-      name: 'AdminActivityPage',     //
-      component: AdminActivityPage
-    },
-    {
-      path: '/AdminOrderPage',    // 
-      name: 'AdminOrderPage',     //
-      component: AdminOrderPage
-    },
-    {
-      path: '/AdminShopPage',    // 
-      name: 'AdminShopPage',     //
-      component: AdminShopPage
-    },
-     {
-      path: '/AdminNewsPage',    // 
-      name: 'AdminNewsPage',     //
-      component: AdminNewsPage
-    },
-    {
-      path: '/AdminCommentPage',    // 
-      name: 'AdminCommentPage',     //
-      component: AdminCommentPage
+      path: '/AdminLayoutPage',    
+      name: '/AdminLayoutPage',     
+      component: () => import('@/views/admin/AdminLayoutPage.vue'),
+      meta: { requiresAuth: true } , //提示路由這個頁面要認證才可以跳轉
+      children:[
+          {
+            path: '/AdminMemberPage',    
+            name: 'AdminMemberPage',     
+            component: () => import('@/views/admin/AdminMemberPage.vue')
+          },
+
+          {
+            path: '/AdminActivityPage',    
+            name: 'AdminActivityPage',     
+            component: () => import('@/views/admin/AdminActivityPage.vue')
+          },
+
+          {
+            path: '/AdminOrderPage',    
+            name: 'AdminOrderPage',     
+            component: () => import('@/views/admin/AdminOrderPage.vue')
+          },
+
+           {
+            path: '/AdminShopPage',     
+            name: 'AdminShopPage',     
+            component: () => import('@/views/admin/AdminShopPage.vue')
+          },
+
+          {
+            path: '/AdminNewsPage',    
+            name: 'AdminNewsPage',     
+            component:  () => import('@/views/admin/AdminNewsPage.vue')
+          },
+
+          {
+            path: '/AdminCommentPage',    
+            name: 'AdminCommentPage',     
+            component: () => import('@/views/admin/AdminCommentPage.vue')
+          },
+      ]
     },
 
-
-
-
-
+   
+   
 
 
 
@@ -217,6 +216,17 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes, // 等同 routes: routes 1
+})
+
+
+//建立路由守衛 這是一個回呼涵式 
+router.beforeEach((to,from,next) => {
+  const token = localStorage.getItem('admin_token') //定義一個token 到 localStorage 裡面去取出 admin_token 的值
+  if(!token && to.meta.requiresAuth){ 
+    next({name:'AdminLoginPage'}) //如果沒有token,且是需要驗證的頁面,就跳轉到登入頁面 也可以寫{/path: '/AdminloginPage'}
+  } else{
+    next()  //不須驗證頁面依上面設定跳轉畫面
+  }
 })
 
 export default router
