@@ -4,12 +4,13 @@
     
     // 方法
     import { ref, computed } from 'vue'
-    import { makeProductsMock } from '@/data/productsMock'
+    // import { makeProductsMock } from '@/data/productsMock'
+    import products from '@/data/products';
 
     
 
     // ------------------------ 生成假資料 ------------------------
-    const items = ref(makeProductsMock(220)) 
+    const items = ref(products) 
     // console.log(items)
 
     // ------------------------ Pagination 的變數 ------------------------
@@ -29,7 +30,7 @@
     <section>
         <div class="product-items">
             <div class="item__card" v-for="( item, index ) in showItems"> <!-- 用顯示的商品陣列跑 v-for -->
-                <img :src="item.image" alt="商品假圖" class="item__card__img">
+                <img :src="item.pic" alt="商品假圖" class="item__card__img">
                 <div class="item__card__text">
                     <h1 class="item__card__text--name">{{ item.name }}</h1>
                     <h2 class="item__card__text--price">NT$ {{ item.price }}</h2>
@@ -59,6 +60,8 @@
         gap: 40px;
 
         .item__card {
+            border: 1px solid red;
+            max-width: 200px;
             cursor: pointer;
             text-align: center;
             padding: 4px;
@@ -66,12 +69,18 @@
             &__img {
                 margin-bottom: 16px;
                 display: block;
+                width: 200px;
+                height: 200px;
+                object-fit: cover;
             }
             &__text {
                 padding: 0 16px;
                 &--name {
                     font-size: $pcChFont-H4;
                     margin-bottom: 12px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                 }
                 &--price {
                     font-size: $pcChFont-p;
