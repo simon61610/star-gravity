@@ -1,29 +1,61 @@
 <script setup>
     // 組件
     import Pagination from '@/components/common/Pagination.vue';
-    
     // 方法
-    import { ref, computed } from 'vue'
-    // import { makeProductsMock } from '@/data/productsMock'
+    import { ref, watch, computed } from 'vue'
+    // 假資料
     import products from '@/data/products';
-
     
+    // 父傳子接收: Proxy(Object) {main: '天文望遠鏡', sub: '基礎入門型'}
+    const props = defineProps({
+        selectedCate: {
+            type: Object,
+            default: null,
+        }
+    })
+    // console.log(props.selectedCate)
 
-    // ------------------------ 生成假資料 ------------------------
-    const items = ref(products) 
+// -------------------------------------------------------------------------------
+
+    const items = ref(products) // 生成假資料
     // console.log(items)
-
-    // ------------------------ Pagination 的變數 ------------------------
     const currentPage = ref(1) // 預設第一頁
     const pageSize= ref(16) // 每頁顯示幾筆
 
-    // 切分頁
-    const showItems = computed (() => {
-        const start = (currentPage.value - 1) * pageSize.value // 從第幾筆開始
-        return items.value.slice(start, start + pageSize.value) // 顯示的商品陣列
+// -------------------------------------------------------------------------------
+    // 分類重選，回到第一頁
+    // watch(偵測的資料, 函數)
+    watch(() => props.selectedCate, () => {
+        currentPage.value = 1
+        window.scrollTo({ 
+            top: 0, 
+            behavior: 'smooth' // 平滑滾動 
+        })
     })
 
+    // =====================================================
+    // ==================== 商品類型篩選 ====================
+    // =====================================================
+    const filteredItems = computed(() => {
+        // 判斷有沒有選
+        if(!props.selectedCate){
+            return items.value
+        }else {
+            return items.value.filter((product) => {
+                // 商品分類名稱相等
+                return product.category.main === props.selectedCate.main && product.category.sub === props.selectedCate.sub
+            })
+        }
+    })
 
+    // =====================================================
+    // ==================== Pagination =====================
+    // =====================================================
+    // 每頁顯示的商品
+    const showItems = computed (() => {
+        const start = (currentPage.value - 1) * pageSize.value // 從第幾筆開始
+        return filteredItems.value.slice(start, start + pageSize.value) // 顯示的商品陣列
+    })
 </script>
 
 <template>
@@ -44,7 +76,7 @@
             <Pagination
                 v-model="currentPage"
                 v-model:pageSize="pageSize"
-                :total="items.length"
+                :total="filteredItems.length"
             />
         </div>
     </section>

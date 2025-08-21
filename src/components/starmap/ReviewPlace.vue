@@ -1,3 +1,18 @@
+<script setup>
+import { ref, defineEmits} from 'vue'
+
+const emit = defineEmits()
+function cencelReview(){   //這邊要判斷是不是會員
+    if(1){
+        emit("cencelReview")
+    }else{
+        
+    }
+    
+}
+
+</script>
+
 <template>
     <!-- 評論攔 -->
     <div class="mapreview-writePlace">
@@ -15,18 +30,20 @@
             <p>字數限制：0/300</p>
         </div>
         <div class="review-writePlace-photo">
-            <h5>上傳照片：</h5>
+            <!-- <h5>上傳照片：</h5> -->
             <div class="review-photo-input">
                 <div class="photo-inputtitle">
                     <img src="../../assets/icons/icon-map-photoadd.svg" alt="">
-                    <p>新增照片</p>
+                    <p>點擊新增照片</p>
                 </div>
                 <input type="file">
             </div>
+            <!-- 照片預覽 -->
+            <img class="userPhotoShow" src=""></img>
             
         </div>
         <div class="review-writePlace-button">
-            <button class="cancel">取消</button>
+            <button class="cancel" @click="cencelReview">取消</button>
             <button class="submit">張貼</button>
         </div>
     </div>
@@ -39,15 +56,15 @@
 
 .mapreview-writePlace{
     width: 430px;
-    max-height: 680px;
+    max-height: 90%;
     border: 2px solid $primaryColor-100;
     border-radius: 20px;
 
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    // justify-content:center;
+    gap: 36px;
     align-items: center;
-    gap: 24px;
     padding: 30px;
     box-sizing: border-box;
 
@@ -61,6 +78,8 @@
     right: 0;
     margin: auto;
     z-index: 300;
+
+    overflow-y: auto;
 }
 .mapreview-writePlace h3{
     font-size: $pcChFont-H3;
@@ -101,6 +120,7 @@
     //照片上傳區
 .review-writePlace-photo{
     width: 100%;
+    height: auto;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -109,12 +129,12 @@
     font-size: $pcChFont-p;
 }
 .review-photo-input{
-    width: 360px;
-    height: 270px;
+    width: 350px;
+    height: 48px;
     align-self: center;
 
     border: 1px solid $FontColor-black;
-    border-radius: 20px;
+    border-radius: 5px;
 
     position: relative;
 }
@@ -138,6 +158,12 @@
 }
 .photo-inputtitle img{
     width: 36px;
+}
+
+.userPhotoShow{
+    display: block;
+    margin: 12px auto;
+    width: 100%;
 }
 
     //按鈕
