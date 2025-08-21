@@ -16,8 +16,8 @@
 </script>
 
 <template>
-	<Header /> 
-	<router-view />
+	<Header />  
+	<router-view /> 
   	<Footer /> 
 </template>
 
