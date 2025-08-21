@@ -1,48 +1,82 @@
 <script setup>
+import { ref } from 'vue'
 
+// Tab 清單（之後要加/改只改這裡）
+const tabs = [
+  { key: 'intro',    label: '星座介紹' },
+  { key: 'position', label: '星點位置' },
+  { key: 'myth',     label: '神話故事' },
+]
+
+// 目前選中的分頁
+const activeTab = ref('intro')
 </script>
 
 <template>
  <main class="scene" aria-label="星空互動場景">
-    <!-- 抽屜卡片：目前純排版靜態，沒有 v-model 行為 -->
-    <aside class="card" aria-live="polite">
-      <header class="card__hd">
-        <div class="card__thumb">
-          <!-- 換成你的縮圖 -->
-          <img src="/src/assets/images/games/GameSkyPage/zodiac-cardPic/gmasky_card-aries.png" alt="星座圖示" />
-        </div>
-      </header>
-     <div class="card__title">
-          <div class="card_icon">
-             <img src="/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_aries-icon.png" alt="星座圖示" />
-          </div>
-          <div class="card__name">
-            牡羊座 Aries
-          </div>
-        </div>
-      <nav class="tabs" aria-label="卡片分頁（靜態）">
-        <button class="tabs__btn tabs__btn--on" type="button">星座介紹</button>
-        <button class="tabs__btn" type="button">星點位置</button>
-        <button class="tabs__btn" type="button">神話故事</button>
-      </nav>
-
-      <section class="card__body">
-        <p class="card__text">
-          很久很久以前的遙遠國度，國王和皇后離婚了。國王很快娶了一名為新皇后，新皇后嫉妒國王疼愛前妻生的一對兄妹，於是想出了一條惡計想殺死這對孩子。。
-        </p>
-      </section>
-    </aside>
-
-    <!-- 畫布區：目前只放背景圖與幾顆假星點，沒有互動 -->
-    <div class="canvas">
-      <div class="sky">
-        <!-- 星座輪廓示意（靜態顯示） -->
-        <img class="figure" src="/src/assets/images/games/GameSkyPage/zodiac-sky/gamesky_aries.png" alt="牡羊座輪廓" />
+  <aside class="card" aria-live="polite">
+    <header class="card__hd">
+      <div class="card__thumb">
+        <img src="/src/assets/images/games/GameSkyPage/zodiac-cardPic/gmasky_card-aries.png" alt="星座圖示" />
       </div>
+    </header>
+
+    <div class="card__title">
+      <div class="card_icon">
+        <img src="/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_aries-icon.png" alt="星座圖示" />
+      </div>
+      <div class="card__name">牡羊座 Aries</div>
     </div>
 
-  </main>
+    <!-- Tabs：由資料產生 + 高亮切換 -->
+    <nav class="tabs" aria-label="卡片分頁">
+      <button
+        v-for="tab in tabs"
+        :key="tab.key"
+        class="tabs__btn"
+        :class="{ 'tabs__btn--on': activeTab === tab.key }"
+        type="button"
+        @click="activeTab = tab.key"
+      >
+        {{ tab.label }}
+      </button>
+    </nav>
+
+    <!-- 內容區：依 activeTab 顯示（用 v-show 切換） -->
+    <section class="card__body">
+      <!-- 星座介紹 -->
+      <p class="card__text" v-show="activeTab === 'intro'">
+        很久很久以前的遙遠國度，國王和皇后離婚了。國王很快娶了一名為新皇后，
+        新皇后嫉妒國王疼愛前妻生的一對兄妹，於是想出了一條惡計想殺死這對孩子……
+      </p>
+
+      <!-- 星點位置（示例：列表/小表格都可以） -->
+      <div v-show="activeTab === 'position'">
+        <ul>
+          <li>赤經：約 2h40m</li>
+          <li>赤緯：約 +20°</li>
+          <li>象線：由主星 α(嬰兒座α)～γ 等連成典型羊角形</li>
+        </ul>
+        <p class="card__text">位於雙魚座與金牛座之間，為黃道帶第一個星座。</p>
+      </div>
+
+      <!-- 神話故事 -->
+      <p class="card__text" v-show="activeTab === 'myth'">
+        傳說金羊毛能庇佑孩童平安，眾神派出會飛的公羊拯救兄妹穿越大海，
+        其後化作天上的牡羊座，守護勇氣與新開始。
+      </p>
+    </section>
+  </aside>
+
+  <!-- 右側畫布（保持原樣；若要依 Tab 切換圖，也可加 v-show/v-if） -->
+  <div class="canvas">
+    <div class="sky">
+      <img class="figure" src="/src/assets/images/games/GameSkyPage/zodiac-sky/gamesky_aries.png" alt="牡羊座輪廓" />
+    </div>
+  </div>
+ </main>
 </template>
+
 
 <style scoped lang="scss">
 
