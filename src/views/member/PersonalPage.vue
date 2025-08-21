@@ -4,9 +4,20 @@
         <div class="leftright">
             <!-----左邊頭像+選單-------->
             <aside class="sidebar">
-                <div class="demo-type">
-                    <el-avatar :icon="UserFilled" :size="55" class="avatar" />
+                <!-- 頭像，點整個圈圈就能選圖 -->
+                <label class="avatar-uploader">
+                    <input class="file" type="file" accept="image/*" @change="onPick" />
+                    <img v-if="preview" :src="preview" alt="avatar" />
+                    <div v-else class="placeholder">+</div>
+                    <!-- <span class="edit-tag">更換頭像</span> -->
+                </label>
+
+                <div class="buttons">
+                    <button @click="save" :disabled="!file">儲存</button>
                 </div>
+                <!-- <div class="demo-type">
+                    <el-avatar :icon="UserFilled" :size="55" class="avatar" />
+                </div> -->
     
                 <!-- 帳號 -->
                 <p class="username">{{ username }}</p>
@@ -32,7 +43,6 @@
 
             </aside>
             <!-----右邊內容-------->
-            
             <section class="content">
                 <RouterView />
             </section>
@@ -53,6 +63,41 @@
         username: { type: String, default: '小姐/先生' },
     })
 
+    // 頭像
+    import { ref } from 'vue'
+    // 預覽用的 base64
+    const preview = ref('')
+    // 真的要上傳的檔案物件
+    const file = ref(null)
+
+    // 選圖後：驗證型別/大小 → 做本地預覽
+    function onPick(e) {
+        const f = e.target.files?.[0]
+        if (!f) return
+
+        // 型別/大小限制：JPG/PNG/WebP 且 <= 2MB
+        const okType = /^image\/(png|jpeg|jpg|webp)$/.test(f.type)
+        const okSize = f.size <= 2 * 1024 * 1024
+        if (!okType) return alert('只允許 JPG / PNG / WebP 圖片')
+        if (!okSize) return alert('圖片大小不得超過 2MB')
+
+        file.value = f
+        const reader = new FileReader()
+        reader.onload = () => (preview.value = reader.result)
+        reader.readAsDataURL(f)
+    }
+    // 送到後端（示範：改成你的 API 即可）
+    async function save() {
+        if (!file.value) return alert('請先選擇圖片')
+        // const fd = new FormData()
+        // fd.append('avatar', file.value)
+        // await axios.post('/api/me/avatar', fd)
+
+        alert(`（示範）已準備上傳：${file.value.name}`)
+        // 上傳成功後可清空或保留預覽
+        // file.value = null
+        // preview.value = ''
+    }
 </script>
 
 
@@ -82,22 +127,69 @@
     padding-top: 50px;
     color: $secondaryColor-yellow;
 }
-// 頭像icon
-.demo-type {
-    width: 60px;
-    height: 55px;
-    margin: 0 auto;
+// 圓形頭像框
+.avatar-uploader{
+  width: 100px; 
+  height: 100px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  overflow: hidden;
+  display: grid; 
+  place-items: center;
+  position: relative; 
+  cursor: pointer;
+  background: $bgColor-white;
+  margin-left: 23px;
 }
+.avatar-uploader img{
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; /* 填滿圓形 */
+}
+.avatar-uploader .file{
+    position: absolute; 
+    inset: 0; 
+    opacity: 0; 
+    cursor: pointer; /* 整圈可點 */
+}
+// 圖像中間+
+.placeholder{ 
+    font-weight: 700px;
+    font-size: $pcChFont-H1;
+    color: $inputColor-focus;
+}
+// 更換頭像
+// .edit-tag{
+//     position: absolute; 
+//     bottom: 7px; 
+//     left: 50%; 
+//     transform: translateX(-50%);
+//     font-size: 12px; 
+//     padding: 2px 1px; 
+//     color: $primaryColor-800;
+//     background: rgba(0,0,0,.55);
+//     border-radius: 999px;
+// }
+// 儲存
+.buttons{ 
+    // background-color: none;
+    margin-top: 10px; 
+    text-align: center; 
+    // background-color: $primaryColor-500;
+    // width: 45px;
+}
+// 顯示小姐/先生文字
 .username{
     font-size: $pcChFont-H4;
     padding-top: 20px;
     padding-left: 30px;
 }
+// 選單
 .menu{
     padding: 10px 10px;
     width: 150px;
 }
-/* 預設/已瀏覽顏色（把原色覆蓋掉） */
+// 預設/已瀏覽顏色（把原色覆蓋掉
 .menu .menu-link,
 .menu .menu-link:link,
 .menu .menu-link:visited {
@@ -107,7 +199,7 @@
     display: block;
     padding: 10px 0;
 }
-/* 滑過 & 當前頁 */
+// 滑過 & 當前頁 
 .menu .menu-link:hover,
 .menu .menu-link.router-link-active,
 .menu .menu-link.router-link-exact-active {

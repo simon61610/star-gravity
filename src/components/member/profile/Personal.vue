@@ -1,45 +1,40 @@
 <!----個人資料修改---->
 <template>
-    <!-- <div class="personal"> -->
-        <!-----右邊內容-------->
-        <div class="personal-form">
-                <div class="row">
-                    <input :value="member.name" type="text" class="rowline" style="font-size: 18px" placeholder="我的名字" disabled />
-                </div>
-                <div class="row">
-                    <input v-model="member.phone" type="tel" class="rowline" style="font-size: 18px" placeholder="我的電話" />
-                </div>
-            <!----縣市鄉鎮-------->
-                <div class="personal-city">
-                    <div class="select">
-                        <select v-model="member.city" class="select-city">
-                        <option value="">縣市</option>
-                        <option v-for="c in cities" :key="c" :value="c">{{ c }}</option>
-                        </select>
-                        <!-- <span class="caret"></span> -->
-                    </div>
-                    <div class="select">
-                        <select v-model="member.district" class="select-city">
-                        <option value="">鄉鎮</option>
-                        <option v-for="d in districtOptions" :key="d" :value="d">{{ d }}</option>
-                        </select>
-                        <!-- <span class="caret">▾</span> -->
-                    </div>
-                </div>
-                <!-- 我的地址 -->
-                <div class="row">
-                    <input v-model="member.address" type="text" class="rowline" style="font-size: 18px" placeholder="我的地址" />
-                </div>
-                <!-- 儲存 -->
-                <div class="actions">
-                    <button class="save" :disabled="saving" @click="save">
-                        {{ saving ? '儲存中…' : '儲存' }}
-                    </button>
-                    <span class="hint" v-if="savedAt">已更新 {{ savedAt }}</span>
-                </div>
+    <!-----右邊內容-------->
+    <div class="personal-form">
+        <div class="row">
+            <input :value="member.name" type="text" class="rowline" style="font-size: 18px" placeholder="我的名字" disabled />
         </div>
-
-    <!-- </div> -->
+        <div class="row">
+            <input v-model="member.phone" type="tel" class="rowline" style="font-size: 18px" placeholder="我的電話" />
+        </div>
+        <!----縣市鄉鎮-------->
+        <div class="personal-city">
+            <div class="select">
+                <select v-model="member.city" class="select-city">
+                <option value="">縣市</option>
+                <option v-for="c in cities" :key="c" :value="c">{{ c }}</option>
+                </select>
+            </div>
+            <div class="select">
+                <select v-model="member.district" class="select-city">
+                <option value="">鄉鎮</option>
+                <option v-for="d in districtOptions" :key="d" :value="d">{{ d }}</option>
+                </select>
+            </div>
+        </div>
+        <!-- 我的地址 -->
+        <div class="row">
+            <input v-model="member.address" type="text" class="rowline" style="font-size: 18px" placeholder="我的地址" />
+        </div>
+        <!-- 儲存 -->
+        <div class="actions">
+            <button class="save" :disabled="saving" @click="save">
+                {{ saving ? '儲存中…' : '儲存' }}
+            </button>
+            <span class="hint" v-if="savedAt">已更新 {{ savedAt }}</span>
+        </div>
+    </div>
 
 </template>
 
@@ -93,19 +88,13 @@
 // 按儲存後會跳出更新字
 .hint{
     font-size: $pcChFont-small; 
-    color: $FontColor-white;
+    color: $FontColor-black;
 }
 </style>
 
 <script setup>
     import { ref, onMounted, reactive, computed, watch } from 'vue'
     import { UserFilled } from '@element-plus/icons-vue'
-
-    
-
-   
-
-    
 
     /* ---- 假後端：取會員註冊資料 ---- */
     function fetchMember() {

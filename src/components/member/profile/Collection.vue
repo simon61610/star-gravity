@@ -18,12 +18,23 @@
                         </div>
             
                         <div class="actions">
-                            <button class="btn cancel ">取消收藏</button>
-                            <button class="btn primary">直接購買</button>
+                            <button class="btn cancel" @click="askUnfavorite">取消收藏</button>
+                            <button class="btn primary" @click="onBuyNow">直接購買</button>
                         </div>
                     </div>
                 </div>
             </article>
+            <!-----加入購物車顯示小彈窗---------->
+            <div v-if="showAdded" class="cart-overlay" @click="closeAdded">
+                <div class="cart-modal" @click.stop>
+                    <div class="ok">✓</div>    
+                    <h3>已加入購物車</h3>
+                    <p class="hint">商品已加入購物車，您可繼續選購</p>
+                    <div class="modal-actions">
+                        <button class="btn outline" @click="closeAdded">知道了</button>
+                    </div>
+                </div>
+            </div>
             <!----分頁-------->
             <div class="pager">
                 <el-pagination background layout="prev, pager, next" :total="24" />
@@ -114,6 +125,42 @@
 .btn:active { 
     transform: translateY(1px); 
 }
+// 購物車小彈窗
+.cart-overlay{
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,.45);
+  display: grid; place-items: center;
+}
+.cart-modal{
+  width: min(320px, 86vw);
+  background: #fff;
+  color: #222;
+  border-radius: 14px;
+  padding: 20px 18px;
+  text-align: center;
+  box-shadow: 0 12px 30px rgba(0,0,0,.25);
+  animation: pop .15s ease-out;
+}
+.ok{
+  width: 44px; height: 44px; margin: 0 auto 8px;
+  border-radius: 50%;
+  background: #16a34a;     /* 綠色圈 */
+  color: #fff; display: grid; place-items: center;
+  font-weight: 700; font-size: 22px;
+}
+.hint{ 
+    margin-top: 4px; color:#666; font-size:14px; 
+}
+.modal-actions{ 
+    margin-top: 12px; display:flex; justify-content:center; gap:8px; 
+}
+.btn.outline{
+  background: transparent; color:#444; border:1px solid #ccc; border-radius: 999px;
+  padding: 8px 14px; cursor: pointer;
+}
+@keyframes pop { 
+    from { transform: scale(.96); opacity: .6 } to { transform: none; opacity: 1 } 
+}
 // 分頁
 .pager{
     width: 700px;
@@ -132,20 +179,6 @@
     // photo:   { type: String, default: '/src/assets/icons/account.svg' }    // 頭像還沒新增
     // })
 
-    const emit = defineEmits(['select'])
-    const activeKey = ref('')
-
-    // 預設第一個 active
-    // onMounted(() => {
-    // activeKey.value = 'profile'
-    // emit('select', 'profile')
-    // })
-
-    // function selectItem(key) {
-    // activeKey.value = key
-    // emit('select', key)
-    // }
-
     // 右邊資料
     // 先放 8 張假資料；之後接 API 只要改這個陣列即可
     const products = ref(
@@ -161,4 +194,22 @@
 
     // 分頁
     const page = ref(1)
+
+    // 取消收藏
+    const emit = defineEmits(['unfavorite'])   // 告訴父層「真的要取消了」
+
+    function askUnfavorite () {
+        if (confirm('確定要取消收藏嗎？')) emit('unfavorite')
+    }
+    // 直接購買 
+    const showAdded = ref(false)
+
+        function onBuyNow () {
+        showAdded.value = true               // 顯示成功畫面
+        // 自動關閉（1.5 秒）
+        setTimeout(() => { showAdded.value = false }, 1500)
+    }
+    function closeAdded () {
+        showAdded.value = false
+    }
 </script>
