@@ -236,13 +236,15 @@ import  logo from '@/assets/logos/logo.svg'
         
             
             .footer-left-box{
-                margin-left: 40px;
+                
+                padding-left: 60px;
                 width: 350px;
                 justify-content: center;
                 align-items: flex-start;
                 
-                .footer-left-Logo{
+               >.footer-left-Logo{
                     
+                    margin-left: -60px;
                     max-width: none;
                     width: 350px ;
                     text-align: center;
@@ -254,7 +256,7 @@ import  logo from '@/assets/logos/logo.svg'
                     
                 }
             }
-        
+            
 
 
 

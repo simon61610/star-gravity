@@ -39,4 +39,19 @@ main{
     }
    
 }
+@media screen and (max-width: 431px){
+    main{
+        padding:  0 16px;
+        .article-page-body{
+       
+        margin-top: 36px !important;
+        display: flex;
+        flex-direction: column;
+        }
+    }
+   
+}
+
+
+
 </style>

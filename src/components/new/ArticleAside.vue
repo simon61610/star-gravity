@@ -27,7 +27,7 @@ const relatedArticles = computed(() => {
 </script>
 
 <template>
-    <aside>
+    <aside class="article-aside">
         <div class="article-aside-h2">
             <h2>延伸資訊</h2>
         </div>
@@ -80,6 +80,7 @@ const relatedArticles = computed(() => {
 <style scoped lang="scss">  
 @import '@/assets/styles/main.scss';
 aside{
+    
     background-color: $primaryColor-500;
     color: $FontColor-white;
     max-width: 400px;
@@ -159,4 +160,34 @@ aside{
 
     }
 }
+@media screen and (max-width: 431px){
+    .article-aside{
+        box-sizing: border-box;
+        .article-aside-wapper{
+            padding-left: 15px;
+            
+            .article-aside-ul{
+               
+                overflow-x: auto;  
+                flex-direction: row;
+                
+                scroll-snap-type: x mandatory;
+                .article-aside-li{
+                    
+                    scroll-snap-align: start;
+                    width: 100%;
+                    flex: 0 0 auto; 
+                    
+                }
+            }
+            
+
+        }
+        
+    }
+
+}
+
+
+
 </style>
