@@ -59,17 +59,6 @@ import ResetPasswordPage from '@/views/member/ResetPasswordPage.vue'
 //--------------------文章 Article -----------------------
 import Newpage from '@/views/new/Newpage.vue'
 
-//--------------------後台 Admin -------------------------
-import AdminLoginPage from '@/views/admin/AdminLoginPage.vue';
-import AdminMemberPage from '@/views/admin/AdminMemberPage.vue';
-import AdminActivityPage from '@/views/admin/AdminActivityPage.vue';
-import AdminOrderPage from '@/views/admin/AdminOrderPage.vue';
-import AdminShopPage from '@/views/admin/AdminShopPage.vue';
-import AdminNewsPage from '@/views/admin/AdminNewsPage.vue';
-import AdminCommentPage from'@/views/admin/AdminCommentPage.vue';
-
-
-
 
 // ||=================================================================||
 // ||                              routes                             ||
@@ -143,45 +132,59 @@ const routes = [
     {
       path: '/article/:id',    // 在vue裡面 / = http://localhost:5173/ 也就是本機的意思
       name: 'ArticleDetailpage',     //網頁的id
-      component: () => import('../views/new/ArticleDetailpage.vue'), 
+      component: () => import('@/views/new/ArticleDetailpage.vue'), 
     },
     //  ---Admin後台-----
     {
-      path: '/AdminLoginPage',    // 
-      name: 'AdminLoginPage',     //
-      component: AdminLoginPage
+      path: '/AdminLoginPage',    
+      name: 'AdminLoginPage',     
+      component: () => import('@/views/admin/AdminLoginPage.vue')
+    },
+    {
+      path: '/AdminLayoutPage',    
+      name: '/AdminLayoutPage',     
+      component: () => import('@/views/admin/AdminLayoutPage.vue'),
+      children:[
+          {
+            path: '/AdminMemberPage',    
+            name: 'AdminMemberPage',     
+            component: () => import('@/views/admin/AdminMemberPage.vue')
+          },
+
+          {
+            path: '/AdminActivityPage',    
+            name: 'AdminActivityPage',     
+            component: () => import('@/views/admin/AdminActivityPage.vue')
+          },
+
+          {
+            path: '/AdminOrderPage',    
+            name: 'AdminOrderPage',     
+            component: () => import('@/views/admin/AdminOrderPage.vue')
+          },
+
+           {
+            path: '/AdminShopPage',     
+            name: 'AdminShopPage',     
+            component: () => import('@/views/admin/AdminShopPage.vue')
+          },
+
+          {
+            path: '/AdminNewsPage',    
+            name: 'AdminNewsPage',     
+            component:  () => import('@/views/admin/AdminNewsPage.vue')
+          },
+
+          {
+            path: '/AdminCommentPage',    
+            name: 'AdminCommentPage',     
+            component: () => import('@/views/admin/AdminCommentPage.vue')
+          },
+      ]
     },
 
-    {
-      path: '/AdminMemberPage',    // 
-      name: 'AdminMemberPage',     //
-      component: AdminMemberPage
-    },
-    {
-      path: '/AdminActivityPage',    // 
-      name: 'AdminActivityPage',     //
-      component: AdminActivityPage
-    },
-    {
-      path: '/AdminOrderPage',    // 
-      name: 'AdminOrderPage',     //
-      component: AdminOrderPage
-    },
-    {
-      path: '/AdminShopPage',    // 
-      name: 'AdminShopPage',     //
-      component: AdminShopPage
-    },
-     {
-      path: '/AdminNewsPage',    // 
-      name: 'AdminNewsPage',     //
-      component: AdminNewsPage
-    },
-    {
-      path: '/AdminCommentPage',    // 
-      name: 'AdminCommentPage',     //
-      component: AdminCommentPage
-    },
+   
+   
 
 
 

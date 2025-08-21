@@ -1,8 +1,8 @@
 <script setup>
     import {ref} from 'vue'
-    import AdminHeader from '@/components/admin/AdminHeader.vue';
+  // import AdminHeader from '@/components/admin/AdminHeader.vue';
     import AdminToolbar from '@/components/admin/AdminToolbar.vue';
-    import AdminSidebar from '@/components/admin/AdminSidebar.vue';
+ //   import AdminSidebar from '@/components/admin/AdminSidebar.vue';
     import AdminShop from '@/components/admin/management/AdminShop.vue';
     const search = ref('')
     
@@ -42,22 +42,6 @@
     box-sizing: border-box;
 
     
-    .Admin-home-box{
-        gap: 40px;
-        max-width: 1200px;
-        margin: 40px auto 0;
-        display: flex;
-        justify-content: center;
-        align-items:flex-start;
-        flex-direction: row-reverse;
-         .Admin-home-centent{
-            width: 100%;
-          
-            
-            
-        
-    }
-
-    }
+    
 }
 </style>
