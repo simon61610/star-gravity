@@ -1,186 +1,216 @@
 <script setup>
-import {ref, onMounted, computed, watch, defineProps} from 'vue'
+// ========== 1. 引入依賴 ==========
+import { ref, onMounted, computed, watch, defineProps, defineEmits } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import taiwanMap from '@/assets/images/map/starmap-taiwan.svg'
 
-onMounted(()=>{
-    region.value = '全台'
-    placeholder.value = ''
-    setMap()
-})
+// ========== 2. Props & Emits ==========
+const { locationList } = defineProps(["locationList"])
+const emit = defineEmits(['show-detail'])
 
-const {locationList} = defineProps(["locationList"])
-//假數據
-// const locationList = ref([
-//   { region: '南部', scene: '市郊', name:'南瀛天文館', img: '../../assets/images/map/map-tainanPhoto.jpg',score:4.7, address:"台南市大內區34-2號" ,coords:[ 385 , 380] },
-//   { region: '北部', scene: '山間', name:'陽明山',img: '../../assets/images/map/map-taipeiPhoto.jpg' ,score:4.5, address:"台北市士林區竹子湖" ,coords:[ 880 , 630]},
-//   { region: '中部', scene: '山間', name:'杉林溪',img: '../../assets/images/map/map-taichungPhoto.jpg' ,score:4.3, address:"南投縣溪頭" ,coords:[ 510 , 470]},
-//   { region: '東部', scene: '海邊', name:'三仙台',img: '../../assets/images/map/map-taichungPhoto.jpg' ,score:4.2, address:"台東縣" ,coords:[ 385 , 595]},
-//   { region: '離島', scene: '海邊', name:'蘭嶼',img: '../../assets/images/map/map-taichungPhoto.jpg' ,score:4.0, address:"台東縣蘭嶼" ,coords:[ 122 , 635]},
-// ])
+// ========== 3. 響應式數據 ==========
+// 3.1 頁面動畫狀態
+const isEntering = ref(true)
 
+// 3.2 地圖相關
+let map, marklist = []
 
+// 3.3 篩選條件
+const region = ref('全台')
+const selectedScenes = ref([])
+const searchText = ref('')
+const placeholder = ref('')
+
+// 3.4 UI 狀態
 const activeIndex = ref(-1)
+const placeList = ref(false)
 
-//li查看更多
-const showMore = (index) => {
-    //             ↑這是篩選過後的列表的索引 不是原始locationList的索引
-    const originalIndex = locationList.findIndex(item => item === filteredLocationList.value[index])
-    activeIndex.value = (activeIndex.value === originalIndex ? -1 : originalIndex) //這句三元運算子是判斷該li是不是被二次點擊 點兩次activeIndex變成-1 html內的v-show判斷要關起來
-    goToMarker(originalIndex)
-    scrollToListItem(index)
+// ========== 4. 計算屬性 ==========
+const filteredLocationList = computed(() => {
+    let newLocationList = locationList
+
+    // 地區篩選
+    if (region.value !== '全台') {
+        newLocationList = newLocationList.filter(item => item.region === region.value)
+    }
     
-}
-
-const placeholder =ref(' ')
-const region = ref('') 
-const selectedScenes = ref([]) // 篩選後的新陣列
-const searchText = ref('') 
-
-const filteredLocationList = computed(()=>{
-    let newList = locationList
-
-    //地區篩選
-    if( region.value != '全台' ){
-        newList = newList.filter(item => item.region  === region.value)
+    // 場景篩選
+    if (selectedScenes.value.length > 0) {
+        newLocationList = newLocationList.filter(item => selectedScenes.value.includes(item.scene))
     }
-    //場景篩選
-    if( selectedScenes.value.length >0 ){
-        newList = newList.filter(item => selectedScenes.value.includes(item.scene))
-    }
-    if( searchText.value.trim() !== '' ){
-        newList = newList.filter(item => 
-            item.name.includes(searchText.value) ||    // 搜尋地點名稱
-            item.address.includes(searchText.value)    // 搜尋地址
+    
+    // 搜尋篩選
+    if (searchText.value.trim() !== '') {
+        newLocationList = newLocationList.filter(item => 
+            item.name.includes(searchText.value) ||
+            item.address.includes(searchText.value)
         )
     }
 
-    return newList
+    return newLocationList
 })
 
-// 監聽篩選變化，呼叫更新marker
+// ========== 5. 監聽器 ==========
+// 監聽篩選變化，更新地圖標記
 watch(filteredLocationList, (newFilteredList) => {
     updateMapMarkers(newFilteredList)
-    activeIndex.value = -1 // 關閉see more
+    activeIndex.value = -1 // 關閉展開的項目
 }, { deep: true })
 
+// ========== 6. 生命週期 ==========
+onMounted(() => {
+    region.value = '全台'
+    placeholder.value = ''
+    setTimeout(()=>{
+        setMap()
+    } , 500)
+    // setMap()
 
+})
 
-//台灣地圖
-let map, marklist = []
+// ========== 7. 地圖相關方法 ==========
+// 7.1 初始化地圖
+function setMap() {
 
-function setMap(){
-    //地圖初始化
-    map = L.map('map', {crs:L.CRS.Simple, minZoom:0, maxZoom:2 })
+    if (map) {
+        map.remove()   // 清掉舊的 map
+    }
+    // 地圖初始化
+    map = L.map('map', { crs: L.CRS.Simple, minZoom: 0, maxZoom: 2 })
     const imageWidth = 1000
     const imageHeight = 1000
-    const bounds = [[0,0] , [imageHeight, imageWidth]]
+    const bounds = [[0, 0], [imageHeight, imageWidth]]
 
-    //自訂地圖圖案
-    L.imageOverlay( taiwanMap, bounds, ).addTo(map)
+    // 自訂地圖圖案
+    L.imageOverlay(taiwanMap, bounds).addTo(map)
     map.fitBounds(bounds)
     map.setMaxBounds(bounds)
 
     // 初始化標記
-    updateMapMarkers(locationList)  
+    updateMapMarkers(locationList)
 
-    //滑鼠座標 確認地點座標用 寫進croods用
-    const coordsDiv = L.control({position:'bottomleft'})
-    coordsDiv.onAdd = ()=>{
+    // 滑鼠座標顯示（開發用）
+    addMouseCoordinateDisplay()
+}
+
+// 7.2 滑鼠座標顯示
+function addMouseCoordinateDisplay() {
+    const coordsDiv = L.control({ position: 'bottomleft' })
+    coordsDiv.onAdd = () => {
         const div = L.DomUtil.create('div', 'mouse-coords')
         div.style.background = '#fff'
-        div.style.padding = ' 3px 6px'
+        div.style.padding = '3px 6px'
         div.style.fontSize = '12px'
         return div
     }
     coordsDiv.addTo(map)
-    map.on('mousemove' , e=>{
+    
+    map.on('mousemove', e => {
         const div = document.querySelector('.mouse-coords')
-        div.innerHTML = `Y:${e.latlng.lat.toFixed(0)} , X:${e.latlng.lng.toFixed(0)}`
+        div.innerHTML = `Y:${e.latlng.lat.toFixed(0)}, X:${e.latlng.lng.toFixed(0)}`
     })
-
 }
-//更新標記
-function updateMapMarkers(locations){
-    //移除標記
+
+// 7.3 更新地圖標記
+function updateMapMarkers(locations) {
+    // 移除現有標記
     marklist.forEach(marker => {
         map.removeLayer(marker)
     })
     marklist = []
 
-    //重新添加標記
-    for (let i = 0; i < locations.length; i++) {
-        const location = locations[i]
+    // 重新添加標記
+    locations.forEach((location, index) => {
         const marker = L.marker([location.coords[0], location.coords[1]]).addTo(map)
         marker.bindPopup(location.name)
         marklist.push(marker)
 
-        //找到原始列表索引
+        // 找到原始列表索引
         const originalIndex = locationList.findIndex(item => item === location)
 
-        //對marker綁定點擊事件
-        marker.on('click', ()=>{
-            // 篩選列表中的索引來滾動
+        // 綁定點擊事件
+        marker.on('click', () => {
             const filteredIndex = filteredLocationList.value.findIndex(item => item === location)
             scrollToListItem(filteredIndex)
+            showMore(filteredIndex)
         })
-    }    
+    })
 }
 
-
+// 7.4 飛行到指定標記
 function goToMarker(idx) {
-  const location = locationList[idx]
-  map.flyTo([location.coords[0], location.coords[1]], 1, { duration: 1.2 })
+    const location = locationList[idx]
+    map.flyTo([location.coords[0], location.coords[1]], 1, { duration: 1.2 })
 
-  const filteredIndex = filteredLocationList.value.findIndex(item => item === location)
-  if(filteredIndex !== -1 && marklist[filteredIndex]) {
-      marklist[filteredIndex].openPopup()
-  }
+    const filteredIndex = filteredLocationList.value.findIndex(item => item === location)
+    if (filteredIndex !== -1 && marklist[filteredIndex]) {
+        marklist[filteredIndex].openPopup()
+    }
 }
 
-function scrollToListItem(index){
-    //因為li摺疊有動畫時間 所以設定計時器延遲幾秒後再做這函數
+// ========== 8. 列表相關方法 ==========
+// 8.1 展開/收起地點詳情
+function showMore(index) {
+    // 找到原始索引
+    const originalIndex = locationList.findIndex(item => item === filteredLocationList.value[index])
+    
+    // 切換展開狀態
+    activeIndex.value = (activeIndex.value === originalIndex ? -1 : originalIndex)
+    
+    // pin飛到對應位置
+    goToMarker(originalIndex)
+    
+    // 滾動到對應項目
+    scrollToListItem(index)
+}
+
+// 8.2 滾動到指定列表項
+function scrollToListItem(index) {
     setTimeout(() => {
         const locationListBox = document.querySelector('.locationList')
         const locationItem = document.querySelectorAll('.locationList ul li')
         const targetItem = locationItem[index]
         
+        if (!targetItem) return
+        
         const locationListBoxRect = locationListBox.getBoundingClientRect()
         const itemRect = targetItem.getBoundingClientRect()
         const topPadding = 20
-        const newScrollTop = locationListBox.scrollTop + itemRect.top - locationListBoxRect.top - topPadding //itemRect.top - divRect.top 是li距離容器頂部的距離
+        const newScrollTop = locationListBox.scrollTop + itemRect.top - locationListBoxRect.top - topPadding
 
         locationListBox.scrollTo({
             top: newScrollTop,
             behavior: 'smooth'
-            })
-    }, 100)     
+        })
+    }, 100)
 }
 
-// 地點下拉選單
-const placeList = ref(false)
-function focusLocation(index){
+// ========== 9. 搜尋相關方法 ==========
+// 9.1 聚焦到特定地點
+function focusLocation(index) {
     const originalIndex = locationList.findIndex(item => item === filteredLocationList.value[index])
-    activeIndex.value =  originalIndex 
+    activeIndex.value = originalIndex
     goToMarker(originalIndex)
     scrollToListItem(index)
     placeList.value = false
-
 }
-function handleFocus(e){
+
+// 9.2 搜尋框焦點事件
+function handleFocus(e) {
     placeList.value = true
-    e.target.style.borderRadius= '10px 10px 0px 0px'
-}
-function handleBlur(e){
-    setTimeout(()=>{
-        placeList.value = false
-        e.target.style.borderRadius= '10px 10px 10px 10px'
-    },300)
-   
+    e.target.style.borderRadius = '10px 10px 0px 0px'
 }
 
-//場景checkedbox
+function handleBlur(e) {
+    setTimeout(() => {
+        placeList.value = false
+        e.target.style.borderRadius = '10px 10px 10px 10px'
+    }, 300)
+}
+
+// ========== 10. 篩選相關方法 ==========
+// 10.1 場景複選框變化處理
 function handleSceneChange(scene, event) {
     if (event.target.checked) {
         selectedScenes.value.push(scene)
@@ -192,7 +222,11 @@ function handleSceneChange(scene, event) {
     }
 }
 
-
+// ========== 11. 事件處理方法 ==========
+// 11.1 顯示地點詳情（發送給父組件）
+function showLocationDetail(location) {
+    emit('show-detail', location)  //傳該地點的ID回父組件
+}
 
 
 </script>
@@ -201,7 +235,7 @@ function handleSceneChange(scene, event) {
 
 
 <template>
-    <div class="wrapper">
+    <div class="wrapper" :class="{ 'entering': isEntering }">
         <!-- 左半邊 -->
         <div class="map-leftBlock">            
             <!-- 上方checkbox -->
@@ -310,9 +344,8 @@ function handleSceneChange(scene, event) {
                                 <div v-show="activeIndex === locationList.findIndex(item => item === location)" class="location-singlePlace-more" >
                                     <img class="location-singlePlace-photo" src="../../assets/images/map/map-tainanPhoto.jpg" alt="" @click="showMore(index)">
 
-                                    <a class="seeMore" href="#">
-                                        <p>更多資訊</p>
-                                        <!-- <img src="../../assets/icons/closed-eyes.svg" alt=""> -->
+                                    <a class="seeMore" href="#" @click.prevent="showLocationDetail(location)">
+                                        更多資訊
                                     </a>
                                 </div>
                             </transition>
@@ -386,6 +419,7 @@ function handleSceneChange(scene, event) {
     position: relative;
 }
 
+
 /*右下裝飾字體*/
 .map-decorate{
     color: $FontColor-white;
@@ -416,6 +450,7 @@ function handleSceneChange(scene, event) {
     font-family:$enFont ;
     font-size: $pcEngFont-numberTitle;
     line-height: 100%;
+    text-align: center;
 }
 
 

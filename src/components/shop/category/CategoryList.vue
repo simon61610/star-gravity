@@ -10,13 +10,26 @@
 		{name: '書籍/小物', items: ['觀星教學書籍', '星空小物']},
 	])
 
-	// 預設是 false，先關起來，目前陣列長度固定，待修改
+    // ====================================================
+    // ===================== 開合功能 ======================
+    // ====================================================
+    // 預設是 false，先關起來，目前陣列長度固定，待修改
 	const isShow = ref([false, false, false, false, false])
-
-	// toggle 處理函數
 	const toggleCategory = (index) => {
 		isShow.value[index] = !isShow.value[index]
 	}
+
+    // =====================================================
+    // ==================== 商品類型篩選 ====================
+    // =====================================================
+    const emit = defineEmits(['select'])
+
+    // 點擊分類 => 事件傳送 select，資料傳送主和副的名稱
+    const selectSub = (main, sub) => {
+        emit('select', {main, sub})
+    }
+
+
 
 </script>
 
@@ -25,17 +38,25 @@
         <h2>分類</h2>
         <div class="cate-products">
           	<div class="cate-products__area" v-for="(category, index) in productsCate">
-              <h3 
-                class="cate-products__area__name"
-                :class="{open: isShow[index]}"
-                @click="toggleCategory(index)"
-              >
+                <!-- 商品 main 分類 -->
+                <h3 
+                 class="cate-products__area__name"
+                 :class="{open: isShow[index]}"
+                 @click="toggleCategory(index)"
+                >
                 {{ category.name }}
-              </h3>
+                </h3>
+
+                <!-- 商品 sub 分類 -->
                 <transition name="slide">
-                  <ul class="product-items" v-if="isShow[index]">
-                    <li v-for="item in category.items">{{ item }}</li>
-                  </ul>
+                    <ul class="product-items" v-if="isShow[index]">
+                        <li
+                            v-for="item in category.items"
+                            @click = 'selectSub(category.name, item)'
+                        >
+                        {{ item }}
+                        </li>
+                    </ul>
                 </transition>
             </div>
         </div>
@@ -115,6 +136,9 @@
 
                     li {
                         font-size: $pcChFont-H4;
+                        &:hover {
+                            text-decoration: underline;
+                        }
 
                         // 裝飾性方塊
                         &::before {

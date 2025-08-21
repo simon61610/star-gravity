@@ -60,12 +60,31 @@
     display: flex;
     gap: 10px;
     color: $primaryColor-500;
+    
 }
 .idx{
     font-size: $pcEngFont-numberTitle;
 }
 .container-five h2{
     font-size: $pcChFont-H2;
+    position: relative;     /* 讓偽元素定位在 h2 內 */
+    display: inline-block;  /* 線長度 = 文字寬度 */
+    line-height: 1.1;
+    padding: 4px 10px; 
+}
+.container-five h2::before,
+.container-five h2::after{
+  content: "";
+  position: absolute;
+  left: 0; right: 0;      /* 線寬 = 文字寬 + padding */
+  height: 2px;            /* 線的粗細 */
+  background: rgba(255,255,255,.25); /* 線的顏色（可調） */
+}
+.container-five h2::before{ 
+    top: -6px; 
+}     
+.container-five h2::after { 
+    bottom: -6px; 
 }
 .cards{
     margin-top: 20px;

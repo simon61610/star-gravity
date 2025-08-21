@@ -2,7 +2,7 @@
     <section class="guide">
         <div class="container">
             <!----------1. 攜帶物品---------------->
-            <div class="container-one"> 
+            <div class="section"> 
                 <span class="idx">1.</span>
                 <h2>需要攜帶的物品</h2>
             </div>
@@ -47,9 +47,9 @@
                     <img src="../../assets/images/aboutstar/Mask group.png" alt="moon"> 
                 </div>
                 <div class="lookmoonall">
-                    <div class="lookmoon">
+                    <div class="section">
                         <span class="idx">2.</span>
-                        <h3>觀看月相的方式</h3>
+                        <h2>觀看月相的方式</h2>
                     </div>
                     <div class="tips">
                         <p class="tip">
@@ -66,9 +66,9 @@
             <!----------3. 看星星的地方---------------->
             <div class="container-third">
                 <div class="spaceall">
-                    <div class="space">
+                    <div class="section">
                         <span class="idx">3.</span>
-                        <h3>看星星的地方</h3>
+                        <h2>看星星的地方</h2>
                     </div>
                     <div class="tips">
                         <p class="tip">
@@ -95,9 +95,9 @@
                     <img src="../../assets/images/aboutstar/constellation-4.png" alt="season">
                 </div>
                 <div class="seasonall">
-                    <div class="seasontitle">
+                    <div class="section">
                         <span class="idx">4.</span>
-                        <h3>觀星好季節</h3>
+                        <h2>觀星好季節</h2>
                     </div>
                     <div class="tips">
                         <p class="tip">
@@ -146,7 +146,7 @@
     gap: 30px;
 }
 // 1.區塊標題
-.container-one{
+.section{
     margin: 0 auto;
     justify-content: center;
     align-items: center;
@@ -157,9 +157,29 @@
 .idx{
     font-size: $pcEngFont-title;
 }
-.container-one h2{   // 差上下線
+.section h2{   
     font-size: $pcChFont-H2;
+    position: relative;      // 讓偽元素定位在 h2 裡
+    display: inline-block;   // 線長度就會跟著文字寬度
+    line-height: 1.1;
+    padding: 4px 10px;
 }
+/* 上下兩條線（顏色與距離自己調） */
+.section h2::before,
+.section h2::after{
+  content: "";
+  position: absolute;
+  left: 0; 
+  right: 0;       // 線寬 = 文字寬 + padding
+  height: 2px;
+  background: rgba(255,255,255,.25);
+}
+.section h2::before{ 
+    top: -6px;     // 線距離文字頂部 6px
+}   
+.section h2::after { 
+    bottom: -6px;  // 線距離文字底部 6px
+} 
 // 卡片區塊
 .cards{    // 3張卡片
     width: 900px;

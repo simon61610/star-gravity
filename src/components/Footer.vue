@@ -17,6 +17,7 @@ import  logo from '@/assets/logos/logo.svg'
                 <div class="footer-left-email">
                     <i class="fa-regular fa-envelope"> <span>tibamestar@gmail.com</span> </i>
                 </div>
+
                 <div class="footer-left-phone">
                     <i class="fa-regular fa-phone"><span>02-1234-5678</span></i>
                 </div>
@@ -38,12 +39,12 @@ import  logo from '@/assets/logos/logo.svg'
 
             </section>
 
-                <div class="icon">
-                    <h4>關注我們</h4>
-                    <i class="fa-brands fa-square-facebook"></i>
-                    <i class="fa-brands fa-youtube fa-xl"></i>  
-                    <i class="fa-brands fa-instagram"></i>
-                </div>
+            <div class="icon">
+                <h4>關注我們</h4>
+                <i class="fa-brands fa-square-facebook"></i>
+                <i class="fa-brands fa-youtube fa-xl"></i>  
+                <i class="fa-brands fa-instagram"></i>
+            </div>
 
             <section class="footer-right-box">
                 <ul class="footer-right-one">
@@ -197,13 +198,93 @@ import  logo from '@/assets/logos/logo.svg'
         }
         p{  
 
-          
+            line-height: 1.5;
             max-width: 1200px;
             margin: 28px auto 0;
         }
     }
 }
+/*-------------斷點430--------------*/
+@media screen and (max-width: 431px){
+    .footer{
+        padding: 16px;
+        box-sizing: border-box;
+        .main-footer-box{
+            flex-direction: column;
+            
+            
+        .icon{
+            
+            
+            width: 100%;
+            padding-top: 50px;
+            margin-right:0;
+            text-align: center;
+            box-sizing: border-box;
+            
+            
+            h4{ 
+                display: block;
+                text-align: center;
+                width: 100%;
+                margin: 0;
+                margin-bottom: 16px;
+                box-sizing: border-box;
+                
+            }
+        }
+        
+            
+            .footer-left-box{
+                
+                padding-left: 60px;
+                width: 350px;
+                justify-content: center;
+                align-items: flex-start;
+                
+               >.footer-left-Logo{
+                    
+                    margin-left: -60px;
+                    max-width: none;
+                    width: 350px ;
+                    text-align: center;
+                    
+                    img{
+                        margin: 0 auto;
+                        width: 250px;
+                    }
+                    
+                }
+            }
+            
 
+
+
+        .footer-right-box{
+            display: none;
+            
+        }
+
+        }
+        .footerend{
+            hr{ 
+                margin: 0;
+                width: 100%;
+            }
+
+        }
+
+
+
+        
+
+    }   
+   
+
+
+
+
+}
 
 
 

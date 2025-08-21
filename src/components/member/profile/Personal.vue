@@ -1,77 +1,39 @@
 <!----個人資料修改---->
 <template>
-    <div class="personal">
-        <div class="leftright">
-            <!-----左邊頭像+選單-------->
-            <aside class="sidebar">
-                 <!-- 頭像 -->
-                 <!-- <img class="photo" :src="photo" alt="頭像" /> -->
-                 <div class="demo-type">
-                     <el-avatar :icon="UserFilled" :size="55" class="avatar" />
-                 </div>
-     
-                 <!-- 帳號 -->
-                 <p class="username">{{ username }}</p>
-     
-                 <!-- 清單 -->
-                 <ul class="menu">
-                     <li :class="{ active: activeKey === 'profile' }">
-                         <button class="menu-btn" type="button" @click="selectItem('profile')">個人資料管理</button>
-                     </li>
-                     <li :class="{ active: activeKey === 'orders' }">
-                         <button class="menu-btn" type="button" @click="selectItem('orders')">我的訂單</button>
-                     </li>
-                     <li :class="{ active: activeKey === 'events' }">
-                         <button class="menu-btn" type="button" @click="selectItem('events')">報名活動列表</button>
-                     </li>
-                     <li :class="{ active: activeKey === 'favorites' }">
-                         <button class="menu-btn" type="button" @click="selectItem('favorites')">我的收藏</button>
-                     </li>
-                     <li :class="{ active: activeKey === 'reviews' }">
-                         <button class="menu-btn" type="button" @click="selectItem('reviews')">我的評論</button>
-                     </li>
-                 </ul>
-            </aside>
-            <!-----右邊內容-------->
-            <div class="personal-form">
-                    <div class="row">
-                        <input :value="member.name" type="text" class="rowline" style="font-size: 18px" placeholder="我的名字" disabled />
-                    </div>
-                    <div class="row">
-                        <input v-model="member.phone" type="tel" class="rowline" style="font-size: 18px" placeholder="我的電話" />
-                    </div>
-                <!----縣市鄉鎮-------->
-                    <div class="personal-city">
-                        <div class="select">
-                            <select v-model="member.city" class="select-city">
-                            <option value="">縣市</option>
-                            <option v-for="c in cities" :key="c" :value="c">{{ c }}</option>
-                            </select>
-                            <!-- <span class="caret"></span> -->
-                        </div>
-                        <div class="select">
-                            <select v-model="member.district" class="select-city">
-                            <option value="">鄉鎮</option>
-                            <option v-for="d in districtOptions" :key="d" :value="d">{{ d }}</option>
-                            </select>
-                            <!-- <span class="caret">▾</span> -->
-                        </div>
-                    </div>
-                 <!-- 我的地址 -->
-                    <div class="row">
-                        <input v-model="member.address" type="text" class="rowline" style="font-size: 18px" placeholder="我的地址" />
-                    </div>
-                 <!-- 儲存 -->
-                    <div class="actions">
-                        <button class="save" :disabled="saving" @click="save">
-                            {{ saving ? '儲存中…' : '儲存' }}
-                        </button>
-                        <span class="hint" v-if="savedAt">已更新 {{ savedAt }}</span>
-                    </div>
-            </div>
-
+    <!-----右邊內容-------->
+    <div class="personal-form">
+        <div class="row">
+            <input :value="member.name" type="text" class="rowline" style="font-size: 18px" placeholder="我的名字" disabled />
         </div>
-
+        <div class="row">
+            <input v-model="member.phone" type="tel" class="rowline" style="font-size: 18px" placeholder="我的電話" />
+        </div>
+        <!----縣市鄉鎮-------->
+        <div class="personal-city">
+            <div class="select">
+                <select v-model="member.city" class="select-city">
+                <option value="">縣市</option>
+                <option v-for="c in cities" :key="c" :value="c">{{ c }}</option>
+                </select>
+            </div>
+            <div class="select">
+                <select v-model="member.district" class="select-city">
+                <option value="">鄉鎮</option>
+                <option v-for="d in districtOptions" :key="d" :value="d">{{ d }}</option>
+                </select>
+            </div>
+        </div>
+        <!-- 我的地址 -->
+        <div class="row">
+            <input v-model="member.address" type="text" class="rowline" style="font-size: 18px" placeholder="我的地址" />
+        </div>
+        <!-- 儲存 -->
+        <div class="actions">
+            <button class="save" :disabled="saving" @click="save">
+                {{ saving ? '儲存中…' : '儲存' }}
+            </button>
+            <span class="hint" v-if="savedAt">已更新 {{ savedAt }}</span>
+        </div>
     </div>
 
 </template>
@@ -79,55 +41,6 @@
 <style scoped lang="scss">
 @import '@/assets/styles/main.scss';
 
-.personal{
-    font-family: $chFont;
-    width: 100%;
-    height: calc(100vh - 100px);
-    overflow-y: auto;           /* 把捲動限制在這個容器 */
-    box-sizing: border-box;
-    background-image: url(@/assets/images/member/login-bgi.png);
-    background-size: cover;
-}
-.leftright{
-    width: 1000px;
-    display: flex;
-    gap: 50px;
-    margin: 0 auto;
-    padding-top: 80px;
-}
-.sidebar{
-    width: 150px;
-    padding-top: 20px;
-    color: $secondaryColor-yellow;
-}
-// 頭像icon
-.demo-type {
-    width: 60px;
-    height: 55px;
-    margin: 0 auto;
-}
-.username{
-    font-size: $pcChFont-H4;
-    // color: $FontColor-white;
-    padding-top: 20px;
-    padding-left: 30px;
-}
-.menu{
-    padding: 10px 10px;
-    width: 150px;
-}
-.menu-btn{
-    border: none;
-    background-color: transparent;
-    padding-top: 10px;
-    font-size: $pcChFont-H4;
-    color: $secondaryColor-yellow;
-    cursor: pointer;
-}
-.menu-btn:hover, .menu li.active .menu-btn {   /* hover 與 active 都變色 */
-    color: $secondaryColor-orange;
-    text-decoration: underline;
-}
 // 右邊內容
 .personal-form{
     display: flex;
@@ -175,32 +88,13 @@
 // 按儲存後會跳出更新字
 .hint{
     font-size: $pcChFont-small; 
-    color: $FontColor-white;
+    color: $FontColor-black;
 }
 </style>
 
 <script setup>
     import { ref, onMounted, reactive, computed, watch } from 'vue'
     import { UserFilled } from '@element-plus/icons-vue'
-
-    const props = defineProps({
-    username: { type: String, default: '小姐/先生' },
-    // photo:   { type: String, default: '/src/assets/icons/account.svg' }
-    })
-
-    const emit = defineEmits(['select'])
-    const activeKey = ref('')
-
-    // 預設第一個 active
-    onMounted(() => {
-    activeKey.value = 'profile'
-    emit('select', 'profile')
-    })
-
-    function selectItem(key) {
-    activeKey.value = key
-    emit('select', key)
-    }
 
     /* ---- 假後端：取會員註冊資料 ---- */
     function fetchMember() {

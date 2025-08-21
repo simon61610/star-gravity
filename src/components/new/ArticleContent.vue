@@ -46,8 +46,6 @@ async function copyurl(){    // async....await  非同步操作 複製網址程�
 }
 
 
-
-
 </script>
 
 
@@ -109,7 +107,7 @@ async function copyurl(){    // async....await  非同步操作 複製網址程�
     max-width: 710px;
     width: 100%;
     .article-title-box{
-        
+            
         .article-title-h2{
             padding: 10px;
             margin-bottom: 10px;
@@ -143,6 +141,7 @@ async function copyurl(){    // async....await  非同步操作 複製網址程�
 
 
     .article-content-box{
+        margin-top: 36px !important;
 
          ul{
             margin-top: 30px;
@@ -190,7 +189,34 @@ async function copyurl(){    // async....await  非同步操作 複製網址程�
     }
 
 }
+@media screen and (max-width: 431px){
 
+    .article-content-img{
+        aspect-ratio: 16/9;
+        text-align: center;
+        margin-top: 50px;
+        
+        
+        img{
+            max-width: 350px !important;
+            width: 100% !important;
+            
+        }
+    }
+
+
+    .article-content-box {
+        align-items: center;
+        background-color: $primaryColor-900;
+        display: flex;
+        flex-direction: column;
+         .article-content-back {
+            width: 100%;
+            justify-content: flex-start !important;
+            margin-bottom: 16px;
+            }
+        }
+}   
 
 
 </style>

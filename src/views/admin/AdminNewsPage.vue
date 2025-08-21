@@ -1,8 +1,8 @@
 <script setup>
     import {ref} from 'vue'
-    import AdminHeader from '@/components/admin/AdminHeader.vue';
+ //   import AdminHeader from '@/components/admin/AdminHeader.vue';
     import AdminToolbar from '@/components/admin/AdminToolbar.vue';
-    import AdminSidebar from '@/components/admin/AdminSidebar.vue';
+ //   import AdminSidebar from '@/components/admin/AdminSidebar.vue';
     import AdminNews from '@/components/admin/management/AdminNews.vue';
     const articleRef = ref(null)  //建立一個ref放子層資料
     const search = ref('')
@@ -46,7 +46,7 @@
     box-sizing: border-box;
 
     
-    .Admin-home-box{
+    /* .Admin-home-box{
         gap: 40px;
         max-width: 1200px;
         margin: 40px auto 0;
@@ -62,6 +62,6 @@
         
     }
 
-    }
+    } */
 }
 </style>
