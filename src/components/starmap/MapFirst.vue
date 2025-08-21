@@ -15,12 +15,32 @@ onMounted(() => {
     })
   }
 })
+
+import { useRouter } from 'vue-router'
+const router = useRouter()
+const isLeaving = ref(false)
+
+const goToMapMain = async () => {
+  // 添加離開動畫
+  isLeaving.value = true
+  
+  // 等待動畫完成
+  await new Promise(resolve => setTimeout(resolve, 500))
+  
+  // 跳轉頁面
+  router.push('/mapmain')
+}
+
+
 </script>
 
 <template>
-    <div class="wrapper">
+    <div class="wrapper" :class="{ 'leaving': isLeaving }">
         <h1>STAR MAP</h1>
-        <button class="map-click button--map">Click here</button>
+        <!-- <router-link to="/mapmain" class="map-click button--map" @click="goToMapMain">
+            Click here
+        </router-link> -->
+        <button class="map-click button--map" @click="goToMapMain">Click here</button>
         <div class="decorate">
             <p>精選觀星地點</p>
         </div>
@@ -70,6 +90,14 @@ onMounted(() => {
 
     position: relative;
     overflow: hidden;
+
+    // transition: all 0.5s ease;
+}
+
+.wrapper.leaving {
+  // opacity: 0.6;
+  // transform: scale();
+  filter: blur(2px);
 }
 
 .wrapper h1 {

@@ -1,9 +1,87 @@
+<script setup>
+import { ref, defineEmits ,defineProps, onMounted, onUnmounted, computed} from 'vue'
+//向父組件發送事件
+const emit = defineEmits()
+
+function closeModel(){
+    emit('closeModel')
+}
+function backToDetail(){
+    emit('backToDetail')
+}
+function writeReview(){
+    emit('writeReview')
+}
+
+//接收父組件傳來資料
+const props = defineProps(["selectedLocation","selectedLocationId", 'locationReviews'])
+
+//定義響應式變數
+const showSelect = ref(false)
+const sortType = ref('newest')
+
+//監聽標籤事件
+function showSelectUl(){
+    showSelect.value = !showSelect.value
+}
+function clickOutside( e ){
+    const selectElement = document.querySelector('.review-select')
+    if( selectElement && !selectElement.contains( e.target ) ){
+        showSelect.value = false
+    }
+}
+function changeSortType(newType, e) {
+    sortType.value = newType
+    e.stopPropagation();
+    showSelect.value = false
+}
+const sortedReviews = computed(()=>{
+    if( !props.locationReviews){
+        return []
+    }else{
+        //避免改到雙向資料 所以要幫評論陣列建個副本
+        const reviews = [...props.locationReviews]
+
+        switch(sortType.value){
+            case "newest": 
+                // sortedResult = reviews.sort((a, b) => new Date(b.時間) - new Date(a.時間))
+                console.log('📅 按最新排序完成')
+                return reviews.sort((a, b) => new Date(b.時間) - new Date(a.時間))                
+            case "rating_low": 
+                console.log('⭐ 按評分低到高排序完成')
+                return reviews.sort((a, b) => a.評論分數 - b.評論分數)  
+            case "rating_high": 
+                console.log('⭐ 按評分高到低排序完成')
+                return reviews.sort((a, b) => b.評論分數 - a.評論分數)
+            default:
+                console.log('📝 使用預設排序')
+                return reviews   
+        }
+    }
+})
+
+
+//生命週期
+//掛載時即執行
+onMounted( ()=>{
+    document.addEventListener('click', clickOutside)
+})
+onUnmounted( ()=>{
+    document.removeEventListener('click', clickOutside)
+})
+
+
+
+
+
+</script>
+
 <template>
     <!-- 內容彈窗 -->
     <div class="map-reviewBox">
          <!-- 叉叉按鈕 -->
-        <img class="mapbox-close" src="../../assets/icons/icon-map-close.svg" alt="">
-        <h3 class="mapbox-back">
+        <img class="mapbox-close" src="../../assets/icons/icon-map-close.svg" alt="" @click="closeModel">
+        <h3 class="mapbox-back"  @click="backToDetail">
             <img class="mapbox-backTo" src="../../assets/icons/icon-map-goToBack.svg" alt="">
             返回上頁
         </h3>
@@ -12,13 +90,13 @@
         <!-- 左半邊 -->
         <div class="mapreview-left">
             <div class="mapreview-title">
-                <h1>南瀛天文館</h1>
+                <h1>{{selectedLocation.name}}</h1>
                 <h3>
                     <img src="../../assets/icons/icon-map-whitestar.svg" alt="">
-                    4.7
+                    {{selectedLocation.score}}
                 </h3>
             </div>
-            <button class="mapreview-btn button--normal">
+            <button class="mapreview-btn button--normal" @click="writeReview">
                 <img src="" alt="">
                 撰寫評論
             </button>
@@ -27,86 +105,36 @@
         <!-- 右半邊 -->
         <div class="mapreview-right">
             <!-- 排序 -->
-            <div class="review-select">
+            <div class="review-select" @click="showSelectUl">
                 <div class="review-select-title" >
                     <img src="" alt="">
                     <h5>排序</h5>
                 </div>
-                <ul class="review-select-detail">
-                    <li>最新評論</li>
-                    <li>評論低到高</li>
-                    <li>最新高到低</li>
+                <ul v-show="showSelect" class="review-select-detail">
+                    <li @click="changeSortType('newest', $event)">最新評論</li>
+                    <li @click="changeSortType('rating_low', $event)">評論低到高</li>
+                    <li @click="changeSortType('rating_high', $event)">評論高到低</li>
+
+                    <!-- <li v-for="option in sortOptions"
+                        :key="option.value"
+                        @click="selectSortOption(option, $event)"
+                    >{{option.label}}</li> -->
                 </ul>
             </div>
             <!-- 評論列表 -->
             <ul class="mapreview-list">
-                <li>
-                    <h4>Ani_98</h4>
+                <li v-for="review in sortedReviews">
+                    <h4>{{review.會員名稱}}</h4>
                     <span class="review-score"> <!--到時候img 用v-for跑 評論幾分跑幾次-->
-                        <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                        <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                        <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                        <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                        <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
+                        <img v-for="value in review.評論分數" src="../../assets/icons/icon-filledStar.svg" alt="星星">
                     </span>
                     <p class="cnContent--18px">
-                        新手友善，剛好是天文館，可以先在天文館學習新知後，留到晚上用天文望遠鏡看星星。
+                        {{review.評論內容}}
                     </p>
                     <img class="review-photo" src="../../assets/images/map/map-reviewleft.jpg" alt="">
-                    <h6>2025/07/25</h6>
+                    <h6>{{review.時間}}</h6>
                 </li>  
                 
-                <li>
-                    <h4>Ani_98</h4>
-                    <span class="review-score"> <!--到時候img 用v-for跑 評論幾分跑幾次-->
-                        <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                        <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                        <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                        <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                        <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-
-                    </span>
-                    <p class="cnContent--18px">
-                        新手友善，剛好是天文館，可以先在天文館學習新知後，留到晚上用天文望遠鏡看星星。新手友善，剛好是天文館，可以先在天文館學習新知後，留到晚上用天文望遠鏡看星星。新手友善，剛好是天文館，可以先在天文館學習新知後，留到晚上用天文望遠鏡看星星。
-                    </p>
-                    <!-- <img class="review-photo" src="" alt=""> -->
-                    <h6>2025/07/25</h6>
-                </li> 
-
-                <li>
-                    <h4>Ani_98</h4>
-                    <span class="review-score"> <!--到時候img 用v-for跑 評論幾分跑幾次-->
-                        <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                        <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                        <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                        <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                        <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                    </span>
-                    <p class="cnContent--18px">
-                        帶小孩來，光害少，車位是路邊白線，滿天星空真的美！
-                    </p>
-                    <img class="review-photo" src="../../assets/images/map/map-reviewleft.jpg" alt="">
-                    <h6>2025/07/25</h6>
-                </li> 
-
-                <li>
-                    <h4>Ani_98</h4>
-                    <span class="review-score"> <!--到時候img 用v-for跑 評論幾分跑幾次-->
-                        <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                        <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                        <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                        <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                        <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                    </span>
-                    <p class="cnContent--18px">
-                        新手友善，剛好是天文館，可以先在天文館學習新知後，留到晚上用天文望遠鏡看星星。
-                    </p>
-                    <!-- <img class="review-photo" src="" alt=""> -->
-                    <h6>2025/07/25</h6>
-                </li> 
-
-
-
             </ul>
         </div>
    
@@ -122,9 +150,9 @@
 
 //評論彈窗
 .map-reviewBox {
-    width: 1200px;
-    // height: 820px;
-    height: 90vh;
+    width: min(90vw, 1200px);  
+    max-height: 90vh;  
+    // padding: clamp(20px, 3vw, 40px); 
 
     // border: 2px solid $primaryColor-500;
     background-color:$bgColor-white ;
@@ -251,7 +279,7 @@
 
     background-color: $primaryColor-100;
 }
-.review-select ul{
+.review-select-detail{
     width: 100%;
     border: 1px solid $primaryColor-100;
     box-sizing: border-box;
@@ -259,12 +287,17 @@
 
     position: absolute;
     top: 26px;
+    
 }
-.review-select ul li{
+.review-select-detail li{
     padding: 4px;
     border-bottom: 1px solid $primaryColor-100;
 
     // display: none;
+
+    &:hover{
+        color: $secondaryColor-orange;
+    }
 }
     
     //評論攔
