@@ -142,7 +142,8 @@ const routes = [
       name: 'ArticleDetailpage',     //網頁的id
       component: () => import('@/views/new/ArticleDetailpage.vue'), 
     },
-    //  ---Admin後台-----
+
+  //  ---Admin後台-----
     {
       path: '/AdminLoginPage',    
       name: 'AdminLoginPage',     
@@ -190,6 +191,12 @@ const routes = [
             component: () => import('@/views/admin/AdminCommentPage.vue')
           },
       ]
+    },
+    //-----index分流導頁-------
+    {
+      path: '/IndexPage',    
+      name: 'IndexPage',     
+      component: () => import('@/views/index/IndexPage.vue')
     },
 
    
