@@ -4,46 +4,32 @@
         <div class="leftright">
             <!-----左邊頭像+選單-------->
             <aside class="sidebar">
-                 <!-- 頭像 -->
-                 <!-- <img class="photo" :src="photo" alt="頭像" /> -->
-                 <div class="demo-type">
-                     <el-avatar :icon="UserFilled" :size="55" class="avatar" />
-                 </div>
-     
-                 <!-- 帳號 -->
-                 <p class="username">{{ username }}</p>
-     
-                 <!-- 清單 -->
-                 <ul class="menu">
-                    <!-- <p>
-                        <router-link to="/cartpage/cart">跳到購物車頁</router-link>
-                    </p> -->
-                     <li :class="{ active: activeKey === 'profile' }" class="menu-btn">
-                         <router-link to='/membercenter/personal'>個人資料管理</router-link>
-                    </li>
-                         <!-- <button class="menu-btn" type="button" @click="selectItem('profile')">個人資料管理</button> -->
-                     <!-- </li> -->
-                     <li :class="{ active: activeKey === 'orders' }" class="menu-btn">
-                         <router-link to='/membercenter/order'>我的訂單</router-link>
-                    </li>
-                         <!-- <button class="menu-btn" type="button" @click="selectItem('orders')">我的訂單</button> -->
-                     <!-- </li> -->
-                     <li :class="{ active: activeKey === 'events' }" class="menu-btn">
-                         <router-link to='/membercenter/eventlist'>報名活動列表</router-link>
-                    </li>
-                         <!-- <button class="menu-btn" type="button" @click="selectItem('events')">報名活動列表</button> -->
-                     <!-- </li> -->
-                     <li :class="{ active: activeKey === 'favorites' }" class="menu-btn">
-                         <router-link to='/membercenter/collection'>我的收藏</router-link>
-                    </li>
-                         <!-- <button class="menu-btn" type="button" @click="selectItem('favorites')">我的收藏</button> -->
-                     <!-- </li> -->
-                     <li :class="{ active: activeKey === 'reviews' }" class="menu-btn">
-                         <router-link to='/membercenter/comment'>我的評論</router-link>
-                    </li>
-                         <!-- <button class="menu-btn" type="button" @click="selectItem('reviews')">我的評論</button> -->
-                     <!-- </li> -->
-                 </ul>
+                <div class="demo-type">
+                    <el-avatar :icon="UserFilled" :size="55" class="avatar" />
+                </div>
+    
+                <!-- 帳號 -->
+                <p class="username">{{ username }}</p>
+    
+                <!-- 清單 -->
+                <ul class="menu">
+                <li>
+                    <router-link class="menu-link" to='/membercenter/personal'>個人資料管理</router-link>
+                </li>
+                <li>
+                    <router-link class="menu-link" to='/membercenter/order'>我的訂單</router-link>
+                </li>
+                <li>
+                    <router-link class="menu-link" to='/membercenter/eventlist'>報名活動列表</router-link>
+                </li>
+                <li>
+                    <router-link class="menu-link" to='/membercenter/collection'>我的收藏</router-link>
+                </li>
+                <li>
+                    <router-link class="menu-link" to='/membercenter/comment'>我的評論</router-link>
+                </li>
+                </ul>
+
             </aside>
             <!-----右邊內容-------->
             
@@ -59,29 +45,13 @@
 
 
 <script setup>
-    
-    import { ref, onMounted, reactive, computed, watch } from 'vue'
+    import { useRoute } from 'vue-router'
+    import { computed } from 'vue'
     import { UserFilled } from '@element-plus/icons-vue'
 
     const props = defineProps({
-    username: { type: String, default: '小姐/先生' },
-    // photo:   { type: String, default: '/src/assets/icons/account.svg' }
+        username: { type: String, default: '小姐/先生' },
     })
-
-    const emit = defineEmits(['select'])
-    const activeKey = ref('')
-
-    // 預設第一個 active
-    /* onMounted(() => {
-        activeKey.value = 'profile'
-        emit('select', 'profile')
-    })
-
-    function selectItem(key) {
-        activeKey.value = key
-        emit('select', key)
-    } */
-
 
 </script>
 
@@ -92,18 +62,20 @@
 .personal{
     font-family: $chFont;
     width: 100%;
-    height: calc(100vh - 100px);
+    height: calc(100vh - 80px);
     overflow-y: auto;           /* 把捲動限制在這個容器 */
     box-sizing: border-box;
     background-image: url(@/assets/images/member/login-bgi.png);
     background-size: cover;
 }
 .leftright{
-    width: 1000px;
+    // max-width: 1200px;
+    justify-content: center;
+    align-items: center;
     display: flex;
     gap: 50px;
     margin: 0 auto;
-    padding-top: 80px;
+    padding-top: 50px;
 }
 .sidebar{
     width: 150px;
@@ -118,7 +90,6 @@
 }
 .username{
     font-size: $pcChFont-H4;
-    // color: $FontColor-white;
     padding-top: 20px;
     padding-left: 30px;
 }
@@ -126,23 +97,22 @@
     padding: 10px 10px;
     width: 150px;
 }
-.menu-btn{
-    border: none;
-    background-color: transparent;
-    padding-top: 20px;
+/* 預設/已瀏覽顏色（把原色覆蓋掉） */
+.menu .menu-link,
+.menu .menu-link:link,
+.menu .menu-link:visited {
     font-size: $pcChFont-H4;
-    // color: $secondaryColor-yellow;
-    cursor: pointer;
+    color: $secondaryColor-yellow;
+    text-decoration: none;
+    display: block;
+    padding: 10px 0;
 }
-// .menu-btn:hover, .menu li.active .menu-btn {   /* hover 與 active 都變色 */
-//     color: $secondaryColor-orange;
-//     text-decoration: underline;
-// }
+/* 滑過 & 當前頁 */
+.menu .menu-link:hover,
+.menu .menu-link.router-link-active,
+.menu .menu-link.router-link-exact-active {
+    color: $secondaryColor-orange;
+    text-decoration: underline;
+}
 
-// .menu a.menu-btn,
-// .menu a.menu-btn:link,
-// .menu a.menu-btn:visited {
-//   color: $secondaryColor-yellow;   /* 自己的變數，或直接寫顏色 */
-//   text-decoration: none;\\
-// }
 </style>

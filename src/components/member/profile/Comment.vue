@@ -6,31 +6,31 @@
         <div class="comment-1">
             <h3>陽明山</h3>
             <span class="review-score">  <!--到時候img 用v-for跑 評論幾分跑幾次---->
-                <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
+                <img src="../../../assets/icons/icon-filledStar.svg" alt="星星">
+                <img src="../../../assets/icons/icon-filledStar.svg" alt="星星">
+                <img src="../../../assets/icons/icon-filledStar.svg" alt="星星">
+                <img src="../../../assets/icons/icon-filledStar.svg" alt="星星">
+                <img src="../../../assets/icons/icon-filledStar.svg" alt="星星">
             </span>
             <p class="review-text">
                 新手友善，剛好是天文館，可以先在天文館學習新知後，留到晚上用天文望遠鏡看星星。
             </p>
-            <img class="review-photo" src="../../assets/images/aboutstar/star space.png" alt="照片">
+            <img class="review-photo" src="../../../assets/images/aboutstar/star space.png" alt="照片">
             <button class="delete">刪除</button>
 
             <div class="comment-1">
                 <h3>陽明山</h3>
                 <span class="review-score">  <!--到時候img 用v-for跑 評論幾分跑幾次---->
-                    <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                    <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                    <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                    <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                    <img src="../../assets/icons/icon-filledStar.svg" alt="星星">
-                </span>
+                    <img src="../../../assets/icons/icon-filledStar.svg" alt="星星">
+                    <img src="../../../assets/icons/icon-filledStar.svg" alt="星星">
+                    <img src="../../../assets/icons/icon-filledStar.svg" alt="星星">
+                    <img src="../../../assets/icons/icon-filledStar.svg" alt="星星">
+                    <img src="../../../assets/icons/icon-filledStar.svg" alt="星星">
+                    </span>
                 <p class="review-text">
                     新手友善，剛好是天文館，可以先在天文館學習新知後，留到晚上用天文望遠鏡看星星。
                 </p>
-                <img class="review-photo" src="../../assets/images/aboutstar/star space.png" alt="照片">
+                <img class="review-photo" src="../../../assets/images/aboutstar/star space.png" alt="照片">
                 <button class="delete">刪除</button>
             </div>
         </div>
@@ -46,7 +46,8 @@
 
 // 右邊評論
 .comment-area{
-    margin-top: 28px;
+    margin-top: -20px;
+    // margin-left: 180px;
     padding-left: 10px;
     padding-top: 10px;
     // height: 550px;

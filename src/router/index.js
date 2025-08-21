@@ -124,11 +124,11 @@ const routes = [
 // {path: '/collection', name: 'collection', component: CollectionPage},
 // {path: '/membercomment', name: 'membercomment', component: CommentPage},
 // {path: '/eventlist', name: 'eventlist', component: EventListPage},
-{path: '/forget', name: 'forget', component: ForgetPage},
-{path: '/forgot', name: 'forgot', component: ForgotPage},
-{path: '/loginfirst', name: 'loginfirst', component: LoginFirstPage},
+{path: '/forget', name: 'forget', component: ForgetPage},               // 忘記密碼頁面(輸入信箱)
+{path: '/forgot', name: 'forgot', component: ForgotPage},               // 忘記密碼頁面(輸入驗證碼)
+{path: '/loginfirst', name: 'loginfirst', component: LoginFirstPage},   // 登入頁面
 // {path: '/memberorder', name: 'memberorder', component: OrderPage},
-{path: '/membercenter', name: 'membercenter', component: PersonalPage,
+{path: '/membercenter', name: 'membercenter', component: PersonalPage,  // 會員中心
   children: [
     {path: 'personal', component: () => import('../components/member/profile/Personal.vue')},
     {path: 'order', component: () => import('../components/member/profile/Order.vue')},
@@ -137,8 +137,8 @@ const routes = [
     {path: 'comment', component: () => import('../components/member/profile/Comment.vue')},
   ]
 },
-{path: '/register', name: 'register', component: RegisterPage},
-{path: '/resetpassword', name: 'resetpassword', component: ResetPasswordPage},
+{path: '/register', name: 'register', component: RegisterPage},          // 註冊頁面
+{path: '/resetpassword', name: 'resetpassword', component: ResetPasswordPage},  // 重設密碼頁面
 
 
 // ------------------ 以下是王牌浩竣的 VIP 區，閒雜人等請勿靠近  ------------------
