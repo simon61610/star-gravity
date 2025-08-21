@@ -208,6 +208,7 @@ import  logo from '@/assets/logos/logo.svg'
 @media screen and (max-width: 431px){
     .footer{
         padding: 16px;
+        box-sizing: border-box;
         .main-footer-box{
             flex-direction: column;
             

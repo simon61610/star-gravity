@@ -108,6 +108,62 @@ const emit = defineEmits(['changeCategory'])
          }
     
 }
+/*-------------斷點430--------------*/
+@media screen and (max-width: 431px){
+.article-list-wrapper{
+    .article-list{
+        border-bottom: none;
+        justify-content: center;
+        .title{
+            display: none;
+        }
+        .article-category{
+            justify-content: center;
+            width: 250px;
+            flex-wrap: wrap;
+            li{
+                height: 42px;
+                line-height: 42px;
+            
+            }
+
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
 
 
 </style>

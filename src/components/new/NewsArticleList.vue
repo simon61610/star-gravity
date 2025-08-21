@@ -250,7 +250,7 @@ const props = defineProps({
                
 
                 .Readmore{
-                    margin-top: 15px;
+                    margin-top: 35px;
                     float: right;
                     text-decoration:underline;
                 }
@@ -327,4 +327,20 @@ const props = defineProps({
     }
 
 }
+
+/*-------------斷點430--------------*/
+@media screen and (max-width: 431px){
+.news-article-wrapper{
+    padding: 16px;
+
+    .news-article-list{
+        gap: 80px;
+    }
+
+
+    }
+
+}
+
+
 </style>

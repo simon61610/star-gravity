@@ -40,22 +40,22 @@ function changeCategory(cat){
 
 <template>
   <div class="news-article-box">  
-    <NewsBanner/>
-      <main>
+      <NewsBanner/>  
+       <main>
         <NewsBar
         :categories= "categories"
         :selectedCategory="selectedCategory"
-        @changeCategory="changeCategory"
+        @changeCategory="changeCategory" 
         
         />
-        <NewsArticleList :articles="showArticles"/>
+         <NewsArticleList :articles="showArticles"/>
         <Pagination 
          v-model="currentPage"
          v-model:pageSize="pageSize"  
         :total="filterArticles.length"
-         />   
+         />    
 
-      </main>
+      </main> 
   </div>
 </template>
 

@@ -103,6 +103,7 @@ function toggleMenu() {
 /*-------------斷點430--------------*/
 @media screen and (max-width: 431px){
     .navbar{
+        z-index: 1000;
         position: relative;
         .wrapper{
             ul{ 
