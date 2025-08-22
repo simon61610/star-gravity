@@ -1,7 +1,14 @@
 <!-- src/components/ZodiacBar.vue -->
 <script setup>
-const emit = defineEmits(['select-constellation'])
+const emit = defineEmits(['select-constellation','draw-next','toggle-lines'])
 import { ref } from 'vue'
+
+/*星連星的程式*/
+function DrawNext() {
+  // 呼叫子層的 drawNext
+  emit('draw-next')
+}
+
 
 const zodiacInfo = ref([
   { 
@@ -81,14 +88,14 @@ const zodiacInfo = ref([
    <div class="zodiac__actions" aria-label="顯示控制">
         <h2 class="zodiac__title"> 十 二 星 座</h2>
       <div class="zodiac__icons">
-        <img class="action__icon" src="@/assets/images/games/GameSkyPage/btn/gamesky_point.png" alt="點狀顯示" />
-        <img class="action__icon" src="@/assets/images/games/GameSkyPage/btn/gamesky_line.png"  alt="連線顯示" />
+        <img class="action__icon" src="@/assets/images/games/GameSkyPage/btn/gamesky_point.png" alt="點狀顯示" @click="$emit('toggle-lines');console.log('toggle-lines emit 出去了')" />
+        <img class="action__icon" src="@/assets/images/games/GameSkyPage/btn/gamesky_line.png"  alt="連線顯示" @click="DrawNext" />
         <img class="action__icon action__icon--star" src="@/assets/images/games/GameSkyPage/btn/gamesky_star.png" alt="星星" />
       </div>
     </div>
   <div class="zodiac">
     <ul class="zodiac__list" aria-label="十二星座清單">
-      <li class="zodiac__item" v-for="zodiac in zodiacInfo" :key="zodiac.id"  @click="$emit('select-constellation', zodiac.id)">
+      <li class="zodiac__item" v-for="zodiac in zodiacInfo" :key="zodiac.id"  @click="() => { console.log('emit id:', zodiac.id); $emit('select-constellation', zodiac.id) }">
         <img class="zodiac__icon" :src="zodiac.imgurl" :alt="zodiac.eng">
         <div class="zodiac__text"><strong>{{ zodiac.eng }}</strong><span>{{ zodiac.ch }}</span></div>
       </li>
@@ -153,6 +160,9 @@ const zodiacInfo = ref([
   height: 44px;
   object-fit: contain;         /* 等比顯示 */
   display: block;
+  &:hover{
+    cursor: pointer;
+  }
 }
 
 .zodiac__text {
@@ -181,6 +191,9 @@ const zodiacInfo = ref([
 .zodiac__icons {
   display: flex;
   /* color: #fff; */
+  &:hover{
+    cursor: pointer;
+  }
  
 }
 

@@ -1,9 +1,27 @@
 <script setup>
+import StarsCanvas from '@/components/game/StarsCanvas.vue'
 import { ref } from 'vue'
 
+
+
+
 const props = defineProps({
-  constellation: { type: Object, required: true }
+  constellation: { 
+    type: Object,
+    required: true ,
+  },
+  showLines: Boolean   // 接收父層傳來的
 })
+
+const canvasRef = ref(null)
+
+function drawNextLine() {
+  console.log(" Card.drawNextLine() 被呼叫了")
+  canvasRef.value?.drawNext()
+}
+
+defineExpose({ drawNextLine })
+
 
 // Tab 清單（之後要加/改只改這裡）
 const tabs = [
@@ -21,7 +39,7 @@ const activeTab = ref('intro')
   <aside class="card" aria-live="polite">
     <header class="card__hd">
       <div class="card__thumb">
-        <img :src="constellation.image" alt="星座圖示" />
+        <img :src="constellation.image"  alt="星座圖示" />
       </div>
     </header>
 
@@ -57,9 +75,8 @@ const activeTab = ref('intro')
       <div v-show="activeTab === 'position'">
         <ul>
           <li v-for ="(data,i) in constellation.tabs.position.list" :key="i">
-            {{ data.label }} : {{data.value}}
+            {{ data.label }} : {{data.value}} 
           </li>
-          
           <!-- <li>赤經：約 2h40m</li>
           <li>赤緯：約 +20°</li>
           <li>象線：由主星 α(嬰兒座α)～γ 等連成典型羊角形</li> -->
@@ -77,7 +94,14 @@ const activeTab = ref('intro')
   <!-- 右側畫布（保持原樣；若要依 Tab 切換圖，也可加 v-show/v-if） -->
   <div class="canvas">
     <div class="sky">
-      <img class="figure" :src="constellation.bg" alt="牡羊座輪廓" />
+      <div Class="figure-box">
+        <!-- <img class="figure" :src="constellation.bg" alt="" /> -->
+        <StarsCanvas   class="Stars-Canvas-svg" 
+        :stars="constellation.stars" 
+        :show-lines="showLines" 
+        :lines="constellation.lines" 
+        :bg="constellation.bg" ref="canvasRef"/>
+      </div>
     </div>
   </div>
  </main>
@@ -205,15 +229,44 @@ justify-content: center;
   right: 0;
   left: 0;
   margin: auto;
+  
+}
+.sky{
+  position: relative;   // 父層相對定位
+  width: 100%;
+  height: auto;
+  
+
+  .figure-box{
+    position: relative;
+    width: 100%;
+    aspect-ratio: 10 / 4; // 🔑 這個比例跟你的星點座標 viewBox 對齊 (800x600 → 4:3)
+    overflow: hidden;
+    
+  //   .figure{
+  //   display: block;
+  //   position:absolute;
+  //   max-width: 500px;
+  //   width: 100%;
+  //   object-fit: cover;
+  //   // object-fit: contain;
+  //   padding-left: 850px;
+  //   padding-top: 67px;
+
+  // }
+  .Stars-Canvas-svg{
+      position: absolute;   // 疊在圖片上
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none; 
+      display: block;
+    }
+    
+  }
 }
 
-.figure{
-  position:absolute; inset:0;
-  width: 80%; height: 80%;
-  object-fit: contain;
-  padding-left: 350px;
-  padding-top: 67px;
-}
 
 /* 星點（PNG，先手動定位） */
 .star{
