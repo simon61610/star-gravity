@@ -1,10 +1,11 @@
 <!-- src/components/ZodiacBar.vue -->
 <script setup>
-
+const emit = defineEmits(['select-constellation'])
 import { ref } from 'vue'
 
 const zodiacInfo = ref([
-  {
+  { 
+    id:'Capricorn',
     eng: "Capricorn",
     ch: "摩羯座",
     imgurl: "/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_capricorn-icon.png",
@@ -21,7 +22,8 @@ const zodiacInfo = ref([
     imgurl: "/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_pisces-icon.png",
   },
 
-  {
+  { 
+    id:'Aries',
     eng: "Aries",
     ch:"牡羊座" ,
     imgurl: "/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_aries-icon.png",
@@ -79,17 +81,17 @@ const zodiacInfo = ref([
    <div class="zodiac__actions" aria-label="顯示控制">
         <h2 class="zodiac__title"> 十 二 星 座</h2>
       <div class="zodiac__icons">
-        <img class="action__icon" src="/src/assets/images/games/GameSkyPage/btn/gamesky_point.png" alt="點狀顯示" />
-        <img class="action__icon" src="/src/assets/images/games/GameSkyPage/btn/gamesky_line.png"  alt="連線顯示" />
-        <img class="action__icon action__icon--star" src="/src/assets/images/games/GameSkyPage/btn/gamesky_star.png" alt="星星" />
+        <img class="action__icon" src="@/assets/images/games/GameSkyPage/btn/gamesky_point.png" alt="點狀顯示" />
+        <img class="action__icon" src="@/assets/images/games/GameSkyPage/btn/gamesky_line.png"  alt="連線顯示" />
+        <img class="action__icon action__icon--star" src="@/assets/images/games/GameSkyPage/btn/gamesky_star.png" alt="星星" />
       </div>
     </div>
   <div class="zodiac">
     <ul class="zodiac__list" aria-label="十二星座清單">
-       <li class="zodiac__item" v-for="zodiac in zodiacInfo">
+      <li class="zodiac__item" v-for="zodiac in zodiacInfo" :key="zodiac.id"  @click="$emit('select-constellation', zodiac.id)">
         <img class="zodiac__icon" :src="zodiac.imgurl" :alt="zodiac.eng">
         <div class="zodiac__text"><strong>{{ zodiac.eng }}</strong><span>{{ zodiac.ch }}</span></div>
-       </li>
+      </li>
     </ul>
   </div>
   </section>
@@ -97,7 +99,7 @@ const zodiacInfo = ref([
 
 
 
-<style scoped>
+<style scoped lang="scss">
 /* --- 版面 --- */
 .zodiac-tittle{
 /* border:2px solid red ; */
@@ -140,6 +142,10 @@ const zodiacInfo = ref([
   align-items: center;
   gap: 5px;
   min-width: 140px;
+  &:hover{ 
+    cursor: pointer;
+    background-color: rgba(193, 133, 226, 0.504);
+  }
 }
 
 .zodiac__icon {
