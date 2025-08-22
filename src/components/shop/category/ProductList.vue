@@ -61,7 +61,12 @@
 <template>
     <section>
         <div class="product-items">
-            <div class="item__card" v-for="( item, index ) in showItems"> <!-- 用顯示的商品陣列跑 v-for -->
+            <RouterLink 
+             :to="`/product/${item.id}`"
+             class="item__card router-link" 
+             v-for="( item, index ) in showItems"
+            > 
+            <!-- 用顯示的商品陣列跑 v-for -->
                 <img :src="item.pic" alt="商品假圖" class="item__card__img">
                 <div class="item__card__text">
                     <h1 class="item__card__text--name">{{ item.name }}</h1>
@@ -70,7 +75,7 @@
                         <i class="fa-solid fa-cart-shopping"></i>
                     </div>
                 </div>
-            </div>
+            </RouterLink>
         </div>
         <div>  
             <Pagination
@@ -84,6 +89,11 @@
 
 <style scoped lang="scss">
     @import '@/assets/styles/main.scss';
+    // 共用
+    .router-link {
+        text-decoration: none;
+        color: inherit;
+    }
 
     .product-items {
         color: white;

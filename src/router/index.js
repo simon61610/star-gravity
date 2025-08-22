@@ -97,7 +97,8 @@ const routes = [
 // ------------------ 星空小舖 shop ------------------
 { path: '/shop', name: 'shop', component: ShopHomePage},
 { path: '/shopcategory', name: 'shopcategory', component: ShopCategoryPage},
-{ path: '/product', name: 'product', component: ShopProductPage},
+// { path: '/product', name: 'product', component: ShopProductPage},
+{ path: '/product/:id?', name: 'product', component: ShopProductPage},
 { path: '/cartpage',  // 購物車與步驟頁面
   name: 'cartpage', 
   component: () => import('@/views/shop/CartPage.vue'),

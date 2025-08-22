@@ -6,10 +6,14 @@
 4. 寫上圖片超出要能滑動的功能
 5. 加上商品資料的綁定
 6. Toast 訊息
+7. 隨路由引入的商品名稱與內容待改
+8. 等於 nul
 -->
 
 <script setup>
-    import { ref, reactive } from 'vue'
+    import { ref, reactive, computed } from 'vue'
+    import { useRoute } from 'vue-router';
+    import products from '@/data/products';
 
     // 組件
     import ShopBanner from '@/components/shop/ShopBanner.vue';
@@ -17,6 +21,13 @@
     import AccordionItem from '@/components/common/AccordionItem.vue';
     import QtyControl from '@/components/shop/product/QtyControl.vue';
     import ProdIntro from '@/components/shop/product/ProdIntro.vue';
+
+    // 路由
+    const route = useRoute()
+    const product = computed(() => {
+        return products.find((prod) => { return prod.id == route.params.id || null})
+    })
+    
 
     // 資料
     const productDetail = reactive({
@@ -42,7 +53,7 @@
     <section class="product-page">
         <ShopBanner />
         <Breadcrumbs />
-        <div class="container">
+        <div class="container" v-if="product">
             <!-- 左：商品圖片 -->
             <div class="product-gallery">
                 <div class="product-gallery__pic">
@@ -105,14 +116,28 @@
 
 
         <!-- 下方商品介紹 -->
-        <div class="product-info">
+        <div class="product-info" v-if="product">
             <ProdIntro />
+        </div>
+
+        <!-- 沒有這個商品編號時會出現如下 -->
+        <div class="no-product" v-else>
+            <p>查無此商品</p>
+            <p class="back-cate">
+                <router-link to="/shopcategory" class="router-link">點擊回到商品分類</router-link>
+            </p>
         </div>
     </section>
 </template>
 
 <style scoped lang="scss">
     @import '@/assets/styles/main.scss';
+    // 共用
+    .router-link {
+        text-decoration: none;
+        color: inherit;
+    }
+
     .product-page {
         background-color: $bgColor-shop;
 
@@ -258,6 +283,21 @@
         .product-info {
             max-width: 1200px;
             margin: 0 auto;
+        }
+
+        // ------------------- 沒有商品時出現 -------------------
+        .no-product {
+            text-align: center;
+            font-size: 52px;
+            padding: 20px;
+            color: white;
+            .back-cate {
+                padding-top: 20px;
+                cursor: pointer;
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
         }
     }
 
