@@ -32,10 +32,10 @@ const steps = ['準備結帳', '填寫資料', '完成訂單'] // 步驟內容
             <router-view />
         </div>
 
-        <!-- 用 v-if 控制出現哪些 -->
-        <p><router-link to="/cartpage/cart">跳到購物車頁</router-link></p>
+        <!-- 假路徑 -->
+        <!-- <p><router-link to="/cartpage/cart">跳到購物車頁</router-link></p>
         <p><router-link to="/cartpage/cartform">跳到表單頁</router-link></p>
-        <p><router-link to="/cartpage/cartsuccess">跳到完成頁面</router-link></p>
+        <p><router-link to="/cartpage/cartsuccess">跳到完成頁面</router-link></p> -->
     </section>
     
 

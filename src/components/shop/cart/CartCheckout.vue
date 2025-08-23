@@ -86,8 +86,12 @@
                         <p><span>運費</span><span>NT$60</span></p>
                         <p><span>總計</span><span>NT$6060</span></p>
                     </div>
-                    <div class="goto-pay-btn">前往結帳</div>
-                    <div class="shop-btn">繼續購物</div>
+                    <router-link to="/cartpage/cartform" class="router-link">
+                        <div class="goto-pay-btn">前往結帳</div>
+                    </router-link>
+                    <router-link to="/shop/category" class="router-link">
+                        <div class="shop-btn">繼續購物</div>
+                    </router-link>
                 </div>
             </div>
         </section>
@@ -97,6 +101,11 @@
 
 <style scoped lang="scss">
     @import '@/assets/styles/main.scss';
+
+    // 共用
+    .router-link {
+        text-decoration: none;
+    }
 
     .checkout-section {
         // --------- 上方: 購物清單 ---------
@@ -248,7 +257,10 @@
                     }
                     .goto-pay-btn {
                         background-color: $secondaryColor-orange;
-                        color: white;   
+                        color: white;
+                        &:hover {
+                            background-color: $primaryColor-900;
+                        }   
                     }
                     .shop-btn {
                         border: 1px solid #888;
