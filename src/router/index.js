@@ -118,10 +118,10 @@ const routes = [
 // {path: '/forgot', name: 'forgot', component: ForgotPage},               // 忘記密碼頁面(輸入驗證碼)
 {path: '/loginfirst', name: 'loginfirst', component: LoginFirstPage,      // 登入頁面
   children: [
-    {path: 'register', component: () => import('../views/member/RegisterPage.vue')},
-    {path: 'forgetemail', component: () => import('../views/member/ForgetPage.vue')},
-    {path: 'forgotcode', component: () => import('../views/member/ForgotPage.vue')},
-    {path: 'resetpassword', component: () => import('../views/member/ResetPasswordPage.vue')},
+    {path: 'register', name: 'register', component: () => import('../views/member/RegisterPage.vue')},
+    {path: 'forget', name: 'forget', component: () => import('../views/member/ForgetPage.vue')},
+    {path: 'forgot', name: 'forgot', component: () => import('../views/member/ForgotPage.vue')},
+    {path: 'resetpassword', name: 'resetpassword', component: () => import('../views/member/ResetPasswordPage.vue')},
   ]
 },   
 // {path: '/register', name: 'register', component: RegisterPage},          // 註冊頁面

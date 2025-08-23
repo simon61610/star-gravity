@@ -1,5 +1,5 @@
 <template>    <!-----忘記密碼1------->
-    <div class="forget-all">
+    <!-- <div class="forget-all"> -->
         <div class="all">
             <div class="forget-one" >
                 <h2>忘記密碼</h2>
@@ -15,19 +15,19 @@
             </div>
         </div>
         
-    </div>
+    <!-- </div> -->
 </template>
 
 <style scoped lang="scss">
 @import '@/assets/styles/main.scss';
 
-.forget-all{
-    width: 100%;
-    min-height: calc(100vh - 350px);
-    background-image: url(@/assets/images/member/login-bgi.png);  
-    background-size: cover;
-    margin-top: 0;
-}
+// .forget-all{
+//     width: 100%;
+//     min-height: calc(100vh - 350px);
+//     background-image: url(@/assets/images/member/login-bgi.png);  
+//     background-size: cover;
+//     margin-top: 0;
+// }
 .all{
     padding-top: 50px;
 }

@@ -1,9 +1,9 @@
 <template>      <!----註冊畫面----->
-    <div class="register-all">
+    <!-- <div class="register-all"> -->
 
         <div class="tabs">
-            <button class="tabs-btn-active button--normal" data-tab="login">登入</button>
-            <button class="tabs-btn button--normal"  data-tab="register">註冊</button>
+            <!-- <button class="tabs-btn-active button--normal" data-tab="login">登入</button>
+            <button class="tabs-btn button--normal"  data-tab="register">註冊</button> -->
         </div>
 
         <div class="second-area">
@@ -91,7 +91,7 @@
             </form>
         </div>
     
-    </div>
+    <!-- </div> -->
 </template>
 
 
@@ -113,7 +113,7 @@
     gap: 12px;
     justify-content: center;
     text-align: center;
-    padding-top: 40px;
+    // padding-top: 40px;
 }
 .tabs-btn-active{    // 登入鈕
     border: none;
@@ -186,6 +186,9 @@
 .select-city{
     width: 277px;
     height: 50px;
+    padding-left: 14px;
+    font-size: $pcChFont-small;
+    color: #9aa0a6;
 }
 // 縣市區域字體大小
 .personal-city .select-city, .personal-city .select-city option {
