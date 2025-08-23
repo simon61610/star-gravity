@@ -1,6 +1,6 @@
 <!-- src/components/ZodiacBar.vue -->
 <script setup>
-const emit = defineEmits(['select-constellation','draw-next','toggle-lines'])
+const emit = defineEmits(['select-constellation','draw-next','toggle-lines','showAllLines'])
 import { ref } from 'vue'
 
 /*星連星的程式*/
@@ -9,21 +9,30 @@ function DrawNext() {
   emit('draw-next')
 }
 
+/*線段顯示程式*/
+function showAllLines() {
+  // 呼叫子層的 
+  emit('showAllLines')
+  console.log('showAllLines emit 出去了')
+}
+
 
 const zodiacInfo = ref([
   { 
-    id:'Capricorn',
+    id:"Capricorn",
     eng: "Capricorn",
     ch: "摩羯座",
     imgurl: "/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_capricorn-icon.png",
   },
-  {
+  { 
+    id: "Aquarius",
     eng: "Aquarius",
     ch: "水瓶座",
     imgurl: "/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_aquarius-icon.png",
   },
 
-  {
+  { 
+    id:'Pisces',
     eng: "Pisces",
     ch: "雙魚座",
     imgurl: "/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_pisces-icon.png",
@@ -35,44 +44,52 @@ const zodiacInfo = ref([
     ch:"牡羊座" ,
     imgurl: "/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_aries-icon.png",
   },
-  {
+  { 
+    id:'Taurus',
     eng: "Taurus",
     ch: "金牛座",
     imgurl: "/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_tauru-icon.png",
   },
-  {
+  { 
+    id:'Gemini',
     eng: "Gemini",
     ch: "雙子座",
     imgurl: "/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_gemini-icon.png",
   },
 
-  {
+  { 
+    id:'Cancer',
     eng: "Cancer",
     ch:"巨蟹座" ,
     imgurl: "/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_cancer-icon.png",
   },
 
-  {
+  { 
+    id:'Leo',
     eng: "Leo",
     ch:"獅子座" ,
     imgurl: "/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_leo-icon.png",
   },
-  {
+  { 
+    id:'Virgo',
     eng: "Virgo",
     ch: "處女座",
     imgurl: "/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_virgo-icon.png",
   },
   {
+    id:'Libra',
     eng: "Libra",
     ch:"天秤座" ,
     imgurl:"/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_capricorn-icon.png",
   },
-  {
+  { 
+    id:'Scorpio',
     eng: "Scorpio",
     ch:"天蠍座" ,
     imgurl: "/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_scorpio-icon.png",
   },
   {
+    id:'Sagittarius',
     eng: "Sagittarius",
     ch:"射手座" ,
     imgurl: "/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_sagitarius-icon.png",
@@ -90,7 +107,7 @@ const zodiacInfo = ref([
       <div class="zodiac__icons">
         <img class="action__icon" src="@/assets/images/games/GameSkyPage/btn/gamesky_point.png" alt="點狀顯示" @click="$emit('toggle-lines');console.log('toggle-lines emit 出去了')" />
         <img class="action__icon" src="@/assets/images/games/GameSkyPage/btn/gamesky_line.png"  alt="連線顯示" @click="DrawNext" />
-        <img class="action__icon action__icon--star" src="@/assets/images/games/GameSkyPage/btn/gamesky_star.png" alt="星星" />
+        <img class="action__icon action__icon--star" src="@/assets/images/games/GameSkyPage/btn/gamesky_star.png" alt="星星" @click="showAllLines" />
       </div>
     </div>
   <div class="zodiac">
