@@ -24,6 +24,7 @@ const reduceNum = () => {
 
 // 輸入數字
 const inputNum = () => {
+
     // 如果大於庫存，等於庫存量
     if (num.value > stock.value) {
         num.value = stock.value
@@ -47,7 +48,7 @@ const inputNum = () => {
     <!-- <h1 class="title">數量</h1> -->
     <section class="qty-control">
         <div class="reduce-btn" @click="reduceNum" :class="{forbid: num <= 1}">-</div>
-        <input class="num" type="input" v-model="num" @input="inputNum" min="1" :max="stock">
+        <input class="num" type="number" v-model="num" @input="inputNum" min="1" :max="stock">
         <div class="add-btn" @click="addNum" :class="{forbid: num >= stock}">+</div>
     </section>
 </template>
@@ -76,11 +77,11 @@ const inputNum = () => {
             width: 60px;
 
             /* 隱藏 type="number" 的按鈕 */
-            /* &::-webkit-inner-spin-button,
+            &::-webkit-inner-spin-button,
             &::-webkit-outer-spin-button {
                 -webkit-appearance: none;
                 margin: 0;
-            } */
+            }
         }
         .add-btn, .reduce-btn {
             width: 28px;
