@@ -1,8 +1,6 @@
 <script setup>
     import { ref } from 'vue'
 
-    // 組件
-    import QtyControl from '../product/QtyControl.vue'
 
 
     // 商品假資料 => 要改用 storage 傳入
@@ -38,6 +36,7 @@
 
     const products = productDetail.value
     // console.log(products[0].name)
+
 </script>
 
 
@@ -61,7 +60,9 @@
                                 <p class="spe-price">NT${{ product.specialprice }}</p>
                             </div>
                             <div class="qty-ctrl">
-                                <QtyControl />
+                                <!-- 暫時移除庫存功能 -->
+                                <!-- <p class="stock">尚有庫存 <span>{{ stock }}</span> 件</p> -->
+                                <input class="num" type="number" @input="inputNum" min="1" :max="stock">
                             </div>
                             <p class="price-subtotal">小計：</p>
                         </div>
@@ -169,7 +170,24 @@
                                     color: #888;
                                 }
                             }
-                            .qty-ctrl {}
+                            .qty-ctrl {
+                                .stock {
+                                    font-size: $pcChFont-p;
+                                    margin-bottom: 12px;
+
+                                    span {
+                                        color: $secondaryColor-orange;
+                                    }
+                                }
+
+                                .num {
+                                    padding: 4px 12px;
+                                    font-size: $pcChFont-p;
+                                    text-align: center;
+                                    // flex-grow: 1;
+                                    width: 60px;
+                                }
+                            }
                             .price-subtotal {
                                 
                             }
