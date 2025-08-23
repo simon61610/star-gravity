@@ -56,7 +56,6 @@ import ResetPasswordPage from '@/views/member/ResetPasswordPage.vue'
 //--------------------文章 Article -----------------------
 import Newpage from '@/views/new/Newpage.vue'
 
-
 // ||=================================================================||
 // ||                              routes                             ||
 // ||=================================================================||
@@ -151,13 +150,17 @@ const routes = [
     {
       path: '/AdminLoginPage',    
       name: 'AdminLoginPage',     
-      component: () => import('@/views/admin/AdminLoginPage.vue')
+      component: () => import('@/views/admin/AdminLoginPage.vue'),
+      meta:{layout:'backend'}
     },
     {
       path: '/AdminLayoutPage',    
       name: '/AdminLayoutPage',     
       component: () => import('@/views/admin/AdminLayoutPage.vue'),
-      meta: { requiresAuth: true } , //提示路由這個頁面要認證才可以跳轉
+      meta: { 
+        requiresAuth: true,
+        layout:'backend'
+       } , //提示路由這個頁面要認證才可以跳轉
       children:[
           {
             path: '/AdminMemberPage',    

@@ -16,9 +16,9 @@
 </script>
 
 <template>
-	<Header />   
+	<Header  v-if:="$route.meta.layout !== 'backend'"/>   
 	<router-view /> 
-  	<Footer />  
+  	<Footer  v-if:="$route.meta.layout !== 'backend'"/>  
 </template>
 
 <style>
