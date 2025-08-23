@@ -1,6 +1,9 @@
 <script setup>
     import { ref } from 'vue'
 
+    // 組件
+    import QtyControl from '../product/QtyControl.vue'
+
 
     // 商品假資料 => 要改用 storage 傳入
     const productDetail = ref(
@@ -57,8 +60,10 @@
                                 <p class="price">NT${{ product.price }}</p>
                                 <p class="spe-price">NT${{ product.specialprice }}</p>
                             </div>
-                            <div class="qty-ctrl" style="color: red">控制按鈕</div>
-                            <p class="price-subtotal" style="color: red">小計金額</p>
+                            <div class="qty-ctrl">
+                                <QtyControl />
+                            </div>
+                            <p class="price-subtotal">小計：</p>
                         </div>
                     </div>
 
