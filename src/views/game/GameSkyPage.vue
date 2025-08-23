@@ -35,7 +35,7 @@ function showall(){
 
 <template>
   <div class="sky">
-    <ConstellationCard  :constellation="currentConstellation" ref="cardRef" :show-lines="showLines"  />
+    <ConstellationCard  :constellation="currentConstellation" ref="cardRef" :show-lines="showLines"   />
     <ZodiacBar  @select-constellation="selectConstellation" @draw-next ="DrawNext"  @toggle-lines="toggle" @showAllLines="showall"/>
     <!-- <StarsCanvas :stars="currentConstellation.stars"  :lines="currentConstellation.lines"/> -->
   </div>
@@ -47,5 +47,16 @@ function showall(){
   background-repeat: no-repeat;    /* 不重複 */
   background-size: cover;          /* 填滿容器 */
   background-position: center;     /* 置中對齊 */
+}
+
+
+
+@media (max-width: 430px) {
+  .sky{
+    
+    display: flex;
+    flex-direction: column-reverse;
+
+  }
 }
 </style>

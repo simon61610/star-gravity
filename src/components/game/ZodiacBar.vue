@@ -102,22 +102,22 @@ const zodiacInfo = ref([
 
 <template>
   <section class="zodiac-tittle">
-   <div class="zodiac__actions" aria-label="顯示控制">
-        <h2 class="zodiac__title"> 十 二 星 座</h2>
-      <div class="zodiac__icons">
-        <img class="action__icon" src="@/assets/images/games/GameSkyPage/btn/gamesky_point.png" alt="點狀顯示" @click="$emit('toggle-lines');console.log('toggle-lines emit 出去了')" />
-        <img class="action__icon" src="@/assets/images/games/GameSkyPage/btn/gamesky_line.png"  alt="連線顯示" @click="DrawNext" />
-        <img class="action__icon action__icon--star" src="@/assets/images/games/GameSkyPage/btn/gamesky_star.png" alt="星星" @click="showAllLines" />
+    <div class="zodiac__actions" aria-label="顯示控制">
+          <h2 class="zodiac__title"> 十 二 星 座</h2>
+        <div class="zodiac__icons">
+          <img class="action__icon" src="@/assets/images/games/GameSkyPage/btn/gamesky_point.png" alt="點狀顯示" @click="$emit('toggle-lines');console.log('toggle-lines emit 出去了')" />
+          <img class="action__icon" src="@/assets/images/games/GameSkyPage/btn/gamesky_line.png"  alt="連線顯示" @click="DrawNext" />
+          <img class="action__icon action__icon--star" src="@/assets/images/games/GameSkyPage/btn/gamesky_star.png" alt="星星" @click="showAllLines" />
+        </div>
       </div>
+    <div class="zodiac">
+      <ul class="zodiac__list" aria-label="十二星座清單">
+        <li class="zodiac__item" v-for="zodiac in zodiacInfo" :key="zodiac.id"  @click="() => { console.log('emit id:', zodiac.id); $emit('select-constellation', zodiac.id) }">
+          <img class="zodiac__icon" :src="zodiac.imgurl" :alt="zodiac.eng">
+          <div class="zodiac__text"><strong>{{ zodiac.eng }}</strong><span>{{ zodiac.ch }}</span></div>
+        </li>
+      </ul>
     </div>
-  <div class="zodiac">
-    <ul class="zodiac__list" aria-label="十二星座清單">
-      <li class="zodiac__item" v-for="zodiac in zodiacInfo" :key="zodiac.id"  @click="() => { console.log('emit id:', zodiac.id); $emit('select-constellation', zodiac.id) }">
-        <img class="zodiac__icon" :src="zodiac.imgurl" :alt="zodiac.eng">
-        <div class="zodiac__text"><strong>{{ zodiac.eng }}</strong><span>{{ zodiac.ch }}</span></div>
-      </li>
-    </ul>
-  </div>
   </section>
 </template>
 
@@ -231,8 +231,48 @@ const zodiacInfo = ref([
   .zodiac__actions { justify-content: flex-end; }
 }
 
-@media (max-width: 480px) {
-  .zodiac__list  { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
-  .zodiac__icon  { width: 40px; height: 40px; }
+@media (max-width: 431px) {
+//   .zodiac__list  { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+//   .zodiac__icon  { width: 40px; height: 40px; }
+// }
+
+.zodiac-tittle{
+  
+  display: flex !important;
+  flex-direction: column;
+  padding: 0;
+  .zodiac__actions{
+    height: 0;
+    h2{
+      display: none;
+    }
+    .zodiac__icons{
+      position: relative;
+      top: 380px;
+      width: 100%;
+      img{
+        &:first-child{
+        margin-right: auto;
+      }
+      }
+      
+    }
+    
+  }
+  .zodiac{
+        
+  padding: 0;
+  
+    .zodiac__list{
+      display: flex;
+      overflow-x: auto;  
+      flex-direction: row;
+      }
+
+  
+  }
+
+}
+
 }
 </style>
