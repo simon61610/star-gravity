@@ -3,11 +3,11 @@ import {ref,onMounted,watch} from 'vue'
 const props = defineProps({
     stars:{
         type:Array,
-        default:() => [] //星點座標
+        default:() => [] //回傳預設值星點座標
     },
     lines:{
         type:Array,
-        default:() => [] //要連的線，格式 [[0,1],[1,2],...]
+        default:() => [] //回傳預設值要連的線，格式 [[0,1],[1,2],...]
     },
     bg: {   
     type: String,
@@ -120,6 +120,16 @@ watch(
     transition: stroke-dashoffset 0.5s ease
 
 }
+@media (max-width: 431px){
+  .Stars-Canvs-box{
+    
+    .Stars-Canvs-wapper{
+    
+    margin-left: 0px;
+  }
 
+  }
+  
+}
 
 </style>
