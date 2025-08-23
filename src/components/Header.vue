@@ -1,11 +1,78 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import bus from '@/composables/useMitt'
+
+import products from '@/data/products'
+
 import  logo from '@/assets/logos/logo.svg'
 const active = ref(false)
 
 function toggleMenu() {
   active.value = !active.value
 }
+
+    // =====================================================
+    // ==================== 更新購物車數量 ====================
+    // =====================================================
+    const cartCount = ref(0)
+    const storage = localStorage
+
+    // ------------------------------------------------------
+    const updateCart = () => {
+        let itemString = storage['addItemList']
+        // console.log(itemString) // P2, P1, P3, 
+
+        if(!itemString || itemString == ''){
+            cartCount.value = 0
+            return
+        }
+
+        let items = itemString.substring(0, itemString.length - 2).split(', ')
+        // console.log(items) // ['P2', 'P1', 'P3']
+        let totalQuantity = 0
+
+        for(let i = 0; i < items.length; i++){
+            let itemInfo = storage.getItem(items[i])
+            // alert(itemInfo)
+            if(itemInfo){
+                let totalPrice = parseInt(itemInfo.split('|')[2]) // 累積的總價
+
+                // 從 products.js 取出單價
+                let productId = items[i].replace('P', '') // 先改成正確 id 號碼
+                let product = products.find(p => p.id == productId) // 找出那件商品
+                let originalSpePrice = product ? product.specialPrice : 1 // 保險，免得 product 變成 undefined ，自動轉型變成除 0 爆掉
+
+                let quantity = Math.round(totalPrice / originalSpePrice)
+
+                totalQuantity += quantity
+
+
+
+                /* const productId = parseInt(items[i].replace('P',''))
+                const product = products.find(p => p.id === productId)
+                const originalPrice = product ? product.specialPrice : 1
+
+                let quantity = Math.round(totalPrice / originalPrice)
+                totalQuantity += quantity */
+                
+                
+            }
+        }
+
+        cartCount.value = totalQuantity
+    }
+
+
+
+
+
+    // ------------------------------------------------------
+    // 每次事件更新，通知購物車要更新數量
+    onMounted(() => {
+        updateCart()
+        bus.on('notifyUpdateCart', updateCart)
+    })
+
 </script>
 
 
@@ -26,7 +93,11 @@ function toggleMenu() {
                 <li><router-link to="/shop">星空小舖</router-link></li>               
                 <li><router-link to="/"><i class="fa-solid fa-user fa-lg"></i></router-link></li>
                 <li><router-link to="/"><i class="fa-solid fa-arrow-right-from-bracket"></i></router-link></li>
-                <li><router-link to="/"><i class="fa-solid fa-cart-shopping fa-lg"></i></router-link></li>
+                <li>
+                    <router-link to="/">
+                        <i class="fa-solid fa-cart-shopping fa-lg"></i> ( {{cartCount}} )
+                    </router-link>
+                </li>
             </ul>
             <div class="hum" :class="{active:active}" @click="toggleMenu">
                 <div class="bar bar1 transition"></div>
