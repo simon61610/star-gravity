@@ -1,6 +1,6 @@
 <!-- src/components/ZodiacBar.vue -->
 <script setup>
-const emit = defineEmits(['select-constellation','draw-next','toggle-lines'])
+const emit = defineEmits(['select-constellation','draw-next','toggle-lines','showAllLines'])
 import { ref } from 'vue'
 
 /*星連星的程式*/
@@ -9,21 +9,30 @@ function DrawNext() {
   emit('draw-next')
 }
 
+/*線段顯示程式*/
+function showAllLines() {
+  // 呼叫子層的 
+  emit('showAllLines')
+  console.log('showAllLines emit 出去了')
+}
+
 
 const zodiacInfo = ref([
   { 
-    id:'Capricorn',
+    id:"Capricorn",
     eng: "Capricorn",
     ch: "摩羯座",
     imgurl: "/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_capricorn-icon.png",
   },
-  {
+  { 
+    id: "Aquarius",
     eng: "Aquarius",
     ch: "水瓶座",
     imgurl: "/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_aquarius-icon.png",
   },
 
-  {
+  { 
+    id:'Pisces',
     eng: "Pisces",
     ch: "雙魚座",
     imgurl: "/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_pisces-icon.png",
@@ -35,44 +44,52 @@ const zodiacInfo = ref([
     ch:"牡羊座" ,
     imgurl: "/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_aries-icon.png",
   },
-  {
+  { 
+    id:'Taurus',
     eng: "Taurus",
     ch: "金牛座",
     imgurl: "/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_tauru-icon.png",
   },
-  {
+  { 
+    id:'Gemini',
     eng: "Gemini",
     ch: "雙子座",
     imgurl: "/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_gemini-icon.png",
   },
 
-  {
+  { 
+    id:'Cancer',
     eng: "Cancer",
     ch:"巨蟹座" ,
     imgurl: "/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_cancer-icon.png",
   },
 
-  {
+  { 
+    id:'Leo',
     eng: "Leo",
     ch:"獅子座" ,
     imgurl: "/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_leo-icon.png",
   },
-  {
+  { 
+    id:'Virgo',
     eng: "Virgo",
     ch: "處女座",
     imgurl: "/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_virgo-icon.png",
   },
   {
+    id:'Libra',
     eng: "Libra",
     ch:"天秤座" ,
     imgurl:"/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_capricorn-icon.png",
   },
-  {
+  { 
+    id:'Scorpio',
     eng: "Scorpio",
     ch:"天蠍座" ,
     imgurl: "/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_scorpio-icon.png",
   },
   {
+    id:'Sagittarius',
     eng: "Sagittarius",
     ch:"射手座" ,
     imgurl: "/src/assets/images/games/GameSkyPage/zodiac-icon/gamesky_sagitarius-icon.png",
@@ -85,22 +102,22 @@ const zodiacInfo = ref([
 
 <template>
   <section class="zodiac-tittle">
-   <div class="zodiac__actions" aria-label="顯示控制">
-        <h2 class="zodiac__title"> 十 二 星 座</h2>
-      <div class="zodiac__icons">
-        <img class="action__icon" src="@/assets/images/games/GameSkyPage/btn/gamesky_point.png" alt="點狀顯示" @click="$emit('toggle-lines');console.log('toggle-lines emit 出去了')" />
-        <img class="action__icon" src="@/assets/images/games/GameSkyPage/btn/gamesky_line.png"  alt="連線顯示" @click="DrawNext" />
-        <img class="action__icon action__icon--star" src="@/assets/images/games/GameSkyPage/btn/gamesky_star.png" alt="星星" />
+    <div class="zodiac__actions" aria-label="顯示控制">
+          <h2 class="zodiac__title"> 十 二 星 座</h2>
+        <div class="zodiac__icons">
+          <img class="action__icon" src="@/assets/images/games/GameSkyPage/btn/gamesky_point.png" alt="點狀顯示" @click="$emit('toggle-lines');console.log('toggle-lines emit 出去了')" />
+          <img class="action__icon" src="@/assets/images/games/GameSkyPage/btn/gamesky_line.png"  alt="連線顯示" @click="DrawNext" />
+          <img class="action__icon action__icon--star" src="@/assets/images/games/GameSkyPage/btn/gamesky_star.png" alt="星星" @click="showAllLines" />
+        </div>
       </div>
+    <div class="zodiac">
+      <ul class="zodiac__list" aria-label="十二星座清單">
+        <li class="zodiac__item" v-for="zodiac in zodiacInfo" :key="zodiac.id"  @click="() => { console.log('emit id:', zodiac.id); $emit('select-constellation', zodiac.id) }">
+          <img class="zodiac__icon" :src="zodiac.imgurl" :alt="zodiac.eng">
+          <div class="zodiac__text"><strong>{{ zodiac.eng }}</strong><span>{{ zodiac.ch }}</span></div>
+        </li>
+      </ul>
     </div>
-  <div class="zodiac">
-    <ul class="zodiac__list" aria-label="十二星座清單">
-      <li class="zodiac__item" v-for="zodiac in zodiacInfo" :key="zodiac.id"  @click="() => { console.log('emit id:', zodiac.id); $emit('select-constellation', zodiac.id) }">
-        <img class="zodiac__icon" :src="zodiac.imgurl" :alt="zodiac.eng">
-        <div class="zodiac__text"><strong>{{ zodiac.eng }}</strong><span>{{ zodiac.ch }}</span></div>
-      </li>
-    </ul>
-  </div>
   </section>
 </template>
 
@@ -214,8 +231,48 @@ const zodiacInfo = ref([
   .zodiac__actions { justify-content: flex-end; }
 }
 
-@media (max-width: 480px) {
-  .zodiac__list  { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
-  .zodiac__icon  { width: 40px; height: 40px; }
+@media (max-width: 431px) {
+//   .zodiac__list  { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+//   .zodiac__icon  { width: 40px; height: 40px; }
+// }
+
+.zodiac-tittle{
+  
+  display: flex !important;
+  flex-direction: column;
+  padding: 0;
+  .zodiac__actions{
+    height: 0;
+    h2{
+      display: none;
+    }
+    .zodiac__icons{
+      position: relative;
+      top: 380px;
+      width: 100%;
+      img{
+        &:first-child{
+        margin-right: auto;
+      }
+      }
+      
+    }
+    
+  }
+  .zodiac{
+        
+  padding: 0;
+  
+    .zodiac__list{
+      display: flex;
+      overflow-x: auto;  
+      flex-direction: row;
+      }
+
+  
+  }
+
+}
+
 }
 </style>

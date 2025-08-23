@@ -13,13 +13,16 @@
 <script setup>
     import { ref, reactive, computed } from 'vue'
     import { useRoute } from 'vue-router';
+    import bus from '@/composables/useMitt';
+
+    // 假資料
     import products from '@/data/products';
 
     // 組件
     import ShopBanner from '@/components/shop/ShopBanner.vue';
     import Breadcrumbs from '@/components/shop/Breadcrumbs.vue';
     import AccordionItem from '@/components/common/AccordionItem.vue';
-    import QtyControl from '@/components/shop/product/QtyControl.vue';
+    // import QtyControl from '@/components/shop/product/QtyControl.vue';
     import ProdIntro from '@/components/shop/product/ProdIntro.vue';
 
     // 路由
@@ -29,15 +32,15 @@
     })
     
 
-    // 資料
-    const productDetail = reactive({
+    // 最開始切版的假資料
+    /* const productDetail = reactive({
         name: '輕巧觀測鏡｜50mm 入門型牛頓式望遠鏡',
-        intro: '適合兒童的觀星好物，入門款天文望遠鏡，支援手機拍攝記錄',
-        warranty: '望遠鏡單筆金額滿 2 萬元，享保固內免費清潔兩次，未滿則享保固內清潔一次。',
-        discount: '現享8折好康優惠',
+        desc: '適合兒童的觀星好物，入門款天文望遠鏡，支援手機拍攝記錄',
+        promotion: '望遠鏡單筆金額滿 2 萬元，享保固內免費清潔兩次，未滿則享保固內清潔一次。',
+        marketing: '現享8折好康優惠',
         price: 2500,
         specialprice: 2000,
-    })
+    }) */
 
 
     // 收藏愛心切換
@@ -45,6 +48,58 @@
     const followProduct = () => {
         isFollow.value = !isFollow.value
     }
+
+    // =====================================================
+    // ==================== 加入購物車 ====================
+    // =====================================================
+    const storage = localStorage
+
+    function addCart(product){
+        if(!storage['addItemList']){
+            storage['addItemList'] = ''
+        }
+
+        /* Storage 的 Key 和 Value */
+        const itemId = `P${product.id}`
+        const itemValue = `${product.name}|${product.pic}|${product.specialPrice}`
+
+        // alert(itemValue) 
+        // itemId => P1 
+        // itemValue => 基礎入門型 商品 1|https://placehold.co/480x480?text=Product+1|9718
+        // ===============================================================================
+
+        /* 直接從物件中抓的資料字串 */
+        const itemName = product.name // 基礎入門型 商品 1
+        const itemPic = product.pic // https://placehold.co/480x480?text=Product+1
+        const itemSpecialPrice = product.specialPrice // 9718
+        // alert(itemSpecialPrice)
+
+        // ===============================================================================
+        
+        if(storage[itemId]){ // 如果已經買過，價格累加
+            let existInfo = storage[itemId].split('|') // 字串切割成陣列，用 split 方法
+            // console.log(existInfo) ['基礎入門型 商品 1', 'https://placehold.co/480x480?text=Product+1', '9718']
+            let existSpecialPrice = parseInt(existInfo[2]) // 原本的價格
+            let newExistPrice = existSpecialPrice + itemSpecialPrice
+            let updatedInfo = `${existInfo[0]}|${existInfo[1]}|${newExistPrice}`
+            // alert(updatedInfo)
+
+            storage[itemId] = updatedInfo
+
+        }else{ //第一次買
+            storage['addItemList'] += `${itemId}, `
+            storage[itemId] = itemValue
+        }
+
+        // ===============================================================================
+        bus.emit('notifyUpdateCart') // 通知 Header 更新購物車數量
+    }
+
+
+
+
+
+
 
 </script>
 
@@ -57,38 +112,40 @@
             <!-- 左：商品圖片 -->
             <div class="product-gallery">
                 <div class="product-gallery__pic">
-                    <img src="https://placehold.co/480x480" alt="">
+                    <!-- <img src="https://placehold.co/480x480" alt=""> -->
+                    <img :src="product.pic" alt="">
                 </div>
                 <ul class="product-gallery__thumbs">
                     <li>
-                        <img src="https://placehold.co/110x110" alt="">
+                        <img :src="product.pic" alt="">
                     </li>
                     <li>
-                        <img src="https://placehold.co/110x110" alt="">
+                        <img :src="product.pic" alt="">
                     </li>
                     <li>
-                        <img src="https://placehold.co/110x110" alt="">
+                        <img :src="product.pic" alt="">
                     </li>
                 </ul>
             </div>
 
             <!-- 右：商品資訊 -->
             <div class="product-detail">
-                <h1 class="product-detail__title">{{ productDetail.name }}</h1>
+                <h1 class="product-detail__title">{{ product.name }}</h1>
                 <div class="detail-text">
-                    <p class="detail-text__intro">{{ productDetail.intro }}</p>
-                    <p class="detail-text__warranty">{{ productDetail.warranty }}</p>
-                    <p class="detail-text__discount">{{ productDetail.discount }}</p>
+                    <p class="detail-text__desc">{{ product.desc }}</p>
+                    <p class="detail-text__promotion">{{ product.promotion }}</p>
+                    <p class="detail-text__marketing">{{ product.marketing }}</p>
                     <div class="product-price">
-                        <p class="product-price__special">NT$ {{ productDetail.specialprice }}</p>
-                        <p class="product-price__nospecial">NT$ {{ productDetail.price }}</p>
+                        <p class="product-price__special">NT$ {{ product.specialPrice }}</p>
+                        <p class="product-price__nospecial">NT$ {{ product.price }}</p>
                     </div>
-                    <div class="qty-control">
+                    <!-- 數量按鈕位置，暫時刪除 -->
+                    <!-- <div class="qty-control">
                         <QtyControl />
-                    </div>
+                    </div> -->
                 </div>
                 <div class="product-detail__btn">
-                    <p class="product-detail__btn__add">
+                    <p class="product-detail__btn__add" @click="addCart(product)">
                         <i class="fa-solid fa-cart-shopping"></i>
                         加入購物車
                     </p>
@@ -124,7 +181,7 @@
         <div class="no-product" v-else>
             <p>查無此商品</p>
             <p class="back-cate">
-                <router-link to="/shopcategory" class="router-link">點擊回到商品分類</router-link>
+                <router-link to="/shop/category" class="router-link">點擊回到商品分類</router-link>
             </p>
         </div>
     </section>
@@ -176,7 +233,10 @@
                         cursor: pointer;
                         img{
                             display: block;
+                            max-width: 110px;
+                            height: auto;
                             object-fit: cover;
+                            aspect-ratio: 1 / 1;
                         }
                     }
                 }
@@ -202,19 +262,19 @@
                     flex-direction: column;
                     gap: 20px;
 
-                    &__intro {
+                    &__desc {
                         font-size: $pcChFont-H3;
                         line-height: 1.5;
                         padding-bottom: 16px;
                         border-bottom: 1px solid white;
                     }
-                    &__warranty {
+                    &__promotion {
                         font-size: $pcChFont-H4;
                         padding-left: 20px;
                         border-left: 10px solid white;
                         line-height: 1.5;
                     }
-                    &__discount {
+                    &__marketing {
                         align-self: flex-start;
                         font-size: $pcChFont-H4;
                         padding: 12px;

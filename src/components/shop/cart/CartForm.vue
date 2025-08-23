@@ -187,8 +187,12 @@
 
             <!-- ---------------- 按鈕區 ---------------- -->
             <section class="btn-box">
-                <p class="previous-btn">< 返回上一步</p>
-                <p class="next-btn">完成訂單</p>
+                <router-link to="/cartpage/cart" class="router-link">
+                    <p class="previous-btn">< 返回上一步</p>
+                </router-link>
+                <router-link to="/cartpage/cartsuccess" class="router-link">
+                    <p class="next-btn">完成訂單</p>
+                </router-link>
             </section>
 
         </form>
@@ -198,6 +202,11 @@
 
 <style scoped lang="scss">
     @import '@/assets/styles/main.scss';
+
+    // 共用
+    .router-link {
+        text-decoration: none;
+    }
 
     // 共用標題樣式
     .common-title {

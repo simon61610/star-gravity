@@ -1,6 +1,36 @@
 <script setup>
 
 
+// 分類資料，圖片放在 public，不用打包轉換
+const categories = [
+    { 
+        name: '天文望遠鏡', 
+        img: '/images/shop/shophome-telescope.jpg', 
+        path: '/shop/category' 
+    },
+    { 
+        name: '雙筒/單筒望遠鏡', 
+        img: '/images/shop/shophome-binoculars.jpg', 
+        path: '/shop/category' 
+    },
+    { 
+        name: '腳架', 
+        img: 'https://placehold.co/220x220', 
+        path: '/shop/category' 
+    },
+    { 
+        name: '配件', 
+        img: 'https://placehold.co/220x220', 
+        path: '/shop/category' 
+    },
+    { 
+        name: '書籍/小物', 
+        img: '/images/shop/shophome-souvenirs.jpg', 
+        path: '/shop/category' 
+    }
+]
+
+
 </script>
 
 
@@ -8,34 +38,27 @@
     <section class="prod-cate">
         <p>商品分類</p>
         <div class="cate-grid">
-            <div class="item item-main">
-                <img src="@/assets/images/shop/shophome-telescope.jpg">
-                <p>天文望遠鏡</p>
-            </div>
-            <div class="item item-sub">
-                <img src="@/assets/images/shop/shophome-binoculars.jpg">
-                <p>雙筒/單筒<br>望遠鏡</p>
-            </div>
-            <div class="item item-sub">
-                <img src="https://placehold.co/220x220">
-                <p>腳架</p>
-            </div>
-            <div class="item item-sub">
-                <img src="https://placehold.co/220x220">
-                <p>配件</p>
-            </div>
-            <div class="item item-sub">
-                <img src="@/assets/images/shop/shophome-souvenirs.jpg">
-                <p>書籍/小物</p>
-            </div>
+            <router-link 
+             v-for="cate in categories"
+             :to="cate.path"
+             class="item router-link"
+            >
+                <img :src="cate.img" alt="">
+                <p>{{ cate.name }}</p>
+            </router-link>
         </div>
-        
     </section>
 </template>
 
 
 <style scoped lang="scss">
     @import '@/assets/styles/main.scss';
+
+    // 共用
+    .router-link {
+        text-decoration: none;
+        color: white;
+    }
 
     .prod-cate {
         // border: 1px solid yellow;
@@ -62,7 +85,7 @@
             grid-auto-rows: 250px 250px;
             gap: 1.5em;
 
-            .item-main {
+            .item:first-child {
                 grid-row: span 2;
             }
 

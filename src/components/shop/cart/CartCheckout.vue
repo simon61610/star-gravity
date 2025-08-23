@@ -2,6 +2,7 @@
     import { ref } from 'vue'
 
 
+
     // 商品假資料 => 要改用 storage 傳入
     const productDetail = ref(
         [
@@ -35,6 +36,7 @@
 
     const products = productDetail.value
     // console.log(products[0].name)
+
 </script>
 
 
@@ -57,8 +59,12 @@
                                 <p class="price">NT${{ product.price }}</p>
                                 <p class="spe-price">NT${{ product.specialprice }}</p>
                             </div>
-                            <div class="qty-ctrl" style="color: red">控制按鈕</div>
-                            <p class="price-subtotal" style="color: red">小計金額</p>
+                            <div class="qty-ctrl">
+                                <!-- 暫時移除庫存功能 -->
+                                <!-- <p class="stock">尚有庫存 <span>{{ stock }}</span> 件</p> -->
+                                <input class="num" type="number" @input="inputNum" min="1" :max="stock">
+                            </div>
+                            <p class="price-subtotal">小計：</p>
                         </div>
                     </div>
 
@@ -86,8 +92,12 @@
                         <p><span>運費</span><span>NT$60</span></p>
                         <p><span>總計</span><span>NT$6060</span></p>
                     </div>
-                    <div class="goto-pay-btn">前往結帳</div>
-                    <div class="shop-btn">繼續購物</div>
+                    <router-link to="/cartpage/cartform" class="router-link">
+                        <div class="goto-pay-btn">前往結帳</div>
+                    </router-link>
+                    <router-link to="/shop/category" class="router-link">
+                        <div class="shop-btn">繼續購物</div>
+                    </router-link>
                 </div>
             </div>
         </section>
@@ -97,6 +107,11 @@
 
 <style scoped lang="scss">
     @import '@/assets/styles/main.scss';
+
+    // 共用
+    .router-link {
+        text-decoration: none;
+    }
 
     .checkout-section {
         // --------- 上方: 購物清單 ---------
@@ -155,7 +170,24 @@
                                     color: #888;
                                 }
                             }
-                            .qty-ctrl {}
+                            .qty-ctrl {
+                                .stock {
+                                    font-size: $pcChFont-p;
+                                    margin-bottom: 12px;
+
+                                    span {
+                                        color: $secondaryColor-orange;
+                                    }
+                                }
+
+                                .num {
+                                    padding: 4px 12px;
+                                    font-size: $pcChFont-p;
+                                    text-align: center;
+                                    // flex-grow: 1;
+                                    width: 60px;
+                                }
+                            }
                             .price-subtotal {
                                 
                             }
@@ -248,7 +280,10 @@
                     }
                     .goto-pay-btn {
                         background-color: $secondaryColor-orange;
-                        color: white;   
+                        color: white;
+                        &:hover {
+                            background-color: $primaryColor-900;
+                        }   
                     }
                     .shop-btn {
                         border: 1px solid #888;

@@ -20,7 +20,16 @@ function drawNextLine() {
   canvasRef.value?.drawNext()
 }
 
-defineExpose({ drawNextLine })
+const resetLines = () => {
+  canvasRef.value?.resetLines()
+}
+
+//抓子層的showalllines程式
+const showAllLines = ()=>{
+  canvasRef.value.showAllLines();
+}
+
+defineExpose({ drawNextLine,resetLines,showAllLines })
 
 
 // Tab 清單（之後要加/改只改這裡）
@@ -35,76 +44,76 @@ const activeTab = ref('intro')
 </script>
 
 <template>
- <main class="scene" aria-label="星空互動場景">
-  <aside class="card" aria-live="polite">
-    <header class="card__hd">
-      <div class="card__thumb">
-        <img :src="constellation.image"  alt="星座圖示" />
-      </div>
-    </header>
+  <main class="scene" aria-label="星空互動場景">
+    <aside class="card" aria-live="polite">
+      <header class="card__hd">
+        <div class="card__thumb">
+          <img :src="constellation.image"  alt="星座圖示" />
+        </div>
+      </header>
 
-    <div class="card__title">
-      <div class="card_icon">
-        <img :src="constellation.icon" alt="星座圖示" />
+      <div class="card__title">
+        <div class="card_icon">
+          <img :src="constellation.icon" alt="星座圖示" />
+        </div>
+        <div class="card__name">{{constellation.name}}</div>
       </div>
-      <div class="card__name">{{constellation.name}}</div>
+
+      <!-- Tabs：由資料產生 + 高亮切換 -->
+      <nav class="tabs" aria-label="卡片分頁">
+        <button
+          v-for="tab in tabs"
+          :key="tab.key"
+          class="tabs__btn"
+          :class="{ 'tabs__btn--on': activeTab === tab.key }"
+          type="button"
+          @click="activeTab = tab.key"
+        >
+          {{ tab.label }}
+        </button>
+      </nav>
+
+      <!-- 內容區：依 activeTab 顯示（用 v-show 切換） -->
+      <section class="card__body">
+        <!-- 星座介紹 -->
+        <p class="card__text" v-show="activeTab === 'intro'">
+          {{ constellation.tabs.intro }}
+        </p>
+
+        <!-- 星點位置（示例：列表/小表格都可以） -->
+        <div v-show="activeTab === 'position'">
+          <ul>
+            <li v-for ="(data,i) in constellation.tabs.position.list" :key="i">
+              {{ data.label }} : {{data.value}} 
+            </li>
+            <!-- <li>赤經：約 2h40m</li>
+            <li>赤緯：約 +20°</li>
+            <li>象線：由主星 α(嬰兒座α)～γ 等連成典型羊角形</li> -->
+          </ul>
+          <p class="card__text">{{ constellation.tabs.desc }}</p>
+        </div>
+
+        <!-- 神話故事 -->
+        <p class="card__text" v-show="activeTab === 'myth'">
+          {{ constellation.tabs.myth }}
+        </p>
+      </section>
+    </aside>
+
+    <!-- 右側畫布（保持原樣；若要依 Tab 切換圖，也可加 v-show/v-if） -->
+    <div class="canvas">
+      <div class="sky">
+        <div Class="figure-box">
+          <!-- <img class="figure" :src="constellation.bg" alt="" /> -->
+          <StarsCanvas   class="Stars-Canvas-svg" 
+          :stars="constellation.stars" 
+          :show-lines="showLines" 
+          :lines="constellation.lines" 
+          :bg="constellation.bg" ref="canvasRef"/>
+        </div>
+      </div>
     </div>
-
-    <!-- Tabs：由資料產生 + 高亮切換 -->
-    <nav class="tabs" aria-label="卡片分頁">
-      <button
-        v-for="tab in tabs"
-        :key="tab.key"
-        class="tabs__btn"
-        :class="{ 'tabs__btn--on': activeTab === tab.key }"
-        type="button"
-        @click="activeTab = tab.key"
-      >
-        {{ tab.label }}
-      </button>
-    </nav>
-
-    <!-- 內容區：依 activeTab 顯示（用 v-show 切換） -->
-    <section class="card__body">
-      <!-- 星座介紹 -->
-      <p class="card__text" v-show="activeTab === 'intro'">
-        {{ constellation.tabs.intro }}
-      </p>
-
-      <!-- 星點位置（示例：列表/小表格都可以） -->
-      <div v-show="activeTab === 'position'">
-        <ul>
-          <li v-for ="(data,i) in constellation.tabs.position.list" :key="i">
-            {{ data.label }} : {{data.value}} 
-          </li>
-          <!-- <li>赤經：約 2h40m</li>
-          <li>赤緯：約 +20°</li>
-          <li>象線：由主星 α(嬰兒座α)～γ 等連成典型羊角形</li> -->
-        </ul>
-        <p class="card__text">{{ constellation.tabs.desc }}</p>
-      </div>
-
-      <!-- 神話故事 -->
-      <p class="card__text" v-show="activeTab === 'myth'">
-        {{ constellation.tabs.myth }}
-      </p>
-    </section>
-  </aside>
-
-  <!-- 右側畫布（保持原樣；若要依 Tab 切換圖，也可加 v-show/v-if） -->
-  <div class="canvas">
-    <div class="sky">
-      <div Class="figure-box">
-        <!-- <img class="figure" :src="constellation.bg" alt="" /> -->
-        <StarsCanvas   class="Stars-Canvas-svg" 
-        :stars="constellation.stars" 
-        :show-lines="showLines" 
-        :lines="constellation.lines" 
-        :bg="constellation.bg" ref="canvasRef"/>
-      </div>
-    </div>
-  </div>
- </main>
+  </main>
 </template>
 
 
@@ -240,7 +249,7 @@ justify-content: center;
   .figure-box{
     position: relative;
     width: 100%;
-    aspect-ratio: 10 / 4; // 🔑 這個比例跟你的星點座標 viewBox 對齊 (800x600 → 4:3)
+    aspect-ratio: 10 / 4; // 這個比例跟你的星點座標 viewBox 對齊 (800x600 → 4:3)
     overflow: hidden;
     
   //   .figure{
@@ -291,8 +300,48 @@ justify-content: center;
 
 /* RWD */
 @media (max-width: 750px) {
-   .stage{ left: 12px; right: 12px; top: 220px; height: 420px; }
+  .stage{ left: 12px; right: 12px; top: 220px; height: 420px; }
   .ctrls{ right: 12px; top: 12px; }
   .star{ width: 10px; height: 10px; }
 }
+
+@media (max-width: 431px) {
+  .scene {
+      // 修正 border 語法
+    display: flex;
+    flex-direction:column-reverse; 
+
+    
+    .card {
+      position: static !important;
+      margin-bottom: 100px;  
+      padding: 16px !important;
+      
+      
+
+      .card__hd {
+        text-align: center;
+        max-width: 200px;
+
+        img {
+          width: 100%;
+        }
+      }
+
+      .card__body {
+       
+        width: 100%; 
+        text-align: center;
+        font-size: 16px !important;
+      }
+    }
+
+    .figure-box {
+      
+        // 修正 border 語法，如果需要的話
+      height: 400px;
+    }
+  }
+}
+
 </style>

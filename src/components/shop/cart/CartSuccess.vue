@@ -92,8 +92,12 @@
 
         <!-- 按鈕區 -->
         <section class="btn-box">
-            <p class="back-home">回到首頁</p>
-            <p class="back-shop">繼續購物</p>
+            <router-link to="/" class="router-link">
+                <p class="back-home">回到首頁</p>
+            </router-link>
+            <router-link to="/shop/category" class="router-link">
+                <p class="back-shop">繼續購物</p>
+            </router-link>
         </section>
     </section>
 </template>
@@ -102,6 +106,11 @@
 
 <style scoped lang="scss">
     @import '@/assets/styles/main.scss';
+
+    // 共用
+    .router-link {
+        text-decoration: none;
+    }
 
     .success-section {
         padding: 20px 24px 0;

@@ -3,11 +3,11 @@ import {ref,onMounted,watch} from 'vue'
 const props = defineProps({
     stars:{
         type:Array,
-        default:() => [] //星點座標
+        default:() => [] //回傳預設值星點座標
     },
     lines:{
         type:Array,
-        default:() => [] //要連的線，格式 [[0,1],[1,2],...]
+        default:() => [] //回傳預設值要連的線，格式 [[0,1],[1,2],...]
     },
     bg: {   
     type: String,
@@ -17,7 +17,14 @@ const props = defineProps({
   
 })
 
+//線段直接全部顯示
+const showAllLines = () => {
+  currentStep.value = props.lines.length
+  console.log("showall 被呼叫了")
+}
 
+
+//線段逐漸顯示
 const currentStep = ref(0)
 const drawNext = () => {
     if (currentStep.value < props.lines.length){
@@ -25,25 +32,17 @@ const drawNext = () => {
         console.log("drawNext 被呼叫了！ currentStep =", currentStep.value)
     }
 }
-
- const resetLines = () => {
+//重製線段
+const resetLines = () => {
    currentStep.value = 0
+   console.log('currentStep.value')
 }
-// //監聽
-// watch(() => props.showLines,
-//   (newVal) => {
-//     if (!newVal) {
-//       resetLines()
-//       console.log("🔄 線條已重置")
-//     }
-//   }
-// )
-
 
  //讓父層調用程式
 defineExpose({
   drawNext,
-  resetLines
+  resetLines,
+  showAllLines
 })
 
 // 假設 star 是 {x:數字, y:數字} 直線距離公式...
@@ -52,6 +51,18 @@ function lineLength(a, b) {
   const dy = (a.y - b.y) / 100 * 546
   return Math.sqrt(dx*dx + dy*dy)
 }
+
+ // 切換星座時，重製線條進度
+watch(
+  () => [props.stars, props.lines],
+  () => {
+    currentStep.value = -1
+    drawNext()
+  },
+  { deep: true } // 監聽物件內部變化
+)
+
+
 
 </script>
 
@@ -106,9 +117,19 @@ function lineLength(a, b) {
 
 
 .Stars-Canvs-line{
-    transition: stroke-dashoffset 1s ease
+    transition: stroke-dashoffset 0.5s ease
 
 }
+@media (max-width: 431px){
+  .Stars-Canvs-box{
+    
+    .Stars-Canvs-wapper{
+    
+    margin-left: 0px;
+  }
 
+  }
+  
+}
 
 </style>
