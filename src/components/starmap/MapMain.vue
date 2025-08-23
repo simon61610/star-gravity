@@ -62,10 +62,7 @@ watch(filteredLocationList, (newFilteredList) => {
 onMounted(() => {
     region.value = '全台'
     placeholder.value = ''
-    setTimeout(()=>{
-        setMap()
-    } , 500)
-    // setMap()
+    setMap()
 
 })
 
@@ -593,10 +590,26 @@ input[type="text"]:disabled {
     box-sizing: border-box;
     
     background-color: $FontColor-white;
-    border-radius: 20px;
+    border-radius: 5px;
     
 
     overflow-y: auto;
+
+    &::-webkit-scrollbar {
+            width: 10px;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: $primaryColor-500;
+            border-radius: 10px;
+            /* 重點：加邊框讓滾軸往內縮 */
+            border: 1px solid transparent;
+            background-clip: content-box;
+        }
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+
 }
 .locationList ul{
     

@@ -20,13 +20,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const isLeaving = ref(false)
 
-const goToMapMain = async () => {
-  // 添加離開動畫
-  isLeaving.value = true
-  
-  // 等待動畫完成
-  await new Promise(resolve => setTimeout(resolve, 500))
-  
+const goToMapMain = () => {
   // 跳轉頁面
   router.push('/mapmain')
 }
@@ -35,7 +29,7 @@ const goToMapMain = async () => {
 </script>
 
 <template>
-    <div class="wrapper" :class="{ 'leaving': isLeaving }">
+    <div class="wrapper">
         <h1>STAR MAP</h1>
         <!-- <router-link to="/mapmain" class="map-click button--map" @click="goToMapMain">
             Click here
@@ -92,12 +86,6 @@ const goToMapMain = async () => {
     overflow: hidden;
 
     // transition: all 0.5s ease;
-}
-
-.wrapper.leaving {
-  // opacity: 0.6;
-  // transform: scale();
-  filter: blur(2px);
 }
 
 .wrapper h1 {
@@ -159,7 +147,11 @@ const goToMapMain = async () => {
   }
   50% { 
     opacity: 0.2; 
-    transform: scale(0.8);
+    transform: scale(1.3);
+  }
+  100%{
+    opacity: 1; 
+    transform: scale(1);
   }
 }
 
