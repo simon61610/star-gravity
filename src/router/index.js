@@ -35,9 +35,6 @@ import EventRegistrationSuccessPage from '@/views/starevent/EventRegistrationSuc
 import ShopHomePage from '@/views/shop/ShopHomePage.vue'
 import ShopCategoryPage from '@/views/shop/ShopCategoryPage.vue'
 import ShopProductPage from '@/views/shop/ShopProductPage.vue'
-// import CartCheckoutPage from '@/components/shop/cart/CartCheckout.vue'
-// import CartFormPage from '@/components/shop/cart/CartForm.vue'
-// import CartSuccessPage from '@/components/shop/cart/CartSuccess.vue'
 
 
 // ------------------ 會員 member  ------------------

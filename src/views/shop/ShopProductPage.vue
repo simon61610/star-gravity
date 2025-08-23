@@ -124,7 +124,7 @@
         <div class="no-product" v-else>
             <p>查無此商品</p>
             <p class="back-cate">
-                <router-link to="/shopcategory" class="router-link">點擊回到商品分類</router-link>
+                <router-link to="/shop/category" class="router-link">點擊回到商品分類</router-link>
             </p>
         </div>
     </section>
