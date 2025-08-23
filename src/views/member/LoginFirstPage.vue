@@ -5,14 +5,8 @@
         </div>
 
         <div class="tabs" v-if="isAuthBg">
-            <RouterLink class="tabs-btn-active button--normal" :class="{ 'tabs-btn-active': isLogin }" to="/loginfirst" data-tab="register">
-                登入
-            </RouterLink>
-            <!-- <button class="tabs-btn-active button--normal" data-tab="login">登入</button> -->
-            <RouterLink class="tabs-btn button--normal" :class="{ 'tabs-btn-active': isRegister }" to="/loginfirst/register" data-tab="register">
-                註冊
-            </RouterLink>
-            <!-- <button class="tabs-btn button--normal"  data-tab="register">註冊</button>    --連結到註冊畫面--- -->
+            <RouterLink class="tab" to="/loginfirst" data-tab="login">登入</RouterLink>
+            <RouterLink class="tab" to="/loginfirst/register" data-tab="register">註冊</RouterLink>
         </div>
 
         <div class="area" v-if="isLogin">
@@ -43,9 +37,6 @@
                     <button type="button" class="refresh-btn" @click.prevent="refreshCode">
                         <img src="@/assets/icons/refresh.svg" alt="" />
                     </button>
-                    <!-- <button class="refresh-btn" @click="captchaCode = genCode()">
-                        <img src="@/assets/icons/refresh.svg" alt="">
-                    </button> -->
                 </div>
                 <div class="forget-area">
                     <!--登入按鈕 -->
@@ -54,7 +45,6 @@
                     <!--忘記密碼 --> <!----連結到忘記密碼forget畫面----->
                     <div class="forgot">
                         <RouterLink class="forget-link"   to="/loginfirst/forget">忘記密碼?</RouterLink>
-                        <!-- <router-link to="/loginfirst/forgetpage ">忘記密碼?</router-link> -->
                     </div>
                 </div>
             </form>
@@ -107,31 +97,28 @@
     text-align: center;
     padding-top: 15px;
 }
-/*------登入鈕------------*/
-.tabs-btn-active{   
+/*------登入、註冊鈕------------*/
+.tab{   
     border: none;
     width: 280px;
     height: 45px;
-    background-color: #5C4B90;
+    background-color: $primaryColor-500; 
     font-size: $pcChFont-H4;
     color: $FontColor-white;
     display: inline-flex;  
     align-items: center;
     justify-content: center;
-    text-decoration: none;   
+    text-decoration: none;  
+    border-radius: 999px; 
 }
-/*------註冊鈕------------*/
-.tabs-btn{     
-    border: none;
-    width: 280px;
-    height: 45px;
-    background-color: #5C4B90;   
-    font-size: $pcChFont-H4;
-    color: $FontColor-white;
-    display: inline-flex;       
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
+.tab:hover{ 
+    filter: brightness(1.05); 
+}
+/* 當前所在頁：變淺紫（表示已選中）*/
+.tabs .tab.router-link-exact-active{
+    background: #5C4B90;        
+    cursor: default;              /* 提示不可點 */
+    filter: none;
 }
 .area{
     width: 600px;

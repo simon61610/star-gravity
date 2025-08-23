@@ -15,10 +15,6 @@
                 <div class="buttons">
                     <button @click="save" :disabled="!file">儲存</button>
                 </div>
-                <!-- <div class="demo-type">
-                    <el-avatar :icon="UserFilled" :size="55" class="avatar" />
-                </div> -->
-    
                 <!-- 帳號 -->
                 <p class="username">{{ username }}</p>
     
