@@ -1,5 +1,5 @@
 <template>   <!----- 重設密碼 ----->
-    <div class="reset-all">
+    <!-- <div class="reset-all"> -->
         <div class="allall">
             <div class="title" >
                 <h2>重設密碼</h2>
@@ -42,25 +42,18 @@
             </div>
         </div>
 
-    </div>
+    <!-- </div> -->
 
 </template>
 
 <style scoped lang="scss">
 @import '@/assets/styles/main.scss';
 
-.reset-all{
-    width: 100%;
-    min-height: calc(100vh - 320px);
-    background-image: url(@/assets/images/member/login-bgi.png);  
-    background-size: cover;
-    margin-top: 0;
-}
 .allall{
     padding-top: 50px;
 }
 .title{
-    background-color: $primaryColor-800;
+    // background-color: $primaryColor-800;
     width: 280px;
     height: 50px;
     border-radius: 8px;
