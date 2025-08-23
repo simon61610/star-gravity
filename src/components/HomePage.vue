@@ -1,4 +1,59 @@
+<script setup>
+import { onMounted, ref ,onUnmounted } from 'vue'
+import HomePageContent from './HomePageContent.vue';
+
+//定義響應式變數
+const showbackToTop = ref(false)
+const showBox = ref(false)
+const boxText = ref('Q&A')
+//監聽事件
+function scrollToTop(){
+    window.scrollTo({
+        top:0,
+        behavior:'smooth'
+    })
+}
+function controlScroll(){
+    showbackToTop.value = window.scrollY > 300
+}
+function showQABox(){
+    if( showBox.value === false){
+        showBox.value = true
+        boxText.value = '關閉'
+    }else if(showBox.value === true){
+        showBox.value = false
+        boxText.value = 'Q&A'
+    }
+    
+}
+//生命週期
+onMounted(()=>{
+    window.addEventListener('scroll', controlScroll)
+})
+onUnmounted(()=>{
+    window.removeEventListener('scroll', controlScroll)
+})
+
+
+</script>
+
 <template>
+    <div class="backToTop" @click="scrollToTop" v-show="showbackToTop">
+        <h3>top</h3>
+    </div>
+
+    <!-- Q&A -->
+    <div class="QA">
+        <h3 class="QATitle" @click="showQABox">{{boxText}}</h3>
+        <div class="QAbox" v-show="showBox">
+            <div v-for="value in 8" class="QAbox-content">
+                <h2 class="cnContent--14px">怎麼退費</h2>
+                <p class="cnContent--14px">不能推費住54324532wawadacawc不能推費住54324532wawadacawc不能推費住54324532wawadacawc</p>
+            </div>
+        </div>
+    </div>
+    
+
     <!-- 動畫效果大區-->
     <Section class="special-effects">
        
@@ -52,125 +107,7 @@
 
 
     <!-- 大div 包裹四區塊-->
-    <div class="home-contentBlock">
-        <!-- 第一區 觀星指南?? -->
-        <div class="home-guide">
-            <!-- 標題 -->
-            <div class="home-guileTitle">
-                <h1 class="guileTitle-en decTitle--medium">GUILD</h1>
-                <h2 class="guileTitle-cn cnTitle--h2 ">觀星指南</h2>
-            </div>
-            <!-- 指南三項 -->
-            <div class="home-guildExtract">
-                <ul class="guildExtract-block">
-                    <li>
-                        <img src="../assets/images/home/index_bigIcon1.svg" alt="指南1">
-                    </li>
-                    <li>
-                        <h2 class=" cnTitle--h2">觀星指南1</h2>
-                    </li>
-                    <li>
-                        <p class="cnContent--18px">這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述</p>
-                    </li>
-                </ul>
-                <ul class="guildExtract-block">
-                    <li>
-                        <img src="../assets/images/home/index_bigIcon2.svg" alt="指南2">
-                    </li>
-                    <li>
-                        <h2 class=" cnTitle--h2">觀星指南1</h2>
-                        
-                    </li>
-                    <li>
-                        <p class="cnContent--18px">這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述</p>
-                    </li>
-                </ul>
-                <ul class="guildExtract-block">
-                    <li>
-                        <img src="../assets/images/home/index_bigIcon3.svg" alt="指南3">
-                    </li>
-                     <li>
-                        <h2 class=" cnTitle--h2">觀星指南1</h2>
-                    </li>
-                    <li>
-                        <p class="cnContent--18px">這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述</p>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- 天文快訊 -->
-        <div class="home-news">
-            <!-- 左邊照片 -->
-             <img class="home-news-photo" src="../assets/images/aboutstar/lunar eclipse.png" alt="">
-            <!-- 右邊描述 -->
-            <div class="home-news-rightSide">
-                <h1 class="news-rightSide-title decTitle--medium">NEWS</h1>
-                <h2 class="news-rightSide-title2 cnTitle--h2">天文快訊</h2>
-                <p class="news-rightSide-text cnContent--18px">天文快訊內容天文快訊內容天文快訊內容天文快訊內容天文快訊內容天文快訊內容天文快訊內容天文快訊內容天文快訊內容天文快訊內容</p>
-                <button class="news-rightSide-button button--normal">查看更多</button>
-            </div>
-        </div>
-
-        <!-- 星空模擬 -->
-        <div class="home-sky">
-            <!-- 左邊描述 -->
-            <div class="home-sky-leftSide">
-                <h1 class="sky-leftSide-title decTitle--medium">FOUR SEASONS</h1>
-                <h2 class="sky-leftSide-title2 cnTitle--h2">四季星空模擬圖</h2>
-                <p class="sky-leftSide-text cnContent--18px">星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹</p>
-                <button class="sky-leftSide-button button--normal">查看更多</button>
-            </div>
-            <!-- 右邊圖片 -->
-            <img class="home-sky-photo" src="../assets/images/aboutstar/constellation-4.png" alt="">
-
-        </div>
-
-        <!-- 活動資訊 -->
-        <div class="home-activity">
-            <!-- 英文字 -->
-            <h1 class="activity-title decTitle--medium">EVENT  INFORMATION</h1>
-            <!-- 中文字 -->
-            <h2 class="activity-title2 cnTitle--h2">活動資訊</h2>
-            <!-- 下方左右選單 -->
-            <div class="activity-content">
-                <a class="activity-a" href="#">
-                    <img class="activity-a-img" src="../assets/images/news/article-content-back.svg" alt="">
-                </a>
-                <!-- 近日活動清單 -->
-                <div class="activity-list">
-                    <a class="list-singleInfo" href="#">
-                        <img class="singleInfo-photo" src="../assets/images/aboutstar/star space.png" alt="活動資訊圖">
-                        <div class="singleInfo-content">
-                            <h3 class="activity-list-datetime">2025.05.20</h3>
-                            <h3 class="activity-list-activityName">活動名稱</h3>
-                            <p class="activity-list-info cnConten--18px">這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述</p>
-                        </div>
-                    </a>
-                    <a class="list-singleInfo" href="#">
-                        <img class="singleInfo-photo" src="../assets/images/aboutstar/star space.png" alt="活動資訊圖">
-                        <div class="singleInfo-content">
-                            <h3 class="activity-list-datetime">2025.05.20</h3>
-                            <h3 class="activity-list-activityName">活動名稱</h3>
-                            <p class="activity-list-info cnConten--18px">這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述</p>
-                        </div>
-                    </a>
-                    <a class="list-singleInfo" href="#">
-                        <img class="singleInfo-photo" src="../assets/images/aboutstar/star space.png" alt="活動資訊圖">
-                        <div class="singleInfo-content">
-                            <h3 class="activity-list-datetime">2025.05.20</h3>
-                            <h3 class="activity-list-activityName">活動名稱</h3>
-                            <p class="activity-list-info cnConten--18px">這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述這是一段活動描述</p>
-                        </div>
-                    </a>
-                </div>
-                <a class="activity-a" href="#">
-                    <img class="activity-a-img2" src="../assets/images/news/article-content-back.svg" alt="">
-                </a>
-            </div>
-        </div>
-
-    </div>
+    <HomePageContent/>
 
 
 </template>
@@ -178,33 +115,127 @@
 <style scoped lang="scss">
 @import '../assets/styles/main.scss';
 
+//返回上面
+.backToTop{
+    width: 50px;
+    height: 50px;
+    position: fixed;
+    z-index: 999;
+    bottom: 20px;
+    right: 20px;
+    background-color: $secondaryColor-yellow;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+
+//
+//---------------------------
+//Q$A
+.QA {
+    &Title{
+        // background-image: url('../assets/icons/icon-guide_star.svg');
+        width: 50px;
+        height: 50px;
+        position: fixed;
+        z-index: 999;
+        bottom: 75px;
+        right: 20px;
+        background-color: $secondaryColor-yellow;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        // opacity: 0.8;
+        cursor: pointer;
+    }
+
+    //問答內容
+    &box{
+        position: fixed;
+        background-color: #fff;
+        z-index: 999;
+        bottom: 110px;
+        right: 75px;
+        max-width: 430px;
+        height: 70vh;
+        padding: 24px;
+        border-radius: 5px;
+        box-sizing: border-box;
+
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        overflow-y: auto;
+
+
+        &::-webkit-scrollbar {
+            width: 10px;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: $primaryColor-500;
+            border-radius: 10px;
+            /* 重點：加邊框讓滾軸往內縮 */
+            border: 1px solid transparent;
+            background-clip: content-box;
+        }
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+
+
+        &-content{
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+    }
+}
 
 //視差滾動特效區
 .home-firstBlock{
-    background-image: url(../assets/images/home/index-bgp1.png);
+    background-image: url('../assets/images/home/index-bgp1.png');
     background-size: cover;
-    // background-color: $primaryColor-100;
+    background-color: $primaryColor-100;
     width: 100%;
     height: calc(100vh - 50px);
 
     position: relative;
-}
-.firstBlock-moon{
-    width: 25vh;
 
-    position: absolute;
-    left: 15%;
-    top: 10%;
-}
-.firstBlock-star1{
-    height: 15vh;
+    .firstBlock-moon{
+        width: 25vh;
 
-    position: absolute;
-    right: 20%;
-    top: 8%;
+        position: absolute;
+        left: 15%;
+        top: 10%;
+    }
 
-    animation: star1 5s linear infinite;
+    .firstBlock-star1{
+        height: 15vh;
+
+        position: absolute;
+        right: 20%;
+        top: 8%;
+
+        animation: star1 5s linear infinite;
+    }
+
+    .firstBlock-star2{
+        height: 15vh;
+
+        position: absolute;
+        left: 25%;
+        top: 45%;
+
+        animation: star2 4s linear infinite;
+    }
 }
+
 @keyframes star1{
     0%{
         transform: skew(0deg, 0deg);
@@ -217,15 +248,6 @@
     }
 }
 
-.firstBlock-star2{
-    height: 15vh;
-
-    position: absolute;
-    left: 25%;
-    top: 45%;
-
-    animation: star2 4s linear infinite;
-}
 @keyframes star2{
     0%{
         transform: skew(0deg, 0deg);
@@ -476,7 +498,7 @@
 // 第一區 觀星指南
 .home-guide{
     padding: 36px  0;
-    background-color: $bgColor-shop;
+    // background-color: $bgColor-shop;
 
 }
     //標題
@@ -526,7 +548,7 @@
 //第二區 天文快訊
 .home-news{
     max-width: 85vw;
-    background-color: $bgColor-shop;
+    // background-color: $bgColor-shop;
     display: flex;
     justify-content: center;
     gap: 10vw;
@@ -555,7 +577,7 @@
 // 第三區 觀星指南
 .home-sky{
     max-width: 85vw;
-    background-color: $bgColor-shop;
+    // background-color: $bgColor-shop;
     display: flex;
     justify-content: center;
     gap: 10vw;
