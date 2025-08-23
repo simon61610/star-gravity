@@ -13,6 +13,7 @@
 <script setup>
     import { ref, reactive, computed } from 'vue'
     import { useRoute } from 'vue-router';
+    import bus from '@/composables/useMitt';
 
     // 假資料
     import products from '@/data/products';
@@ -21,7 +22,7 @@
     import ShopBanner from '@/components/shop/ShopBanner.vue';
     import Breadcrumbs from '@/components/shop/Breadcrumbs.vue';
     import AccordionItem from '@/components/common/AccordionItem.vue';
-    import QtyControl from '@/components/shop/product/QtyControl.vue';
+    // import QtyControl from '@/components/shop/product/QtyControl.vue';
     import ProdIntro from '@/components/shop/product/ProdIntro.vue';
 
     // 路由
@@ -47,6 +48,58 @@
     const followProduct = () => {
         isFollow.value = !isFollow.value
     }
+
+    // =====================================================
+    // ==================== 加入購物車 ====================
+    // =====================================================
+    const storage = localStorage
+
+    function addCart(product){
+        if(!storage['addItemList']){
+            storage['addItemList'] = ''
+        }
+
+        /* Storage 的 Key 和 Value */
+        const itemId = `P${product.id}`
+        const itemValue = `${product.name}|${product.pic}|${product.specialPrice}`
+
+        // alert(itemValue) 
+        // itemId => P1 
+        // itemValue => 基礎入門型 商品 1|https://placehold.co/480x480?text=Product+1|9718
+        // ===============================================================================
+
+        /* 直接從物件中抓的資料字串 */
+        const itemName = product.name // 基礎入門型 商品 1
+        const itemPic = product.pic // https://placehold.co/480x480?text=Product+1
+        const itemSpecialPrice = product.specialPrice // 9718
+        // alert(itemSpecialPrice)
+
+        // ===============================================================================
+        
+        if(storage[itemId]){ // 如果已經買過，價格累加
+            let existInfo = storage[itemId].split('|') // 字串切割成陣列，用 split 方法
+            // console.log(existInfo) ['基礎入門型 商品 1', 'https://placehold.co/480x480?text=Product+1', '9718']
+            let existSpecialPrice = parseInt(existInfo[2]) // 原本的價格
+            let newExistPrice = existSpecialPrice + itemSpecialPrice
+            let updatedInfo = `${existInfo[0]}|${existInfo[1]}|${newExistPrice}`
+            // alert(updatedInfo)
+
+            storage[itemId] = updatedInfo
+
+        }else{ //第一次買
+            storage['addItemList'] += `${itemId}, `
+            storage[itemId] = itemValue
+        }
+
+        // ===============================================================================
+        bus.emit('notifyUpdateCart') // 通知 Header 更新購物車數量
+    }
+
+
+
+
+
+
 
 </script>
 
@@ -86,12 +139,13 @@
                         <p class="product-price__special">NT$ {{ product.specialPrice }}</p>
                         <p class="product-price__nospecial">NT$ {{ product.price }}</p>
                     </div>
-                    <div class="qty-control">
+                    <!-- 數量按鈕位置，暫時刪除 -->
+                    <!-- <div class="qty-control">
                         <QtyControl />
-                    </div>
+                    </div> -->
                 </div>
                 <div class="product-detail__btn">
-                    <p class="product-detail__btn__add">
+                    <p class="product-detail__btn__add" @click="addCart(product)">
                         <i class="fa-solid fa-cart-shopping"></i>
                         加入購物車
                     </p>
