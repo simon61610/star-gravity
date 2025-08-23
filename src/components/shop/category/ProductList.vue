@@ -3,6 +3,7 @@
     import Pagination from '@/components/common/Pagination.vue';
     // 方法
     import { ref, watch, computed } from 'vue'
+    import bus from '@/composables/useMitt';
     // 假資料
     import products from '@/data/products';
     
@@ -101,6 +102,9 @@
             storage['addItemList'] += `${itemId}, `
             storage[itemId] = itemValue
         }
+
+        // ===============================================================================
+        bus.emit('notifyUpdateCart') // 通知 Header 更新購物車數量
     }
 
 
