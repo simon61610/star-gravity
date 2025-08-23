@@ -13,14 +13,22 @@ function DrawNext() {
   cardRef.value?.drawNextLine()
 }
 const currentConstellation = ref(swtichstars[0])
-const showLines = ref(true) //星座連線預設關
+const showLines = ref(true) //星座連線預設開
 
 const selectConstellation = (id) => {
   console.log("emit id:", id)
   currentConstellation.value = swtichstars.find(s => s.id === id)
 }
 
-
+//抓子層的restline程式
+function toggle () {
+    cardRef.value?.resetLines();
+  }
+  
+//抓子層的showalllines程式
+function showall(){
+  cardRef.value.showAllLines();
+}
 
 
 </script>
@@ -28,7 +36,7 @@ const selectConstellation = (id) => {
 <template>
   <div class="sky">
     <ConstellationCard  :constellation="currentConstellation" ref="cardRef" :show-lines="showLines"  />
-    <ZodiacBar  @select-constellation="selectConstellation" @draw-next ="DrawNext"  @toggle-lines="() => { showLines= !showLines ; cardRef.value?.resetLines(); }"/>
+    <ZodiacBar  @select-constellation="selectConstellation" @draw-next ="DrawNext"  @toggle-lines="toggle" @showAllLines="showall"/>
     <!-- <StarsCanvas :stars="currentConstellation.stars"  :lines="currentConstellation.lines"/> -->
   </div>
 </template>

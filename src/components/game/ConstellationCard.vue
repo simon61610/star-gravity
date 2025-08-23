@@ -20,7 +20,16 @@ function drawNextLine() {
   canvasRef.value?.drawNext()
 }
 
-defineExpose({ drawNextLine })
+const resetLines = () => {
+  canvasRef.value?.resetLines()
+}
+
+//抓子層的showalllines程式
+const showAllLines = ()=>{
+  canvasRef.value.showAllLines();
+}
+
+defineExpose({ drawNextLine,resetLines,showAllLines })
 
 
 // Tab 清單（之後要加/改只改這裡）
