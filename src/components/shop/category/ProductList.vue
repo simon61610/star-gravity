@@ -136,13 +136,13 @@
         <div class="product-items">
             <div class="item__card" v-for="( item, index ) in showItems"> <!-- 用顯示的商品陣列跑 v-for -->
 
-                <RouterLink :to="`/product/${item.id}`"class="router-link" > 
-                <img :src="item.pic" alt="商品假圖" class="item__card__img">
-                <div class="item__card__text">
-                    <h1 class="item__card__text--name">{{ item.name }}</h1>
-                    <h2 class="item__card__text--spe-price">NT$ {{ item.specialPrice }}</h2>
-                    <h3 class="item__card__text--price">NT$ {{ item.price }}</h3>
-                </div>
+                <RouterLink :to="`/shop/category/product/${item.id}` "class="router-link" > 
+                    <img :src="item.pic" alt="商品假圖" class="item__card__img">
+                    <div class="item__card__text">
+                        <h1 class="item__card__text--name">{{ item.name }}</h1>
+                        <h2 class="item__card__text--spe-price">NT$ {{ item.specialPrice }}</h2>
+                        <h3 class="item__card__text--price">NT$ {{ item.price }}</h3>
+                    </div>
                 </RouterLink>
 
                 <div class="item__card--cart-btn" @click="addCart(item)">

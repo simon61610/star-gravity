@@ -35,9 +35,9 @@ import EventRegistrationSuccessPage from '@/views/starevent/EventRegistrationSuc
 import ShopHomePage from '@/views/shop/ShopHomePage.vue'
 import ShopCategoryPage from '@/views/shop/ShopCategoryPage.vue'
 import ShopProductPage from '@/views/shop/ShopProductPage.vue'
-import CartCheckoutPage from '@/components/shop/cart/CartCheckout.vue'
-import CartFormPage from '@/components/shop/cart/CartForm.vue'
-import CartSuccessPage from '@/components/shop/cart/CartSuccess.vue'
+// import CartCheckoutPage from '@/components/shop/cart/CartCheckout.vue'
+// import CartFormPage from '@/components/shop/cart/CartForm.vue'
+// import CartSuccessPage from '@/components/shop/cart/CartSuccess.vue'
 
 
 // ------------------ 會員 member  ------------------
@@ -95,10 +95,9 @@ const routes = [
 
 
 // ------------------ 星空小舖 shop ------------------
-{ path: '/shop', name: 'shop', component: ShopHomePage},
-{ path: '/shopcategory', name: 'shopcategory', component: ShopCategoryPage},
-// { path: '/product', name: 'product', component: ShopProductPage},
-{ path: '/product/:id?', name: 'product', component: ShopProductPage},
+{ path: '/shop', name: 'shop', component: ShopHomePage },
+{ path: '/shop/category', name: 'category', component: ShopCategoryPage },
+{ path: '/shop/category/product/:id?', name: 'product', component: ShopProductPage },
 { path: '/cartpage',  // 購物車與步驟頁面
   name: 'cartpage', 
   component: () => import('@/views/shop/CartPage.vue'),

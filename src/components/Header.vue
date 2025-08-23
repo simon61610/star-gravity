@@ -94,7 +94,7 @@ function toggleMenu() {
                 <li><router-link to="/"><i class="fa-solid fa-user fa-lg"></i></router-link></li>
                 <li><router-link to="/"><i class="fa-solid fa-arrow-right-from-bracket"></i></router-link></li>
                 <li>
-                    <router-link to="/">
+                    <router-link to="/cartpage/cart">
                         <i class="fa-solid fa-cart-shopping fa-lg"></i> ( {{cartCount}} )
                     </router-link>
                 </li>
