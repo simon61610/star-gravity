@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import loaderKit from '@/composables/loaderState.js'            // ★ 匯入 default 物件
+const { show, set, hide, loader } = loaderKit               // ★ 一次解構需要的東西
 
 // ||=================================================================||
 // ||                              import                             ||
@@ -113,10 +115,10 @@ const routes = [
 // {path: '/forgot', name: 'forgot', component: ForgotPage},               // 忘記密碼頁面(輸入驗證碼)
 {path: '/loginfirst', name: 'loginfirst', component: LoginFirstPage,      // 登入頁面
   children: [
-    {path: 'register', component: () => import('../views/member/RegisterPage.vue')},
-    {path: 'forgetemail', component: () => import('../views/member/ForgetPage.vue')},
-    {path: 'forgotcode', component: () => import('../views/member/ForgotPage.vue')},
-    {path: 'resetpassword', component: () => import('../views/member/ResetPasswordPage.vue')},
+    {path: 'register', name: 'register', component: () => import('../views/member/RegisterPage.vue')},
+    {path: 'forget', name: 'forget', component: () => import('../views/member/ForgetPage.vue')},
+    {path: 'forgot', name: 'forgot', component: () => import('../views/member/ForgotPage.vue')},
+    {path: 'resetpassword', name: 'resetpassword', component: () => import('../views/member/ResetPasswordPage.vue')},
   ]
 },   
 // {path: '/register', name: 'register', component: RegisterPage},          // 註冊頁面
@@ -138,8 +140,23 @@ const routes = [
     {
       path: '/Newpage',    // 
       name: 'Newpage',     //
-      component: Newpage
+      component: Newpage,
+      meta: { 
+        useLoader: true,
+        loaderLogo: 'ORION',                                  // 可選：徽章文字
+        loaderFeatures: { pulsar: true, rings: true, moon: true },//pulsar雷達  , rings 行星環
+        loaderPalette: {
+        bg: '#05060eff',            // 背景
+        star: '#f2ecff',          // 星點
+        accent: '#a1a7ff',        // 外環漸層尾端
+        accent2: '#ffb7e5',       // 外環漸層起點
+        glass: 'rgba(255,255,255,.07)', // 玻璃擬態底色
+        glassBorder: 'rgba(255,255,255,.16)', // 玻璃擬態邊線
+        moon: '#b1c83cff'           // 月面顏色
+        }  
+      }
     },
+
     {
       path: '/article/:id',    // 在vue裡面 / = http://localhost:5173/ 也就是本機的意思
       name: 'ArticleDetailpage',     //網頁的id
@@ -237,9 +254,40 @@ const router = createRouter({
 router.beforeEach((to,from,next) => {
   const token = localStorage.getItem('admin_token') //定義一個token 到 localStorage 裡面去取出 admin_token 的值
   if(!token && to.meta.requiresAuth){ 
-    next({name:'AdminLoginPage'}) //如果沒有token,且是需要驗證的頁面,就跳轉到登入頁面 也可以寫{/path: '/AdminloginPage'}
-  } else{
-    next()  //不須驗證頁面依上面設定跳轉畫面
+    next({name:'AdminLoginPage'}) 
+    }    //如果沒有token,且是需要驗證的頁面,就跳轉到登入頁面 也可以寫{/path: '/AdminloginPage'}
+
+  // } else{
+  //   next()  //不須驗證頁面依上面設定跳轉畫面
+  // }
+
+
+  const use = to.meta.useLoader === true                    // 預設不顯示：只有 true 才顯示
+  if (use) {                                                // 若此頁 opt-in
+    show({                                                  // 顯示 Loader
+      progress: 10,                                         // 初始進度
+      palette: to.meta.loaderPalette,                       // 頁面自訂配色（若有）
+      features: to.meta.loaderFeatures,                     // 頁面自訂特效（若有）
+      logoText: to.meta.loaderLogo                          // 頁面自訂徽章（若有）
+    })
+  }
+  next()                                                    // 繼續導航
+
+})
+
+
+  router.afterEach(() => {
+  if (loader.active) {
+    let p = loader.progress
+    const timer = setInterval(() => {
+      p += 5
+      if (p >= 100) {
+        p = 100
+        clearInterval(timer)
+        setTimeout(() => hide(), 1500) // 500ms 之後淡出
+      }
+      set(p)
+    }, 100) // 每 50ms 加 5%
   }
 })
 

@@ -73,14 +73,14 @@ function toggleMenu() {
                 <router-link to="/"><img :src="logo" alt="星引力logo" width="120" height="50"/></router-link>
             </div>
             <ul>
-                <li><router-link to="/">觀星初學指南</router-link></li>
+                <li><router-link to="/about">觀星初學指南</router-link></li>
                 <li><router-link to="/Newpage">天文快訊</router-link></li>       <!--<li><router-link :to="{ name: 'NewpageView' }">天文快訊</router-link></li>--->
                 <li><router-link to="/">星視野</router-link></li>
                 <li><router-link to="/mapfirst">星據點</router-link></li>
                 <li><router-link to="/">星遊戲</router-link></li>
                 <li><router-link to="/">星星活動</router-link></li>
                 <li><router-link to="/shop">星空小舖</router-link></li>               
-                <li><router-link to="/"><i class="fa-solid fa-user fa-lg"></i></router-link></li>
+                <li><router-link to="/loginfirst"><i class="fa-solid fa-user fa-lg"></i></router-link></li>
                 <li><router-link to="/"><i class="fa-solid fa-arrow-right-from-bracket"></i></router-link></li>
                 <li>
                     <router-link to="/cartpage/cart">

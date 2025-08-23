@@ -1,13 +1,48 @@
 <script setup>
-import { ref, defineEmits} from 'vue'
+import { ref, defineEmits, computed} from 'vue'
+import filledStar from '@/assets/icons/icon-filledStar.svg'
+import borderStar from '@/assets/icons/icon-borderStar.svg'
+//建立響應式變數
+const score = ref(0)
+const reviewText =ref('')
+const photoPreview = ref('')
+
+const limitWord = computed(()=>{
+    return reviewText.value.length
+})
+
+//事件監聽
+// 01. 打分數
+function fillStar(index){
+    score.value = index + 1
+}
+function isStarFilled(index){
+   return index < score.value
+}
+function uploadPhoto(e){
+  const file = e.target.files[0]
+  if(file){
+    const reader = new FileReader()
+    reader.onload = () => {
+      photoPreview.value = reader.result
+    }
+    reader.readAsDataURL(file)
+  }
+}
+function removePhoto(){
+    photoPreview.value = ''
+}
+
+
+
 
 const emit = defineEmits()
 function cencelReview(){   //這邊要判斷是不是會員
-    if(1){
-        emit("cencelReview")
-    }else{
-        
-    }
+    fillStar(-1)
+    reviewText.value = ''
+    photoPreview.value = ''
+    emit("cencelReview")
+    
     
 }
 
@@ -18,16 +53,19 @@ function cencelReview(){   //這邊要判斷是不是會員
     <div class="mapreview-writePlace">
         <h3>會員名稱</h3>
         <div class="review-writePlace-score">
-            <img src="../../assets/icons/icon-borderStar.svg" alt="空星星">
-            <img src="../../assets/icons/icon-borderStar.svg" alt="空星星">
-            <img src="../../assets/icons/icon-borderStar.svg" alt="空星星">
-            <img src="../../assets/icons/icon-borderStar.svg" alt="空星星">
-            <img src="../../assets/icons/icon-borderStar.svg" alt="空星星">
+            <img class="starScore" 
+                v-for="(star, index) in 5"  
+                :key="index"
+                :src="isStarFilled(index)? filledStar: borderStar"
+                @click="fillStar(index)"
+            >
         </div>
+
+
         <div class="review-writePlace-text">
             <h5><span>*</span>說出你的想法：</h5>
-            <textarea name="" id=""></textarea>
-            <p>字數限制：0/300</p>
+            <textarea name="" id="" maxlength='300' v-model="reviewText"></textarea>
+            <p>字數限制：{{limitWord}}/300</p>
         </div>
         <div class="review-writePlace-photo">
             <!-- <h5>上傳照片：</h5> -->
@@ -36,10 +74,11 @@ function cencelReview(){   //這邊要判斷是不是會員
                     <img src="../../assets/icons/icon-map-photoadd.svg" alt="">
                     <p>點擊新增照片</p>
                 </div>
-                <input type="file">
+                <input type="file" accept="image/*" @change="uploadPhoto">
             </div>
             <!-- 照片預覽 -->
-            <img class="userPhotoShow" src=""></img>
+            <img class="userPhotoShow" :src="photoPreview"></img>
+            <button v-if="photoPreview!=''" @click="removePhoto">取消照片</button>
             
         </div>
         <div class="review-writePlace-button">

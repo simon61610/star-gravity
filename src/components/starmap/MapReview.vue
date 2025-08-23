@@ -44,7 +44,6 @@ const sortedReviews = computed(()=>{
 
         switch(sortType.value){
             case "newest": 
-                // sortedResult = reviews.sort((a, b) => new Date(b.時間) - new Date(a.時間))
                 console.log('📅 按最新排序完成')
                 return reviews.sort((a, b) => new Date(b.時間) - new Date(a.時間))                
             case "rating_low": 
@@ -59,6 +58,10 @@ const sortedReviews = computed(()=>{
         }
     }
 })
+function enlargePhoto(el){
+    el.requestFullscreen()
+}
+
 
 
 //生命週期
@@ -114,11 +117,6 @@ onUnmounted( ()=>{
                     <li @click="changeSortType('newest', $event)">最新評論</li>
                     <li @click="changeSortType('rating_low', $event)">評論低到高</li>
                     <li @click="changeSortType('rating_high', $event)">評論高到低</li>
-
-                    <!-- <li v-for="option in sortOptions"
-                        :key="option.value"
-                        @click="selectSortOption(option, $event)"
-                    >{{option.label}}</li> -->
                 </ul>
             </div>
             <!-- 評論列表 -->
@@ -131,13 +129,11 @@ onUnmounted( ()=>{
                     <p class="cnContent--18px">
                         {{review.評論內容}}
                     </p>
-                    <img class="review-photo" src="../../assets/images/map/map-reviewleft.jpg" alt="">
+                    <img class="review-photo" src="../../assets/images/map/map-reviewleft.jpg" alt="" @click="enlargePhoto($event.target)">
                     <h6>{{review.時間}}</h6>
                 </li>  
-                
             </ul>
         </div>
-   
    </div>
 
     

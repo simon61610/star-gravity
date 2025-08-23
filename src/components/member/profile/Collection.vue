@@ -8,7 +8,7 @@
                 
                 <div class="photoall">
                     <div class="thumb">
-                        <img src="@/assets/images/shop/shophome-binoculars.jpg" alt="">
+                        <img src="../../../assets/images/aboutstar/Mask group.png" alt="">
                     </div>
         
                     <div class="down">
