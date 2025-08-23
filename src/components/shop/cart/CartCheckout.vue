@@ -1,9 +1,29 @@
+<!-- 
+ 
+1. 待處理數量改變後，header 沒改變的問題
+
+-->
+
+
 <script setup>
-    import { ref } from 'vue'
 
-
-
+    import { ref, computed, onMounted } from 'vue'
+    import products from '@/data/products'
+    
+    const orderGuide = ref([
+        "商品出貨時間約需 5–7 個工作天，若您無法等待，請斟酌再下單。",
+        "宅配服務（黑貓）配送時間通常為 1–2 個工作天，如遇連續假期或重大節慶，恕無法指定送達日期與時段。",
+        "本網站保留活動內容之 最終修改與解釋權利。",
+        "若有任何疑問，歡迎於訂單留言或與客服聯繫，感謝您的支持！",
+    ])
+    
+    // ===================================================================================
+    // ===================================== 抓假資料 =====================================
+    // ===================================================================================
+    
+    /* 
     // 商品假資料 => 要改用 storage 傳入
+    
     const productDetail = ref(
         [
             {
@@ -25,17 +45,174 @@
                 pic: 'https://placehold.co/80x80',
             },
         ]
-    )
+    ) 
+   
 
-    const orderGuide = ref([
-        "商品出貨時間約需 5–7 個工作天，若您無法等待，請斟酌再下單。",
-        "宅配服務（黑貓）配送時間通常為 1–2 個工作天，如遇連續假期或重大節慶，恕無法指定送達日期與時段。",
-        "本網站保留活動內容之 最終修改與解釋權利。",
-        "若有任何疑問，歡迎於訂單留言或與客服聯繫，感謝您的支持！",
-    ])
 
     const products = productDetail.value
     // console.log(products[0].name)
+
+
+    
+    // 每種商品的數量: 陣列，初始值為一
+    const qtyList = ref(products.map(() => 1))
+    // console.log(qtyList.value) // {0: 1, 1: 1, 2: 1} or [1, 1, 1]?????????
+    let qtyNumArr = qtyList.value
+
+    // 驗證商品數量
+    const checkQty = (index) => {
+        if(qtyNumArr[index] < 1){
+            qtyNumArr[index]=1
+        }
+    }
+
+    
+    // 計算合計金額
+    const total = computed(() => {
+        let sum = 0
+        
+        for(let i = 0; i < products.length; i++){
+            let spePrice = products[i].specialprice // 特價金額
+            let qty = qtyNumArr[i] // 數量
+
+            sum += spePrice * qty
+        }
+
+        return sum
+    })
+
+    // -----------------------------------------------------------------------
+
+    // 刪除商品
+    const deleteItem = (index) => {
+        products.splice(index, 1) // 刪除商品本身
+        qtyNumArr.splice(index, 1) // 刪除數量
+    } 
+    */
+   
+
+    // ===================================================================================
+    // ===================================== Storage =====================================
+    // ===================================================================================
+    const storage = localStorage
+    const cartItems = ref([])
+
+    // ===================================== 抓資料 =====================================
+
+    const doFirst = () => {
+        const itemString = storage['addItemList']
+        // alert(itemString) // P1, P3, P5, 
+        if(!itemString){
+            cartItems.value = []
+            return
+        }
+
+        let items = itemString.substring(0, itemString.length - 2).split(', ')
+        // alert(items) // P1,P3,P5
+        let cartData = []
+        
+        for(let i = 0; i < items.length; i++){
+            let itemInfo = storage.getItem(items[i])
+            if(itemInfo){
+                // 建立商品資料的陣列，裡面包商品資料的物件
+                cartData.push(createCartList(items[i], itemInfo))
+            }
+        }
+
+        cartItems.value = cartData
+        // console.log(cartItems.value) // 陣列包物件 [{...}, {...}, {...}]
+    }
+
+    const createCartList = (itemId, itemValue) => {
+        let existInfo = itemValue.split('|')
+        // console.log(existInfo) //['基礎入門型 商品 1', 'https://placehold.co/480x480?text=Product+1', '19436']
+        let itemTitle = existInfo[0] // 商品名稱
+        let itemImgURL = existInfo[1] // 圖片連結
+        let itemTotalPrice = parseInt(existInfo[2]) // 商品總價
+        
+        // 找單價: 從原始的 products 資料
+        let productId = Number(itemId.replace('P', ''))
+        let product = products.find(p => p.id == productId)
+        let originalPrice = product ? product.specialPrice : 1 // 優惠單價
+        
+        // 計算數量: 總價 / 單價
+        let quantity = Math.round( itemTotalPrice / originalPrice ) // 數量
+
+        // console.log(quantity) // 檢查用
+
+        return {
+            id: itemId,
+            name: itemTitle,
+            pic: itemImgURL,
+            speprice: originalPrice,
+            qty: quantity,
+            subtotal: itemTotalPrice,
+        }
+    }
+
+    // ===================================== 計算新的數量 => 價格 =====================================
+    // item 是抓資料出來的物件
+    const changeItemCount = (item, index) => {
+        if(item.qty < 1){
+            item.qty = 1
+        }
+
+        // 重新計算小計
+        item.subtotal = item.qty * item.speprice
+
+        // 更新 localStorage 中的價錢
+        let itemInfo = storage.getItem(item.id)
+        if(itemInfo){
+            let parts = itemInfo.split('|')
+            parts[2] = item.subtotal
+            storage.setItem(item.id, parts.join('|'))
+        }
+    }
+
+    // ===================================== 計算合計金額 =====================================
+    const total = computed(() => {
+        let sum = 0;
+
+        for(let i = 0; i < cartItems.value.length; i++){
+            sum += cartItems.value[i].subtotal
+        }
+
+        return sum
+    })
+
+
+    // ===================================== 刪除商品 =====================================
+    const deleteItem = (index) => {
+        const item = cartItems.value[index] // 要被刪除的該物件
+        
+        // 1. 移除 storage 中的該項 & addItemList 的id
+        storage.removeItem(item.id)
+        let itemString = storage.getItem('addItemList') 
+        if (itemString) {
+            // 移除 "P1, P3, P5, " 格式的字串
+            let updatedItemString = itemString.replace(`${item.id}, `, '')
+            storage.setItem('addItemList', updatedItemString)
+        }
+
+        // 2. 從畫面上移除該項
+        cartItems.value.splice(index, 1) // 陣列刪除值，用 splice
+
+
+        // 3. 重新計算總金額
+        // 在 computed
+    }
+
+
+
+
+    // ===================================== onMounted =====================================
+    
+    onMounted(() => {
+        doFirst()
+    })
+
+    
+
 
 </script>
 
@@ -47,34 +224,45 @@
         <section class="cart-list">
             <h1>購物清單</h1>
             <ul class="items">
-                <li class="item" v-for="(product, index) in products">
-                    <!-- 圖片 -->
-                    <img :src="product.pic" alt="" class="item__img">
+                <li class="item" v-for="(item, index) in cartItems">
 
-                    <!-- 商品資訊和計算 -->
+                    <!-- 商品圖片 -->
+                    <img :src="item.pic" alt="" class="item__img">
+
+                    <!-- 商品資訊 -->
                     <div class="item__info">
-                        <h2 class="item__info__name">{{ product.name }}</h2>
+                        <h2 class="item__info__name">{{ item.name }}</h2>
                         <div class="item__info__price">
                             <div class="price-per-item">
-                                <p class="price">NT${{ product.price }}</p>
-                                <p class="spe-price">NT${{ product.specialprice }}</p>
+                                <p class="spe-price">NT${{ item.speprice }}</p>
+                                <!-- <p class="price">NT${{ product.price }}</p> -->
                             </div>
                             <div class="qty-ctrl">
-                                <!-- 暫時移除庫存功能 -->
-                                <!-- <p class="stock">尚有庫存 <span>{{ stock }}</span> 件</p> -->
-                                <input class="num" type="number" @input="inputNum" min="1" :max="stock">
+                                <input 
+                                    class="num"
+                                    type="number"
+                                    v-model.number="item.qty"
+                                    min="1" 
+                                    @input="changeItemCount(item, index)"
+                                >
+                                <!-- @blur="checkQty(index)" 移除Blur事件驗證 -->
                             </div>
-                            <p class="price-subtotal">小計：</p>
+                            <p class="price-subtotal">
+                                小計：NT${{ item.subtotal }}
+                            </p>
                         </div>
                     </div>
 
                     <!-- 刪除按鈕 -->
-                    <div class="item__del-btn">
+                    <div class="item__del-btn" @click="deleteItem(index)">
                         <i class="fa-solid fa-xmark"></i>
                     </div>
                 </li>
             </ul>
         </section>
+
+        <!-- 暫時移除庫存功能 -->
+        <!-- <p class="stock">尚有庫存 <span>{{ stock }}</span> 件</p> -->
 
         <!-- ---------------- 下方: 說明與訂單金額 ---------------- -->
         <section class="guide-box">
@@ -88,9 +276,9 @@
                 <h2>訂單資訊</h2>
                 <div class="order-cal">
                     <div class="cal-box">
-                        <p><span>合計</span><span>NT$6000</span></p>
+                        <p><span>合計</span><span>NT${{ total }}</span></p>
                         <p><span>運費</span><span>NT$60</span></p>
-                        <p><span>總計</span><span>NT$6060</span></p>
+                        <p><span>總計</span><span>NT${{ total + 60 }}</span></p>
                     </div>
                     <router-link to="/cartpage/cartform" class="router-link">
                         <div class="goto-pay-btn">前往結帳</div>
@@ -136,6 +324,9 @@
                     align-items: center;
                     &__img { // 圖片
                         display: block;
+                        width: 80px;
+                        height: 80px;
+                        object-fit: cover;
                     }
                     &__info { // 商品名稱與金額
                         display: flex;
@@ -163,11 +354,11 @@
                                 flex-direction: column;
                                 text-align: center;
                                 .price {
-                                    font-size: $pcChFont-H4;
-                                }
-                                .spe-price {
                                     text-decoration: line-through;
                                     color: #888;
+                                }
+                                .spe-price {
+                                    font-size: $pcChFont-H4;
                                 }
                             }
                             .qty-ctrl {
@@ -189,7 +380,8 @@
                                 }
                             }
                             .price-subtotal {
-                                
+                                // border: 1px solid red;
+                                width: 200px;
                             }
                         }
                     }

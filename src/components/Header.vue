@@ -45,17 +45,6 @@ function toggleMenu() {
                 let quantity = Math.round(totalPrice / originalSpePrice)
 
                 totalQuantity += quantity
-
-
-
-                /* const productId = parseInt(items[i].replace('P',''))
-                const product = products.find(p => p.id === productId)
-                const originalPrice = product ? product.specialPrice : 1
-
-                let quantity = Math.round(totalPrice / originalPrice)
-                totalQuantity += quantity */
-                
-                
             }
         }
 
