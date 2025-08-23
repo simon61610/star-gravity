@@ -42,7 +42,7 @@
 .email-3{
     width: 484px;
     height: 50px;
-    font-size: $pcChFont-p;
+    font-size: $pcChFont-small;
     padding-left: 16px;
 }
 .button-forget{

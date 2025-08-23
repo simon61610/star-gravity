@@ -57,7 +57,7 @@
                           class="custom-placeholder"
                           style="width: 578px; height: 50px; font-size: 14px;"
                           type="password"
-                          placeholder="請輸入密碼"
+                          placeholder="請輸入密碼(至少6碼)"
                           show-password
                         />
                     </div>
@@ -75,7 +75,7 @@
                 
                 <div class="captcha-group-1">
                     <!-- 輸入驗證碼框 -->
-                    <input v-model="captcha" type="text" class="captcha-2" placeholder="輸入驗證碼" required />
+                    <input v-model="captcha" type="text" class="captcha-2" placeholder="輸入驗證碼(不分大小寫)" required />
             
                     <!-- 灰色驗證碼格子 -->
                     <div class="captcha-code-1">{{ captchaCode }}</div>
