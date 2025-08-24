@@ -1,13 +1,7 @@
-<!-- 
- 
-1. 待處理數量改變後，header 沒改變的問題
-
--->
-
-
 <script setup>
 
     import { ref, computed, onMounted } from 'vue'
+    import bus from '@/composables/useMitt'
     import products from '@/data/products'
     
     const orderGuide = ref([
@@ -167,6 +161,8 @@
             parts[2] = item.subtotal
             storage.setItem(item.id, parts.join('|'))
         }
+
+        bus.emit('notifyUpdateCart') // 通知 header
     }
 
     // ===================================== 計算合計金額 =====================================
@@ -200,6 +196,8 @@
 
         // 3. 重新計算總金額
         // 在 computed
+
+        bus.emit('notifyUpdateCart') // 通知 header
     }
 
 
@@ -259,6 +257,18 @@
                     </div>
                 </li>
             </ul>
+
+            <div class="no-products" v-if="cartItems.length == 0">
+                <p class="no-prod-text">無商品資料</p>
+                <p class="go-to-store">還沒找到心動商品？快去
+                    <span>
+                        <router-link to="/shop/category" class="router-link">
+                            星空小舖
+                        </router-link>
+                    </span>
+                    看看！
+                </p>
+            </div>
         </section>
 
         <!-- 暫時移除庫存功能 -->
@@ -299,6 +309,7 @@
     // 共用
     .router-link {
         text-decoration: none;
+        color: inherit;
     }
 
     .checkout-section {
@@ -400,6 +411,28 @@
 
                         &:hover {
                             background-color: $primaryColor-900;
+                        }
+                    }
+                }
+            }
+
+            .no-products {
+                border: 2px solid #ccc;
+                border-top: none;
+                color: #999;
+                padding: 20px;
+                text-align: center;
+                font-size: 20px;
+                .no-prod-text {
+                    margin-bottom: 12px;
+                }
+                .go-to-store {
+                    padding-top: 12px;
+                    span {
+                        color: $secondaryColor-orange;
+                        
+                        &:hover {
+                            color: $primaryColor-900;
                         }
                     }
                 }
