@@ -1,6 +1,7 @@
 <script setup>
     // 組件
     import Pagination from '@/components/common/Pagination.vue';
+    import shopToast from '@/components/shop/shopToast.vue';
     // 方法
     import { ref, watch, computed } from 'vue'
     import bus from '@/composables/useMitt';
@@ -23,6 +24,8 @@
     const currentPage = ref(1) // 預設第一頁
     const pageSize= ref(16) // 每頁顯示幾筆
 
+    const toast = ref(false)
+
 // -------------------------------------------------------------------------------
     // 分類重選，回到第一頁
     // watch(偵測的資料, 函數)
@@ -33,6 +36,14 @@
             behavior: 'smooth' // 平滑滾動 
         })
     })
+
+    // 吐司出現的function
+    const showToast = () => {
+        toast.value = true
+        setTimeout(() => {
+            toast.value = false
+        }, 2000)
+    }
 
     // =====================================================
     // ==================== 商品類型篩選 ====================
@@ -109,12 +120,10 @@
 
         // ===============================================================================
         bus.emit('notifyUpdateCart') // 通知 Header 更新購物車數量
+
+        
+        showToast() 
     }
-
-
-
-
-
 
 </script>
 
@@ -123,19 +132,9 @@
 
 <template>
     <section>
-        <!-- ----------------------- 購物車區塊 ----------------------- -->
-        <!-- <section class="cart">
-            <h1>這是購物車</h1>
-            <div class="cartbox">
-                <h2>商品名稱：</h2>
-                <p>商品數量：</p>
-                <p>商品金額：</p>
-                <h2>總計數量：</h2>
-                <h2>總計金額：</h2>
-            </div>
-        </section> -->
-        <!-- ----------------------- 購物車區塊 ----------------------- -->
-
+        <transition>
+            <shopToast v-show="toast"></shopToast>
+        </transition>
 
         <div class="product-items">
             <div class="item__card" v-for="( item, index ) in showItems"> <!-- 用顯示的商品陣列跑 v-for -->
@@ -169,6 +168,18 @@
 
 <style scoped lang="scss">
     @import '@/assets/styles/main.scss';
+
+    // transition 樣式
+    .v-enter-active,
+    .v-leave-active {
+    transition: opacity 0.5s ease;
+    }
+
+    .v-enter-from,
+    .v-leave-to {
+    opacity: 0;
+    }
+
     // 共用
     .router-link {
         text-decoration: none;
