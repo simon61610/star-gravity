@@ -32,10 +32,11 @@
     :features="loader.features || { pulsar:true, rings:true, moon:true }" 
     :logo-text="loader.logoText"                          
   	/>
-
-	<Header  v-if:="$route.meta.layout !== 'backend'"/>   
-	<router-view /> 
-  	<Footer  v-if:="$route.meta.layout !== 'backend'"/>  
+    <div v-show="!loader.active">
+		<Header  v-if:="$route.meta.layout !== 'backend'"/>   
+		<router-view /> 
+		<Footer  v-if:="$route.meta.layout !== 'backend'"/>  
+	</div>
 </template>
 
 <style>

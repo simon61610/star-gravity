@@ -9,7 +9,7 @@ active: { type: Boolean, default: true }, // 是否顯示覆蓋層
 progress: { type: Number, default: 0 }, // 進度（0~100）
 logoText: { type: String, default: 'STAR' }, // 徽章中央文字
 features: { // 三種效果的開關
-type: Object,
+type: Object,   
 default: () => ({ pulsar: true, rings: true, moon: true })
 },
 palette: { // 主題色配置
@@ -70,7 +70,7 @@ const cssVars = computed(() => ({ // 綁定在根層 :style
 
 <template>
     <Teleport to="body"><!-- 將覆蓋層直接掛到 <body>，避免被父層定位/裁切影響 -->
-    <transition name="fade-scale"><!-- 進出淡入淡出＋微縮放的 CSS 過渡名稱 -->
+    <transition name="fade-scale" appear class="starry-loader-box"><!-- 進出淡入淡出＋微縮放的 CSS 過渡名稱 -->
     <div
     v-show="active"
     class="starry-loader"
@@ -130,6 +130,7 @@ const cssVars = computed(() => ({ // 綁定在根層 :style
 
 <style scoped>
 /* 版面與過渡 ----------------------------------------------------------------*/
+/* .fade-scale-enter-active,.fade-scale-appear-active {  transition: none !important;  不要進場動畫 } */
 .starry-loader{ position: fixed; inset:0; display:grid; place-items:center; z-index: 9999; background: var(--bg); }/* 全螢幕覆蓋層 */
 .fade-scale-enter-active, .fade-scale-leave-active{ transition: opacity .45s cubic-bezier(.2,.8,.2,1), transform .45s cubic-bezier(.2,.8,.2,1); }/* 進出過渡 */
 .fade-scale-enter-from, .fade-scale-leave-to{ opacity:0; transform: scale(.985); }/* 初末態 */

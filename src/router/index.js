@@ -296,15 +296,16 @@ router.beforeEach((to,from,next) => {
   // }
 
 
-  const use = to.meta.useLoader === true                    // 預設不顯示：只有 true 才顯示
-  if (use) {                                                // 若此頁 opt-in
+                    
+  if (to.meta.useLoader === true) {      // 預設不顯示：只有 true 才顯示        
     show({                                                  // 顯示 Loader
-      progress: 10,                                         // 初始進度
+      progress: 15,                                         // 初始進度
       palette: to.meta.loaderPalette,                       // 頁面自訂配色（若有）
       features: to.meta.loaderFeatures,                     // 頁面自訂特效（若有）
       logoText: to.meta.loaderLogo                          // 頁面自訂徽章（若有）
     })
   }
+
   next()                                                    // 繼續導航
 
 })
@@ -318,10 +319,10 @@ router.beforeEach((to,from,next) => {
       if (p >= 100) {
         p = 100
         clearInterval(timer)
-        setTimeout(() => hide(), 1500) // 500ms 之後淡出
+        setTimeout(() => hide(), .5) // 1s 之後淡出
       }
       set(p)
-    }, 100) // 每 50ms 加 5%
+    }, 70) // 每 200ms 加 5%
   }
 })
 
