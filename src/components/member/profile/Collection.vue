@@ -1,4 +1,52 @@
 <!----我的收藏---->
+<script setup>
+    import { ref, computed, onMounted } from 'vue'
+    import Pagination from '@/components/common/Pagination.vue'
+
+    // 先放 8 張假資料；之後接 API 只要改這個陣列即可
+    const products = ref(
+        Array.from({ length: 8 }, (_, i) => ({
+            id: i + 1,
+            title: '基礎望遠鏡',
+            price: 2500,
+        }))
+    )
+    const products8 = computed(() => products.value.slice(0, 8))
+
+    const formatTWD = (n) => `NT$${Number(n).toLocaleString('zh-TW')}`
+
+    // 分頁
+    const collectionPage = ref(1)    // 目前頁     
+    const pageSize = ref(8)          // 每頁幾筆
+    const filteredTotal = computed(() => products.value.length)  // 總筆數給 Pagination
+
+    const showProducts = computed(() => {                       // 依頁碼切資料
+        const start = (collectionPage.value - 1) * pageSize.value
+        return products.value.slice(start, start + pageSize.value)
+    })
+    function pagechange (newpage) {                             // 接子元件 emit
+        collectionPage.value = newpage
+        window.scrollTo({ top: 0, behavior: 'smooth' })         // 切頁回頂（可保留/移除）
+    }
+    // 取消收藏
+    const emit = defineEmits(['unfavorite'])   // 告訴父層「真的要取消了」
+
+    function askUnfavorite () {
+        if (confirm('確定要取消收藏嗎？')) emit('unfavorite')
+    }
+    // 直接購買 
+    const showAdded = ref(false)
+
+        function onBuyNow () {
+        showAdded.value = true               // 顯示成功畫面
+        // 自動關閉（1.5 秒）
+        setTimeout(() => { showAdded.value = false }, 1500)
+    }
+    function closeAdded () {
+        showAdded.value = false
+    }
+</script>
+
 <template>
             
     <!----右邊-------->
@@ -37,7 +85,12 @@
             </div>
             <!----分頁-------->
             <div class="pager">
-                <el-pagination background layout="prev, pager, next" :total="24" />
+                <Pagination
+                :modelValue="collectionPage"
+                @update:modelValue="pagechange"
+                :page-size="pageSize"
+                :total="filteredTotal"
+            />
             </div>
         </div>
     </div>
@@ -149,14 +202,23 @@
   font-weight: 700; font-size: 22px;
 }
 .hint{ 
-    margin-top: 4px; color:#666; font-size:14px; 
+    margin-top: 4px; 
+    color:#666; 
+    font-size:14px; 
 }
 .modal-actions{ 
-    margin-top: 12px; display:flex; justify-content:center; gap:8px; 
+    margin-top: 12px; 
+    display:flex; 
+    justify-content:center; 
+    gap:8px; 
 }
 .btn.outline{
-  background: transparent; color:#444; border:1px solid #ccc; border-radius: 999px;
-  padding: 8px 14px; cursor: pointer;
+    background: transparent; 
+    //   color:#444; 
+    //   border:1px solid #ccc; 
+    border-radius: 999px;
+    padding: 8px 14px; 
+    cursor: pointer;
 }
 @keyframes pop { 
     from { transform: scale(.96); opacity: .6 } to { transform: none; opacity: 1 } 
@@ -164,52 +226,9 @@
 // 分頁
 .pager{
     width: 700px;
-    display: flex;
-    justify-content: flex-end;  /* 靠最右邊 */
+    // display: flex;
+    justify-content: center;  
     padding-right: 4px; 
 }
 </style>
 
-<script setup>
-    import { ref, computed, onMounted } from 'vue'
-
-    // 左邊資料
-    // const props = defineProps({
-    // username: { type: String, default: '小姐/先生' },
-    // photo:   { type: String, default: '/src/assets/icons/account.svg' }    // 頭像還沒新增
-    // })
-
-    // 右邊資料
-    // 先放 8 張假資料；之後接 API 只要改這個陣列即可
-    const products = ref(
-    Array.from({ length: 8 }, (_, i) => ({
-        id: i + 1,
-        title: '基礎望遠鏡',
-        price: 2500,
-    }))
-    )
-    const products8 = computed(() => products.value.slice(0, 8))
-
-    const formatTWD = (n) => `NT$${Number(n).toLocaleString('zh-TW')}`
-
-    // 分頁
-    const page = ref(1)
-
-    // 取消收藏
-    const emit = defineEmits(['unfavorite'])   // 告訴父層「真的要取消了」
-
-    function askUnfavorite () {
-        if (confirm('確定要取消收藏嗎？')) emit('unfavorite')
-    }
-    // 直接購買 
-    const showAdded = ref(false)
-
-        function onBuyNow () {
-        showAdded.value = true               // 顯示成功畫面
-        // 自動關閉（1.5 秒）
-        setTimeout(() => { showAdded.value = false }, 1500)
-    }
-    function closeAdded () {
-        showAdded.value = false
-    }
-</script>
