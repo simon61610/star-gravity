@@ -96,7 +96,8 @@ const routes = [
         glass: 'rgba(231, 149, 149, 0.69)', 
         glassBorder: 'rgba(255, 255, 255, 0.3)', 
         moon: '#b1c83cff' ,      
-        ring:'#13bb3dff'       
+        ring:'#4694ddff',
+        planet:'#11d486ff'      
         }  
       }
     },
