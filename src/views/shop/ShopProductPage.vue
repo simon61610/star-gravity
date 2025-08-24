@@ -14,6 +14,8 @@
     import { ref, reactive, computed } from 'vue'
     import { useRoute } from 'vue-router';
     import bus from '@/composables/useMitt';
+    import shopToast from '@/components/common/shopToast.vue';
+    import { showToast } from '@/composables/useToast';
 
     // 假資料
     import products from '@/data/products';
@@ -47,6 +49,13 @@
     const isFollow = ref(false)
     const followProduct = () => {
         isFollow.value = !isFollow.value
+        
+        if(isFollow.value){
+            showToast('已加入收藏!')
+        }
+        if(!isFollow.value){
+            showToast('已取消收藏!')
+        }
     }
 
     // =====================================================
@@ -93,6 +102,8 @@
 
         // ===============================================================================
         bus.emit('notifyUpdateCart') // 通知 Header 更新購物車數量
+
+        showToast('已成功加入購物車!')
     }
 
 
@@ -105,6 +116,8 @@
 
 
 <template>
+    <shopToast />
+
     <section class="product-page">
         <ShopBanner />
         <Breadcrumbs />

@@ -1,8 +1,8 @@
 // 使用方式:
 /* 
 1. 先在 template 中插入組件，以下複製貼上
+    import 組件程式碼:       import shopToast from '@/components/common/shopToast.vue';
     組件:                   <shopToast />
-    import 組件程式碼:       import shopToast from '@/components/shop/shopToast.vue';
 
 2. 使用 showToast 方法，以下複製貼上
     import 方法程式碼:       import { showToast } from '@/composables/useToast';
