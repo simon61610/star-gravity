@@ -1,10 +1,11 @@
 <script setup>
     // 組件
     import Pagination from '@/components/common/Pagination.vue';
-    import shopToast from '@/components/shop/shopToast.vue';
+    import shopToast from '@/components/common/shopToast.vue';
     // 方法
     import { ref, watch, computed } from 'vue'
     import bus from '@/composables/useMitt';
+    import { showToast } from '@/composables/useToast';
     // 假資料
     import products from '@/data/products';
     
@@ -24,7 +25,7 @@
     const currentPage = ref(1) // 預設第一頁
     const pageSize= ref(16) // 每頁顯示幾筆
 
-    const toast = ref(false)
+    // const toast = ref(false)
 
 // -------------------------------------------------------------------------------
     // 分類重選，回到第一頁
@@ -38,12 +39,12 @@
     })
 
     // 吐司出現的function
-    const showToast = () => {
+    /* const showToast = () => {
         toast.value = true
         setTimeout(() => {
             toast.value = false
         }, 2000)
-    }
+    } */
 
     // =====================================================
     // ==================== 商品類型篩選 ====================
@@ -122,7 +123,7 @@
         bus.emit('notifyUpdateCart') // 通知 Header 更新購物車數量
 
         
-        showToast() 
+        showToast('已成功加入購物車!')
     }
 
 </script>
@@ -132,9 +133,8 @@
 
 <template>
     <section>
-        <transition>
-            <shopToast v-show="toast"></shopToast>
-        </transition>
+
+        <shopToast />
 
         <div class="product-items">
             <div class="item__card" v-for="( item, index ) in showItems"> <!-- 用顯示的商品陣列跑 v-for -->
@@ -168,17 +168,6 @@
 
 <style scoped lang="scss">
     @import '@/assets/styles/main.scss';
-
-    // transition 樣式
-    .v-enter-active,
-    .v-leave-active {
-    transition: opacity 0.5s ease;
-    }
-
-    .v-enter-from,
-    .v-leave-to {
-    opacity: 0;
-    }
 
     // 共用
     .router-link {

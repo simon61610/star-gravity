@@ -1,18 +1,23 @@
 <script setup>
+    import { toast } from '@/composables/useToast';
 
 
 </script>
 
 
 <template>
-    <section class="shop-toast">
-        <div>已成功加入購物車！</div>
-    </section>
+    <transition name="fadeShopToast">
+        <section class="shop-toast" v-show="toast.show">
+            <div>{{ toast.message }}</div>
+        </section>
+    </transition>
 </template>
 
 
 <style scoped lang="scss">
     @import '@/assets/styles/main.scss';
+
+    
 
     .shop-toast {
         position: fixed;
