@@ -22,7 +22,7 @@ function login(){
 <template>
     <section class="admin-login-section">
         <figure class="admin-login-logo" >
-            <img :src="logoadmin" alt="">
+            <router-link to="/"><img :src="logoadmin" alt=""></router-link>
         </figure>
 
         <div class="admin-login-input">

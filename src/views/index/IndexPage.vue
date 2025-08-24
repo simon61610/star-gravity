@@ -1,6 +1,7 @@
 <script setup>
 import Index from '@/components/index.vue'
-import { ref , onMounted, onBeforeUnmount } from 'vue'
+import { ref , onMounted, onBeforeUnmount , } from 'vue'
+import { onBeforeRouteLeave } from 'vue-router'
 
 const vantaRef = ref(null)
 const vantaEffect = ref(null)
@@ -32,12 +33,31 @@ onMounted(() => {     //掛載vanta特效
 
 })
 
-onBeforeUnmount(() => {   //卸載vanta特效
-  if (vantaEffect.value) {
-    vantaEffect.value.destroy()
+// 「清理」函式，同時給路由切換與元件卸載呼叫
+function cleanup() {
+  if (meteorInterval) {
+    clearInterval(meteorInterval)
+    meteorInterval = null
   }
-  clearInterval(meteorInterval)
+  if (vantaEffect.value && typeof vantaEffect.value.destroy === 'function') {
+    try { vantaEffect.value.destroy() } catch (e) {}
+    vantaEffect.value = null
+  }
+  container = null
+}
+
+// 在「導航離開前」就先清理，避免動畫還在跑就換頁
+onBeforeRouteLeave((_to, _from, next) => {
+  cleanup()
+  next()
 })
+
+// 元件被卸載時也再保險清一次
+onBeforeUnmount(() => {
+  cleanup()
+})
+
+
 
 /*------------流星生成程式------------------*/
 function createMeteor(){
