@@ -4,12 +4,10 @@
       <h1>請選擇遊戲種類</h1>
       <div class="cards">
         <div class="card">
-              <img src="" alt="星占卜">
-              <span>星占卜</span>
+              <img src="/src/assets/images/games/GameHomePage/gamecenter-door1.png" alt="星占卜">
           </div>
           <div class="card">
-             <img src="" alt="許願牆">
-              <span>許願牆</span>
+             <img src="/src/assets/images/games/GameHomePage/gamecenter-door2.png" alt="許願牆">
           </div>
         </div>
     </div>
@@ -24,15 +22,14 @@
     @import '@/assets/styles/main.scss';
 
  .game {
-    background: linear-gradient( #2e2e5c);
     width: 100%;
     height: calc(100vh - 50px);
+    background-image: url(/src/assets/images/games/GameHomePage/gamecenter_bg.png);
     }
 
     h1 {
       padding: 80px;
       letter-spacing:5px;
-      border: 2px solid red;
       font-size: 24px;
       color:$FontColor-white;
       text-align: center;
@@ -40,7 +37,6 @@
     }
 
     .cards {
-      border: 2px solid red;
       align-items: center;
       display: flex;
       justify-content: center;
@@ -49,9 +45,6 @@
     }
 
     .card {
-      border: 2px solid red;
-      background: rgba(0, 0, 50, 0.8);
-      border-radius: 20px;
       width: 317px;
       height: 404px;
       display: flex;
@@ -65,12 +58,9 @@
 
     .card:hover {
       transform: translateY(-10px);
-      background: rgba(0, 0, 70, 0.9);
     }
 
     .card img {
-      width: 60px;
-      height: 60px;
       margin-bottom: 40px;
     }
 
