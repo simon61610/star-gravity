@@ -251,11 +251,12 @@ const routes = [
       ]
     },
     //-----index分流導頁-------
-    {
-      path: '/IndexPage',    
-      name: 'IndexPage',     
-      component: () => import('@/views/index/IndexPage.vue')
-    },
+    // {
+    //   path: '/',    
+    //   name: 'IndexPage',     
+    //   component: () => import('@/views/index/IndexPage.vue'),
+    //   meta:{layout:'index'}
+    // },
 
    
    

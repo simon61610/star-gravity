@@ -9,13 +9,13 @@ import logo from '@/assets/logos/logo-admin.svg';
     </header>
 
     <div class="main">
-        <div class="front">
+        <router-link to="/home" class="front">
             前台
-        </div>
+        </router-link>
             
-        <div class="back">
+        <router-link to="/AdminLoginPage" class="back">
             後台
-        </div>
+        </router-link>
     </div>
 
     <footer>
@@ -62,6 +62,7 @@ margin-bottom: 100px
         width: 200px;
         height: 200px;
         animation: twinkle 2s infinite alternate ease-in;
+        text-decoration: none;
 
 
         clip-path: polygon(

@@ -7,8 +7,8 @@
 	/* 以下這一行，每次 push 前請打開，其它 import 請註解 */
 	// import Header from './components/Header.vue';
   	// import Footer from './components/Footer.vue';
-	import Header from './components/Header.vue';
-  	import Footer from './components/Footer.vue';
+	import Header from '@/components/Header.vue';
+  	import Footer from '@/components/Footer.vue';
 	import StarryLoader from '@/components/common/StarryLoader.vue'
 	import loaderKit from '@/composables/loaderState' 
 	const { loader } = loaderKit 
@@ -21,6 +21,8 @@
 		ring: '#6fa8ff',
 		planet:'#6fa8ff'                                        
 	}
+
+	
 	
 </script>
 
@@ -32,10 +34,10 @@
     :features="loader.features || { pulsar:true, rings:true, moon:true }" 
     :logo-text="loader.logoText"                          
   	/>
-    <div v-show="!loader.active">
-		<Header  v-if:="$route.meta.layout !== 'backend'"/>   
+    <div v-show ="!loader.active">
+		<Header  v-if="$route.meta.layout !== 'backend' && $route.meta?.layout !== 'index'"/>   <!--只要不是 backend 也不是 index，才顯示-->
 		<router-view /> 
-		<Footer  v-if:="$route.meta.layout !== 'backend'"/>  
+		<Footer  v-if="$route.meta.layout !== 'backend' && $route.meta?.layout !== 'index'"/>  
 	</div>
 </template>
 
