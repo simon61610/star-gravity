@@ -146,13 +146,14 @@ const routes = [
         loaderLogo: 'ORION',                                  // 可選：徽章文字
         loaderFeatures: { pulsar: true, rings: true, moon: true },//pulsar雷達  , rings 行星環
         loaderPalette: {
-        bg: '#05060eff',            // 背景
+        bg: '#05060eff',          // 背景
         star: '#f2ecff',          // 星點
         accent: '#a1a7ff',        // 外環漸層尾端
-        accent2: '#ffb7e5',       // 外環漸層起點
-        glass: 'rgba(255,255,255,.07)', // 玻璃擬態底色
-        glassBorder: 'rgba(255,255,255,.16)', // 玻璃擬態邊線
-        moon: '#b1c83cff'           // 月面顏色
+        accent2: '#dc59acbc',       // 外環漸層起點
+        glass: 'rgba(231, 149, 149, 0.69)', // 玻璃擬態底色
+        glassBorder: 'rgba(255, 255, 255, 0.3)', // 玻璃擬態邊線
+        moon: '#b1c83cff' ,      // 月面顏色
+        ring:'#13bb3dff'       
         }  
       }
     },

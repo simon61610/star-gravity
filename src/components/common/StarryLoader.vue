@@ -151,20 +151,20 @@ const cssVars = computed(() => ({ // 綁定在根層 :style
 
 
 /* 徽章圓盤與 Pulsar 掃描 -----------------------------------------------------*/
-.badge{ position:relative; width:min(230px, 46vw); aspect-ratio:1/1; border-radius:50%; display:grid; place-items:center; color:#e6edf3; background: radial-gradient(100% 100% at 50% 38%, rgba(255,255,255,.14), rgba(255,255,255,.04)); border: 1px solid var(--glass-border); box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 22px 60px rgba(0,0,0,.46); overflow:hidden; isolation:isolate; }/* 圓形徽章底 */
+.badge{ position:relative; width:min(230px, 46vw); aspect-ratio:1/1; border-radius:50%; display:grid; place-items:center; color:#27d18a; background: radial-gradient(100% 100% at 50% 38%, rgba(255,255,255,.14), rgba(255,255,255,.04)); border: 1px solid var(--glass-border); box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 22px 60px rgba(0,0,0,.46); overflow:hidden; isolation:isolate; }/* 圓形徽章底 */
 .badge__title{ font-weight:800; letter-spacing:.08em; text-transform:uppercase; font-size: clamp(18px, 3.2vw, 22px); opacity:.92; text-shadow: 0 0 12px rgba(255,255,255,.12) }/* 中央文字 */
-.badge.pulsar::before{ content:""; position:absolute; inset:-25%; border-radius:50%; background: conic-gradient(from 0deg, var(--accent) 0deg, rgba(0,0,0,0) 22deg); filter: blur(8px) saturate(115%); opacity:.22; animation: sweep 3.6s linear infinite; }/* 掃描光束（扇形） */
+.badge.pulsar::before{ content:""; position:absolute; inset:-25%; border-radius:50%; background: conic-gradient(from 0deg, var(--accent) 0deg, rgba(18, 17, 17, 0) 22deg); filter: blur(8px) saturate(115%); opacity:.22; animation: sweep 3.6s linear infinite; }/* 掃描光束（扇形） */
 .badge.pulsar::after{ content:""; position:absolute; inset:8%; border-radius:50%; background: radial-gradient(50% 50% at 50% 50%, color-mix(in oklab, var(--accent) 22%, transparent), transparent 70%); }/* 中央柔光暈 */
 @keyframes sweep{ to{ transform: rotate(360deg) } }/* 連續旋轉 */
 
 
 /* 行星環（虛線軌道＋行星珠） -------------------------------------------------*/
 .orbits{ position:absolute; inset:-10%; border-radius:50%; pointer-events:none; }/* 外圍容器 */
-.orbit{ position:absolute; inset:0; border-radius:50%; border:1px dashed rgba(255,255,255,.12); animation: spin var(--spd,12s) linear infinite; }/* 軌道圓 */
+.orbit{ position:absolute; inset:0; border-radius:50%; border: 2px solid var(--ring); animation: spin var(--spd,12s) linear infinite; box-shadow: 0 0 8px var(--accent), 0 0 16px var(--accent2); opacity: 0.8; }/* 軌道圓 */
 @keyframes spin{ to{ transform: rotate(360deg) } }/* 公轉動畫 */
-.planet{ position:absolute; top:50%; right:-3px; transform: translateY(-50%); width:6px; aspect-ratio:1/1; border-radius:50%; background: var(--accent); box-shadow: 0 0 8px var(--accent), 0 0 22px color-mix(in oklab, var(--accent) 60%, transparent); }/* 行星珠 */
-.planet.small{ width:5px }/* 小顆 */
-.planet.big{ width:7px }/* 大顆 */
+.planet{ position:absolute; top:50%; right:-3px; transform: translateY(-50%); width:28px; aspect-ratio:1/1; border-radius:50%; background: var(--accent); box-shadow: 0 0 8px var(--accent), 0 0 22px color-mix(in oklab, var(--accent) 60%, transparent); }/* 行星珠 */
+.planet.small{ width:12px }/* 小顆 */
+.planet.big{ width:18px }/* 大顆 */
 
 
 /* 月相進度圈（外環與內圈） ---------------------------------------------------*/

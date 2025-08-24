@@ -22,7 +22,6 @@
 		moon:'#e9f1ff'                                          // 月面色
 	}
 	
- // import ArticleDetailView from './views/ArticleDetailView.vue';
 </script>
 
 <template>
