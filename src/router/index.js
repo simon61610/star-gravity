@@ -76,14 +76,47 @@ const routes = [
 
 // ------------------ 星據點 Map ------------------
 {path: '/mapfirst', name: 'mapfirst', component: MapFirstPage},
-{path: '/mapmain', name: 'mapmain', component: MapMainPage},
+{path: '/mapmain', name: 'mapmain', component: MapMainPage,
+  meta: { 
+        useLoader: true,
+        loaderLogo: 'ORION',                                  // 可選：徽章文字
+        loaderFeatures: { pulsar: true, rings: true, moon: true },//pulsar雷達  , rings 行星環
+        loaderPalette: {
+        bg: '#05060eff',          
+        star: '#f2ecff',          
+        accent: '#a1a7ff',        
+        accent2: '#dc59acbc',       
+        glass: 'rgba(231, 149, 149, 0.69)', 
+        glassBorder: 'rgba(255, 255, 255, 0.3)', 
+        moon: '#b1c83cff' ,      
+        ring:'#13bb3dff'       
+        }  
+      }
+},
 
 
 // ------------------ 星遊戲 game ------------------
 {path: '/gamehome', name: 'gamehome', component: GameHomePage},
 {path: '/gamecard', name: 'gamecard', component: GameCardPage},
 {path: '/gamewish', name: 'gamewish', component: GameWishPage},
-{path: '/gamesky', name: 'gamesky', component: GameSkyPage},
+{path: '/gamesky', name: 'gamesky', component: GameSkyPage,
+  meta: { 
+        useLoader: true,
+        loaderLogo: 'ORION',                                  // 可選：徽章文字
+        loaderFeatures: { pulsar: true, rings: true, moon: true },//pulsar雷達  , rings 行星環
+        loaderPalette: {
+        bg: '#05060eff',          
+        star: '#f2ecff',          
+        accent: '#a1a7ff',        
+        accent2: '#dc59acbc',       
+        glass: 'rgba(231, 149, 149, 0.69)', 
+        glassBorder: 'rgba(255, 255, 255, 0.3)', 
+        moon: '#b1c83cff' ,      
+        ring:'#4694ddff',
+        planet:'#11d486ff'      
+        }  
+      }
+    },
 
 // ------------------ 星星活動 starevent ------------------
 {path: '/events', name: 'events', component: EventsPage},
@@ -146,13 +179,14 @@ const routes = [
         loaderLogo: 'ORION',                                  // 可選：徽章文字
         loaderFeatures: { pulsar: true, rings: true, moon: true },//pulsar雷達  , rings 行星環
         loaderPalette: {
-        bg: '#05060eff',            // 背景
+        bg: '#05060eff',          // 背景
         star: '#f2ecff',          // 星點
         accent: '#a1a7ff',        // 外環漸層尾端
-        accent2: '#ffb7e5',       // 外環漸層起點
-        glass: 'rgba(255,255,255,.07)', // 玻璃擬態底色
-        glassBorder: 'rgba(255,255,255,.16)', // 玻璃擬態邊線
-        moon: '#b1c83cff'           // 月面顏色
+        accent2: '#dc59acbc',       // 外環漸層起點
+        glass: 'rgba(231, 149, 149, 0.69)', // 玻璃擬態底色
+        glassBorder: 'rgba(255, 255, 255, 0.3)', // 玻璃擬態邊線
+        moon: '#b1c83cff' ,      // 月面顏色
+        ring:'#13bb3dff'       
         }  
       }
     },
@@ -262,15 +296,16 @@ router.beforeEach((to,from,next) => {
   // }
 
 
-  const use = to.meta.useLoader === true                    // 預設不顯示：只有 true 才顯示
-  if (use) {                                                // 若此頁 opt-in
+                    
+  if (to.meta.useLoader === true) {      // 預設不顯示：只有 true 才顯示        
     show({                                                  // 顯示 Loader
-      progress: 10,                                         // 初始進度
+      progress: 15,                                         // 初始進度
       palette: to.meta.loaderPalette,                       // 頁面自訂配色（若有）
       features: to.meta.loaderFeatures,                     // 頁面自訂特效（若有）
       logoText: to.meta.loaderLogo                          // 頁面自訂徽章（若有）
     })
   }
+
   next()                                                    // 繼續導航
 
 })
@@ -284,10 +319,10 @@ router.beforeEach((to,from,next) => {
       if (p >= 100) {
         p = 100
         clearInterval(timer)
-        setTimeout(() => hide(), 1500) // 500ms 之後淡出
+        setTimeout(() => hide(), .5) // 1s 之後淡出
       }
       set(p)
-    }, 100) // 每 50ms 加 5%
+    }, 70) // 每 200ms 加 5%
   }
 })
 
