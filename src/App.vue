@@ -12,14 +12,14 @@
 	import StarryLoader from '@/components/common/StarryLoader.vue'
 	import loaderKit from '@/composables/loaderState' 
 	const { loader } = loaderKit 
-	
-
 	const defaultPalette = {                                  // 預設配色（未指定時使用）
 		bg:'#050a18', star:'#cfe3ff',                           // 背景 / 星點
 		accent:'#88aaff', accent2:'#8bf5ff',                    // 外環漸層兩端
 		glass:'rgba(255,255,255,.06)',                          // 玻璃擬態
 		glassBorder:'rgba(255,255,255,.12)',                    // 玻璃擬態邊線
-		moon:'#e9f1ff'                                          // 月面色
+		moon:'#e9f1ff',                                          // 月面色
+		ring: '#6fa8ff',
+		planet:'#6fa8ff'                                        
 	}
 	
 </script>

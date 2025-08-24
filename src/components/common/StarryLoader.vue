@@ -62,7 +62,8 @@ const cssVars = computed(() => ({ // 綁定在根層 :style
 '--accent2': props.palette.accent2, // 強調色 B（外環漸層起點）
 '--glass': props.palette.glass, // 玻璃擬態底色
 '--glass-border': props.palette.glassBorder, // 玻璃擬態邊線
-'--moon': props.palette.moon // 月面色
+'--moon': props.palette.moon, // 月面色
+'--planet': props.palette.planet
 }))
 </script>
 
@@ -86,34 +87,34 @@ const cssVars = computed(() => ({ // 綁定在根層 :style
     <div class="center"><!-- 中央內容容器：徽章與進度文案 -->
     <div class="badge" :class="{ pulsar: features.pulsar }" aria-hidden="true"><!-- 徽章圓盤；pulsar 開關決定是否顯示掃描光束 -->
     <div v-if="features.rings" class="orbits"><!-- 行星環（可開關） -->
-    <div class="orbit" style="--spd:12s"><i class="planet"></i></div><!-- 第一層軌道＋行星 -->
-    <div class="orbit" style="--spd:16s"><i class="planet small"></i></div><!-- 第二層軌道＋較小行星 -->
-    <div class="orbit" style="--spd:22s"><i class="planet big"></i></div><!-- 第三層軌道＋較大行星 -->
+    <div class="orbit" style="--spd:5s"><i class="planet"></i></div><!-- 第一層軌道＋行星 -->
+    <div class="orbit" style="--spd:10s"><i class="planet small"></i></div><!-- 第二層軌道＋較小行星 -->
+    <div class="orbit" style="--spd:15s"><i class="planet big"></i></div><!-- 第三層軌道＋較大行星 -->
     </div>
     <span class="badge__title">{{ logoText }}</span><!-- 徽章中央文字（可換站名/縮寫） -->
 
 
     <div v-if="features.moon" class="progress-ring" aria-hidden="true"><!-- 月相式環形進度（可開關） -->
-    <svg viewBox="0 0 120 120"><!-- 固定視窗，方便用半徑計算 dashoffset -->
-    <defs><!-- 定義漸層與遮罩 -->
-    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%"><!-- 進度外環的線性漸層顏色 -->
-    <stop offset="0%" :stop-color="palette.accent2" /><!-- 起點色（較亮） -->
-    <stop offset="100%" :stop-color="palette.accent" /><!-- 終點色（較冷） -->
-    </linearGradient>
-    <mask id="moonMask"><!-- 月相遮罩：以兩個圓交疊模擬盈虧 -->
-    <rect x="0" y="0" width="120" height="120" fill="black"/><!-- 遮罩背景黑（完全遮） -->
-    <g><!-- 白色區域會露出，黑色區域會被遮 -->
-    <circle cx="60" cy="60" :r="moonR" fill="white"/><!-- 月面基底（白） -->
-    <circle :cx="60 + terminatorX" cy="60" :r="moonR" fill="black"/><!-- 終止線（黑圓），隨進度水平移動 -->
-    </g>
-    </mask>
-    </defs>
-    <circle class="track" cx="60" cy="60" :r="ringR"/><!-- 外環底軌（灰） -->
-    <circle class="fill" cx="60" cy="60" :r="ringR" :style="dashStyle"/><!-- 外環進度（使用 strokeDashoffset 控制） -->
-    <g mask="url(#moonMask)"><!-- 將月面套上遮罩，顯示相位變化 -->
-    <circle cx="60" cy="60" :r="moonR" class="moon-disc"/><!-- 月面填色 -->
-    </g>
-    </svg>
+        <svg viewBox="0 0 120 120"><!-- 固定視窗，方便用半徑計算 dashoffset -->
+            <defs><!-- 定義漸層與遮罩 -->
+                <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%"><!-- 進度外環的線性漸層顏色 -->
+                    <stop offset="0%" :stop-color="palette.accent2" /><!-- 起點色（較亮） -->
+                    <stop offset="100%" :stop-color="palette.accent" /><!-- 終點色（較冷） -->
+                </linearGradient>
+                <mask id="moonMask"><!-- 月相遮罩：以兩個圓交疊模擬盈虧 -->
+                <rect x="0" y="0" width="120" height="120" fill="black"/><!-- 遮罩背景黑（完全遮） -->
+                <g><!-- 白色區域會露出，黑色區域會被遮 -->
+                    <circle cx="60" cy="60" :r="moonR" fill="white"/><!-- 月面基底（白） -->
+                    <circle :cx="60 + terminatorX" cy="60" :r="moonR" fill="black"/><!-- 終止線（黑圓），隨進度水平移動 -->
+                </g>
+                </mask>
+            </defs>
+            <circle class="track" cx="60" cy="60" :r="ringR"/><!-- 外環底軌（灰） -->
+            <circle class="fill" cx="60" cy="60" :r="ringR" :style="dashStyle"/><!-- 外環進度（使用 strokeDashoffset 控制） -->
+            <g mask="url(#moonMask)"><!-- 將月面套上遮罩，顯示相位變化 -->
+                <circle cx="60" cy="60" :r="moonR" class="moon-disc"/><!-- 月面填色 -->
+            </g>
+        </svg>
     </div>
     </div>
 
@@ -153,18 +154,18 @@ const cssVars = computed(() => ({ // 綁定在根層 :style
 /* 徽章圓盤與 Pulsar 掃描 -----------------------------------------------------*/
 .badge{ position:relative; width:min(230px, 46vw); aspect-ratio:1/1; border-radius:50%; display:grid; place-items:center; color:#27d18a; background: radial-gradient(100% 100% at 50% 38%, rgba(255,255,255,.14), rgba(255,255,255,.04)); border: 1px solid var(--glass-border); box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 22px 60px rgba(0,0,0,.46); overflow:hidden; isolation:isolate; }/* 圓形徽章底 */
 .badge__title{ font-weight:800; letter-spacing:.08em; text-transform:uppercase; font-size: clamp(18px, 3.2vw, 22px); opacity:.92; text-shadow: 0 0 12px rgba(255,255,255,.12) }/* 中央文字 */
-.badge.pulsar::before{ content:""; position:absolute; inset:-25%; border-radius:50%; background: conic-gradient(from 0deg, var(--accent) 0deg, rgba(18, 17, 17, 0) 22deg); filter: blur(8px) saturate(115%); opacity:.22; animation: sweep 3.6s linear infinite; }/* 掃描光束（扇形） */
+.badge.pulsar::before{ content:""; position:absolute; inset:-25%; border-radius:50%; background: conic-gradient(from 0deg, var(--accent) 0deg, rgba(18, 17, 17, 0) 22deg); filter: blur(8px) saturate(115%); opacity:.22; animation: sweep 2.6s linear infinite; }/* 掃描光束（扇形） */
 .badge.pulsar::after{ content:""; position:absolute; inset:8%; border-radius:50%; background: radial-gradient(50% 50% at 50% 50%, color-mix(in oklab, var(--accent) 22%, transparent), transparent 70%); }/* 中央柔光暈 */
 @keyframes sweep{ to{ transform: rotate(360deg) } }/* 連續旋轉 */
 
 
 /* 行星環（虛線軌道＋行星珠） -------------------------------------------------*/
-.orbits{ position:absolute; inset:-10%; border-radius:50%; pointer-events:none; }/* 外圍容器 */
-.orbit{ position:absolute; inset:0; border-radius:50%; border: 2px solid var(--ring); animation: spin var(--spd,12s) linear infinite; box-shadow: 0 0 8px var(--accent), 0 0 16px var(--accent2); opacity: 0.8; }/* 軌道圓 */
+.orbits{ position:absolute; inset:10%; border-radius:50%; pointer-events:none; }/* 外圍容器 */
+.orbit{ position:absolute; inset:5%; border-radius:50%; border: 2px solid var(--ring); animation: spin var(--spd,12s) linear infinite; box-shadow: 0 0 8px var(--accent), 0 0 16px var(--accent2); opacity: 0.8; }/* 軌道圓 */
 @keyframes spin{ to{ transform: rotate(360deg) } }/* 公轉動畫 */
-.planet{ position:absolute; top:50%; right:-3px; transform: translateY(-50%); width:28px; aspect-ratio:1/1; border-radius:50%; background: var(--accent); box-shadow: 0 0 8px var(--accent), 0 0 22px color-mix(in oklab, var(--accent) 60%, transparent); }/* 行星珠 */
-.planet.small{ width:12px }/* 小顆 */
-.planet.big{ width:18px }/* 大顆 */
+:deep(.planet){ position:absolute; top:50%; right:-3px; transform: translateY(-50%); width:10px; aspect-ratio:1/1; border-radius:50%; background: var(--planet); box-shadow: 0 0 8px var(--accent), 0 0 22px color-mix(in oklab, var(--accent) 60%, transparent); }/* 行星珠 */
+:deep(.planet.small){ width:12px }/* 小顆 */
+:deep(.planet.big){ width:18px }/* 大顆 */
 
 
 /* 月相進度圈（外環與內圈） ---------------------------------------------------*/

@@ -1,5 +1,6 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted,watch } from 'vue'
+import { useRoute } from 'vue-router'
 import bus from '@/composables/useMitt'
 
 import products from '@/data/products'
@@ -7,9 +8,21 @@ import products from '@/data/products'
 import  logo from '@/assets/logos/logo.svg'
 const active = ref(false)
 
+const route = useRoute()
+console.log("route toRaw:", JSON.parse(JSON.stringify(route)))
+
 function toggleMenu() {
   active.value = !active.value
 }
+//監聽所有路徑讓麵包選單切頁關閉
+watch(
+  function () {
+    return route.fullPath   // 這裡是「監聽來源」
+  },
+  function () {
+    active.value = false    // 這裡是「回調函式」
+  }
+)
 
     // =====================================================
     // ==================== 更新購物車數量 ====================
