@@ -182,7 +182,7 @@
         gap: 40px;
 
         .item__card {
-            border: 1px solid red;
+            // border: 1px solid red;
             max-width: 200px;
             cursor: pointer;
             text-align: center;

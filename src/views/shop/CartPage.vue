@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 // 組件
@@ -11,9 +11,22 @@ import CheckoutStepper from '@/components/shop/cart/CheckoutStepper.vue';
 const route = useRoute()
 
 const step = computed(() => { // 控制 process
-  if (route.name == 'cartform') return 2
-  if (route.name == 'cartsuccess') return 3
+  if (route.name == 'cartform'){
+    return 2
+  }
+  if (route.name == 'cartsuccess'){
+    return 3
+  }
   return 1
+})
+
+watch( 
+    () => step.value, 
+    () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+        })
 })
 
 const steps = ['準備結帳', '填寫資料', '完成訂單'] // 步驟內容
