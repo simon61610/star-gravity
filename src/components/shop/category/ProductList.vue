@@ -58,6 +58,10 @@
         return filteredItems.value.slice(start, start + pageSize.value) // 顯示的商品陣列
     })
 
+    function pageChange(newPage) {
+        currentPage.value = newPage
+    }
+
 
 
     // =====================================================
@@ -152,8 +156,11 @@
         </div>
         <div>  
             <Pagination
-                v-model="currentPage"
-                v-model:pageSize="pageSize"
+                :modelValue="currentPage"
+                @update:modelValue="pageChange"
+
+                :pageSize="pageSize"
+
                 :total="filteredItems.length"
             />
         </div>
