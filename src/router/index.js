@@ -24,6 +24,7 @@ import GameHomePage from '@/views/game/GameHomePage.vue'
 import GameCardPage from '@/views/game/GameCardPage.vue'
 import GameWishPage from '@/views/game/GameWishPage.vue'
 import GameSkyPage from '@/views/game/GameSkyPage.vue'
+import GameStoryPage from '@/views/game/GameStoryPage.vue'
 
 
 // ------------------ 星星活動 starevent ------------------
@@ -76,23 +77,7 @@ const routes = [
 
 // ------------------ 星據點 Map ------------------
 {path: '/mapfirst', name: 'mapfirst', component: MapFirstPage},
-{path: '/mapmain', name: 'mapmain', component: MapMainPage,
-  meta: { 
-        useLoader: true,
-        loaderLogo: 'ORION',                                  // 可選：徽章文字
-        loaderFeatures: { pulsar: true, rings: true, moon: true },//pulsar雷達  , rings 行星環
-        loaderPalette: {
-        bg: '#05060eff',          
-        star: '#f2ecff',          
-        accent: '#a1a7ff',        
-        accent2: '#dc59acbc',       
-        glass: 'rgba(231, 149, 149, 0.69)', 
-        glassBorder: 'rgba(255, 255, 255, 0.3)', 
-        moon: '#b1c83cff' ,      
-        ring:'#13bb3dff'       
-        }  
-      }
-},
+{path: '/mapmain', name: 'mapmain', component: MapMainPage},
 
 
 // ------------------ 星遊戲 game ------------------
@@ -117,6 +102,7 @@ const routes = [
         }  
       }
     },
+{ path: '/gamestory', name: 'gamestory', component: GameStoryPage },
 
 // ------------------ 星星活動 starevent ------------------
 {path: '/events', name: 'events', component: EventsPage},

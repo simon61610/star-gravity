@@ -129,7 +129,7 @@ onUnmounted( ()=>{
                     <p class="cnContent--18px">
                         {{review.評論內容}}
                     </p>
-                    <img class="review-photo" src="../../assets/images/map/map-reviewleft.jpg" alt="" @click="enlargePhoto($event.target)">
+                    <img v-if="review.圖片" class="review-photo" src="../../assets/images/map/map-reviewleft.jpg" alt="" @click="enlargePhoto($event.target)">
                     <h6>{{review.時間}}</h6>
                 </li>  
             </ul>
