@@ -214,6 +214,9 @@
     font-size: $pcChFont-small;
     padding-left: 14px;
 }
+// .custom-placeholder{
+//     height: 50px;
+// }
 .custom-placeholder ::v-deep(.el-input__inner::placeholder) {
     color: #000; 
     opacity: 0.5; 
@@ -337,13 +340,11 @@
         background-position: center;
         overflow-y: visible;
     }
-    /* 標題縮小一點 */
     .login-one h2{
         padding-top: 8px;
-        font-size: 42px;     /* 視覺接近設計稿，可再微調 */
+        font-size: 100px; 
         line-height: 1.1;
     }
-    /* 頁籤佈局：左右並排、自動等分寬 */
     .tabs{
         gap: 8px;
         padding: 0 4px;
@@ -356,24 +357,95 @@
         font-size: 16px;
         border-radius: 999px;
     }
-     /* 內容區：改為全寬 */
+    /* 內容區：改為全寬 */
     .area{
         width: 100%;
         margin-top: 16px;
         padding: 0 4px;
     }
+    /* 表單欄位：全寬、較低高度 */
+    .email-1, .captcha-1{
+        width: 100%;
+        height: 44px;
+        font-size: 14px;
+        padding-left: 12px;
+        box-sizing: border-box;
+    }
+    /* 覆蓋 el-input 在 template 內的 inline 寬度（手機改全寬）*/
+    .custom-placeholder{
+        width: 100% !important;
+        height: auto !important;
+    }
+    /* Element Plus v2（wrapper）/ v1（inner）都一起照顧到 */
+    .custom-placeholder ::v-deep(.el-input__wrapper){
+        width: 100% !important;
+        height: 44px;
+        padding-left: 12px;
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+    .custom-placeholder ::v-deep(.el-input__inner){
+        height: 44px;
+        font-size: 14px;
+    }
+     /* 驗證碼區 */
+    .captcha-group{
+        display: grid;
+        grid-template-columns: 1fr 96px 32px;
+        column-gap: 8px;
+        align-items: center;
+        margin-top: 12px;
+    }
+    .captcha-code{
+        width: 100%;
+        height: 44px;
+        line-height: 44px;
+        font-size: $pcChFont-small;
+    }
+    .refresh-btn img{
+        width: 24px;
+        height: 24px;
+    }
+    /* 登入與忘記密碼 */
+    .forget-area{
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    .login-btn{
+        width: 100%;
+        height: 44px;
+        margin: 16px 0 0 0;    /* 移除左邊距 */
+        font-size: 16px;
+    }
+    .forgot{
+        margin: 0;
+        width: 100%;
+        height: auto;
+        text-align: right;
+        line-height: normal;
+        font-size: 14px;
+    }
+    .forget-link{ 
+        text-decoration: underline; 
+        padding-right: 5px;
+    }
+    .or{
+        font-size: 16px;
+        margin-top: 8px;
+    }
+    .or::before, .or::after{
+        margin: 16px 8px;
+    }
+    .social-login{
+        gap: 20px;
+        margin-top: 6px;
+    }
+    .google img, .line img, .facebook img{
+        width: 32px;
+        height: 32px;
+    }
 
 }
-
-
-
-
-
-
-
-
-
-
-
 </style>
 

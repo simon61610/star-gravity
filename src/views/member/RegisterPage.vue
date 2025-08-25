@@ -1,3 +1,71 @@
+<script setup>
+    import { ref, onMounted, reactive, computed, watch } from 'vue'
+
+    // 密碼
+    const pwd1 = ref('')  
+    const pwd2 = ref('')
+    // 判斷密碼同樣才可以送出
+    const canSubmit = computed(() => {    
+    return pwd1.value.length > 0 &&
+           pwd2.value.length > 0 &&
+           pwd1.value === pwd2.value
+    })
+    // 驗證碼
+    const captchaCode = ref('TJD102')
+    const genCode = () => Math.random().toString(36).slice(2, 8).toUpperCase()
+    // 欄位
+    const name = ref('')
+    const phone = ref('')
+    const gender = ref('')
+    const address = ref('')      
+    const email = ref('')
+    const captcha = ref('')
+    // 送出
+    const handleRegister = () => {
+    if (!canSubmit.value) return
+    alert('註冊成功！（假資料測試）')
+    }
+
+    /* ---- 假後端：取會員註冊資料 ---- */
+    function fetchMember() {
+        return new Promise(resolve => {
+            setTimeout(() => {
+            resolve({
+                name: '王小明',                // 先顯示
+                phone: '0912-345-678',
+                city: '台北市',
+                district: '大安區',
+                address: '仁愛路三段 123 號'
+            })
+            }, 300)
+        })
+        }
+        function updateMember(payload) {
+        return new Promise(resolve => setTimeout(() => resolve({ ok: true }), 500))
+    }
+
+    /* ---- 狀態 ---- */
+    const member = reactive({
+        city: '',
+        district: '',
+    })
+
+    const saving = ref(false)
+    const savedAt = ref('')
+    /* ---- 縣市 / 鄉鎮選單 ---- */
+    const DISTRICTS = {
+        台北市: ['中正區', '大安區', '信義區', '士林區'],
+        新北市: ['板橋區', '新店區', '三重區', '永和區'],
+        桃園市: ['桃園區', '中壢區', '龜山區', '八德區']
+    }
+    const cities = Object.keys(DISTRICTS)
+    const districtOptions = computed(() => DISTRICTS[member.city] || [])
+        watch(() => member.city, () => {
+        if (!districtOptions.value.includes(member.district)) member.district = ''
+    })
+
+</script>
+
 <template>      <!----註冊畫面----->
     <!-- <div class="register-all"> -->
 
@@ -254,72 +322,4 @@
     height: 45px;
 }
 </style>
-
-<script setup>
-    import { ref, onMounted, reactive, computed, watch } from 'vue'
-
-    // 密碼
-    const pwd1 = ref('')  
-    const pwd2 = ref('')
-    // 判斷密碼同樣才可以送出
-    const canSubmit = computed(() => {    
-    return pwd1.value.length > 0 &&
-           pwd2.value.length > 0 &&
-           pwd1.value === pwd2.value
-    })
-    // 驗證碼
-    const captchaCode = ref('TJD102')
-    const genCode = () => Math.random().toString(36).slice(2, 8).toUpperCase()
-    // 欄位
-    const name = ref('')
-    const phone = ref('')
-    const gender = ref('')
-    const address = ref('')      
-    const email = ref('')
-    const captcha = ref('')
-    // 送出
-    const handleRegister = () => {
-    if (!canSubmit.value) return
-    alert('註冊成功！（假資料測試）')
-    }
-
-    /* ---- 假後端：取會員註冊資料 ---- */
-    function fetchMember() {
-        return new Promise(resolve => {
-            setTimeout(() => {
-            resolve({
-                name: '王小明',                // 先顯示
-                phone: '0912-345-678',
-                city: '台北市',
-                district: '大安區',
-                address: '仁愛路三段 123 號'
-            })
-            }, 300)
-        })
-        }
-        function updateMember(payload) {
-        return new Promise(resolve => setTimeout(() => resolve({ ok: true }), 500))
-    }
-
-    /* ---- 狀態 ---- */
-    const member = reactive({
-        city: '',
-        district: '',
-    })
-
-    const saving = ref(false)
-    const savedAt = ref('')
-    /* ---- 縣市 / 鄉鎮選單 ---- */
-    const DISTRICTS = {
-        台北市: ['中正區', '大安區', '信義區', '士林區'],
-        新北市: ['板橋區', '新店區', '三重區', '永和區'],
-        桃園市: ['桃園區', '中壢區', '龜山區', '八德區']
-    }
-    const cities = Object.keys(DISTRICTS)
-    const districtOptions = computed(() => DISTRICTS[member.city] || [])
-        watch(() => member.city, () => {
-        if (!districtOptions.value.includes(member.district)) member.district = ''
-    })
-
-</script>
 
