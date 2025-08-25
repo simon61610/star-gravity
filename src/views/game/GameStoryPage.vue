@@ -1,15 +1,98 @@
 <!-- src/views/game/GameResultPage.vue -->
 <script setup>
-// 這頁先不寫任何互動邏輯
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+
+const route = useRoute()
+const router = useRouter()
+
+// ---- 讀取 query，並在缺少時用 localStorage 備援 ----
+const readQueryStr = (val) => (Array.isArray(val) ? val.join(',') : (val || '') + '')
+
+const rawCards = readQueryStr(route.query.cards)
+const rawTypes = readQueryStr(route.query.types)
+
+let cardsStr = rawCards
+let typesStr = rawTypes
+
+if (!cardsStr || !typesStr) {
+  try {
+    const saved = JSON.parse(localStorage.getItem('cardResult') || '{}')
+    if (!cardsStr && Array.isArray(saved.cards)) cardsStr = saved.cards.join(',')
+    if (!typesStr && Array.isArray(saved.types)) typesStr = saved.types.join(',')
+  } catch (e) {
+    // ignore
+  }
+}
+
+// ---- 解析為可用資料：3 張卡 / 3 種結果 ----
+const pickedCards = computed(() =>
+  (cardsStr || '')
+    .split(',')
+    .map(n => Number(n))
+    .filter(n => Number.isInteger(n))
+    .slice(0, 3)
+)
+
+const pickedTypes = computed(() =>
+  (typesStr || '')
+    .split(',')
+    .filter(Boolean)
+    .slice(0, 3)
+)
+
+// ---- 五種結果的文案（先放示例，你可改成自己的）----
+const RESULT_CONTENT = {
+  love:   { key: 'love',   label: '愛情 Love',   text: '互動自然、有話題就有火花；誠實溝通界線更拉近距離。' },
+  career: { key: 'career', label: '事業 Career', text: '靈感湧現、效率提升；排好優先順序穩穩推進，容易遇到貴人。' },
+  health: { key: 'health', label: '健康 Health', text: '作息規律最重要；多喝水與伸展運動，精神與專注度同步提升。' },
+  wealth: { key: 'wealth', label: '財運 Wealth', text: '小額穩健勝過躁進；記帳控管支出，善用折扣與回饋。' },
+  study:  { key: 'study',  label: '學業 Study',  text: '分段讀書＋複習清單成效佳；同儕討論能補齊盲點。' }
+}
+
+// ---- 穩定亂數（同一組 cards/types 每次顯示相同百分比）----
+function hashStr(s) {
+  let h = 2166136261 >>> 0
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i)
+    h = Math.imul(h, 16777619)
+  }
+  return h >>> 0
+}
+function rng(seed) {
+  let t = seed >>> 0
+  return () => {
+    t += 0x6D2B79F5
+    let r = Math.imul(t ^ (t >>> 15), 1 | t)
+    r ^= r + Math.imul(r ^ (r >>> 7), 61 | r)
+    return ((r ^ (r >>> 14)) >>> 0) / 4294967296
+  }
+}
+
+const resultLines = computed(() => {
+  const seedStr = (cardsStr || '') + '|' + (typesStr || '')
+  const rand = rng(hashStr(seedStr))
+  return pickedTypes.value.map(t => {
+    const base = 40, span = 50 // 40%~90%
+    const percent = Math.round(base + rand() * span)
+    const info = RESULT_CONTENT[t] || { key: t, label: t, text: '（請補上此結果的說明內容）' }
+    return { ...info, percent }
+  })
+})
+
+// ---- 按鈕動作 ----
+const goBack = () => router.push({ name: 'gamecard' })  // 若抽牌頁名稱不同，改這裡
+const goProduct = () => {
+  // 連到你的商品頁（自行替換）
+  // 例：router.push({ name: 'shop-product', params: { id: 'wish-ball' } })
+}
+
 </script>
 
 <template>
   <main class="fortune" aria-label="占卜結果頁">
     <!-- 背景／舞台 -->
-    <div class="bg">
-      <!-- 左右簾幕（若有 PNG 可直接換成 <img>） -->
-      <div class="stage" aria-hidden="true"></div>
-    </div>
+    <div class="bg"></div>
 
     <div class="wrap">
       <!-- 標題 -->
@@ -21,69 +104,55 @@
       </h1>
 
       <section class="content">
-        <!-- 左邊：卡片疊放 -->
+        <!-- 左邊：卡片疊放（最多 3 張） -->
         <aside class="cards" aria-label="抽到的卡片">
           <img
             class="card card--back"
             src="/src/assets/images/games/GameCardPage/game_card01.svg"
             alt="背面卡片"
           />
+          <!-- 疊 3 張正面，位置由 index 微調 -->
           <img
+            v-for="(idx, i) in pickedCards"
+            :key="idx"
             class="card card--front"
             src="/src/assets/images/games/GameCardPage/game_card02.svg"
-            alt="巫婆星 卡片"
+            :alt="`抽到的卡片 ${i+1}`"
+            :style="{
+              left: (120 + i * 40) + 'px',
+              top:  (80  - i * 6 ) + 'px',
+              transform: `rotate(${8 - i*6}deg)`
+            }"
           />
         </aside>
 
         <!-- 右邊：結果 + 商品 -->
         <div class="result">
-          <!-- 三項分數 -->
+          <!-- 三項分數（依 types 動態渲染） -->
           <div class="lines">
-            <div class="line">
-              <div class="label">事業</div>
+            <div class="line" v-for="line in resultLines" :key="line.key">
+              <div class="label">{{ line.label }}</div>
               <div class="bar">
-                <div class="bar__fill" style="width: 70%"></div>
+                <div class="bar__fill" :style="{ width: line.percent + '%' }"></div>
               </div>
-              <p class="desc">
-                結果敘述一段文字說明—放兩行示意。結果敘述一段文字說明—放兩行示意。
-              </p>
-            </div>
-
-            <div class="line">
-              <div class="label">愛情</div>
-              <div class="bar">
-                <div class="bar__fill" style="width: 55%"></div>
-              </div>
-              <p class="desc">
-                結果敘述一段文字說明—放兩行示意。結果敘述一段文字說明—放兩行示意。
-              </p>
-            </div>
-
-            <div class="line">
-              <div class="label">家庭</div>
-              <div class="bar">
-                <div class="bar__fill" style="width: 80%"></div>
-              </div>
-              <p class="desc">
-                結果敘述一段文字說明—放兩行示意。結果敘述一段文字說明—放兩行示意。
-              </p>
+              <p class="desc">{{ line.text }}</p>
             </div>
           </div>
 
-          <!-- 推薦商品卡 -->
+          <!-- 推薦商品卡（保留你的內容，可接到實際商品頁） -->
           <article class="product" aria-label="推薦商品">
             <header class="product__hd">
               <span class="tag">推薦商品</span>
-              <h2 class="product__title">星座馬克杯</h2>
+              <h2 class="product__title">星座許願球</h2>
               <p class="product__desc">
-                簡短敘述：這裡是商品介紹，兩行示意文字。這裡是商品介紹，兩行示意文字。
+                搭配三段情境光，無論是床頭夜燈、告白禮、升學與生日祝福，都能以最溫柔的光，承載你的願望。
               </p>
-              <button class="btn btn--gold" type="button">查看商品</button>
+              <button class="btn btn--gold" type="button" @click="goProduct">查看商品</button>
             </header>
             <div class="product__thumb">
               <img
-                src=""
-                alt="星座馬克杯"
+                src="/src/assets/images/games/GameCardPage/game-card_Divination ball.png"
+                alt="星座許願球"
               />
             </div>
           </article>
@@ -92,68 +161,26 @@
 
       <!-- 返回按鈕 -->
       <div class="footer">
-        <button class="btn btn--ghost" type="button">返回</button>
+        <button class="btn btn--ghost" type="button" @click="goBack">返回</button>
       </div>
     </div>
   </main>
 </template>
 
 <style scoped lang="scss">
-
-/* ===== 色票（可依品牌調整） ===== */
-$bg-deep: #2e3b73;
-$bg-sky: #7ba1d1;
-$panel: #3b2d6b;
-$panel-2: #4e3e8c;
-$purple-100: #a595e5;
-$purple-200: #c9bdf4;
-$gold: #ffd34d;
-$text-100: #f2f2f7;
-$text-80: rgba(242, 242, 247, 0.8);
-$text-60: rgba(242, 242, 247, 0.6);
+@import '@/assets/styles/main.scss';
 
 .fortune {
   align-items: center;
   justify-content: center;
-  background-image: url(/src/assets/images/games/GameCardPage/game_card-bg.svg);
+  background-image: url(/src/assets/images/games/GameCardPage/game_card-bg2.svg);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
 }
 
-/* 背景舞台 & 簾幕（若有 PNG 可改用 img） */
-.bg {
-  pointer-events: none;
-
-  .stage {
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  transform: translateX(-50%);
-  width: min(1200px, 100%);
-  height: 140px;
-   min-height: 100vh;
-  display: flex;
-
-  }
-
-  .curtain {
-    position: absolute;
-    top: -5%;
-    bottom: -10%;
-    width: 30%;
-    background: linear-gradient(180deg, #6d56b6 0, #4f3f90 100%);
-    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.4));
-    &--left {
-      left: -6%;
-      border-bottom-right-radius: 80% 40%;
-    }
-    &--right {
-      right: -6%;
-      border-bottom-left-radius: 80% 40%;
-    }
-  }
-}
+/* 背景舞台 */
+.bg { pointer-events: none; }
 
 .wrap {
   width: min(1120px, 92%);
@@ -175,10 +202,10 @@ $text-60: rgba(242, 242, 247, 0.6);
     place-items: center;
     width: 48px;
     height: 48px;
-    font-weight: 800;
-    letter-spacing: 0.2em;
-    background: #fff;
-    color: #1c1942;
+    font-size: 30px;
+    font-weight: 600;
+    background: #5C4B90;
+    color: #FFF;
     border-radius: 6px;
   }
 }
@@ -194,7 +221,7 @@ $text-60: rgba(242, 242, 247, 0.6);
   }
 }
 
-/* 卡片區 */
+/* 卡片區：可疊放 3 張 */
 .cards {
   position: relative;
   padding-top: 12px;
@@ -214,11 +241,13 @@ $text-60: rgba(242, 242, 247, 0.6);
   }
 
   .card--front {
-    position: relative;
-    left: 135px;
-    top: 124px;
-    transform: rotate(8deg);
+    position: absolute; /* 改為絕對定位以便依 index 疊放 */
     z-index: 1;
+
+    @media (max-width: 900px) {
+      left: 226px !important;
+      top: 20px !important;
+    }
   }
 
   .card-name {
@@ -226,7 +255,6 @@ $text-60: rgba(242, 242, 247, 0.6);
     margin-top: 16px;
     font-weight: 700;
     letter-spacing: 0.2em;
-    color: $purple-200;
   }
 }
 
@@ -240,50 +268,42 @@ $text-60: rgba(242, 242, 247, 0.6);
 /* 三條說明 + 進度條 */
 .lines {
   padding: 20px 20px 12px;
- 
   border-radius: 16px;
 }
 
-.line + .line {
-  margin-top: 18px;
-}
+.line + .line { margin-top: 18px; }
 
 .label {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
-  margin-bottom: 6px;
-  color: white;
+  margin-bottom: 12px;
+  color: #5C4B90;
 }
 
 .bar {
-  height: 8px;
+  height: 14px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.25);
+  background: #5C4B90;
   overflow: hidden;
   margin-bottom: 8px;
 
   &__fill {
     height: 100%;
-    background: linear-gradient(90deg, #ffe57a 0, #ffd34d 60%, #ffb400 100%);
+    background: $secondaryColor-yellow;
   }
 }
 
-.desc {
-  color: $text-80;
-  line-height: 1.6;
-  font-size: 14px;
-}
+.desc { line-height: 1.6; font-size: 14px; }
 
 /* 推薦商品卡 */
 .product {
   display: grid;
   grid-template-columns: 1fr 220px;
   align-items: center;
-  gap: 18px;
-  padding: 18px;
-  background: #4a3b8b;
+  gap: 4px;
+  padding: 18px 24px;
+  background: #5C4B90;
   border-radius: 16px;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
 
   @media (max-width: 720px) {
     grid-template-columns: 1fr;
@@ -292,25 +312,25 @@ $text-60: rgba(242, 242, 247, 0.6);
   &__hd {
     .tag {
       display: inline-block;
-      padding: 4px 10px;
-      font-size: 12px;
-      border-radius: 999px;
-      color: #1c1942;
-      background: #ffe57a;
+      padding: 5px 7px;
+      font-size: 14px;
+      border:1px solid $FontColor-white;
+      color:$FontColor-white;
       margin-bottom: 8px;
-      font-weight: 700;
+      font-weight: 400;
     }
 
     .product__title {
-      font-size: 20px;
+      font-size: 24px;
       font-weight: 800;
-      margin-bottom: 4px;
+      margin-bottom: 10px;
+      color: #FFF;
     }
     .product__desc {
-      color: $text-80;
       font-size: 14px;
       line-height: 1.6;
       margin-bottom: 12px;
+      color:$FontColor-white;
     }
   }
 
@@ -319,7 +339,6 @@ $text-60: rgba(242, 242, 247, 0.6);
     width: 200px;
     aspect-ratio: 1 / 1;
     border-radius: 12px;
-    background: rgba(0, 0, 0, 0.15);
     display: grid;
     place-items: center;
     img {
@@ -328,9 +347,7 @@ $text-60: rgba(242, 242, 247, 0.6);
       display: block;
     }
 
-    @media (max-width: 720px) {
-      justify-self: start;
-    }
+    @media (max-width: 720px) { justify-self: start; }
   }
 }
 
@@ -338,24 +355,30 @@ $text-60: rgba(242, 242, 247, 0.6);
 .btn {
   display: inline-grid;
   place-items: center;
-  padding: 10px 16px;
+  padding: 10px 123px;
   border-radius: 999px;
   font-weight: 700;
-  border: 2px solid transparent;
+  border: 1px solid transparent;
   cursor: pointer;
 
   &--gold {
-    background: $gold;
-    color: #2a235a;
-
+    color: $primaryColor-900;
+    background-color: $secondaryColor-yellow;
+  }
+  &--gold:hover {
+    color: $FontColor-white;
+    background-color: $primaryColor-900;
   }
 
   &--ghost {
     background: transparent;
-    color: $text-100;
-    border-color: rgba(255, 255, 255, 0.4);
-    padding-left: 28px;
-    padding-right: 28px;
+    border-color:$FontColor-white;
+    color: $FontColor-white;
+    padding: 10px 250px;
+  }
+  &--ghost:hover {
+    background: $FontColor-white;
+    color: $primaryColor-900;
   }
 }
 

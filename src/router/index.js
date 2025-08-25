@@ -82,7 +82,6 @@ const routes = [
 {path: '/gamehome', name: 'gamehome', component: GameHomePage},
 {path: '/gamecard', name: 'gamecard', component: GameCardPage},
 {path: '/gamewish', name: 'gamewish', component: GameWishPage},
-{path: '/gamesky', name: 'gamesky', component: GameSkyPage},
 { path: '/gamestory', name: 'gamestory', component: GameStoryPage },
 
 // ------------------ 星星活動 starevent ------------------
