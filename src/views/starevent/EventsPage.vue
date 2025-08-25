@@ -1,7 +1,30 @@
 <script setup>
+
+import { ref, computed } from 'vue';
+
+// 組件
 import EventCarousel from '@/components/starevent/eventPage/EventCarousel.vue';
+import Pagination from '@/components/common/Pagination.vue';
+
+
+// 假資料
 import eventlist from '@/data/eventlist';
 
+const currentPage = ref(1)
+const pageSize = ref(6)
+
+const showItems = computed (() => {
+    const start = (currentPage.value - 1) * pageSize.value // 從第幾筆開始
+    return eventlist.slice(start, start + pageSize.value) // 顯示的商品陣列
+})
+
+const pageChange = (newpage)=> {
+    currentPage.value = newpage
+}
+
+
+
+// 切版用
 const eventIcon = [
     { name: 'meteor-shower', imgUrl: '/images/events/home/eventType_meteor-shower.png'},
     { name: 'moon', imgUrl: '/images/events/home/eventType_moon.png'},
@@ -24,7 +47,7 @@ const placeTags = [
 
 <template>
     <section class="eventhome-section">
-        <div class="eventhomr-banner">
+        <div class="eventhome-banner">
             <div class="banner-content">
                 <h1 class="decTitle--big">ACTIVITIES</h1>
                 <h2 class="cnTitle--h1">星星活動</h2>
@@ -66,7 +89,7 @@ const placeTags = [
         
                     <!-- 活動項目卡片區 -->
                     <div class="event-list">
-                        <div class="event-card" v-for="event in eventlist">
+                        <div class="event-card" v-for="event in showItems">
                             <img :src="event.imgurl[0]" alt="">
                             <div class="card-content">
                                 <div class="date">{{ event.date }}</div>
@@ -82,6 +105,18 @@ const placeTags = [
                             </div>
                         </div>
                     </div>
+
+                    <!-- Pagination -->
+                    <Pagination 
+                        :modelValue="currentPage"
+                        @update:modelValue="pageChange"
+
+                        :pageSize="pageSize"
+
+                        :total="eventlist.length"
+                    
+                    
+                    />
                 </div>
             </div>
 
@@ -99,7 +134,7 @@ const placeTags = [
         background-size: cover;
         padding-bottom: 60px;
         
-        .eventhomr-banner {
+        .eventhome-banner {
             padding: 40px 16px 0;
             // border: 1px solid red;
             display: flex;
@@ -219,6 +254,7 @@ const placeTags = [
                             img {
                                 display: block;
                                 height: 200px;
+                                object-fit: cover;
                             }
                             .card-content {
                                 background-color: #fff;
