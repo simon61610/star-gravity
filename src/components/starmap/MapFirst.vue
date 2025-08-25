@@ -203,4 +203,26 @@ $n: 5;
     opacity: 0;
   }
 }
+
+
+
+//--------------RWD--------------
+@media screen and (max-width: 430px) {
+  .wrapper h1{
+    font-size: 120px;
+  }
+  .decorate p{
+    display: none;
+  }
+
+
+
+
+
+
+
+
+
+
+}
 </style>
