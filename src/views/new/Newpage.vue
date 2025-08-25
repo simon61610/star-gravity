@@ -12,20 +12,23 @@ const currentPage = ref(1);  //目前所在頁面
 const pageSize = ref(4);  //每頁顯示數量 
 
 /*文章分類*/
-const categories = ref(['全部文章','天象事件','知識新知','生活應用'])
+const categories = ref( ['全部文章','天象事件','知識新知','生活應用'] ) 
 const selectedCategory = ref('全部文章')  //選擇的分類
 
 
-/*文章過濾切換 */
+/* 2 .文章過濾切換 */
 const filterArticles = computed(()=>{ 
     if(selectedCategory.value === '全部文章'){   //如果點全部文章顯示全部
-        return articles.value
-    }else{
-        return articles.value.filter(a => a.tag === selectedCategory.value)  //如果點其他分類 把tag分類過濾出來
+        return articles.value //顯示所有文章
+    }
+    else{
+        return articles.value.filter(a => a.tag === selectedCategory.value)  //如果點其他分類 顯示符合的tag分類
     }
 })
+
+/* 1. 更新選中的切換分類 */
 function changeCategory(cat){
-    selectedCategory.value = cat  //選擇到的分類存到變數cat
+    selectedCategory.value = cat   
 }
 
 /*---分頁器筆數計算--*/
@@ -43,16 +46,16 @@ function changeCategory(cat){
       <NewsBanner/>  
        <main>
         <NewsBar
-        :categories= "categories"
-        :selectedCategory="selectedCategory"
-        @changeCategory="changeCategory" 
-        
+        :categories= "categories"  
+        :selectedCategory= "selectedCategory"
+        @changeCategory= "changeCategory" 
         />
-         <NewsArticleList :articles="showArticles"/>
+
+        <NewsArticleList :articles="showArticles"/>
         <Pagination 
-         v-model="currentPage"
-         v-model:pageSize="pageSize"  
-        :total="filterArticles.length"
+         v-model= "currentPage"
+         v-model:pageSize= "pageSize"  
+        :total= "filterArticles.length"
          />    
 
       </main> 

@@ -5,6 +5,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['changeCategory'])  
 
+
 </script>
 
 <template>

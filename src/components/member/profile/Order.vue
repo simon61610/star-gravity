@@ -128,6 +128,7 @@
     max-width: 1000px;
     width: 100%;
     margin: 0 auto; 
+    padding-top: 20px;
 }
 .pager{
     width: 800px;

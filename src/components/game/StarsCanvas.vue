@@ -1,5 +1,5 @@
 <script setup>
-import {ref,onMounted,watch} from 'vue'
+import {ref,onMounted,watch,nextTick} from 'vue'
 const props = defineProps({
     stars:{
         type:Array,
@@ -17,8 +17,11 @@ const props = defineProps({
   
 })
 
+const isAnimating = ref(false) //星座顯示開關
+
 //線段直接全部顯示
 const showAllLines = () => {
+  isAnimating.value = false;
   currentStep.value = props.lines.length
   console.log("showall 被呼叫了")
 }
@@ -26,17 +29,27 @@ const showAllLines = () => {
 
 //線段逐漸顯示
 const currentStep = ref(0)
-const drawNext = () => {
-    if (currentStep.value < props.lines.length){
-        currentStep.value++
-        console.log("drawNext 被呼叫了！ currentStep =", currentStep.value)
-    }
+// const drawNext = () => {
+//     if (currentStep.value < props.lines.length){
+//         currentStep.value++
+//         console.log("drawNext 被呼叫了！ currentStep =", currentStep.value)
+//     }
+// }
+
+function drawNext() {
+  isAnimating.value = true
+  if (currentStep.value < props.lines.length) currentStep.value++
+  if (currentStep.value === props.lines.length) isAnimating.value = false
 }
+
+
 //重製線段
 const resetLines = () => {
+  isAnimating.value = false;
    currentStep.value = 0
    console.log('currentStep.value')
 }
+
 
  //讓父層調用程式
 defineExpose({
@@ -53,14 +66,20 @@ function lineLength(a, b) {
 }
 
  // 切換星座時，重製線條進度
+
+
 watch(
   () => [props.stars, props.lines],
   () => {
-    currentStep.value = -1
-    drawNext()
+    isAnimating.value = false
+    currentStep.value = 0
+     // nextTick(()=>{
+      
+    //   drawNext()
+    // })
   },
-  { deep: true } // 監聽物件內部變化
-)
+   { deep: true } // 監聽物件內部變化
+ )
 
 
 
@@ -83,6 +102,7 @@ watch(
             <!--星點連線-->
 
             <line v-if="showLines" class="Stars-Canvs-line" v-for="(line,i) in lines"
+            :class="{ animate: isAnimating }"
             :key="'line_'+ i" 
             :x1="0+(stars[line[0]].x/100 * 759)" 
             :y1="0+(stars[line[0]].y/100 * 546)"
@@ -93,7 +113,7 @@ watch(
             :stroke-dasharray = "lineLength(stars[line[0]], stars[line[1]])"
             :stroke-dashoffset = " i < currentStep ? 0 : lineLength(stars[line[0]], stars[line[1]])" />    
 
-                                            <!-----  1. key使用字串串接 意思是 key = line_0 給第一條線ID長這樣 
+                                            <!----- 1. key使用字串串接 意思是 key = line_0 給第一條線ID長這樣 
                                                     2. 參數stroke-dasharray為虛線總長度
                                                     3. 參數 stroke-dashoffset為線段偏移量 偏移200等於線段消失 反之0等於線段出現   ------>
         </svg>
@@ -101,6 +121,9 @@ watch(
 </template>
 
 <style lang="scss" scoped>
+.Stars-Canvs-line { transition: none; }                 /* ← 切星座時不會有重製動畫 */
+.Stars-Canvs-line.animate { transition: stroke-dashoffset 0.35s linear; } /* ← 播放才有動畫 */
+
 .Stars-Canvs-box{
     width: 100% !important;    
     display: flex !important;
@@ -116,10 +139,10 @@ watch(
 }
 
 
-.Stars-Canvs-line{
-    transition: stroke-dashoffset 0.5s ease
+// .Stars-Canvs-line{
+//     transition: stroke-dashoffset 0.5s ease
 
-}
+// }
 @media (max-width: 431px){
   .Stars-Canvs-box{
     
