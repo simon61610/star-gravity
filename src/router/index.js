@@ -24,6 +24,7 @@ import GameHomePage from '@/views/game/GameHomePage.vue'
 import GameCardPage from '@/views/game/GameCardPage.vue'
 import GameWishPage from '@/views/game/GameWishPage.vue'
 import GameSkyPage from '@/views/game/GameSkyPage.vue'
+import GameStoryPage from '@/views/game/GameStoryPage.vue'
 
 
 // ------------------ 星星活動 starevent ------------------
@@ -101,6 +102,7 @@ const routes = [
         }  
       }
     },
+{ path: '/gamestory', name: 'gamestory', component: GameStoryPage },
 
 // ------------------ 星星活動 starevent ------------------
 {path: '/events', name: 'events', component: EventsPage},
