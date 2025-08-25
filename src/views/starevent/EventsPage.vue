@@ -262,6 +262,7 @@ const placeTags = [
                                 display: flex;
                                 flex-direction: column;
                                 gap: 12px;
+                                height: 100%;
                                 .date {
                                     font-size: 14px;
                                     color: #888;
@@ -269,6 +270,10 @@ const placeTags = [
                                 .event-name {
                                     font-size: 20px;
                                     line-height: 1.2;
+                                    font-weight: bold;
+                                    white-space: nowrap;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
                                 }
                                 .address {
                                     display: flex;
