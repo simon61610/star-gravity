@@ -77,10 +77,10 @@
         <div class="second-area">
             <form @submit.prevent="handleRegister">
                 <div class="name">
-                    <input type="name" class="name-1" placeholder="請輸入姓名" v-model="name" required />
+                    <input type="text" class="name-1" placeholder="請輸入姓名" v-model="name" required />
                 </div>
                 <div class="phone">
-                    <input type="phone" class="phone-1" placeholder="請輸入電話" v-model="phone" required />
+                    <input type="text" class="phone-1" placeholder="請輸入電話" v-model="phone" required />
                 </div>
                 <!------勾選性別--------->
                 <div class="gender-group">
@@ -111,7 +111,7 @@
                 </div>
                <!------選擇區域--------->
                <div class="adress">
-                    <input type="adress" class="adress-2" placeholder="請輸入地址" v-model="adress" required />
+                    <input type="text" class="adress-2" placeholder="請輸入地址" v-model="address" required />
                 </div>
                <!------信箱--------->
                <div class="email">
@@ -321,5 +321,119 @@
     width: 470px;
     height: 45px;
 }
+
+@media screen and (max-width: 433px) {
+    .register-all{
+        min-height: 100vh;
+        padding: 16px 12px 40px;
+        background-position: center;
+        background-size: cover;
+    }
+    /* 分頁條若未使用可忽略 */
+    .tabs{
+        gap: 8px;
+        padding: 0 4px;
+        margin-top: 12px;
+    }
+    /* 內容區改為全寬 */
+    .second-area{
+        width: 100%;
+        margin-top: 12px;
+        padding: 0 4px;
+    }
+     /* 輸入格 */
+    .name-1, .phone-1, .adress-2, .email-2, .captcha-2{
+        width: 100%;
+        height: 44px;
+        font-size: 14px;
+        padding-left: 12px;
+        box-sizing: border-box;
+    }
+    /* 性別 */
+    .gender-group{
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .gender-group label{
+        font-size: 14px;
+        line-height: 1.6;
+    }
+    /* 縣市/鄉鎮：兩欄等分（小於 360px 會自動換行） */
+    .join-city{
+        margin-top: 16px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+    .select-city{
+        width: 100%;
+        height: 44px;
+        padding-left: 12px;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+    /* 密碼 el-input：覆蓋 inline style，手機改全寬 */
+    .password-area{
+        margin-top: 8px;
+    }
+    .area2{ 
+        margin-top: 12px; 
+    }
+    .custom-placeholder{
+        width: 100% !important;
+        height: auto !important;
+    }
+    .custom-placeholder ::v-deep(.el-input__wrapper){
+        width: 100% !important;
+        height: 44px;
+        padding-left: 12px;
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+    .custom-placeholder ::v-deep(.el-input__inner){
+        height: 44px;
+        font-size: 14px;
+    }
+    /* 驗證碼區：三欄 */
+    .captcha-group-1{
+        display: grid;
+        grid-template-columns: 1fr 96px 32px;
+        column-gap: 8px;
+        align-items: center;
+        margin-top: 12px;
+    }
+    .captcha-code-1{
+        width: 100%;
+        height: 44px;
+        line-height: 44px;
+        font-size: 14px;
+    }
+    .refresh-btn-1 img{
+        width: 24px;
+        height: 24px;
+    }
+
+    /* 送出鈕：全寬、取消左邊距 */
+    .register-btn{
+        width: 100%;
+        height: 44px;
+        margin: 16px 0 0 0;
+        font-size: 16px;
+        border-radius: 999px;
+    }
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
 </style>
 
