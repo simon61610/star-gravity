@@ -185,7 +185,7 @@ const routes = [
         accent2: '#dc59acbc',       // 外環漸層起點
         glass: 'rgba(231, 149, 149, 0.69)', // 玻璃擬態底色
         glassBorder: 'rgba(255, 255, 255, 0.3)', // 玻璃擬態邊線
-        moon: '#b1c83cff' ,      // 月面顏色
+        moon: '#22b98cff' ,      // 月面顏色
         ring:'#13bb3dff'       
         }  
       }

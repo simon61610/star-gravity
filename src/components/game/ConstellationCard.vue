@@ -10,6 +10,7 @@ const props = defineProps({
     type: Object,
     required: true ,
   },
+  
   showLines: Boolean   // 接收父層傳來的
 })
 
