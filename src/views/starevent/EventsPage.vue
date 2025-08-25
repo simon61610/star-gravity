@@ -1,6 +1,30 @@
 <script setup>
-import EventCarousel from '@/components/starevent/eventPage/EventCarousel.vue';
 
+import { ref, computed } from 'vue';
+
+// 組件
+import EventCarousel from '@/components/starevent/eventPage/EventCarousel.vue';
+import Pagination from '@/components/common/Pagination.vue';
+
+
+// 假資料
+import eventlist from '@/data/eventlist';
+
+const currentPage = ref(1)
+const pageSize = ref(6)
+
+const showItems = computed (() => {
+    const start = (currentPage.value - 1) * pageSize.value // 從第幾筆開始
+    return eventlist.slice(start, start + pageSize.value) // 顯示的商品陣列
+})
+
+const pageChange = (newpage)=> {
+    currentPage.value = newpage
+}
+
+
+
+// 切版用
 const eventIcon = [
     { name: 'meteor-shower', imgUrl: '/images/events/home/eventType_meteor-shower.png'},
     { name: 'moon', imgUrl: '/images/events/home/eventType_moon.png'},
@@ -16,59 +40,6 @@ const placeTags = [
     {name: '天文台'},
 ]
 
-// 假資料
-const eventCards = [
-    {
-        date: '2025.08.16 (六) 16:00 - 08.17 (日) 2:00',
-        title: '來陽明山吧！許下你的流星願望 | 獅子座流星雨 - 團體觀星活動',
-        address: '台北市',
-        type: '流星雨',
-        place: '高山觀測',
-        imgurl: '/images/events/home/card.png'
-    },
-    {
-        date: '2025.08.16 (六) 16:00 - 08.17 (日) 2:00',
-        title: '來陽明山吧！許下你的流星願望 | 獅子座流星雨 - 團體觀星活動',
-        address: '台北市',
-        type: '流星雨',
-        place: '高山觀測',
-        imgurl: '/images/events/home/card.png'
-    },
-    {
-        date: '2025.08.16 (六) 16:00 - 08.17 (日) 2:00',
-        title: '來陽明山吧！許下你的流星願望 | 獅子座流星雨 - 團體觀星活動',
-        address: '台北市',
-        type: '流星雨',
-        place: '高山觀測',
-        imgurl: '/images/events/home/card.png'
-    },
-    {
-        date: '2025.08.16 (六) 16:00 - 08.17 (日) 2:00',
-        title: '來陽明山吧！許下你的流星願望 | 獅子座流星雨 - 團體觀星活動',
-        address: '台北市',
-        type: '流星雨',
-        place: '高山觀測',
-        imgurl: '/images/events/home/card.png'
-    },
-    {
-        date: '2025.08.16 (六) 16:00 - 08.17 (日) 2:00',
-        title: '來陽明山吧！許下你的流星願望 | 獅子座流星雨 - 團體觀星活動',
-        address: '台北市',
-        type: '流星雨',
-        place: '高山觀測',
-        imgurl: '/images/events/home/card.png'
-    },
-    {
-        date: '2025.08.16 (六) 16:00 - 08.17 (日) 2:00',
-        title: '來陽明山吧！許下你的流星願望 | 獅子座流星雨 - 團體觀星活動',
-        address: '台北市',
-        type: '流星雨',
-        place: '高山觀測',
-        imgurl: '/images/events/home/card.png'
-    },
-]
-
-
 
 </script>
 
@@ -76,7 +47,7 @@ const eventCards = [
 
 <template>
     <section class="eventhome-section">
-        <div class="eventhomr-banner">
+        <div class="eventhome-banner">
             <div class="banner-content">
                 <h1 class="decTitle--big">ACTIVITIES</h1>
                 <h2 class="cnTitle--h1">星星活動</h2>
@@ -87,53 +58,70 @@ const eventCards = [
 
         <div class="main">
             <EventCarousel />
+            <div class="container">
 
-            <!-- 選擇活動類型 -->
-            <div class="event-type">
-                <h1 class="select-title">熱門觀星主題</h1>
-                <div class="event-box">
-                    <div v-for="(eventType, index) in eventIcon" class="event-select">
-                        <img :src="eventType.imgUrl" alt="">
+                <!-- 選擇活動類型 -->
+                <div class="event-type">
+                    <h1 class="select-title">熱門觀星主題</h1>
+                    <div class="event-box">
+                        <div v-for="(eventType, index) in eventIcon" class="event-select">
+                            <img :src="eventType.imgUrl" alt="">
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- 活動項目區 -->
-            <div class="event-list-section">
-
-                <!-- Header -->
-                <header>
-                    <h2>流星雨</h2>
     
-                    <div class="event-ctrl">
-                        <div class="place-tags">
-                            <div class="tag" v-for="(tag, index) in placeTags">{{ tag.name }}</div>
-                        </div>
-                        <div class="select-date">
+                <!-- 活動項目區 -->
+                <div class="event-list-section">
     
-                        </div>
-                    </div>
-                </header>
-    
-                <!-- 活動項目卡片區 -->
-                <div class="event-list">
-                    <div class="event-card" v-for="card in eventCards">
-                        <img :src="card.imgurl" alt="">
-                        <div class="card-content">
-                            <div class="date">{{ card.date }}</div>
-                            <h2 class="event-name">{{ card.title }}</h2>
-                            <div class="address">
-                                <i class="fa-solid fa-location-dot"></i>
-                                <p>{{ card.address }}</p>
+                    <!-- Header -->
+                    <header>
+                        <h2>流星雨</h2>
+        
+                        <div class="event-ctrl">
+                            <div class="place-tags">
+                                <div class="tag" v-for="(tag, index) in placeTags">{{ tag.name }}</div>
                             </div>
-                            <h3 class="tags">
-                                <div class="type-tag"># {{ card.type }}</div>
-                                <div class="place-tag"># {{ card.place }}</div>
-                            </h3>
+                            <div class="select-date">
+        
+                            </div>
+                        </div>
+                    </header>
+        
+                    <!-- 活動項目卡片區 -->
+                    <div class="event-list">
+                        <div class="event-card" v-for="event in showItems">
+                            <RouterLink :to="`/events/${event.id}` "class="router-link" > 
+                            <img :src="event.imgurl[0]" alt="">
+                            <div class="card-content">
+                                <div class="date">{{ event.date }}</div>
+                                <h2 class="event-name">{{ event.title }}</h2>
+                                <div class="address">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                    <p>{{ event.address }}</p>
+                                </div>
+                                <h3 class="tags">
+                                    <div class="type-tag"># {{ event.type }}</div>
+                                    <div class="place-tag"># {{ event.place }}</div>
+                                </h3>
+                            </div>
+                        </RouterLink>
                         </div>
                     </div>
+
+                    <!-- Pagination -->
+                    <Pagination 
+                        :modelValue="currentPage"
+                        @update:modelValue="pageChange"
+
+                        :pageSize="pageSize"
+
+                        :total="eventlist.length"
+                    
+                    
+                    />
                 </div>
             </div>
+
         </div>
 
     </section>
@@ -143,10 +131,18 @@ const eventCards = [
 <style scoped lang="scss">
     @import '@/assets/styles/main.scss';
 
+    // 共用
+    .router-link {
+        text-decoration: none;
+        color: inherit;
+    }
+
     .eventhome-section {
         background-image: url(/images/events/event-bg.png);
+        background-size: cover;
+        padding-bottom: 60px;
         
-        .eventhomr-banner {
+        .eventhome-banner {
             padding: 40px 16px 0;
             // border: 1px solid red;
             display: flex;
@@ -174,131 +170,145 @@ const eventCards = [
             background-color: $primaryColor-900;
             border-radius: 20px;
 
-            display: flex;
-            flex-direction: column;
-            gap: 60px;
-
-            // 選擇活動類型
-            .event-type {
+            
+            .container {
                 display: flex;
                 flex-direction: column;
-                gap: 40px;
-                border: 1px solid green;
-                border-bottom: 1px solid white;
-                padding-bottom: 60px;
-
-                .select-title {
-                    text-align: center;
-                    font-size: $pcChFont-H2;
-                    color: white;
-                    font-weight: bold;
-                }
-
-
-                .event-box {
-                    // border: 1px solid red;
-                    display: flex;
-                    justify-content: space-between;
-    
-                    .event-select {
-                        background-color: $primaryColor-500;
-                        border-radius: 999px;
-                        cursor: pointer;
-    
-                        img {
-                            display: block;
-                        }
-                    }
-                }
-            }
-
-            // 活動項目區
-            .event-list-section {
-                border: 1px solid red;
-                display: flex;
-                flex-direction: column;
-                gap: 28px;
+                gap: 60px;
                 max-width: 1040px;
                 margin: 0 auto;
-
-                // header
-                header {
-                    h2 {
-                        color: white;
+                // 選擇活動類型
+                .event-type {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 40px;
+                    // border: 1px solid green;
+                    border-bottom: 1px solid white;
+                    padding-bottom: 60px;
+    
+                    .select-title {
+                        text-align: center;
                         font-size: $pcChFont-H2;
+                        color: white;
                         font-weight: bold;
-                        margin-bottom: 28px;
                     }
-                    .event-ctrl{
-                        .place-tags{
-                            display: flex;
-                            gap: 12px;
-                            .tag {
-                                text-align: center;
-                                padding: 8px 0;
-                                font-size: 16px;
-                                color: white;
-                                width: 100px;
-                                border: 2px solid white;
-                                border-radius: 999px;
+    
+    
+                    .event-box {
+                        // border: 1px solid red;
+                        display: flex;
+                        justify-content: space-between;
+        
+                        .event-select {
+                            background-color: $primaryColor-500;
+                            border-radius: 999px;
+                            cursor: pointer;
+        
+                            img {
+                                display: block;
                             }
                         }
-                        .select-date {}
                     }
                 }
-
-                // 活動項目卡片區
-                .event-list {
+    
+                // 活動項目區
+                .event-list-section {
+                    // border: 1px solid red;
                     display: flex;
-                    flex-wrap: wrap;
-                    // justify-content: space-between;
-                    justify-content: center;
-                    gap: 40px;
-                    .event-card {
-                        width: 320px;
-                        border-radius: 24px;
-                        overflow: hidden;
-                        img {
-                            display: block;
+                    flex-direction: column;
+                    gap: 28px;
+                    // max-width: 1040px;
+                    margin: 0 auto;
+    
+                    // header
+                    header {
+                        h2 {
+                            color: white;
+                            font-size: $pcChFont-H2;
+                            font-weight: bold;
+                            margin-bottom: 28px;
                         }
-                        .card-content {
-                            background-color: #fff;
-                            padding: 16px;
-                            display: flex;
-                            flex-direction: column;
-                            gap: 12px;
-                            .date {
-                                font-size: 14px;
-                                color: #888;
-                            }
-                            .event-name {
-                                font-size: 20px;
-                                line-height: 1.2;
-                            }
-                            .address {
-                                display: flex;
-                                gap: 4px;
-                                padding-bottom: 12px;
-                                border-bottom: 1px solid #ccc;
-                                .fa-location-dot {
-                                    color: $primaryColor-500;
-                                }
-                                p {
-                                    font-size: 16px;
-                                }
-                            }
-                            .tags {
-                                color: #888;
-                                font-size: 16px;
+                        .event-ctrl{
+                            .place-tags{
                                 display: flex;
                                 gap: 12px;
-                                .place-tag {}
-                                .type-tag {}
+                                .tag {
+                                    text-align: center;
+                                    padding: 8px 0;
+                                    font-size: 16px;
+                                    color: white;
+                                    width: 100px;
+                                    border: 2px solid white;
+                                    border-radius: 999px;
+                                    cursor: pointer;
+                                }
+                            }
+                            .select-date {}
+                        }
+                    }
+    
+                    // 活動項目卡片區
+                    .event-list {
+                        display: flex;
+                        flex-wrap: wrap;
+                        // justify-content: space-between;
+                        justify-content: center;
+                        gap: 40px;
+                        .event-card {
+                            cursor: pointer;
+                            width: 320px;
+                            border-radius: 24px;
+                            overflow: hidden;
+                            img {
+                                display: block;
+                                height: 200px;
+                                object-fit: cover;
+                            }
+                            .card-content {
+                                background-color: #fff;
+                                padding: 16px;
+                                display: flex;
+                                flex-direction: column;
+                                gap: 12px;
+                                height: 100%;
+                                .date {
+                                    font-size: 14px;
+                                    color: #888;
+                                }
+                                .event-name {
+                                    font-size: 20px;
+                                    line-height: 1.2;
+                                    font-weight: bold;
+                                    white-space: nowrap;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                }
+                                .address {
+                                    display: flex;
+                                    gap: 4px;
+                                    padding-bottom: 12px;
+                                    border-bottom: 1px solid #ccc;
+                                    .fa-location-dot {
+                                        color: $primaryColor-500;
+                                    }
+                                    p {
+                                        font-size: 16px;
+                                    }
+                                }
+                                .tags {
+                                    color: #888;
+                                    font-size: 16px;
+                                    display: flex;
+                                    gap: 12px;
+                                    .place-tag {}
+                                    .type-tag {}
+                                }
                             }
                         }
                     }
                 }
             }
+
         }
 
 

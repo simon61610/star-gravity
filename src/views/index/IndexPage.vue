@@ -29,8 +29,6 @@ onMounted(() => {     //掛載vanta特效
   if (container) {
     meteorInterval = setInterval(createMeteor, 1000) // 300ms 一顆
   }
-  
-
 })
 
 // 「清理」函式，同時給路由切換與元件卸載呼叫
@@ -40,7 +38,10 @@ function cleanup() {
     meteorInterval = null
   }
   if (vantaEffect.value && typeof vantaEffect.value.destroy === 'function') {
-    try { vantaEffect.value.destroy() } catch (e) {}
+    try { vantaEffect.value.destroy() } 
+    catch (e) {
+      console.error('vanta特效清除失敗')
+    }
     vantaEffect.value = null
   }
   container = null
@@ -64,7 +65,7 @@ function createMeteor(){
         const meteor = document.createElement('div');  //創造一個dev
         meteor.classList.add('meteor');   //用classList套用shooting的class
 
-        meteor.style.top = -50+Math.random()*(window.innerHeight/2) + 'px'; //.style動態修改位置   後面位置隨機生成+字串px 
+        meteor.style.top = -70+Math.random()*(window.innerHeight/2) + 'px'; //.style動態修改位置   後面位置隨機生成+字串px 
         meteor.style.left = Math.random()*window.innerWidth + 'px';
 
         meteor.addEventListener('animationend', () => {     //監聽動畫

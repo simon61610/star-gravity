@@ -120,7 +120,7 @@ const routes = [
 
 // ------------------ 星星活動 starevent ------------------
 {path: '/events', name: 'events', component: EventsPage},
-{path: '/eventdetail', name: 'eventdetail', component: EventDetailPage},
+{path: '/events/:id', name: 'event', component: EventDetailPage},
 {path: '/eventregistration', name: 'eventregistration', component: EventRegistrationPage},
 {path: '/eventsuccess', name: 'eventsuccess', component: EventRegistrationSuccessPage},
 
@@ -185,7 +185,7 @@ const routes = [
         accent2: '#dc59acbc',       // 外環漸層起點
         glass: 'rgba(231, 149, 149, 0.69)', // 玻璃擬態底色
         glassBorder: 'rgba(255, 255, 255, 0.3)', // 玻璃擬態邊線
-        moon: '#b1c83cff' ,      // 月面顏色
+        moon: '#22b98cff' ,      // 月面顏色
         ring:'#13bb3dff'       
         }  
       }
@@ -290,14 +290,12 @@ router.beforeEach((to,from,next) => {
   const token = localStorage.getItem('admin_token') //定義一個token 到 localStorage 裡面去取出 admin_token 的值
   if(!token && to.meta.requiresAuth){ 
     next({name:'AdminLoginPage'}) 
-    }    //如果沒有token,且是需要驗證的頁面,就跳轉到登入頁面 也可以寫{/path: '/AdminloginPage'}
-
+    }    
+  //如果沒有token,且是需要驗證的頁面,就跳轉到登入頁面 也可以寫{/path: '/AdminloginPage'}
   // } else{
   //   next()  //不須驗證頁面依上面設定跳轉畫面
   // }
-
-
-                    
+                   
   if (to.meta.useLoader === true) {      // 預設不顯示：只有 true 才顯示        
     show({                                                  // 顯示 Loader
       progress: 15,                                         // 初始進度
@@ -306,12 +304,10 @@ router.beforeEach((to,from,next) => {
       logoText: to.meta.loaderLogo                          // 頁面自訂徽章（若有）
     })
   }
-
   next()                                                    // 繼續導航
-
 })
 
-
+  //使用後置守門員 用於loading動畫結束(沒寫會一直持續loading)
   router.afterEach(() => {
   if (loader.active) {
     let p = loader.progress

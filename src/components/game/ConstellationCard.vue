@@ -2,9 +2,6 @@
 import StarsCanvas from '@/components/game/StarsCanvas.vue'
 import { ref } from 'vue'
 
-
-
-
 const props = defineProps({
   constellation: { 
     type: Object,
@@ -15,11 +12,13 @@ const props = defineProps({
 
 const canvasRef = ref(null)
 
+//呼叫星連星程式
 function drawNextLine() {
   console.log(" Card.drawNextLine() 被呼叫了")
   canvasRef.value?.drawNext()
 }
 
+//呼叫reset程式
 const resetLines = () => {
   canvasRef.value?.resetLines()
 }
