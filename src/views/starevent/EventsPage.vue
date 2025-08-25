@@ -67,7 +67,7 @@ const placeTags = [
                     <!-- 活動項目卡片區 -->
                     <div class="event-list">
                         <div class="event-card" v-for="event in eventlist">
-                            <img :src="event.imgurl" alt="">
+                            <img :src="event.imgurl[0]" alt="">
                             <div class="card-content">
                                 <div class="date">{{ event.date }}</div>
                                 <h2 class="event-name">{{ event.title }}</h2>
@@ -218,6 +218,7 @@ const placeTags = [
                             overflow: hidden;
                             img {
                                 display: block;
+                                height: 200px;
                             }
                             .card-content {
                                 background-color: #fff;
