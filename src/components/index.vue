@@ -1,5 +1,5 @@
 <script setup>
-import logo from '@/assets/logos/logo.svg';
+import logo from '@/assets/logos/logo-admin.svg';
 </script>
 
 <template>
@@ -9,13 +9,13 @@ import logo from '@/assets/logos/logo.svg';
     </header>
 
     <div class="main">
-        <div class="front">
+        <router-link to="/home" class="front">
             前台
-        </div>
+        </router-link>
             
-        <div class="Back">
+        <router-link to="/AdminLoginPage" class="back">
             後台
-        </div>
+        </router-link>
     </div>
 
     <footer>
@@ -46,32 +46,88 @@ margin-bottom: 100px
 }
 
 .main{
-    margin-top: 60px;
     display: flex;
-    gap: 250px;
+    gap:200px;
     .front,
-    .Back{
-    width: 200px;  /* 添加寬度 */
-    height: 200px; /* 添加高度 */
-    background-color: #285c96;  
-    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: aliceblue;
-    font-size: 20px;
-         
-        &:hover {
-        transform: scale(1.1);
-        filter: brightness(1.2);
+    .back {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        font-weight: bold;
+        color: white;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease, filter 0.3s ease;
+        width: 200px;
+        height: 200px;
+        animation: twinkle 2s infinite alternate ease-in;
+        text-decoration: none;
 
+
+        clip-path: polygon(
+        50% 0%,
+        61% 35%,
+        98% 35%,
+        68% 57%,
+        79% 91%,
+        50% 70%,
+        21% 91%,
+        32% 57%,
+        2% 35%,
+        39% 35%
+        ); // 五角星
+
+        &:hover {
+        transform: scale(1.2) rotate(10deg);
+        filter: brightness(1.3);
         }
-        
     }
 
-        
-}
+  .front {
+    background: linear-gradient(145deg, #fbc531, #e1b12c); // 金黃色漸層
+  }
 
+  .back {
+    background: linear-gradient(145deg, #4b6cb7, #182848); // 藍紫夜空漸層
+    animation-delay: 1s
+  }
+
+  @keyframes twinkle 
+    {
+        0%{
+            filter: brightness(0.7);
+        }
+        
+        100%{
+            filter: brightness(1.4);
+        }
+    }
+}
+    // margin-top: 60px;
+    // display: flex;
+    // gap: 250px;
+    // .front,
+    // .Back{
+    // width: 200px;  /* 添加寬度 */
+    // height: 200px; /* 添加高度 */
+    // background-color: #285c96;  
+    // clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    // display: flex;
+    // justify-content: center;
+    // align-items: center;
+    // color: aliceblue;
+    // font-size: 20px;
+         
+    //     &:hover {
+    //     transform: scale(1.1);
+    //     filter: brightness(1.2);
+
+    //     }
+        
+    // }
+
+        
 
 footer{
             
@@ -87,11 +143,7 @@ margin-bottom: 20px;
     padding: 20px;
     font-size: 16px;
     margin-top: 150px;
-
     }
-            
 }
         
-
-
 </style>

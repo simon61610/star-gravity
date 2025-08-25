@@ -136,19 +136,21 @@
 
                     li {
                         font-size: $pcChFont-H4;
+                        padding-left: 20px;
                         &:hover {
                             text-decoration: underline;
                         }
 
                         // 裝飾性方塊
-                        &::before {
+                        /* &::before {
                             content: '';
                             display: inline-block;
-                            width: 16px;
-                            height: 16px;
+                            width: 8px;
+                            height: 8px;
                             background-color: $primaryColor-100;
                             margin-right: 12px;
-                        }
+                            border-radius: 999px;
+                        } */
                     }
                 }
             }

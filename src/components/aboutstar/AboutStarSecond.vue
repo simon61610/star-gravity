@@ -131,5 +131,60 @@
     font-size: $pcChFont-p;
     line-height: $linHeight-p;
 }
+
+@media screen and (max-width: 433px) {
+    /* 整體容器：讓卡片可以左右滑動 */
+    .cards {
+        margin: 16px 0 0;              /* 拿掉左側 100px，改用小外距 */
+        padding: 0 12px;               /* 左右留白當作內邊距 */
+        gap: 12px;                     /* 卡片間距大一點比較好滑 */
+        overflow-x: auto;              /* 橫向卷軸 */
+        overflow-y: visible;
+        scroll-snap-type: x mandatory; /* 捲動對準卡片 */
+        -webkit-overflow-scrolling: touch;
+    }
+    /* 隱藏捲軸（仍可滑動） */
+    .cards::-webkit-scrollbar {
+        display: none;
+    }
+    .cards {
+        scrollbar-width: none; 
+    }
+    /* 每張卡片：固定視窗寬度的 80%，滑動時對齊置中 */
+    .cardall{
+        flex: 0 0 65vw;                /* 佔 80% 視窗寬 */
+        max-width: 300px;              /* 上限避免超大 */
+        height: auto;                  /* 高度跟著內容 */
+        aspect-ratio: 5 / 7;           /* 大致比例接近原設計 */
+        scroll-snap-align: center;     /* 對齊中心 */
+        border-radius: 16px;           /* 手機圓角更柔和 */
+    }
+    .cardall img {
+        height: 100%;
+        border-radius: 16px;
+    }
+    /* 文字區塊調整：縮小字級、提升可讀性 */
+    .area {
+        padding: 10px;
+        background: linear-gradient(180deg, rgba(0,0,0,.48), rgba(0,0,0,.32));
+    }
+    .area h4{
+        font-size: $pcChFont-p;
+        margin-top: 10px;
+    }
+    .area p{
+        font-size: 16px;
+        line-height: 1.6;
+    }
+    /* 標題行（5. 可觀測到的現象）微調間距 */
+    .container-five{
+        padding-top: 30px;
+        gap: 8px;
+    }
+    .container-five h2{
+        padding: 2px 8px;
+    }
+}
+
 </style>
 

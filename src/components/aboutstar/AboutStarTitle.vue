@@ -28,10 +28,15 @@
     margin: 0 auto;
     max-width: 1200px;
     width: 100%;
-    justify-content: center;
-    padding-left: 20px;
+    // justify-content: center;
+    // padding-left: 20px;
+    // display: flex;
+    // gap: 30px;
     display: flex;
+    justify-content: center;
+    align-items: center;
     gap: 30px;
+    padding: 0 20px;
 }
 .banner-left-one{
     height: 200px;
@@ -51,6 +56,32 @@
     height: auto;
 }
 
+
+/* 斷點430 */
+@media screen and (max-width: 433px) {
+    .wrapper{
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+        padding: 0 0;
+    }
+    .banner-left-one{
+        height: auto;
+        padding-top: 40px;
+        text-align: start;
+    }
+    .banner-left-one h1{
+        font-size: 105px;
+    }
+    .banner-left-one h2{
+        font-size: $pcChFont-p;
+    }
+    .banner-right img{
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+}
 </style>
 
 <script setup>

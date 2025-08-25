@@ -16,3 +16,16 @@
   font-family: "Font Awesome 6 Brands" !important;
   font-weight: 900 !important;
 }
+
+// ------------- 吐司效果 -----------
+// transition 樣式
+    .fadeShopToast-enter-active,
+    .fadeShopToast-leave-active {
+        transition: all 0.5s ease;
+    }
+
+    .fadeShopToast-enter-from,
+    .fadeShopToast-leave-to {
+        opacity: 0;
+        top: 0;
+    }

@@ -344,4 +344,98 @@
     font-size: $pcChFont-p;
     line-height: $linHeight-p;
 }
+
+/* 斷點430 */
+@media screen and (max-width: 433px) {
+    /* 卡片：3欄 → 單欄 */
+    .cards{
+        width: 100%;
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    .card{
+        width: 100%;
+        padding: 16px;
+        max-width: 220px;
+        margin: 0 auto;
+    }
+    .card-top, .card-right{
+        width: 100%;
+        max-width: 200px;
+        margin-left: 7px;
+        text-align: center;
+    }
+    .card-right img{
+        padding-left: 10px;
+    }
+    .list{
+        width: 100%;
+        margin: 10px auto 0;
+    }
+    /* 月相：左右 → 上下 */
+    .container-two{
+        width: 100%;
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+    .container-two img {
+        width: 250px;
+        height: auto;
+        padding-top: 20px;
+        margin: 0 auto; 
+    }
+    .lookmoonall{
+        // padding: 0;
+    }
+    /* 文字區 */
+    .tips{
+        font-size: $pcChFont-p;
+        text-align: start;
+        margin-right: 0;
+        padding-left: 16px;
+    }
+    /* 看星星的地方：左右 → 上下 */
+    .container-third {
+        width: 100%;
+        flex-direction: column-reverse;
+        gap: 20px;
+        text-align: center;
+    }
+    .spaceall{
+        // width: 100%;
+        // padding: 0;
+        // margin: 0;
+    }
+    .starsapce img{
+        width: 80%;
+        max-width: 280px;
+        margin: 0 auto;
+        padding-top: 20px;
+    }
+    /* 觀星季節：左右 → 上下 */
+    .container-four{
+        width: 100%;
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+    .season img{
+        width: 80%;
+        max-width: 280px;
+        height: auto;
+        margin: 0 auto;
+    }
+    .seasonall {
+        // margin-top: 10px;
+    }
+    
+
+
+}
+
+
+
+
+
 </style>

@@ -1,9 +1,11 @@
 <script setup>
     // 組件
     import Pagination from '@/components/common/Pagination.vue';
+    import shopToast from '@/components/common/shopToast.vue';
     // 方法
     import { ref, watch, computed } from 'vue'
     import bus from '@/composables/useMitt';
+    import { showToast } from '@/composables/useToast';
     // 假資料
     import products from '@/data/products';
     
@@ -23,6 +25,8 @@
     const currentPage = ref(1) // 預設第一頁
     const pageSize= ref(16) // 每頁顯示幾筆
 
+    // const toast = ref(false)
+
 // -------------------------------------------------------------------------------
     // 分類重選，回到第一頁
     // watch(偵測的資料, 函數)
@@ -33,6 +37,14 @@
             behavior: 'smooth' // 平滑滾動 
         })
     })
+
+    // 吐司出現的function
+    /* const showToast = () => {
+        toast.value = true
+        setTimeout(() => {
+            toast.value = false
+        }, 2000)
+    } */
 
     // =====================================================
     // ==================== 商品類型篩選 ====================
@@ -57,6 +69,10 @@
         const start = (currentPage.value - 1) * pageSize.value // 從第幾筆開始
         return filteredItems.value.slice(start, start + pageSize.value) // 顯示的商品陣列
     })
+
+    function pageChange(newPage) {
+        currentPage.value = newPage
+    }
 
 
 
@@ -105,12 +121,10 @@
 
         // ===============================================================================
         bus.emit('notifyUpdateCart') // 通知 Header 更新購物車數量
+
+        
+        showToast('已成功加入購物車!')
     }
-
-
-
-
-
 
 </script>
 
@@ -119,19 +133,8 @@
 
 <template>
     <section>
-        <!-- ----------------------- 購物車區塊 ----------------------- -->
-        <!-- <section class="cart">
-            <h1>這是購物車</h1>
-            <div class="cartbox">
-                <h2>商品名稱：</h2>
-                <p>商品數量：</p>
-                <p>商品金額：</p>
-                <h2>總計數量：</h2>
-                <h2>總計金額：</h2>
-            </div>
-        </section> -->
-        <!-- ----------------------- 購物車區塊 ----------------------- -->
 
+        <shopToast />
 
         <div class="product-items">
             <div class="item__card" v-for="( item, index ) in showItems"> <!-- 用顯示的商品陣列跑 v-for -->
@@ -152,8 +155,11 @@
         </div>
         <div>  
             <Pagination
-                v-model="currentPage"
-                v-model:pageSize="pageSize"
+                :modelValue="currentPage"
+                @update:modelValue="pageChange"
+
+                :pageSize="pageSize"
+
                 :total="filteredItems.length"
             />
         </div>
@@ -162,6 +168,7 @@
 
 <style scoped lang="scss">
     @import '@/assets/styles/main.scss';
+
     // 共用
     .router-link {
         text-decoration: none;
@@ -175,7 +182,7 @@
         gap: 40px;
 
         .item__card {
-            border: 1px solid red;
+            // border: 1px solid red;
             max-width: 200px;
             cursor: pointer;
             text-align: center;

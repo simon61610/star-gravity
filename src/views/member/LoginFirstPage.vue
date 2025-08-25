@@ -1,15 +1,15 @@
 <template>     <!----登入畫面----->
-    <div class="login-all">
-        <div class="login-one decTitle--big" >
+    <div class="login-all" >
+        <div class="login-one decTitle--big" v-if="isAuthBg">
             <h2>LOGIN</h2>
         </div>
 
-        <div class="tabs">
-            <button class="tabs-btn-active button--normal" data-tab="login">登入</button>
-            <button class="tabs-btn button--normal"  data-tab="register">註冊</button>    <!----連結到註冊畫面----->
+        <div class="tabs" v-if="isAuthBg">
+            <RouterLink class="tab" to="/loginfirst" data-tab="login">登入</RouterLink>
+            <RouterLink class="tab" to="/loginfirst/register" data-tab="register">註冊</RouterLink>
         </div>
 
-        <div class="area">
+        <div class="area" v-if="isLogin">
             <form @submit.prevent="handleSubmit">
                 <div class="email-area">
                     <input type="email" class="email-1" placeholder="請輸入信箱" v-model="email" required />
@@ -21,32 +21,31 @@
                       class="custom-placeholder"
                       style="width: 578px; height: 50px; font-size: 14px;"
                       type="password"
-                      placeholder="請輸入密碼"
+                      placeholder="請輸入密碼(至少6碼)"
                       show-password
                     />
                 </div> 
                         
                 <div class="captcha-group">
                     <!-- 輸入驗證碼框 -->         
-                    <input v-model="captcha" type="text" class="captcha-1" placeholder="輸入驗證碼" required />
+                    <input v-model="captcha" type="text" class="captcha-1" placeholder="輸入驗證碼(不分大小寫)" required />
             
                     <!-- 灰色驗證碼格子 -->
                     <div class="captcha-code">{{ captchaCode }}</div>
             
                     <!-- 刷新按鈕 -->
-                    <button class="refresh-btn" @click="captchaCode = genCode()">
-                        <img src="@/assets/icons/refresh.svg" alt="">
+                    <button type="button" class="refresh-btn" @click.prevent="refreshCode">
+                        <img src="@/assets/icons/refresh.svg" alt="" />
                     </button>
                 </div>
                 <div class="forget-area">
                     <!--登入按鈕 -->
-                    <button class="login-btn" type="submit">登入</button>
+                    <button class="login-btn" type="submit" :disabled="loading">確認</button>
     
                     <!--忘記密碼 --> <!----連結到忘記密碼forget畫面----->
                     <div class="forgot">
-                        <router-link to="/ ">忘記密碼?</router-link>
+                        <RouterLink class="forget-link"   to="/loginfirst/forget">忘記密碼?</RouterLink>
                     </div>
-
                 </div>
             </form>
 
@@ -67,6 +66,9 @@
                 </button>
             </div>
         </div> 
+        <section class="content"  v-else>
+            <RouterView />
+        </section>
     </div>
 </template>
 
@@ -95,21 +97,28 @@
     text-align: center;
     padding-top: 15px;
 }
-.tabs-btn-active{    // 登入鈕
+/*------登入、註冊鈕------------*/
+.tab{   
     border: none;
     width: 280px;
     height: 45px;
-    background-color: #5C4B90;
+    background-color: $primaryColor-500; 
     font-size: $pcChFont-H4;
     color: $FontColor-white;
+    display: inline-flex;  
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;  
+    border-radius: 999px; 
 }
-.tabs-btn{            // 註冊鈕
-    border: none;
-    width: 280px;
-    height: 45px;
-    background-color: #5C4B90;   
-    font-size: $pcChFont-H4;
-    color: $FontColor-white;
+.tab:hover{ 
+    filter: brightness(1.05); 
+}
+/* 當前所在頁：變淺紫（表示已選中）*/
+.tabs .tab.router-link-exact-active{
+    background: #5C4B90;        
+    cursor: default;              /* 提示不可點 */
+    filter: none;
 }
 .area{
     width: 600px;
@@ -117,7 +126,7 @@
     margin-top: 20px;
     padding-left: 16px;
 }
-// 信箱
+/*------信箱------------*/
 .email-area{
    margin-top: 20px;
    margin-bottom: 20px;
@@ -128,7 +137,7 @@
     font-size: $pcChFont-small;
     padding-left: 14px;
 }    
-// 密碼
+/*------密碼------------*/
 .password-1{
     width: 558px;
     height: 50px;
@@ -139,7 +148,7 @@
     color: #000; 
     opacity: 0.5; 
 }
-// 驗證碼
+/*------驗證碼------------*/
 .captcha-group{
     display: flex;
     gap: 10px;
@@ -152,7 +161,7 @@
     font-size: $pcChFont-small;
     padding-left: 12px;
 }
-// 灰色驗證碼
+/*------灰色驗證碼------------*/
 .captcha-code{   
     background-color: $FontColor-gray;
     font-size: $pcChFont-small;
@@ -164,6 +173,7 @@
 .refresh-btn{
     background-color: transparent;
     border: none;
+    cursor: pointer;
 }
 .refresh-btn img{
     width: 30px;
@@ -184,6 +194,10 @@
     width: 245px;
     height: 45px;
 }
+.login-btn:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
 .forgot{
     font-size: $pcChFont-p;
     margin-top: 16px;
@@ -195,6 +209,10 @@
 .forgot a{
     color: #ffffff;
     text-decoration: none;
+}
+.forget-link {
+  color: #ffffff;
+  text-decoration: none;
 }
 .or {
     display: flex;
@@ -241,19 +259,71 @@
 </style>
 
 <script setup>
+    import { useRoute, useRouter } from 'vue-router'
+    import { ref, computed } from 'vue'
 
-    import { ref } from 'vue'
+    const router = useRouter()
+    const route = useRoute()
 
     const email = ref('')
     const pwd1 = ref('')
     const captcha = ref('')
+    const loading = ref(false)
 
+    // 驗證碼
     const captchaCode = ref('TJD102')
     const genCode = () => Math.random().toString(36).slice(2, 8).toUpperCase()
 
-    const handleSubmit = () => {
-    // if (captcha.value !== captchaCode.value) return;
-    alert('登入成功！')
+    /* 基本檢查參數 */
+    const MIN_PWD_LEN = 6
+    const emailRe = /\S+@\S+\.\S+/
+
+    function refreshCode() {
+        captchaCode.value = genCode()
     }
 
+    // 當前路徑剛好是 /loginfirst 才顯示登入表單
+    const showLogin = computed(() => route.path === '/loginfirst')
+
+    // 判斷在哪頁
+    const isLogin    = computed(() => route.path === '/loginfirst')
+    const isRegister = computed(() => route.path === '/loginfirst/register')
+    const isAuthBg   = computed(() => isLogin.value || isRegister.value) // ← 登入/註冊都有 LOGIN 大字與背景
+    // const isOverlay  = computed(() => new Set(['forget','forgot','resetpassword']).has(route.name))
+
+    /* 按下確認才會執行 */
+    const handleSubmit = async () => {
+        if (!emailRe.test(email.value)) {
+            alert('請輸入有效的 Email')
+            return
+        }
+        if (pwd1.value.length < MIN_PWD_LEN) {
+            alert(`密碼至少 ${MIN_PWD_LEN} 碼`)
+            return
+        }
+        if (captcha.value.trim().toUpperCase() !== captchaCode.value.trim().toUpperCase()) {
+            alert('驗證碼錯誤')
+            return
+        }
+
+        loading.value = true
+        try {
+            // TODO: 這裡換成你的後端 API
+            // await axios.post('/api/login', { email: email.value, password: pwd1.value })
+
+            // demo：模擬呼叫
+            await new Promise(r => setTimeout(r, 500))
+
+            // demo：存登入狀態（若有路由守衛可使用）
+            localStorage.setItem('auth', '1')
+
+            // 登入成功 → 導到會員中心
+            // 若你的實際路由名稱不同，改這裡
+            router.replace('/membercenter/personal')
+        } catch (e) {
+            alert('登入失敗，請稍後再試')
+        } finally {
+            loading.value = false
+        }
+    }
 </script>

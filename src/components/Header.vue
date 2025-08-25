@@ -1,5 +1,6 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted,watch } from 'vue'
+import { useRoute } from 'vue-router'
 import bus from '@/composables/useMitt'
 
 import products from '@/data/products'
@@ -7,9 +8,21 @@ import products from '@/data/products'
 import  logo from '@/assets/logos/logo.svg'
 const active = ref(false)
 
+const route = useRoute()
+console.log("route toRaw:", JSON.parse(JSON.stringify(route)))
+
 function toggleMenu() {
   active.value = !active.value
 }
+//監聽所有路徑讓麵包選單切頁關閉
+watch(
+  function () {
+    return route.fullPath   // 這裡是「監聽來源」
+  },
+  function () {
+    active.value = false    // 這裡是「回調函式」
+  }
+)
 
     // =====================================================
     // ==================== 更新購物車數量 ====================
@@ -45,17 +58,6 @@ function toggleMenu() {
                 let quantity = Math.round(totalPrice / originalSpePrice)
 
                 totalQuantity += quantity
-
-
-
-                /* const productId = parseInt(items[i].replace('P',''))
-                const product = products.find(p => p.id === productId)
-                const originalPrice = product ? product.specialPrice : 1
-
-                let quantity = Math.round(totalPrice / originalPrice)
-                totalQuantity += quantity */
-                
-                
             }
         }
 
@@ -84,14 +86,14 @@ function toggleMenu() {
                 <router-link to="/"><img :src="logo" alt="星引力logo" width="120" height="50"/></router-link>
             </div>
             <ul>
-                <li><router-link to="/">觀星初學指南</router-link></li>
+                <li><router-link to="/about">觀星初學指南</router-link></li>
                 <li><router-link to="/Newpage">天文快訊</router-link></li>       <!--<li><router-link :to="{ name: 'NewpageView' }">天文快訊</router-link></li>--->
-                <li><router-link to="/">星視野</router-link></li>
+                <li><router-link to="/gamesky">星視野</router-link></li>
                 <li><router-link to="/mapfirst">星據點</router-link></li>
                 <li><router-link to="/">星遊戲</router-link></li>
-                <li><router-link to="/">星星活動</router-link></li>
+                <li><router-link to="/events">星星活動</router-link></li>
                 <li><router-link to="/shop">星空小舖</router-link></li>               
-                <li><router-link to="/"><i class="fa-solid fa-user fa-lg"></i></router-link></li>
+                <li><router-link to="/loginfirst"><i class="fa-solid fa-user fa-lg"></i></router-link></li>
                 <li><router-link to="/"><i class="fa-solid fa-arrow-right-from-bracket"></i></router-link></li>
                 <li>
                     <router-link to="/cartpage/cart">

@@ -1,4 +1,86 @@
 <!----活動列表---->
+<script setup>
+    import { ref, computed, onMounted, watch } from 'vue'
+    import Pagination from '@/components/common/Pagination.vue'
+
+    // 定義 props
+    const props = defineProps({
+        data:     { type: Array,  default: () => [] },
+        columns:  { type: Array,  default: () => [] },
+    })
+    const emit = defineEmits(['select'])
+
+    const activeKey = ref('')
+    onMounted(() => { activeKey.value = 'profile'; emit('select', 'profile') })
+    function selectItem(key){ activeKey.value = key; emit('select', key) }
+
+    // 內建欄位（外部沒傳 columns 時用）
+    const builtinColumns = [
+    { label: '活動名稱', prop: 'activity_name' },
+    { label: '日期&時間', prop: 'date_time' },
+    { label: '地點', prop: 'adress' },
+    { label: '狀態', prop: 'state', align: 'center' },
+    ]
+    const columnDefs = computed(() => (props.columns?.length ? props.columns : builtinColumns))
+
+    // 內建資料（之後可改成 props.data 或 API 結果）
+    const eventtable = ref([
+    { activity_name: '流星雨', date_time: '20250816 19:30', adress: '陽明山', state: '已完成' },
+    { activity_name: '夏季大三角', date_time: '20250825 19:30', adress: '阿里山', state: '進行中' },
+    { activity_name: '賞銀河', date_time: '', adress: '', state: '' },
+    { activity_name: '擁抱宇宙', date_time: '', adress: '', state: '' },
+    { activity_name: '墾丁星夜', date_time: '', adress: '', state: '' },
+    { activity_name: '台東最美星空', date_time: '', adress: '', state: '' },
+    { activity_name: '跟羊一起看星星', date_time: '', adress: '', state: '' },
+    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    ])
+
+    // 單一資料來源：優先用外部 props.data，否則用內建
+    const dataSource = computed(() => eventtable.value) // ← 先用內建資料
+
+    // 分頁
+    const eventPage = ref(1)
+    const pageSize    = ref(8)
+
+    // const handleEdit = (index, row) => {
+    // console.log(index, row)
+    // }
+
+    // 總筆數（給 Pagination 的 :total）
+    const filteredTotal = computed(() => dataSource.value.length)
+
+    // 表格顯示資料（按頁切 slice）
+    const showATable = computed(() => {
+        const start = (eventPage.value - 1) * pageSize.value
+        return dataSource.value.slice(start, start + pageSize.value)
+    })
+    // 接住子元件丟回來的新頁碼
+    function pagechange(newpage) {
+        eventPage.value = newpage
+        // 想要就加：切頁回到頂部
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+
+    // 若資料量變動，回到第一頁（可保險）
+    watch(dataSource, () => { eventPage.value = 1 })
+
+</script>
+
+
 <template>  
     <!-----右邊表格-------->
     <div class="event-table-wrapper">
@@ -11,9 +93,14 @@
             
             </el-table>
         </section>   
-        <!-----分頁靠右-------->
+        <!-----分頁-------->
         <div class="pager">
-            <el-pagination background layout="prev, pager, next" :total="24" />
+           <Pagination
+                :modelValue="eventPage"
+                @update:modelValue="pagechange"
+                :page-size="pageSize"
+                :total="filteredTotal"
+            />
         </div>       
     </div>
   
@@ -44,75 +131,12 @@
 // 分頁
 .pager{
     width: 800px;
-    display: flex;
-    justify-content: flex-end;  /* 靠最右邊 */
-    padding-right: 4px; 
+    // display: flex;
+    justify-content: center;  
+    // padding-right: 4px; 
     padding-top: 10px;
 }
 </style>
-
-<script setup>
-    import { ref, computed, onMounted } from 'vue'
-
-    // 定義 props
-    const props = defineProps({
-    // username: { type: String, default: '小姐/先生' },
-    // photo:    { type: String, default: '/src/assets/icons/account.svg' },
-    data:     { type: Array,  default: () => [] },
-    columns:  { type: Array,  default: () => [] },
-    })
-
-    const emit = defineEmits(['select'])
-    const activeKey = ref('')
-    onMounted(() => { activeKey.value = 'profile'; emit('select', 'profile') })
-    function selectItem(key){ activeKey.value = key; emit('select', key) }
-
-    // 內建欄位（外部沒傳 columns 時用）
-    const builtinColumns = [
-    { label: '活動名稱', prop: 'activity_name' },
-    { label: '日期&時間', prop: 'date_time' },
-    { label: '地點', prop: 'adress' },
-    { label: '狀態', prop: 'state', align: 'center' },
-    ]
-    const columnDefs = computed(() => (props.columns?.length ? props.columns : builtinColumns))
-
-    // 內建資料（外部沒傳 data 時用，要幾行就寫幾行
-    const eventtable = ref([
-    { activity_name: '流星雨', date_time: '20250816 19:30', adress: '陽明山', state: '已完成' },
-    { activity_name: '夏季大三角', date_time: '20250825 19:30', adress: '阿里山', state: '進行中' },
-    { activity_name: '賞銀河', date_time: '', adress: '', state: '' },
-    { activity_name: '擁抱宇宙', date_time: '', adress: '', state: '' },
-    { activity_name: '墾丁星夜', date_time: '', adress: '', state: '' },
-    { activity_name: '台東最美星空', date_time: '', adress: '', state: '' },
-    { activity_name: '跟羊一起看星星', date_time: '', adress: '', state: '' },
-    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    ])
-
-    // 單一資料來源：優先用外部 props.data，否則用內建
-    // const dataSource = computed(() => (props.data?.length ? props.data : ordertable.value))
-    const dataSource = computed(() => eventtable.value) // ← 先用內建資料
-   
-    // 表格資料來源（先不切頁）
-    // const showATable = computed(() => dataSource.value)
-    // 如果想讓分頁顯示正確總筆數，就加這行，模板把 :total 改成 filteredTotal
-    // const filteredTotal = computed(() => dataSource.value.length)
-
-    // 分頁
-    const currentPage = ref(1)
-    const pageSize    = ref(8)
-
-    const handleEdit = (index, row) => {
-    console.log(index, row)
-    }
-
-    // 之後想開分頁再把 showATable 改成用 slice
-    const showATable = computed(() => {
-    const start = (currentPage.value - 1) * pageSize.value
-    return dataSource.value.slice(start, start + pageSize.value)
-    })
-
-</script>
-
 
 
 

@@ -1,9 +1,9 @@
 <template>      <!----註冊畫面----->
-    <div class="register-all">
+    <!-- <div class="register-all"> -->
 
         <div class="tabs">
-            <button class="tabs-btn-active button--normal" data-tab="login">登入</button>
-            <button class="tabs-btn button--normal"  data-tab="register">註冊</button>
+            <!-- <button class="tabs-btn-active button--normal" data-tab="login">登入</button>
+            <button class="tabs-btn button--normal"  data-tab="register">註冊</button> -->
         </div>
 
         <div class="second-area">
@@ -57,7 +57,7 @@
                           class="custom-placeholder"
                           style="width: 578px; height: 50px; font-size: 14px;"
                           type="password"
-                          placeholder="請輸入密碼"
+                          placeholder="請輸入密碼(至少6碼)"
                           show-password
                         />
                     </div>
@@ -75,7 +75,7 @@
                 
                 <div class="captcha-group-1">
                     <!-- 輸入驗證碼框 -->
-                    <input v-model="captcha" type="text" class="captcha-2" placeholder="輸入驗證碼" required />
+                    <input v-model="captcha" type="text" class="captcha-2" placeholder="輸入驗證碼(不分大小寫)" required />
             
                     <!-- 灰色驗證碼格子 -->
                     <div class="captcha-code-1">{{ captchaCode }}</div>
@@ -91,7 +91,7 @@
             </form>
         </div>
     
-    </div>
+    <!-- </div> -->
 </template>
 
 
@@ -113,7 +113,7 @@
     gap: 12px;
     justify-content: center;
     text-align: center;
-    padding-top: 40px;
+    // padding-top: 40px;
 }
 .tabs-btn-active{    // 登入鈕
     border: none;
@@ -186,6 +186,9 @@
 .select-city{
     width: 277px;
     height: 50px;
+    padding-left: 14px;
+    font-size: $pcChFont-small;
+    color: #9aa0a6;
 }
 // 縣市區域字體大小
 .personal-city .select-city, .personal-city .select-city option {

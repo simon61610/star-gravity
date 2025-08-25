@@ -120,6 +120,60 @@
 .star-rating-table tbody tr + tr td{
     border-top: 1px solid rgba(255,255,255,0.15);
 }
+
+@media screen and (max-width: 433px) {
+    /* 父容器改直向，拿掉固定寬與左邊距 */
+    .magnitude{
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+        width: 100%;
+        margin-left: 0;
+        border-radius: 20px;
+        // padding: 12px;               /* 內距補一點空間 */
+    }
+    /* 左側說明區：滿版、置中 */
+    .magnitude-left{
+        width: 100%;
+        padding: 8px 0 0;
+        // text-align: center;
+    }
+    .magnitude-left h2{
+        font-size: $pcChFont-H3;
+    }
+    .magnitude-left p{
+        font-size: 16px;
+        line-height: 1.6;
+        text-align: center; 
+    }
+    /* 表格：可橫向滑動，避免爆版 */
+    .star-rating-table {
+        width: 100%;
+        display: block;              /* 讓 overflow-x 生效 */
+        overflow-x: auto;
+        white-space: nowrap;         /* 欄位不自動換行 */
+        font-size: 13px;
+        border-spacing: 0;    
+    }
+    .star-rating-table thead, 
+    .star-rating-table tbody,
+    .star-rating-table tr {
+        display: table;              /* 維持表格語意 */
+        width: 100%;
+        table-layout: fixed;
+    }
+
+
+
+
+}
+
+
+
+
+
+
+
 </style>
 
 <script setup>

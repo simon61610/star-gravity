@@ -14,6 +14,8 @@
     import { ref, reactive, computed } from 'vue'
     import { useRoute } from 'vue-router';
     import bus from '@/composables/useMitt';
+    import shopToast from '@/components/common/shopToast.vue';
+    import { showToast } from '@/composables/useToast';
 
     // 假資料
     import products from '@/data/products';
@@ -28,7 +30,7 @@
     // 路由
     const route = useRoute()
     const product = computed(() => {
-        return products.find((prod) => { return prod.id == route.params.id || null})
+        return products.find(prod => prod.id == route.params.id || null)
     })
     
 
@@ -47,6 +49,13 @@
     const isFollow = ref(false)
     const followProduct = () => {
         isFollow.value = !isFollow.value
+        
+        if(isFollow.value){
+            showToast('已加入收藏!')
+        }
+        if(!isFollow.value){
+            showToast('已取消收藏!')
+        }
     }
 
     // =====================================================
@@ -93,6 +102,8 @@
 
         // ===============================================================================
         bus.emit('notifyUpdateCart') // 通知 Header 更新購物車數量
+
+        showToast('已成功加入購物車!')
     }
 
 
@@ -105,6 +116,8 @@
 
 
 <template>
+    <shopToast />
+
     <section class="product-page">
         <ShopBanner />
         <Breadcrumbs />
@@ -136,8 +149,8 @@
                     <p class="detail-text__promotion">{{ product.promotion }}</p>
                     <p class="detail-text__marketing">{{ product.marketing }}</p>
                     <div class="product-price">
-                        <p class="product-price__special">NT$ {{ product.specialPrice }}</p>
                         <p class="product-price__nospecial">NT$ {{ product.price }}</p>
+                        <p class="product-price__special">NT$ {{ product.specialPrice }}</p>
                     </div>
                     <!-- 數量按鈕位置，暫時刪除 -->
                     <!-- <div class="qty-control">
@@ -287,7 +300,7 @@
                     gap: 12px;
                     font-size: $pcChFont-H4;
 
-                    p:last-child {
+                    &__nospecial {
                         color: #ccc;
                         text-decoration: line-through;
                     }

@@ -10,7 +10,7 @@ const router = useRouter()
 function login(){
     if(account.value === 'tjd102' && password.value === '20250827'){
         localStorage.setItem('admin_token', 'fake_admin_token=123456789') //設置一個假的token 名字admin_token ,值fake_admin_token=123456789
-        router.push('/AdminMemberPage') //正確就跳轉管理頁面
+        router.push('/AdminMemberPage') //正確就跳轉管理頁面 等於({ path: '/AdminMemberPage' })
     }
     else{
         alert('登入失敗請離開')
@@ -22,7 +22,7 @@ function login(){
 <template>
     <section class="admin-login-section">
         <figure class="admin-login-logo" >
-            <img :src="logoadmin" alt="">
+            <router-link to="/"><img :src="logoadmin" alt=""></router-link>
         </figure>
 
         <div class="admin-login-input">
