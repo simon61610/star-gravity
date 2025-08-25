@@ -84,23 +84,25 @@
     
     <!-----右邊評論-------->
     <div class="comment-area">
+        <div class="comment-box">
+            <div class="comment-1" v-for="r in showReviews" :key="r.id">
+                <h3>{{ r.title }}</h3>
+    
+                <span class="review-score">
+                    <img v-for="n in r.stars" :key="n" src="@/assets/icons/icon-filledStar.svg" alt="星星"/>
+                </span>
+    
+                <p class="review-text">
+                    {{ r.text }}
+                </p>
+    
+                <!-- 圖片來源改成用資料帶入 -->
+                <img class="review-photo" :src="r.photo" alt="照片">
+    
+                <!-- 刪除：改成傳 id，內部用 splice 刪陣列 -->
+                <button class="delete" @click="deleteReview(r.id)">刪除</button>
+            </div>
 
-        <div class="comment-1" v-for="r in showReviews" :key="r.id">
-            <h3>{{ r.title }}</h3>
-
-            <span class="review-score">
-                <img v-for="n in r.stars" :key="n" src="@/assets/icons/icon-filledStar.svg" alt="星星"/>
-            </span>
-
-            <p class="review-text">
-                {{ r.text }}
-            </p>
-
-            <!-- 圖片來源改成用資料帶入 -->
-            <img class="review-photo" :src="r.photo" alt="照片">
-
-            <!-- 刪除：改成傳 id，內部用 splice 刪陣列 -->
-            <button class="delete" @click="deleteReview(r.id)">刪除</button>
         </div>
     </div>
 
@@ -122,10 +124,17 @@
 // 右邊評論
 .comment-area{
     margin-top: -20px;
-    padding-left: 10px;
+    padding-left: 5px;
     padding-top: 10px;
+    padding-right: 5px;
     color: $FontColor-black;
     background-color: white;
+    width: 850px;
+    height: 540px;
+}
+.comment-box{
+    // border: 1px solid black;
+    margin: 0 auto;
 }
 .comment-area h3{
     font-size: $pcChFont-p;

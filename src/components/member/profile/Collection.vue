@@ -72,7 +72,7 @@
                 
                 <div class="photoall">
                     <div class="thumb">
-                        <img src="@assets/images/aboutstar/Mask group.png" alt="">
+                        <img src="../../../assets/images/shop/shop-banner.jpg" alt="望遠鏡">
                     </div>
         
                     <div class="down">
