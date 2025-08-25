@@ -30,7 +30,7 @@
     // 路由
     const route = useRoute()
     const product = computed(() => {
-        return products.find((prod) => { return prod.id == route.params.id || null})
+        return products.find(prod => prod.id == route.params.id || null)
     })
     
 

@@ -90,6 +90,7 @@ const placeTags = [
                     <!-- 活動項目卡片區 -->
                     <div class="event-list">
                         <div class="event-card" v-for="event in showItems">
+                            <RouterLink :to="`/events/${event.id}` "class="router-link" > 
                             <img :src="event.imgurl[0]" alt="">
                             <div class="card-content">
                                 <div class="date">{{ event.date }}</div>
@@ -103,6 +104,7 @@ const placeTags = [
                                     <div class="place-tag"># {{ event.place }}</div>
                                 </h3>
                             </div>
+                        </RouterLink>
                         </div>
                     </div>
 
@@ -128,6 +130,12 @@ const placeTags = [
 
 <style scoped lang="scss">
     @import '@/assets/styles/main.scss';
+
+    // 共用
+    .router-link {
+        text-decoration: none;
+        color: inherit;
+    }
 
     .eventhome-section {
         background-image: url(/images/events/event-bg.png);

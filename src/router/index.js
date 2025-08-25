@@ -120,7 +120,7 @@ const routes = [
 
 // ------------------ 星星活動 starevent ------------------
 {path: '/events', name: 'events', component: EventsPage},
-{path: '/eventdetail', name: 'eventdetail', component: EventDetailPage},
+{path: '/events/:id', name: 'event', component: EventDetailPage},
 {path: '/eventregistration', name: 'eventregistration', component: EventRegistrationPage},
 {path: '/eventsuccess', name: 'eventsuccess', component: EventRegistrationSuccessPage},
 

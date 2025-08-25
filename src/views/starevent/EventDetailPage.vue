@@ -1,24 +1,33 @@
 <script setup>
 
+
+    import { computed } from 'vue';
+    import { useRoute } from 'vue-router';
     import eventlist from '@/data/eventlist';
 
-    const testEvent = eventlist[0]
+    // 假資料
+    // const testEvent = eventlist[0]
     // console.log(testEvent)
 
+    // 路由
+    const route = useRoute()
 
+    const eventData = computed(() => {
+        return eventlist.find(ev => ev.id == route.params.id || null)
+    })
 
 </script>
 
 <template>
-    <section class="event-detail">
+    <section class="event-detail" v-if="eventData">
 
         <!-- 圖片選擇區 -->
         <div class="pic-container">
-            <img :src="testEvent.imgurl[0]" alt="" class="selected-pic">
+            <img :src="eventData.imgurl[0]" alt="" class="selected-pic">
             <div class="pic-box">
-                <img :src="testEvent.imgurl[0]" alt="">
-                <img :src="testEvent.imgurl[1]" alt="">
-                <img :src="testEvent.imgurl[2]" alt="">
+                <img :src="eventData.imgurl[0]" alt="">
+                <img :src="eventData.imgurl[1]" alt="">
+                <img :src="eventData.imgurl[2]" alt="">
             </div>
         </div>
 
@@ -27,10 +36,10 @@
             <main>
                 <div class="title-box">
                     <div class="tags">
-                        <div class="type-tag"># {{ testEvent.type }}</div>
-                        <div class="place-tag"># {{ testEvent.place }}</div>
+                        <div class="type-tag"># {{ eventData.type }}</div>
+                        <div class="place-tag"># {{ eventData.place }}</div>
                     </div>
-                    <h1>{{ testEvent.title }}</h1>
+                    <h1>{{ eventData.title }}</h1>
                     <!-- <p>觀看人次</p> -->
                 </div>
     
@@ -44,9 +53,9 @@
                                 <h2>日期</h2>
                             </div>
                             <p>
-                                活動日期：{{ testEvent.date }}
+                                活動日期：{{ eventData.date }}
                                 <br>
-                                報名截止：{{ testEvent.deadline }}
+                                報名截止：{{ eventData.deadline }}
                             </p>
                         </div>
     
@@ -56,7 +65,7 @@
                                 <i class="fa-solid fa-location-dot"></i>
                                 <h2>地點</h2>
                             </div>
-                            <p>{{ testEvent.address }}</p>
+                            <p>{{ eventData.address }}</p>
                         </div>
     
                         <!-- 費用 -->
@@ -65,7 +74,7 @@
                                 <i class="fa-solid fa-dollar-sign"></i>
                                 <h2>費用</h2>
                             </div>
-                            <p>NT$ {{ testEvent.price }} / 位</p>
+                            <p>NT$ {{ eventData.price }} / 位</p>
                         </div>
                     </div>
     
@@ -79,7 +88,7 @@
     
                 <div class="intro-box">
                     <h2>活動內容</h2>
-                    <p>{{ testEvent.desc }}</p>
+                    <p>{{ eventData.desc }}</p>
                 </div>
             </main>
 
@@ -87,11 +96,24 @@
                 回到活動列表
             </div>
         </div>
+
     </section>
+    <div v-else class="no-event">
+        無活動資料
+        <router-link to="/events" class="router-link">
+            <p>回到活動頁面</p>
+        </router-link>
+    </div>
 </template>
 
 <style scoped lang="scss">
     @import '@/assets/styles/main.scss';
+
+    // 共用
+    .router-link {
+        text-decoration: none;
+        color: inherit;
+    }
 
     .event-detail {
         background-color: $primaryColor-900;
@@ -247,11 +269,25 @@
             }
         }
 
-
-        
     }
+    
+    // 查無
+    .no-event {
+        font-size: 32px;
+        color: white;
+        background-color: $primaryColor-900;
+        padding: 160px;
+        text-align: center;
 
-
+        p {
+            margin-top: 16px;
+            cursor: pointer;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+    
 
 
 
