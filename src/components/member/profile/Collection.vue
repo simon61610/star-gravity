@@ -1,7 +1,9 @@
 <!----我的收藏---->
 <script setup>
-    import { ref, computed, onMounted } from 'vue'
+    import { ref, computed } from 'vue'
     import Pagination from '@/components/common/Pagination.vue'
+    import shopToast from '@/components/common/shopToast.vue'  // 新增
+    import { showToast } from '@/composables/useToast'         // 新增
 
     // 先放 8 張假資料；之後接 API 只要改這個陣列即可
     const products = ref(
@@ -11,7 +13,7 @@
             price: 2500,
         }))
     )
-    const products8 = computed(() => products.value.slice(0, 8))
+    // const products8 = computed(() => products.value.slice(0, 8))
 
     const formatTWD = (n) => `NT$${Number(n).toLocaleString('zh-TW')}`
 
@@ -31,32 +33,46 @@
     // 取消收藏
     const emit = defineEmits(['unfavorite'])   // 告訴父層「真的要取消了」
 
-    function askUnfavorite () {
-        if (confirm('確定要取消收藏嗎？')) emit('unfavorite')
+    // function askUnfavorite () {
+    //     if (confirm('確定要取消收藏嗎？')) emit('unfavorite')
+    // }
+    function askUnfavorite () {                                   
+        if (confirm('確定要取消收藏嗎？')) {
+        emit('unfavorite')
+        showToast('已取消收藏', { type: 'info', duration: 1800 })
+        }
     }
     // 直接購買 
-    const showAdded = ref(false)
+    // const showAdded = ref(false)
 
-        function onBuyNow () {
-        showAdded.value = true               // 顯示成功畫面
-        // 自動關閉（1.5 秒）
-        setTimeout(() => { showAdded.value = false }, 1500)
+    //     function onBuyNow () {
+    //     showAdded.value = true               // 顯示成功畫面
+    //     // 自動關閉（1.5 秒）
+    //     setTimeout(() => { showAdded.value = false }, 1500)
+    // }
+    // function closeAdded () {
+    //     showAdded.value = false
+    // }
+    function onBuyNow () {
+        // 這裡可放實際購物流程，成功後提示：
+        showToast('已加入購物車！', { type: 'success', duration: 2000 })
     }
-    function closeAdded () {
-        showAdded.value = false
-    }
+
 </script>
 
 <template>
             
     <!----右邊-------->
     <div class="products">
+
+        <shopToast/>
+
         <div class="flex">
             <article v-for="p in products" :key="p.id" class="card">
                 
                 <div class="photoall">
                     <div class="thumb">
-                        <img src="../../../assets/images/aboutstar/Mask group.png" alt="">
+                        <img src="@assets/images/aboutstar/Mask group.png" alt="">
                     </div>
         
                     <div class="down">
@@ -72,8 +88,9 @@
                     </div>
                 </div>
             </article>
-            <!-----加入購物車顯示小彈窗---------->
-            <div v-if="showAdded" class="cart-overlay" @click="closeAdded">
+            
+            <!-- 自製小彈窗已改為 toast 呈現 -->
+            <!-- <div v-if="showAdded" class="cart-overlay" @click="closeAdded">
                 <div class="cart-modal" @click.stop>
                     <div class="ok">✓</div>    
                     <h3>已加入購物車</h3>
@@ -82,7 +99,8 @@
                         <button class="btn outline" @click="closeAdded">知道了</button>
                     </div>
                 </div>
-            </div>
+            </div> -->
+            
             <!----分頁-------->
             <div class="pager">
                 <Pagination
@@ -179,47 +197,47 @@
     transform: translateY(1px); 
 }
 // 購物車小彈窗
-.cart-overlay{
-  position: fixed; inset: 0; z-index: 9999;
-  background: rgba(0,0,0,.45);
-  display: grid; place-items: center;
-}
-.cart-modal{
-  width: min(320px, 86vw);
-  background: #fff;
-  color: #222;
-  border-radius: 14px;
-  padding: 20px 18px;
-  text-align: center;
-  box-shadow: 0 12px 30px rgba(0,0,0,.25);
-  animation: pop .15s ease-out;
-}
-.ok{
-  width: 44px; height: 44px; margin: 0 auto 8px;
-  border-radius: 50%;
-  background: #16a34a;     /* 綠色圈 */
-  color: #fff; display: grid; place-items: center;
-  font-weight: 700; font-size: 22px;
-}
-.hint{ 
-    margin-top: 4px; 
-    color:#666; 
-    font-size:14px; 
-}
-.modal-actions{ 
-    margin-top: 12px; 
-    display:flex; 
-    justify-content:center; 
-    gap:8px; 
-}
-.btn.outline{
-    background: transparent; 
-    //   color:#444; 
-    //   border:1px solid #ccc; 
-    border-radius: 999px;
-    padding: 8px 14px; 
-    cursor: pointer;
-}
+// .cart-overlay{
+//   position: fixed; inset: 0; z-index: 9999;
+//   background: rgba(0,0,0,.45);
+//   display: grid; place-items: center;
+// }
+// .cart-modal{
+//   width: min(320px, 86vw);
+//   background: #fff;
+//   color: #222;
+//   border-radius: 14px;
+//   padding: 20px 18px;
+//   text-align: center;
+//   box-shadow: 0 12px 30px rgba(0,0,0,.25);
+//   animation: pop .15s ease-out;
+// }
+// .ok{
+//   width: 44px; height: 44px; margin: 0 auto 8px;
+//   border-radius: 50%;
+//   background: #16a34a;     /* 綠色圈 */
+//   color: #fff; display: grid; place-items: center;
+//   font-weight: 700; font-size: 22px;
+// }
+// .hint{ 
+//     margin-top: 4px; 
+//     color:#666; 
+//     font-size:14px; 
+// }
+// .modal-actions{ 
+//     margin-top: 12px; 
+//     display:flex; 
+//     justify-content:center; 
+//     gap:8px; 
+// }
+// .btn.outline{
+//     background: transparent; 
+//     //   color:#444; 
+//     //   border:1px solid #ccc; 
+//     border-radius: 999px;
+//     padding: 8px 14px; 
+//     cursor: pointer;
+// }
 @keyframes pop { 
     from { transform: scale(.96); opacity: .6 } to { transform: none; opacity: 1 } 
 }
