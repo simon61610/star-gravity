@@ -1,5 +1,6 @@
 <script setup>
 import EventCarousel from '@/components/starevent/eventPage/EventCarousel.vue';
+import eventlist from '@/data/eventlist';
 
 const eventIcon = [
     { name: 'meteor-shower', imgUrl: '/images/events/home/eventType_meteor-shower.png'},
@@ -15,59 +16,6 @@ const placeTags = [
     {name: '平地公園'},
     {name: '天文台'},
 ]
-
-// 假資料
-const eventCards = [
-    {
-        date: '2025.08.16 (六) 16:00 - 08.17 (日) 2:00',
-        title: '來陽明山吧！許下你的流星願望 | 獅子座流星雨 - 團體觀星活動',
-        address: '台北市',
-        type: '流星雨',
-        place: '高山觀測',
-        imgurl: '/images/events/home/card.png'
-    },
-    {
-        date: '2025.08.16 (六) 16:00 - 08.17 (日) 2:00',
-        title: '來陽明山吧！許下你的流星願望 | 獅子座流星雨 - 團體觀星活動',
-        address: '台北市',
-        type: '流星雨',
-        place: '高山觀測',
-        imgurl: '/images/events/home/card.png'
-    },
-    {
-        date: '2025.08.16 (六) 16:00 - 08.17 (日) 2:00',
-        title: '來陽明山吧！許下你的流星願望 | 獅子座流星雨 - 團體觀星活動',
-        address: '台北市',
-        type: '流星雨',
-        place: '高山觀測',
-        imgurl: '/images/events/home/card.png'
-    },
-    {
-        date: '2025.08.16 (六) 16:00 - 08.17 (日) 2:00',
-        title: '來陽明山吧！許下你的流星願望 | 獅子座流星雨 - 團體觀星活動',
-        address: '台北市',
-        type: '流星雨',
-        place: '高山觀測',
-        imgurl: '/images/events/home/card.png'
-    },
-    {
-        date: '2025.08.16 (六) 16:00 - 08.17 (日) 2:00',
-        title: '來陽明山吧！許下你的流星願望 | 獅子座流星雨 - 團體觀星活動',
-        address: '台北市',
-        type: '流星雨',
-        place: '高山觀測',
-        imgurl: '/images/events/home/card.png'
-    },
-    {
-        date: '2025.08.16 (六) 16:00 - 08.17 (日) 2:00',
-        title: '來陽明山吧！許下你的流星願望 | 獅子座流星雨 - 團體觀星活動',
-        address: '台北市',
-        type: '流星雨',
-        place: '高山觀測',
-        imgurl: '/images/events/home/card.png'
-    },
-]
-
 
 
 </script>
@@ -118,18 +66,18 @@ const eventCards = [
         
                     <!-- 活動項目卡片區 -->
                     <div class="event-list">
-                        <div class="event-card" v-for="card in eventCards">
-                            <img :src="card.imgurl" alt="">
+                        <div class="event-card" v-for="event in eventlist">
+                            <img :src="event.imgurl" alt="">
                             <div class="card-content">
-                                <div class="date">{{ card.date }}</div>
-                                <h2 class="event-name">{{ card.title }}</h2>
+                                <div class="date">{{ event.date }}</div>
+                                <h2 class="event-name">{{ event.title }}</h2>
                                 <div class="address">
                                     <i class="fa-solid fa-location-dot"></i>
-                                    <p>{{ card.address }}</p>
+                                    <p>{{ event.address }}</p>
                                 </div>
                                 <h3 class="tags">
-                                    <div class="type-tag"># {{ card.type }}</div>
-                                    <div class="place-tag"># {{ card.place }}</div>
+                                    <div class="type-tag"># {{ event.type }}</div>
+                                    <div class="place-tag"># {{ event.place }}</div>
                                 </h3>
                             </div>
                         </div>
@@ -249,6 +197,7 @@ const eventCards = [
                                     width: 100px;
                                     border: 2px solid white;
                                     border-radius: 999px;
+                                    cursor: pointer;
                                 }
                             }
                             .select-date {}
