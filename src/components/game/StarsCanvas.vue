@@ -17,7 +17,7 @@ const props = defineProps({
   
 })
 
-const isAnimating = ref(false) //星座顯示開關
+const isAnimating = ref(false) //控制星座動畫顯示開關
 
 //線段直接全部顯示
 const showAllLines = () => {
@@ -29,13 +29,6 @@ const showAllLines = () => {
 
 //線段逐漸顯示
 const currentStep = ref(0)
-// const drawNext = () => {
-//     if (currentStep.value < props.lines.length){
-//         currentStep.value++
-//         console.log("drawNext 被呼叫了！ currentStep =", currentStep.value)
-//     }
-// }
-
 function drawNext() {
   isAnimating.value = true
   if (currentStep.value < props.lines.length) currentStep.value++
@@ -67,17 +60,11 @@ function lineLength(a, b) {
 
  // 切換星座時，重製線條進度
 
-
 watch(
   () => [props.stars, props.lines],
   () => {
-    isAnimating.value = false
-    currentStep.value = 0
-     // nextTick(()=>{
-      
-    //   drawNext()
-    // })
-  },
+    isAnimating.value = false //星點資訊變化了關閉樣式
+    currentStep.value = 0 }, //星點資訊變化了就清0
    { deep: true } // 監聽物件內部變化
  )
 
@@ -115,7 +102,9 @@ watch(
 
                                             <!----- 1. key使用字串串接 意思是 key = line_0 給第一條線ID長這樣 
                                                     2. 參數stroke-dasharray為虛線總長度
-                                                    3. 參數 stroke-dashoffset為線段偏移量 偏移200等於線段消失 反之0等於線段出現   ------>
+                                                    3. 參數 stroke-dashoffset為線段偏移量 偏移200等於線段消失 反之0等於線段出現
+                                                    4. stroke-dashoffset 三元運算 = if (i < currentStep) {strokeDashoffset = 0   // 顯示這條線} 
+                                                    else { strokeDashoffset = lineLength(...)  // 藏起這條線}   ------>
         </svg>
     </div>
 </template>

@@ -218,12 +218,22 @@ const zodiacInfo = ref([
 }
 
 .zodiac__icons {
+  
   display: flex;
   /* color: #fff; */
+  img{
+    &:nth-child(1),
+    &:nth-child(2),
+    &:nth-child(3){
+      &:hover{
+        transform: scale(1.2);
+      }
+    }
+  }
   &:hover{
     cursor: pointer;
   }
- 
+  
 }
 
 .action__icon--star {
