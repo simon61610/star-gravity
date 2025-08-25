@@ -1,20 +1,21 @@
 <script setup>
-import { ref, defineEmits, defineProps, computed, watch } from 'vue'
+import { ref, defineEmits, defineProps, computed, watch, onMounted } from 'vue'
+import axios from 'axios'
+import sunnyIcon from "@/assets/icons/icon-map-sunny.svg"
+import cloudyIcon from "@/assets/icons/icon-map-cloudy.svg"
+import rainIcon from "@/assets/icons/icon-map-rainy.svg"
+import thunderIcon from "@/assets/icons/icon-map-thunder.svg"
+import sunnrRainyIcon from "@/assets/icons/icon-map-sun&rainy.svg"
 
 const emit = defineEmits(['closeModel', 'showReview'])
 const props = defineProps(["selectedLocation","selectedLocationId", 'locationReviews'])
+const API_KEY = "CWA-CF702105-AC4A-4F92-9483-D47FBE37A110"
+const weatherData = ref([])  //預報資料
+const temperature = ref('')
+const weather = ref('')
+const sixDaysArray = ref([])
 
-
-
-//關閉彈窗
-function closeModel(){
-    emit('closeModel')
-}
-//開啟更多評論
-function showReview(){
-    emit('showReview')
-}
-//取評論的前四個
+//取評論列表的前四個
 const fourReviewList = computed(()=>{
     if( !props.locationReviews || props.locationReviews.length === 0){
         return []
@@ -22,14 +23,97 @@ const fourReviewList = computed(()=>{
         return props.locationReviews.slice(0 , 4)
     }
 })
+//取得預報的天氣圖案
+function getWeatherIcon(weather) {
+    if(weather.includes('雷')){
+        return thunderIcon
+    }else if(weather.includes('雲') && weather.includes('晴')){
+        return sunnrRainyIcon
+    }else if(weather.includes('雨') ){
+        return rainIcon
+    }else if(weather.includes('雲') || weather.includes('陰')){
+        return cloudyIcon
+    }else if(weather.includes('晴')){
+        return sunnyIcon
+    }
+}
+
+//事件監聽
+    //關閉彈窗
+function closeModel(){
+    emit('closeModel')
+}
+   //開啟更多評論
+function showReview(){
+    emit('showReview')
+}
+function getSixDays(){
+    if (!weatherData.value.records) return;
+    let tem = ''
+    let wea = ''
+    const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
+    let weekDay = ''
+    let date = ''
+    sixDaysArray.value = []
+    for( let i=1 ; i<6 ; i++){
+        let j = i*2
+        tem = weatherData.value.records.Locations[0].Location[0].WeatherElement[0].Time[j].ElementValue[0].Temperature //當天氣溫
+        wea = weatherData.value.records.Locations[0].Location[0].WeatherElement[12].Time[j].ElementValue[0].Weather //當天氣溫
+        date = weatherData.value.records.Locations[0].Location[0].WeatherElement[12].Time[j].StartTime
+        const dayIndex = new Date(date).getDay();
+        weekDay = weekdays[dayIndex]
+
+        sixDaysArray.value.push({ 溫度:tem, 天氣:wea, 星期:weekDay})
+
+        // 0: {溫度: '32', 天氣: '陰時多雲', 星期: '一'}
+        // 1: {溫度: '31', 天氣: '多雲', 星期: '二'}
+        // 2: {溫度: '30', 天氣: '陰時多雲', 星期: '三'}
+        // 3: {溫度: '30', 天氣: '多雲時陰', 星期: '四'}
+        // 4: {溫度: '30', 天氣: '多雲時陰短暫陣雨', 星期: '五'}
+        // 5: {溫度: '30', 天氣: '陰短暫陣雨', 星期: '六'}
+    }
+}
+
+const getWeather = async()=>{
+    try{
+        const response = await axios.get('https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-D0047-091?Authorization=CWA-CF702105-AC4A-4F92-9483-D47FBE37A110', {
+            params: {
+            Authorization: API_KEY,
+            LocationName: props.selectedLocation.city,
+            format: 'JSON',
+            }   
+        })
+        weatherData.value = response.data //該縣市整包資訊
+        temperature.value = weatherData.value.records.Locations[0].Location[0].WeatherElement[0].Time[0].ElementValue[0].Temperature //當天氣溫
+        weather.value = weatherData.value.records.Locations[0].Location[0].WeatherElement[12].Time[0].ElementValue[0].Weather //當天天氣
+
+    }catch (error) {
+        console.error('API 錯誤:', error)
+    }
+}
+
+watch(() => props.selectedLocation, async (newLocation) => {
+    if (newLocation) {
+        await getWeather()
+        getSixDays()
+    }
+} )
+    
 
 
-const locationId = ref('')  //用來賦值父組件過來的selectedLocationId
 //暫時除錯用
+const locationId = ref('')  //用來賦值父組件過來的selectedLocationId
 function aaa(){
     locationId.value = props.selectedLocationId
-    console.log(locationId.value);
-    console.log(fourReviewList.value);
+    // console.log(locationId.value);
+    // console.log(fourReviewList.value);
+    console.log(weatherData.value);
+    // console.log(temperature.value);
+    // console.log(weather.value);
+    console.log(sixDaysArray.value);
+    
+    // console.log(weatherData.value.records.Locations[0].Location[0].WeatherElement[0].Time[0].ElementValue[0].Temperature);
+    // console.log(weatherData.value.records.Locations[0].Location[0].WeatherElement[12].Time[0].ElementValue[0].Weather);
 
 }
 
@@ -61,35 +145,16 @@ function aaa(){
                         <div class="weather-now">
                             <h5>即時天氣</h5>
                             <div class="live-weather">
-                                <img src="../../assets/icons/icon-map-cloudy.svg" alt="">
-                                <div>32°C</div>
+                                <img src="@/assets/icons/icon-map-sunny.svg" alt="">
+                                <div>{{temperature}}°C</div>
                             </div>
                         </div>
                         <!-- 五天預報 -->
                         <div class="weather-5days">  <!--共五個div排列-->
-                            <div class="daily-weather">
-                                <h5>週五</h5>
-                                <img class="weather-icon" src="../../assets/icons/icon-map-cloudy.svg"></img>
-                            </div>
-
-                            <div class="daily-weather">
-                                <h5>週六</h5>
-                                <img class="weather-icon" src="../../assets/icons/icon-map-rainy.svg" alt="">
-                            </div>
-
-                            <div class="daily-weather">
-                                <h5>週日</h5>
-                                <img class="weather-icon" src="../../assets/icons/icon-map-rainy.svg" alt="">
-                            </div>
-
-                            <div class="daily-weather">
-                                <h5>週一</h5>
-                                <img class="weather-icon" src="../../assets/icons/icon-map-thunder.svg" alt="">
-                            </div>
-
-                            <div class="daily-weather">
-                                <h5>週二</h5>
-                                <img class="weather-icon" src="../../assets/icons/icon-map-rainy.svg" alt="">
+                            <div v-for="(day, index) in sixDaysArray" class="daily-weather">
+                                <h5>週{{day['星期']}}</h5>
+                                <!-- <p class="cnContent--18px">{{day['溫度']}}</p> -->
+                                <img class="weather-icon" :src="getWeatherIcon(day.天氣)"></img>
                             </div>
                         </div>
                     </div>
@@ -109,12 +174,12 @@ function aaa(){
                             <div class="transportation">
                                 <h5>交通方式</h5>
                                 <div class="transport">
-                                    <span>
-                                        <img src="../../assets/logo.svg" alt="">
+                                    <span v-if="props.selectedLocation.publicTrans">
+                                        <img src="@/assets/icons/icon-map-bus.svg" alt="">
                                         大眾運輸
                                     </span>
                                     <span>
-                                        <img src="../../assets/logo.svg" alt="">
+                                        <img src="@/assets/icons/icon-map-car.svg" alt="">
                                         自行開車
                                     </span>
                                 </div>
@@ -167,7 +232,7 @@ function aaa(){
                         </div>
                         <!-- 右邊照片 -->
                         <div class="singleReview-rightPhoto">
-                            <img src="../../assets/images/map/map-reviewleft.jpg" alt="">
+                            <img v-if="!review.圖片" src="../../assets/images/map/map-reviewleft.jpg" alt="">
                         </div>
                     </div>
 
@@ -175,7 +240,7 @@ function aaa(){
                 <!-- 更多評論 -->
                 <div class="mapbox-seeMore" @click.prevent="showReview">
                     <p>更多評論</p>
-                    <img src='../../assets/icons/icon-map-goToBack.svg' alt="">
+                    <img src='@/assets/icons/icon-map-goToBack.svg' alt="">
                 </div>
             </div>
         </div>
@@ -465,7 +530,7 @@ function aaa(){
 .singleReview-rightPhoto{
     width: 160px;
     height: 120px;
-    background-color:$FontColor-gray ;
+    background-color:transparent ;
 }
 .singleReview-rightPhoto img{
     display: block;
