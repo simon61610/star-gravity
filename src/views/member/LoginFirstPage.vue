@@ -1,4 +1,74 @@
-<template>     <!----登入畫面----->
+<script setup>   
+    import { useRoute, useRouter } from 'vue-router'
+    import { ref, computed } from 'vue'
+
+    const router = useRouter()
+    const route = useRoute()
+
+    const email = ref('')
+    const pwd1 = ref('')
+    const captcha = ref('')
+    const loading = ref(false)
+
+    // 驗證碼
+    const captchaCode = ref('TJD102')
+    const genCode = () => Math.random().toString(36).slice(2, 8).toUpperCase()
+
+    /* 基本檢查參數 */
+    const MIN_PWD_LEN = 6
+    const emailRe = /\S+@\S+\.\S+/
+
+    function refreshCode() {
+        captchaCode.value = genCode()
+    }
+
+    // 當前路徑剛好是 /loginfirst 才顯示登入表單
+    const showLogin = computed(() => route.path === '/loginfirst')
+
+    // 判斷在哪頁
+    const isLogin    = computed(() => route.path === '/loginfirst')
+    const isRegister = computed(() => route.path === '/loginfirst/register')
+    const isAuthBg   = computed(() => isLogin.value || isRegister.value) // ← 登入/註冊都有 LOGIN 大字與背景
+    // const isOverlay  = computed(() => new Set(['forget','forgot','resetpassword']).has(route.name))
+
+    /* 按下確認才會執行 */
+    const handleSubmit = async () => {
+        if (!emailRe.test(email.value)) {
+            alert('請輸入有效的 Email')
+            return
+        }
+        if (pwd1.value.length < MIN_PWD_LEN) {
+            alert(`密碼至少 ${MIN_PWD_LEN} 碼`)
+            return
+        }
+        if (captcha.value.trim().toUpperCase() !== captchaCode.value.trim().toUpperCase()) {
+            alert('驗證碼錯誤')
+            return
+        }
+
+        loading.value = true
+        try {
+            // TODO: 這裡換成你的後端 API
+            // await axios.post('/api/login', { email: email.value, password: pwd1.value })
+
+            // demo：模擬呼叫
+            await new Promise(r => setTimeout(r, 500))
+
+            // demo：存登入狀態（若有路由守衛可使用）
+            localStorage.setItem('auth', '1')
+
+            // 登入成功 → 導到會員中心
+            // 若你的實際路由名稱不同，改這裡
+            router.replace('/membercenter/personal')
+        } catch (e) {
+            alert('登入失敗，請稍後再試')
+        } finally {
+            loading.value = false
+        }
+    }
+</script>
+
+<template>     
     <div class="login-all" >
         <div class="login-one decTitle--big" v-if="isAuthBg">
             <h2>LOGIN</h2>
@@ -256,74 +326,54 @@
     width: 35px;
     height: 35px;
 }
+
+
+@media screen and (max-width: 433px) {
+    .login-all{
+        height: auto;
+        min-height: calc(100vh - 50px);
+        padding: 16px 12px 40px;
+        background-size: cover;
+        background-position: center;
+        overflow-y: visible;
+    }
+    /* 標題縮小一點 */
+    .login-one h2{
+        padding-top: 8px;
+        font-size: 42px;     /* 視覺接近設計稿，可再微調 */
+        line-height: 1.1;
+    }
+    /* 頁籤佈局：左右並排、自動等分寬 */
+    .tabs{
+        gap: 8px;
+        padding: 0 4px;
+        margin-top: 12px;
+    }
+    .tab{
+        flex: 1 1 auto;
+        width: auto;
+        height: 40px;
+        font-size: 16px;
+        border-radius: 999px;
+    }
+     /* 內容區：改為全寬 */
+    .area{
+        width: 100%;
+        margin-top: 16px;
+        padding: 0 4px;
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
 </style>
 
-<script setup>
-    import { useRoute, useRouter } from 'vue-router'
-    import { ref, computed } from 'vue'
-
-    const router = useRouter()
-    const route = useRoute()
-
-    const email = ref('')
-    const pwd1 = ref('')
-    const captcha = ref('')
-    const loading = ref(false)
-
-    // 驗證碼
-    const captchaCode = ref('TJD102')
-    const genCode = () => Math.random().toString(36).slice(2, 8).toUpperCase()
-
-    /* 基本檢查參數 */
-    const MIN_PWD_LEN = 6
-    const emailRe = /\S+@\S+\.\S+/
-
-    function refreshCode() {
-        captchaCode.value = genCode()
-    }
-
-    // 當前路徑剛好是 /loginfirst 才顯示登入表單
-    const showLogin = computed(() => route.path === '/loginfirst')
-
-    // 判斷在哪頁
-    const isLogin    = computed(() => route.path === '/loginfirst')
-    const isRegister = computed(() => route.path === '/loginfirst/register')
-    const isAuthBg   = computed(() => isLogin.value || isRegister.value) // ← 登入/註冊都有 LOGIN 大字與背景
-    // const isOverlay  = computed(() => new Set(['forget','forgot','resetpassword']).has(route.name))
-
-    /* 按下確認才會執行 */
-    const handleSubmit = async () => {
-        if (!emailRe.test(email.value)) {
-            alert('請輸入有效的 Email')
-            return
-        }
-        if (pwd1.value.length < MIN_PWD_LEN) {
-            alert(`密碼至少 ${MIN_PWD_LEN} 碼`)
-            return
-        }
-        if (captcha.value.trim().toUpperCase() !== captchaCode.value.trim().toUpperCase()) {
-            alert('驗證碼錯誤')
-            return
-        }
-
-        loading.value = true
-        try {
-            // TODO: 這裡換成你的後端 API
-            // await axios.post('/api/login', { email: email.value, password: pwd1.value })
-
-            // demo：模擬呼叫
-            await new Promise(r => setTimeout(r, 500))
-
-            // demo：存登入狀態（若有路由守衛可使用）
-            localStorage.setItem('auth', '1')
-
-            // 登入成功 → 導到會員中心
-            // 若你的實際路由名稱不同，改這裡
-            router.replace('/membercenter/personal')
-        } catch (e) {
-            alert('登入失敗，請稍後再試')
-        } finally {
-            loading.value = false
-        }
-    }
-</script>
