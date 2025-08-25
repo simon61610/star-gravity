@@ -1,6 +1,15 @@
 <script setup>
 import { onMounted, ref ,onUnmounted } from 'vue'
 import HomePageContent from './HomePageContent.vue';
+// //test 
+// import gsap from 'gsap'
+// import ScrollTrigger from 'gsap/ScrollTrigger'
+// import ScrollToPlugin from 'gsap/ScrollToPlugin'
+// gsap.registerPlugin(ScrollTrigger, ScrollToPlugin)
+
+
+
+
 
 //定義響應式變數
 const showbackToTop = ref(false)
@@ -29,10 +38,66 @@ function showQABox(){
 //生命週期
 onMounted(()=>{
     window.addEventListener('scroll', controlScroll)
+
+
+    // // 視差滾動
+    //     gsap.timeline({
+    //     scrollTrigger: {
+    //     trigger: '.scrollDist',
+    //     start: '0 0',
+    //     end: '100% 100%',
+    //     scrub: 1
+    //     }
+    // })
+    // .fromTo('.firstBlock-text',      { y:   0 }, { y: -300 }, 0)
+    // .fromTo('.firstBlock-star1',   { y: 100 }, { y: -800 }, 0)
+    // .fromTo('.firstBlock-star2',   { y:-150 }, { y: -500 }, 0)
+    // .fromTo('.firstBlock-backMontain1',   { x: -30 }, { x: 100 }, 0)
+    // .fromTo('.firstBlock-backMontain2',  { y: -10 }, { y: -100 }, 0)
+    // .fromTo('.firstBlock-tower',  { x: 320 }, { x: -550 }, 0)
+    
+
+
+    // // === 箭頭按鈕效果 ===
+    // const arrowBtn = document.querySelector('#arrow-btn')
+
+    // // 滑鼠移入 → 箭頭下彈
+    // arrowBtn.addEventListener('mouseenter', () => {
+    //     gsap.to('.arrow', {
+    //     y: 10,
+    //     duration: 0.8,
+    //     ease: 'back.inOut(3)',
+    //     overwrite: 'auto'
+    //     }) 
+    // })
+
+    // // 滑鼠移出 → 箭頭回到原位
+    // arrowBtn.addEventListener('mouseleave', () => {
+    //     gsap.to('.arrow', {
+    //     y: 0,
+    //     duration: 0.2,
+    //     ease: 'power3.out',
+    //     overwrite: 'auto'
+    //     }) 
+    // })
+
+    // // 點擊 → 捲動到下一個畫面高度
+    // arrowBtn.addEventListener('click', () => {
+    //     gsap.to(window, {
+    //     scrollTo: innerHeight,
+    //     duration: 1.5,
+    //     ease: 'power1.inOut'
+    //     })
+    // })
+    
 })
 onUnmounted(()=>{
     window.removeEventListener('scroll', controlScroll)
 })
+
+
+//test start
+
 
 
 </script>
@@ -95,6 +160,10 @@ onUnmounted(()=>{
 
 <style scoped lang="scss">
 @import '../assets/styles/main.scss';
+// .scrollDist {
+//   height: 900vh; /* 卷軸區域 */
+//   background: lightblue;
+// }
 
 //返回上面
 .backToTop{
@@ -180,6 +249,7 @@ onUnmounted(()=>{
 
 //視差滾動特效區
 .home-firstBlock{
+    // overflow-x: hidden;
     background-image: url('../assets/images/home/index-bgp1.png');
     background-size: cover;
     background-color: $primaryColor-100;
@@ -277,10 +347,10 @@ onUnmounted(()=>{
     right: 25vh;
     bottom: 25vh;
     z-index: 20;
+    
 }
 .firstBlock-towerMountain{
     height: 40vh;
-
     position: absolute;
     right: 0;
     bottom: 0;
@@ -294,7 +364,6 @@ onUnmounted(()=>{
     flex-direction: column;
     gap: 28px;
     align-items: center;
-
     position: absolute;
     left: 50%;
     top: 30%;
@@ -312,6 +381,8 @@ onUnmounted(()=>{
     font-size: $pcChFont-p;
     letter-spacing: 12px;
 }
+
+
 
 
 </style>
