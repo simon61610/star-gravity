@@ -149,8 +149,8 @@
                     <p class="detail-text__promotion">{{ product.promotion }}</p>
                     <p class="detail-text__marketing">{{ product.marketing }}</p>
                     <div class="product-price">
-                        <p class="product-price__special">NT$ {{ product.specialPrice }}</p>
                         <p class="product-price__nospecial">NT$ {{ product.price }}</p>
+                        <p class="product-price__special">NT$ {{ product.specialPrice }}</p>
                     </div>
                     <!-- 數量按鈕位置，暫時刪除 -->
                     <!-- <div class="qty-control">
@@ -300,7 +300,7 @@
                     gap: 12px;
                     font-size: $pcChFont-H4;
 
-                    p:last-child {
+                    &__nospecial {
                         color: #ccc;
                         text-decoration: line-through;
                     }
