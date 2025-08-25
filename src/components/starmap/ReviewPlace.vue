@@ -235,8 +235,12 @@ function cencelReview(){   //這邊要判斷是不是會員
     color: #ffffff;
 }
 
+@media screen and (max-width:430px) {
+    .mapreview-writePlace{
+        max-width: 398px;
+    }
+}
+
+
 </style>
 
-<script setup>
-
-</script>
