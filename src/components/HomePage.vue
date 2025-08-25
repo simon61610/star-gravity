@@ -1,6 +1,19 @@
 <script setup>
 import { onMounted, ref ,onUnmounted } from 'vue'
 import HomePageContent from './HomePageContent.vue';
+// import AccordionItem from './common/AccordionItem.vue';
+
+
+
+// QA 資料
+/* const qaList = ref([
+  { q: '怎麼退費', a: '不能退費' },
+  { q: '付款方式', a: '支援信用卡、轉帳、超商付款。' },
+  { q: '出貨時間', a: '5–7 個工作天內寄出，宅配 1–2 天送達。' },
+  { q: '客服時間', a: '週一至週五 10:00–18:00。' },
+]) */
+
+
 
 //定義響應式變數
 const showbackToTop = ref(false)
@@ -43,15 +56,23 @@ onUnmounted(()=>{
     </div>
 
     <!-- Q&A -->
-    <div class="QA">
+    <!-- <div class="QA">
         <h3 class="QATitle" @click="showQABox">{{boxText}}</h3>
         <div class="QAbox" v-show="showBox">
             <div v-for="value in 8" class="QAbox-content">
                 <h2 class="cnContent--14px">怎麼退費</h2>
                 <p class="cnContent--14px">不能推費住54324532wawadacawc不能推費住54324532wawadacawc不能推費住54324532wawadacawc</p>
             </div>
+            <AccordionItem
+              v-for="(item, index) in qaList"
+              :key="index"
+              :title="item.q"
+              :defaultOpen="false"
+            >
+              <p class="cnContent--20px">{{ item.a }}</p>
+            </AccordionItem>
         </div>
-    </div>
+    </div> -->
     
 
     <!-- 動畫效果大區-->
