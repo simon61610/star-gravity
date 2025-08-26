@@ -1,38 +1,38 @@
 //牡羊座
 import ariesicon from '@/assets/images/games/GameSkyPage/zodiac-icon/gamesky_aries-icon.png'
 import ariesimage from '@/assets/images/games/GameSkyPage/zodiac-cardPic/gmasky_card-aries.png'
-import ariesbg from '@/assets/images/games/GameSkyPage/gamesky_aries.svg'
+import ariesbg from '@/assets/images/games/GameSkyPage/zodiac-sky/gamesky_aries.svg'
 //摩羯座
 import capricornicon from '@/assets/images/games/GameSkyPage/zodiac-icon/gamesky_capricorn-icon.png'
 import capricornimage from '@/assets/images/games/GameSkyPage/zodiac-cardPic/gmasky_card-capricornus.png'
-import capricornbg from '@/assets/images/games/GameSkyPage/gamesky_taurus.svg'
+import capricornbg from '@/assets/images/games/GameSkyPage/zodiac-sky/gamesky_taurus.svg'
 //水瓶座
 import aquariusicon from '@/assets/images/games/GameSkyPage/zodiac-icon/gamesky_aquarius-icon.png'
 import aquariusimage from '@/assets/images/games/GameSkyPage/zodiac-cardPic/gmasky_aquarius.png'
-import aquariusbg from '@/assets/images/games/GameSkyPage/gamesky_aquarius.svg'
+import aquariusbg from '@/assets/images/games/GameSkyPage/zodiac-sky/gamesky_aquarius.svg'
 
 //雙魚座
 import piscesicon from '@/assets/images/games/GameSkyPage/zodiac-icon/gamesky_pisces-icon.png'
 import piscesimage from '@/assets/images/games/GameSkyPage/zodiac-cardPic/gmasky_card-pisces.png'
-import piscesbg from '@/assets/images/games/GameSkyPage/gamesky_piscis.svg'
+import piscesbg from '@/assets/images/games/GameSkyPage/zodiac-sky/gamesky_piscis.svg'
 
 
 //金牛座
 import taurusicon from '@/assets/images/games/GameSkyPage/zodiac-icon/gamesky_tauru-icon.png'
 import taurusimage from '@/assets/images/games/GameSkyPage/zodiac-cardPic/gmasky_card-taurus.png'
-import taurusbg from '@/assets/images/games/GameSkyPage/gamesky_taurus_1.svg'
+import taurusbg from '@/assets/images/games/GameSkyPage/zodiac-sky/gamesky_taurus_1.svg'
 
 
 //雙子座
 import geminiicon from '@/assets/images/games/GameSkyPage/zodiac-icon/gamesky_gemini-icon.png'
 import geminiimage from '@/assets/images/games/GameSkyPage/zodiac-cardPic/gmasky_card-gemini.png'
-import geminibg from '@/assets/images/games/GameSkyPage/gamesky_gemini.svg'
+import geminibg from '@/assets/images/games/GameSkyPage/zodiac-sky/gamesky_gemini.svg'
 
 
 //巨蠍座
 import cancericon from '@/assets/images/games/GameSkyPage/zodiac-icon/gamesky_cancer-icon.png'
 import cancerimage from '@/assets/images/games/GameSkyPage/zodiac-cardPic/gmasky_card-cancer.png'
-import cancerbg from '@/assets/images/games/GameSkyPage/gamesky_cancer.svg'
+import cancerbg from '@/assets/images/games/GameSkyPage/zodiac-sky/gamesky_cancer.svg'
 
 
 
@@ -40,33 +40,33 @@ import cancerbg from '@/assets/images/games/GameSkyPage/gamesky_cancer.svg'
 
 import leoicon from '@/assets/images/games/GameSkyPage/zodiac-icon/gamesky_leo-icon.png'
 import leoimage from '@/assets/images/games/GameSkyPage/zodiac-cardPic/gmasky_card-leo.png'
-import leobg from '@/assets/images/games/GameSkyPage/gamesky_leo.svg'
+import leobg from '@/assets/images/games/GameSkyPage/zodiac-sky/gamesky_leo.svg'
 
 
 //處女座
 import virgoicon from '@/assets/images/games/GameSkyPage/zodiac-icon/gamesky_virgo-icon.png'
 import virgoimage from '@/assets/images/games/GameSkyPage/zodiac-cardPic/gmasky_card-virgo.png'
-import virgobg from '@/assets/images/games/GameSkyPage/gamesky_virgo.svg'
+import virgobg from '@/assets/images/games/GameSkyPage/zodiac-sky/gamesky_virgo.svg'
 
 
 //天秤座
 import libraicon from '@/assets/images/games/GameSkyPage/zodiac-icon/gamesky_libra-icon.png'
 import libraimage from '@/assets/images/games/GameSkyPage/zodiac-cardPic/gmasky_card-libra.png'
-import librabg from '@/assets/images/games/GameSkyPage/gamesky_libra.svg'
+import librabg from '@/assets/images/games/GameSkyPage/zodiac-sky/gamesky_libra.svg'
 
 
 
 //天蠍座
 import scorpioicon from '@/assets/images/games/GameSkyPage/zodiac-icon/gamesky_scorpio-icon.png'
 import scorpioimage from '@/assets/images/games/GameSkyPage/zodiac-cardPic/gmasky_card-scorpius.png'
-import scorpiobg from '@/assets/images/games/GameSkyPage/gamesky_scorpio.svg'
+import scorpiobg from '@/assets/images/games/GameSkyPage/zodiac-sky/gamesky_scorpio.svg'
 
 
 //射手座
 
 import sagittariusicon from '@/assets/images/games/GameSkyPage/zodiac-icon/gamesky_sagitarius-icon.png'
 import sagittariusimage from '@/assets/images/games/GameSkyPage/zodiac-cardPic/gmasky_card-sagittarius.png'
-import sagittariusbg from '@/assets/images/games/GameSkyPage/gamesky_sagittarius.svg'
+import sagittariusbg from '@/assets/images/games/GameSkyPage/zodiac-sky/gamesky_sagittarius.svg'
 
 
 
