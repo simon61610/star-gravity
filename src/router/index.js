@@ -386,7 +386,7 @@ const router = createRouter({
 
 
 //建立路由守衛 這是一個回呼涵式 
-router.beforeEach((to,from,next) => {
+/* router.beforeEach((to,from,next) => {
   const token = localStorage.getItem('admin_token') //定義一個token 到 localStorage 裡面去取出 admin_token 的值
   if(!token && to.meta.requiresAuth){ 
     next({name:'AdminLoginPage'}) 
@@ -424,7 +424,7 @@ router.beforeEach((to,from,next) => {
       set(p)
     }, 70) // 每 200ms 加 5%
   }
-})
+}) */
 
 export default router
 
