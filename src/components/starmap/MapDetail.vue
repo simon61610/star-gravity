@@ -25,9 +25,9 @@ const fourReviewList = computed(()=>{
 })
 //取得預報的天氣圖案
 function getWeatherIcon(weather) {
-    if(weather.includes('雷')){
+    if(weather.includes('雷')|| weather.includes('陣')){
         return thunderIcon
-    }else if(weather.includes('雲') && weather.includes('晴')){
+    }else if(weather.includes('雨') && weather.includes('晴')){
         return sunnrRainyIcon
     }else if(weather.includes('雨') ){
         return rainIcon
@@ -564,9 +564,16 @@ function aaa(){
         gap: 36px;
     }
     .map-detail-weather{
-        justify-content: start;
+        flex-wrap: nowrap;
+
     }
-    
+    .weather-5days h5{
+        font-size: 14px;
+    }
+    .live-weather{
+        font-size: 36px;
+    }
+
     .map-detial-trait{
         gap: 24px;
     }
