@@ -231,7 +231,7 @@
     /* 選單改成兩欄方塊，置中排版 */
     .menu{
         width: 100%;
-        max-width: 260px;        
+        max-width: 340px;        
         margin: 12px auto 0;
         padding: 0 16px;
         box-sizing: border-box;
@@ -249,7 +249,7 @@
         padding: 10px 12px;
         border-radius: 8px;
         text-decoration: none;
-        font-size: $pcChFont-small;
+        font-size: $pcChFont-p;
         color:  $secondaryColor-yellow; 
     }
     /* 選單狀態 */
