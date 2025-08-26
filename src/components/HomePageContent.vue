@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 
 //假數據
 const activities =ref([
@@ -37,21 +37,40 @@ const activities =ref([
         name: '活動名稱5',
         description: '這是第五個活動描述這是第五個活動描述這是第五個活動描述',
         image: '../assets/images/aboutstar/star space.png'
+    },
+    {
+        id: 6,
+        date: '2025.05.28',
+        name: '活動名稱6',
+        description: '這是第六個活動描述這是第六個活動描述這是第六個活動描述',
+        image: '../assets/images/aboutstar/star space.png'
     }
 ])
 
 //定義響應式變數
 const currentIndex = ref(0)
-const itemsPerPage = 3
+const isMobile = ref(false)
 
-const showActivities = computed(()=>{    
-    return activities.value.slice(currentIndex.value, currentIndex.value + itemsPerPage )
+const showActivities = computed(()=>{  
+    if( isMobile.value === true ){
+        return activities.value
+    }else{
+        return activities.value.slice(currentIndex.value, currentIndex.value + itemsPerPage.value )
+    }
 })
 const canSlidePrev = computed(()=>{
     return currentIndex.value > 0
 })
 const canSlideNext = computed(()=>{
-    return currentIndex.value < activities.value.length - itemsPerPage
+    return currentIndex.value < activities.value.length - itemsPerPage.value
+})
+
+const itemsPerPage = computed(()=>{
+    if( isMobile.value === true ){
+        return activities.value.length
+    }else{
+        return 3
+    }
 })
 //事件監聽
 function slidePrev (){
@@ -66,7 +85,22 @@ function slideNext (){
         currentIndex.value++
     }
 }
+function checkScreenSize(){
+    if( window.innerWidth <= 430 ){
+        isMobile.value = true
+    }else {
+        isMobile.value = false 
+    }
+}
 
+//生命週期
+onMounted(()=>{
+    checkScreenSize()
+    window.addEventListener('resize', checkScreenSize)
+})
+onUnmounted(()=>{
+    window.removeEventListener('resize', checkScreenSize)
+})
 
 </script>
 
@@ -100,7 +134,9 @@ function slideNext (){
             <div class="home-guideTitle">
                 <h1 class="guideTitle-en decTitle--medium">GUILD</h1>
                 <h2 class="guideTitle-cn cnTitle--h2 ">觀星指南</h2>
+                <button class="guideTitle-button button--normal">查看更多</button>
             </div>
+            
             <!-- 指南三項 -->
             <div class="home-guildExtract">
                 <ul class="guildExtract-block">
@@ -175,13 +211,16 @@ function slideNext (){
             <div class="activity-content">
                 <!-- 左滑鍵 -->
                 <a class="activity-a"
+                    v-if="!isMobile"
                     @click="slidePrev"
                     :class="{ 'disable': !canSlidePrev }">
                     <img class="activity-a-img" src="../assets/images/news/article-content-back.svg" alt="上一個">
                 </a>
                 <!-- 近日活動清單 -->
                 <div class="activity-list">
-                    <a v-for="activity in showActivities" class="list-singleInfo" href="#">
+                    <a v-for="activity in showActivities" 
+                        class="list-singleInfo" 
+                        href="#">
                         <img class="singleInfo-photo" src="../assets/images/aboutstar/star space.png" alt="活動資訊圖">
                         <div class="singleInfo-content">
                             <h3 class="activity-list-datetime">{{activity.date}}</h3>
@@ -192,6 +231,7 @@ function slideNext (){
                 </div>
                 <!-- 右滑鍵 -->
                 <a class="activity-a"
+                    v-if="!isMobile"
                     @click="slideNext"
                     :class="{ 'disable': !canSlideNext }">
                     <img class="activity-a-img2" src="../assets/images/news/article-content-back.svg" alt="下一個">
@@ -202,12 +242,10 @@ function slideNext (){
 </template>
 
 <style scoped lang="scss">
-
 @import '../assets/styles/main.scss';
+
+// -------------------PC----------------------
 //緣起
-.special-effects{
-    overflow: hidden;
-}
 .home-begining{
     width: 100%;
     height: 100vh;
@@ -369,6 +407,9 @@ function slideNext (){
 
     // 第一區 觀星指南
     .home-guide {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
         padding: 36px 0;
     }
     //標題
@@ -386,6 +427,10 @@ function slideNext (){
     .guideTitle-cn {
         padding-bottom: 20px;
         color: $FontColor-white;
+    }
+    .guideTitle-button{
+        margin: 0 100px 20px;
+        
     }
     //指南三項
     .home-guildExtract {
@@ -581,6 +626,127 @@ function slideNext (){
                     0 0 30px rgba(145, 135, 185, 0.4);
     }
 }
+
+
+//...........RWD.............
+@media screen and (max-width:430px) {
+    .home-contentBlock button{
+        width: 100%;
+    }
+
+    .home-begining{
+        overflow: hidden;
+    }
+    .begining-person{
+        height: 70vh;
+        left: 50%;
+        translate: -70%;
+        z-index: 1;
+    }
+    .begining-bgStars{
+        display: none;
+    }
+    .testbox{
+        top:6.5vh;
+        left:47%;
+        z-index: 0;
+
+    }
+    .testbox::before{
+        top: 35%;
+    }
+    .begining-text{
+        width: 430px;
+        padding: 24px;
+        box-sizing: border-box;
+        top: 40%;
+        left: 0;
+        z-index: 10;
+    }
+    .home-guide{
+        max-width: 85vw;
+        margin: 0 auto;
+    }
+    .home-contentBlock .home-guideTitle{
+        margin-top:24px;
+        flex-direction: column;
+        align-items: start;
+    }
+    .home-contentBlock .home-guildExtract{
+        flex-direction: column;
+        padding:0px;
+        gap:0px;
+    }
+    .home-contentBlock .guideTitle-cn{
+        padding-bottom: 0;
+    }
+
+    .home-contentBlock .guideTitle-button{
+        margin: 0;
+        align-self: start;
+    }
+
+    .home-contentBlock .home-news{
+        flex-direction: column;
+        gap: 12px;
+    }
+    .home-contentBlock .home-news-rightSide{
+        gap: 16px;
+    }
+    .home-contentBlock .home-sky{
+        flex-direction: column-reverse;
+        gap: 12px;
+    }
+    .home-contentBlock .home-sky-leftSide{
+        justify-content: start;
+        gap: 16px;
+    }
+    .home-contentBlock .home-sky-photo{
+        width: 380px;
+        height: 380px;
+    }
+    .home-contentBlock .home-activity .activity-title2{
+        margin-top: 12px;
+        text-align: left;
+    }
+    .home-contentBlock .home-activity .activity-title{
+        text-align: left;
+    }
+
+    .home-contentBlock .home-activity{
+        width: 100vw;
+        padding: 0px 0px 36px;
+        box-sizing: border-box;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+
+    }
+    .home-contentBlock .home-activity .activity-content{
+        justify-content: start;
+    //     width: 380px;
+    //     gap: 0;
+        overflow-x: auto;
+    }
+    .home-contentBlock .home-activity .activity-title{
+        font-size: 88px;
+    }
+    .home-contentBlock .home-activity .activity-content .activity-a{
+        display: none;
+    }
+    .home-contentBlock .home-activity .activity-list{
+        // overflow-x: auto;
+        // gap: 12px;
+    }
+    .home-contentBlock .home-activity .activity-list .list-singleInfo{
+        width: 360px;
+        padding: 12px;
+        box-sizing: border-box;
+    }
+
+
+}
+
 
 
 </style>

@@ -67,7 +67,7 @@ import Newpage from '@/views/new/Newpage.vue'
 
 const routes = [
 // ------------------ 首頁 homepage ------------------
-{path: '/', name: 'homepage', component: HomePage},
+{path: '/homepage', name: 'homepage', component: HomePage},
 
 
 // ------------------ 觀星指南 aboutstar ------------------
@@ -237,12 +237,12 @@ const routes = [
       ]
     },
     //-----index分流導頁-------
-    // {
-    //   path: '/',    
-    //   name: 'IndexPage',     
-    //   component: () => import('@/views/index/IndexPage.vue'),
-    //   meta:{layout:'index'}
-    // },
+     {
+       path: '/',    
+       name: 'IndexPage',     
+      component: () => import('@/views/index/IndexPage.vue'),
+       meta:{layout:'index'}
+     },
 
    
    

@@ -519,4 +519,104 @@
         }
     }
 
+    @media (max-width: 431px){
+        .checkout-section {
+        // --------- 上方: 購物清單 ---------
+        .cart-list {
+            padding-bottom: 12px;
+            h1 {}
+            .items{
+                .item{
+                    gap: 20px;
+                    &__img { // 圖片
+                    }
+                    &__info { // 商品名稱與金額
+                        align-items: flex-start;
+                        flex-direction: column;
+                        &__name {
+                            padding-left: 12px;
+                        }
+                        &__price {
+                            padding-left: 12px;
+                            align-items: start;
+                            flex-direction: column;
+                            gap: 12px;
+                            .price-per-item {
+                                .price {
+                                }
+                                .spe-price {
+                                }
+                            }
+                            .qty-ctrl {
+                                .stock {
+                                    span {
+                                    }
+                                }
+
+                                .num {
+                                }
+                            }
+                            .price-subtotal {
+                                font-size: 20px;
+                            }
+                        }
+                    }
+                    &__del-btn { // 刪除按鈕
+                        &:hover {
+                        }
+                    }
+                }
+            }
+        }
+
+        // --------- 下方: 說明與訂單金額 ---------
+        .guide-box {
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 16px;
+            // 訂購說明
+            &__guide, &__order {
+                h2 {
+                }
+            }
+
+            &__guide{
+                flex-basis: auto;
+                h2 {}
+                ul {
+                    li{
+                    }
+                }
+            }
+
+            // 訂單資訊
+            &__order{
+                flex-basis: auto;
+                h2 {}
+                .order-cal {
+                    .cal-box {
+                        p {
+
+                            &:last-child{
+                            }
+                        }
+                    }
+                    .goto-pay-btn, .shop-btn {
+                    }
+                    .goto-pay-btn {
+                        &:hover {
+                        }   
+                    }
+                    .shop-btn {
+                    }
+                }
+            }
+        }
+    }
+
+
+
+
+    }
+
 </style>

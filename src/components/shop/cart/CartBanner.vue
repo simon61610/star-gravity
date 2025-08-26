@@ -8,8 +8,8 @@
 <template>
     <div class="cart-banner">
         <div class="title-box">
-            <p class="decTitle--medium">SHOPPING CART</p>
-            <p class="cnTitle--h5">購物車</p>
+            <p class="decTitle--medium m-eng">SHOPPING CART</p>
+            <p class="cnTitle--h5 m-ch">購物車</p>
         </div>
     </div>
 </template>
@@ -34,8 +34,22 @@
             gap: 20px;
             padding-bottom: 32px;
         }
-        
-        
+    }
+
+    @media (max-width: 431px) {
+        .cart-banner {
+            .title-box {
+                padding-top: 20px;
+                padding-bottom: 20px;
+
+                .m-eng {
+                    font-size: 60px;
+                }
+                .m-ch {
+                    
+                }
+            }
+        }
     }
 
 

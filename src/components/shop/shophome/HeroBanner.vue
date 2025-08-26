@@ -13,6 +13,7 @@ import 'swiper/css/effect-fade'
 import prodSlides from '@/data/prodSlides'; // console.log(prodSlides) // Array
 
 
+
 </script>
 
 

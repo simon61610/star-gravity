@@ -2,6 +2,12 @@
 
 import { ref, computed } from 'vue';
 
+// 圖檔
+import meteorShower from '@/assets/images/events/home/eventType_meteor-shower.png'
+import moon from '@/assets/images/events/home/eventType_moon.png'
+import starSigns from '@/assets/images/events/home/eventType_star-signs.png'
+import galaxy from '@/assets/images/events/home/eventType_galaxy.png'
+
 // 組件
 import EventCarousel from '@/components/starevent/eventPage/EventCarousel.vue';
 import Pagination from '@/components/common/Pagination.vue';
@@ -26,10 +32,10 @@ const pageChange = (newpage)=> {
 
 // 切版用
 const eventIcon = [
-    { name: 'meteor-shower', imgUrl: '/images/events/home/eventType_meteor-shower.png'},
-    { name: 'moon', imgUrl: '/images/events/home/eventType_moon.png'},
-    { name: 'star-signs', imgUrl: '/images/events/home/eventType_star-signs.png'},
-    { name: 'galaxy', imgUrl: '/images/events/home/eventType_galaxy.png'},
+    { name: 'meteor-shower', imgUrl: meteorShower},
+    { name: 'moon', imgUrl: moon},
+    { name: 'star-signs', imgUrl: starSigns},
+    { name: 'galaxy', imgUrl: galaxy},
 ]
 
 const placeTags = [

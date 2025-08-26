@@ -1,9 +1,11 @@
 <script setup>
-// ========== 1. 引入依賴 ==========
+// ========== 1.import ==========
 import { ref, onMounted, computed, watch, defineProps, defineEmits } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import taiwanMap from '@/assets/images/map/starmap-taiwan.svg'
+import customMarker from '../../assets/icons/icon-map-pin.png'
+import markerShadow from 'leaflet/dist/images/marker-shadow.png' 
 
 // ========== 2. Props & Emits ==========
 const { locationList } = defineProps(["locationList"])
@@ -116,10 +118,19 @@ function updateMapMarkers(locations) {
         map.removeLayer(marker)
     })
     marklist = []
+    const customIcon = L.icon({
+        iconUrl: customMarker,
+        iconSize: [50, 50],
+        iconAnchor: [25, 50],
+        popupAnchor: [0, -50],
+        shadowUrl: markerShadow, // 可以選擇要不要加陰影
+        shadowSize: [50, 50],
+        shadowAnchor: [16, 51]
+    });
 
     // 重新添加標記
     locations.forEach((location, index) => {
-        const marker = L.marker([location.coords[0], location.coords[1]]).addTo(map)
+        const marker = L.marker([location.coords[0], location.coords[1]] , {icon: customIcon }).addTo(map)
         marker.bindPopup(location.name)
         marklist.push(marker)
 
@@ -232,7 +243,7 @@ function showLocationDetail(location) {
 
 
 <template>
-    <div class="wrapper" :class="{ 'entering': isEntering }">
+    <div class="wrapper">
         <!-- 左半邊 -->
         <div class="map-leftBlock">            
             <!-- 上方checkbox -->

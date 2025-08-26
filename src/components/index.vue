@@ -9,7 +9,7 @@ import logo from '@/assets/logos/logo-admin.svg';
     </header>
 
     <div class="main">
-        <router-link to="/home" class="front">
+        <router-link to="/homepage" class="front">
             前台
         </router-link>
             
