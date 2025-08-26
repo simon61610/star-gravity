@@ -26,6 +26,7 @@ function changePage(newpage){
         :page-size = "props.pageSize"  
         :current-page="props.modelValue"
         :hide-on-single-page="false"
+        :pager-count="5"
         @current-change="changePage"/>
     </div>           
          
