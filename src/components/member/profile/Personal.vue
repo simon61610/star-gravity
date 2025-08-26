@@ -150,7 +150,7 @@
 // 按儲存後會跳出更新字
 .hint{
     font-size: $pcChFont-small; 
-    color: $FontColor-black;
+    color: $FontColor-white;
 }
 
 @media screen and (max-width: 433px) {

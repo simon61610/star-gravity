@@ -127,17 +127,17 @@
 }
 // 圓形頭像框
 .avatar-uploader{
-  width: 100px; 
-  height: 100px;
-  border-radius: 50%;
-  border: 2px solid #ccc;
-  overflow: hidden;
-  display: grid; 
-  place-items: center;
-  position: relative; 
-  cursor: pointer;
-  background: $bgColor-white;
-  margin-left: 23px;
+    width: 100px; 
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    overflow: hidden;
+    display: grid; 
+    place-items: center;
+    position: relative; 
+    cursor: pointer;
+    background: $bgColor-white;
+    margin-left: 23px;
 }
 .avatar-uploader img{
     width: 100%; 
@@ -158,11 +158,8 @@
 }
 // 儲存
 .buttons{ 
-    // background-color: none;
     margin-top: 10px; 
     text-align: center; 
-    // background-color: $primaryColor-500;
-    // width: 45px;
 }
 // 顯示小姐/先生文字
 .username{
@@ -175,7 +172,7 @@
     padding: 10px 10px;
     width: 150px;
 }
-// 預設/已瀏覽顏色（把原色覆蓋掉
+// 預設/已瀏覽顏色
 .menu .menu-link,
 .menu .menu-link:link,
 .menu .menu-link:visited {
@@ -198,7 +195,9 @@
         height: auto;
         min-height: calc(100vh - 80px);
         padding-bottom: 40px;
-        background-position: center;
+        // 手機板背景色
+        background: $primaryColor-900;
+        background-size: cover; 
     }
     /* 版面改直向堆疊 */
     .leftright{
@@ -224,11 +223,11 @@
     }
     .username{
         padding: 8px 0 0;
-        font-size: $pcChFont-small;
+        font-size: $pcChFont-p;
         text-align: center;
         padding-left: 0;
     }
-    /* 選單改成兩欄方塊，置中排版 */
+    /* 選單 */
     .menu{
         width: 100%;
         max-width: 340px;        
@@ -250,7 +249,7 @@
         border-radius: 8px;
         text-decoration: none;
         font-size: $pcChFont-p;
-        color:  $secondaryColor-yellow; 
+        color: $secondaryColor-yellow; 
     }
     /* 選單狀態 */
     .menu .menu-link.router-link-active,

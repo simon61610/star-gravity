@@ -171,5 +171,85 @@
     color: $inputColor-focus;
     text-decoration: underline;
 }
+
+@media screen and (max-width: 433px) {
+    .comment-area{
+        width: 100%;
+        max-width: 398px;
+        height: auto;
+        padding: 12px 16px;
+        box-sizing: border-box;      
+        margin: 20px auto;
+    }
+    .comment-box{
+        display: grid;
+        grid-template-columns: 1fr; 
+        row-gap: 16px;
+    }
+    .comment-1{
+        border-radius: 8px;
+        padding: 12px;
+    }
+    .comment-area h3{
+        font-size: 16px;
+        line-height: $linHeight-p;
+    }
+    .review-score{
+        padding-top: 6px;
+        gap: 3px;
+    }
+    .review-score img{
+        width: 16px;
+        height: 16px;
+    }
+    .review-text{
+        padding-top: 8px;
+        font-size: $pcChFont-small;
+        line-height: $linHeight-p;
+    }
+    /* 圖片 */
+    .review-photo{
+        display: block;
+        width: 100%;
+        max-width: 150px;
+        height: auto;
+        aspect-ratio: 1/1;
+        object-fit: cover;
+        margin-top: 8px;
+    }
+    /* 刪除鍵 */
+    .delete{
+        margin-top: 6px;
+        padding: 8px 0;
+        font-size: $pcChFont-small;
+        text-align: right;
+        color: red;
+    }
+    /* 分頁 */
+    .pager{
+        width: 100%;
+        padding: 10px 0 16px;
+        display: flex;
+        justify-content: center;
+    }
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
 </style>
 
