@@ -231,8 +231,8 @@ function aaa(){
                             <p class="cnContent--14px">{{ review.評論內容 }}</p>
                         </div>
                         <!-- 右邊照片 -->
-                        <div class="singleReview-rightPhoto">
-                            <img v-if="!review.圖片" src="../../assets/images/map/map-reviewleft.jpg" alt="">
+                        <div v-if="!review.圖片" class="singleReview-rightPhoto">
+                            <img src="../../assets/images/map/map-reviewleft.jpg" alt="">
                         </div>
                     </div>
 
@@ -557,5 +557,37 @@ function aaa(){
     width: 18px;
     transform: rotate(180deg);
 }
+
+@media screen and (max-width:430px) {
+    .mapbox-Up-row1, .mapbox-Up-row2{
+        flex-direction: column;
+        gap: 36px;
+    }
+    .map-detail-weather{
+        justify-content: start;
+    }
+    
+    .map-detial-trait{
+        gap: 24px;
+    }
+    .trait1, .mapbox-below , .transportation{
+        flex-direction: column;
+        gap: 10px;
+    }
+    .map-detail-googleMap{
+        width: 100%;
+    }
+
+    .mapbox-below{
+        margin-top: 48px;
+    }
+    .mapbox-reviewList{
+        grid-template-columns:1fr;
+    }
+    .mapbox-singleReview{
+        flex-direction: column;
+    }
+}
+
 
 </style>

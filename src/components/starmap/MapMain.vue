@@ -720,4 +720,13 @@ input[type="text"]:disabled {
 .leaflet-container {
   background: transparent !important;
 }
+
+
+
+//------------RWD-------------
+@media screen and (max-width:430px) {
+    .map-rightBlock, .map-decorate{
+        display: none;
+    }
+}
 </style>

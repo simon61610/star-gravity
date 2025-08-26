@@ -1,4 +1,49 @@
-<template>    <!-----忘記密碼1------->
+<script setup>
+    // 新增
+    import { useRouter } from 'vue-router'
+    import { ElMessage } from 'element-plus' 
+    import { ref } from 'vue'
+
+    const router = useRouter()
+    const email = ref('')
+    const loading = ref(false)
+    
+    // email檢查
+    const isValidEmail = (v) => /\S+@\S+\.\S+/.test(v)
+    // 返回登入鈕
+    function goLogin() {
+        router.push('/loginfirst') // 直接到登入頁
+    }
+
+    async function sendData() {
+        if (!isValidEmail(email.value)) {
+            ElMessage ? ElMessage.error('請輸入有效的 Email') : alert('請輸入有效的 Email')
+            return
+        }
+        loading.value = true
+        try {
+            // TODO: 換成真的 API
+            // await axios.post('/api/auth/forgot', { email: email.value })
+            await new Promise((r) => setTimeout(r, 500)) // 模擬呼叫
+
+            // FIX: 導到「第二步」的 forgot 子頁，路徑在 /loginfirst/forgot
+            router.push({
+                path: '/loginfirst/forgot',
+                query: { sent: '1', email: email.value } // NOTE: 看你要不要在下一頁讀取這些 query
+            })
+
+            // 帶著參數到 ForgotPage，進頁後會彈出「驗證碼已發送」
+            // router.push({ path: '/forgot', query: { sent: '1', email: email.value } })
+        } catch (e) {
+            ElMessage ? ElMessage.error('傳送失敗，請稍後再試') : alert('傳送失敗，請稍後再試')
+        } finally {
+            loading.value = false
+        }
+    }
+
+</script>
+
+<template>   
         <div class="all">
             <div class="forget-one" >
                 <h2>忘記密碼</h2>
@@ -61,49 +106,61 @@
     width: 222px;
     height: 45px;
 }
+
+@media screen and (max-width: 433px) {
+    .all{
+        padding-top: 24px;
+        min-height: 100vh;
+        padding-bottom: 40px;
+    }
+    /* 標題區塊 */
+    .forget-one{
+        width: auto;
+        height: auto;
+        margin: 0 12px;
+    }
+    .forget-one h2{
+        font-size: 20px;
+        // line-height: 1.2;
+        text-align: center;    
+    }
+    /* 輸入框 */
+    .email-input, .button-forget{
+        width: 100%;
+        padding: 0 12px;
+        margin-top: 12px;
+        box-sizing: border-box;
+    }
+    /* Email 欄位 */
+    .email-3{
+        width: 100%;
+        height: 44px;
+        font-size: 14px;
+        padding-left: 12px;
+        box-sizing: border-box;
+    }
+    /* 按鈕 */
+    .button-forget{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 16px;
+    }
+    .btn{
+        width: 100%;
+        height: 44px;
+        margin: 0;           /* 移除原本的左邊距與上邊距 */
+        font-size: 16px;
+        border-radius: 999px;
+    }
+    .btn:disabled{
+        opacity: .6;
+        cursor: not-allowed;
+    }
+
+}
+
+
+
 </style>
 
-<script setup>
-    // 新增
-    import { useRouter } from 'vue-router'
-    import { ElMessage } from 'element-plus' 
-    import { ref } from 'vue'
-
-    const router = useRouter()
-    const email = ref('')
-    const loading = ref(false)
-    
-    // email檢查
-    const isValidEmail = (v) => /\S+@\S+\.\S+/.test(v)
-    // 返回登入鈕
-    function goLogin() {
-        router.push('/loginfirst') // 直接到登入頁
-    }
-
-    async function sendData() {
-        if (!isValidEmail(email.value)) {
-            ElMessage ? ElMessage.error('請輸入有效的 Email') : alert('請輸入有效的 Email')
-            return
-        }
-        loading.value = true
-        try {
-            // TODO: 換成真的 API
-            // await axios.post('/api/auth/forgot', { email: email.value })
-            await new Promise((r) => setTimeout(r, 500)) // 模擬呼叫
-
-            // FIX: 導到「第二步」的 forgot 子頁，路徑在 /loginfirst/forgot
-            router.push({
-                path: '/loginfirst/forgot',
-                query: { sent: '1', email: email.value } // NOTE: 看你要不要在下一頁讀取這些 query
-            })
-
-            // 帶著參數到 ForgotPage，進頁後會彈出「驗證碼已發送」
-            // router.push({ path: '/forgot', query: { sent: '1', email: email.value } })
-        } catch (e) {
-            ElMessage ? ElMessage.error('傳送失敗，請稍後再試') : alert('傳送失敗，請稍後再試')
-        } finally {
-            loading.value = false
-        }
-    }
-
-</script>
