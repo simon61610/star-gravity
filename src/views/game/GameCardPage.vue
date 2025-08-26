@@ -6,6 +6,11 @@ import { useRouter } from 'vue-router'
 import backSvg  from '@/assets/images/games/GameCardPage/game_card01.svg'
 import front01  from '@/assets/images/games/GameCardPage/game_card02.svg'
 
+// <!-- 抽滿才可點的「查看結果」 -->
+const isFull = computed(() => pickedIndexes.value.length === MAX_PICKS)
+const ctaText = computed(() => (isFull.value ? '查看占卜結果' : '請依直覺抽出三張'))
+const onCtaClick = () => { if (isFull.value) goResult() } // 抽滿才導頁
+
 // ===== 結果類別（共 5 種）=====
 const TYPES = ['love', 'career', 'health', 'wealth', 'study']
 
@@ -134,15 +139,17 @@ const goResult = () => {
         // 如需舞台背景圖：backgroundImage: `url(${bgStage})`
       }"
     >
-      <button
-        class="cta" 
-        :style="{ '--center-offset': CENTER.offsetX + 'px' }"
-        type="button"
-        disabled
-      >
-        請依直覺抽出三張牌
-        <span v-if="!canPickMore">（已抽滿 3 張）</span>
-      </button>
+    <button
+      class="cta"
+      :style="{ '--center-offset': CENTER.offsetX + 'px' }"
+      type="button"
+      :disabled="!isFull"
+      @click="onCtaClick"
+    >
+      {{ ctaText }}
+    </button>
+
+      
 
       <button
         v-for="(c, idx) in cards"
@@ -159,15 +166,8 @@ const goResult = () => {
         </div>
       </button>
 
-      <!-- 抽滿才可點的「查看結果」 -->
- <button
-  class="result-btn"
-  type="button"
-  :disabled="pickedIndexes.length !== 3"
-  @click="goResult"
->
-  {{ pickedIndexes.length === 3 ? '查看結果' : `已選 ${pickedIndexes.length}/3` }}
-</button>
+
+
     </div>
   </main>
 </template>
