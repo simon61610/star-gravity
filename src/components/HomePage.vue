@@ -161,17 +161,14 @@ onUnmounted(()=>{
 
 <style scoped lang="scss">
 @import '../assets/styles/main.scss';
-<<<<<<< HEAD
 .wrapper{
     overflow: hidden;
 }
 
-=======
 // .scrollDist {
 //   height: 900vh; /* 卷軸區域 */
 //   background: lightblue;
 // }
->>>>>>> 675273d61291d815ac09678c43c7a9f9d9729537
 
 //返回上面
 .backToTop{
