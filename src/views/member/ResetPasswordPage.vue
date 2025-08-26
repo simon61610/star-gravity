@@ -10,7 +10,7 @@
     const pwd1 = ref('')
     const pwd2 = ref('')
 
-    const MIN_LEN = 6 // 密碼設定多少數
+    const MIN_LEN = 6       // 密碼設定多少數
 
     // 長度不足（有輸入才判斷）
     const isTooShort = computed(() => pwd1.value !== '' && pwd1.value.length < MIN_LEN)
@@ -96,7 +96,6 @@
     padding-top: 50px;
 }
 .title{
-    // background-color: $primaryColor-800;
     width: 280px;
     height: 50px;
     border-radius: 8px;
@@ -124,7 +123,7 @@
 }
 /* 簡單的錯誤樣式 */
 .is-invalid :deep(.el-input__wrapper) {
-  box-shadow: 0 0 0 1px #e03131 inset;   /* 紅框 */
+  box-shadow: 0 0 0 1px #e03131 inset;
 }
 .err {
   margin-top: 8px;
@@ -163,13 +162,12 @@
     .field-all{
         width: 100%;
         margin-top: 12px;
-        padding: 0 12px;
+        padding: 0 20px;
         box-sizing: border-box;
     }
     /* 欄位垂直間距 */
     .field{
-        margin: 15px 0 0;
-        // gap: 25px;
+        margin: 15px 0 20px;
     }
     /* 覆蓋 el-input inline style，手機改全寬與較低高度 */
     .field-all :deep(.el-input__wrapper){
@@ -197,7 +195,7 @@
     /* 按鈕 */
     .confirmto{
         width: 100%;
-        margin: 16px 0 0;
+        margin: 20px 0 0;
     }
     .confirm{
         width: 100%;
@@ -211,14 +209,7 @@
         cursor: not-allowed;
     }
 
-
-
-
 }
-
-
-
-
 
 </style>
 
