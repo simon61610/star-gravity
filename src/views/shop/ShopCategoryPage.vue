@@ -1,6 +1,6 @@
 <!-- 分類列表頁 -->
 <script setup>
-    import { ref } from 'vue'
+    import { ref, } from 'vue'
     
     // 組件
     import ShopBanner from '@/components/shop/ShopBanner.vue';
@@ -15,13 +15,15 @@
     // ==================== 商品類型篩選 ====================
     // =====================================================
     const selectedCate = ref(null)
+    const showCategoryList = ref(true)
 
     // 接收事件的處理函數
     const selected = (selectedObj) => {
         selectedCate.value = selectedObj
         console.log(selectedCate.value) // Proxy(Object) {main: '天文望遠鏡', sub: '基礎入門型'}
     }
-    // 下方用 selected-cate 當作屬性，準備傳值給子
+    // template 用 selected-cate 當作屬性，準備傳值給子
+
 </script>
 
 
@@ -31,9 +33,16 @@
         <Breadcrumbs />
         <section class="product-section">
             <CategoryToolbar />
-            <div class="main-section">            
-                <CategoryList @select="selected" />
+            <div class="main-section">
+                <div class="category-list" v-show="showCategoryList">
+                    <CategoryList @select="selected"/>
+                </div>           
                 <ProductList :selected-cate = "selectedCate"/>
+            </div>
+
+            <!-- 浮動按鈕 -->
+            <div class="m-cate-btn">
+                <i class="fa-solid fa-bag-shopping"></i>
             </div>
         </section>
     </section>
@@ -54,6 +63,36 @@
                 justify-content: center;
                 gap: 60px;
             }
+        }
+    }
+
+    .m-cate-btn {
+        color: white;
+        background-color: $primaryColor-500;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        display: none;
+
+    }
+
+
+    @media (max-width: 431px) {
+
+        // 暫時先消失
+        .category-list {
+            display: none;
+        }
+
+        .m-cate-btn {
+            display: flex;
         }
     }
 </style>

@@ -1,3 +1,71 @@
+<script setup>
+    import { ref, onMounted, reactive, computed, watch } from 'vue'
+
+    // 密碼
+    const pwd1 = ref('')  
+    const pwd2 = ref('')
+    // 判斷密碼同樣才可以送出
+    const canSubmit = computed(() => {    
+    return pwd1.value.length > 0 &&
+           pwd2.value.length > 0 &&
+           pwd1.value === pwd2.value
+    })
+    // 驗證碼
+    const captchaCode = ref('TJD102')
+    const genCode = () => Math.random().toString(36).slice(2, 8).toUpperCase()
+    // 欄位
+    const name = ref('')
+    const phone = ref('')
+    const gender = ref('')
+    const address = ref('')      
+    const email = ref('')
+    const captcha = ref('')
+    // 送出
+    const handleRegister = () => {
+    if (!canSubmit.value) return
+    alert('註冊成功！（假資料測試）')
+    }
+
+    /* ---- 假後端：取會員註冊資料 ---- */
+    function fetchMember() {
+        return new Promise(resolve => {
+            setTimeout(() => {
+            resolve({
+                name: '王小明',                // 先顯示
+                phone: '0912-345-678',
+                city: '台北市',
+                district: '大安區',
+                address: '仁愛路三段 123 號'
+            })
+            }, 300)
+        })
+        }
+        function updateMember(payload) {
+        return new Promise(resolve => setTimeout(() => resolve({ ok: true }), 500))
+    }
+
+    /* ---- 狀態 ---- */
+    const member = reactive({
+        city: '',
+        district: '',
+    })
+
+    const saving = ref(false)
+    const savedAt = ref('')
+    /* ---- 縣市 / 鄉鎮選單 ---- */
+    const DISTRICTS = {
+        台北市: ['中正區', '大安區', '信義區', '士林區'],
+        新北市: ['板橋區', '新店區', '三重區', '永和區'],
+        桃園市: ['桃園區', '中壢區', '龜山區', '八德區']
+    }
+    const cities = Object.keys(DISTRICTS)
+    const districtOptions = computed(() => DISTRICTS[member.city] || [])
+        watch(() => member.city, () => {
+        if (!districtOptions.value.includes(member.district)) member.district = ''
+    })
+
+</script>
+
 <template>      <!----註冊畫面----->
     <!-- <div class="register-all"> -->
 
@@ -9,10 +77,10 @@
         <div class="second-area">
             <form @submit.prevent="handleRegister">
                 <div class="name">
-                    <input type="name" class="name-1" placeholder="請輸入姓名" v-model="name" required />
+                    <input type="text" class="name-1" placeholder="請輸入姓名" v-model="name" required />
                 </div>
                 <div class="phone">
-                    <input type="phone" class="phone-1" placeholder="請輸入電話" v-model="phone" required />
+                    <input type="text" class="phone-1" placeholder="請輸入電話" v-model="phone" required />
                 </div>
                 <!------勾選性別--------->
                 <div class="gender-group">
@@ -43,7 +111,7 @@
                 </div>
                <!------選擇區域--------->
                <div class="adress">
-                    <input type="adress" class="adress-2" placeholder="請輸入地址" v-model="adress" required />
+                    <input type="text" class="adress-2" placeholder="請輸入地址" v-model="address" required />
                 </div>
                <!------信箱--------->
                <div class="email">
@@ -253,73 +321,119 @@
     width: 470px;
     height: 45px;
 }
+
+@media screen and (max-width: 433px) {
+    .register-all{
+        min-height: 100vh;
+        padding: 16px 12px 40px;
+        background-position: center;
+        background-size: cover;
+    }
+    /* 分頁條若未使用可忽略 */
+    .tabs{
+        gap: 8px;
+        padding: 0 4px;
+        margin-top: 12px;
+    }
+    /* 內容區改為全寬 */
+    .second-area{
+        width: 100%;
+        margin-top: 12px;
+        padding: 0 4px;
+    }
+     /* 輸入格 */
+    .name-1, .phone-1, .adress-2, .email-2, .captcha-2{
+        width: 100%;
+        height: 44px;
+        font-size: 14px;
+        padding-left: 12px;
+        box-sizing: border-box;
+    }
+    /* 性別 */
+    .gender-group{
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .gender-group label{
+        font-size: 14px;
+        line-height: 1.6;
+    }
+    /* 縣市/鄉鎮：兩欄等分（小於 360px 會自動換行） */
+    .join-city{
+        margin-top: 16px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+    .select-city{
+        width: 100%;
+        height: 44px;
+        padding-left: 12px;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+    /* 密碼 el-input：覆蓋 inline style，手機改全寬 */
+    .password-area{
+        margin-top: 8px;
+    }
+    .area2{ 
+        margin-top: 12px; 
+    }
+    .custom-placeholder{
+        width: 100% !important;
+        height: auto !important;
+    }
+    .custom-placeholder ::v-deep(.el-input__wrapper){
+        width: 100% !important;
+        height: 44px;
+        padding-left: 12px;
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+    .custom-placeholder ::v-deep(.el-input__inner){
+        height: 44px;
+        font-size: 14px;
+    }
+    /* 驗證碼區：三欄 */
+    .captcha-group-1{
+        display: grid;
+        grid-template-columns: 1fr 96px 32px;
+        column-gap: 8px;
+        align-items: center;
+        margin-top: 12px;
+    }
+    .captcha-code-1{
+        width: 100%;
+        height: 44px;
+        line-height: 44px;
+        font-size: 14px;
+    }
+    .refresh-btn-1 img{
+        width: 24px;
+        height: 24px;
+    }
+
+    /* 送出鈕：全寬、取消左邊距 */
+    .register-btn{
+        width: 100%;
+        height: 44px;
+        margin: 16px 0 0 0;
+        font-size: 16px;
+        border-radius: 999px;
+    }
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
 </style>
-
-<script setup>
-    import { ref, onMounted, reactive, computed, watch } from 'vue'
-
-    // 密碼
-    const pwd1 = ref('')  
-    const pwd2 = ref('')
-    // 判斷密碼同樣才可以送出
-    const canSubmit = computed(() => {    
-    return pwd1.value.length > 0 &&
-           pwd2.value.length > 0 &&
-           pwd1.value === pwd2.value
-    })
-    // 驗證碼
-    const captchaCode = ref('TJD102')
-    const genCode = () => Math.random().toString(36).slice(2, 8).toUpperCase()
-    // 欄位
-    const name = ref('')
-    const phone = ref('')
-    const gender = ref('')
-    const address = ref('')      
-    const email = ref('')
-    const captcha = ref('')
-    // 送出
-    const handleRegister = () => {
-    if (!canSubmit.value) return
-    alert('註冊成功！（假資料測試）')
-    }
-
-    /* ---- 假後端：取會員註冊資料 ---- */
-    function fetchMember() {
-        return new Promise(resolve => {
-            setTimeout(() => {
-            resolve({
-                name: '王小明',                // 先顯示
-                phone: '0912-345-678',
-                city: '台北市',
-                district: '大安區',
-                address: '仁愛路三段 123 號'
-            })
-            }, 300)
-        })
-        }
-        function updateMember(payload) {
-        return new Promise(resolve => setTimeout(() => resolve({ ok: true }), 500))
-    }
-
-    /* ---- 狀態 ---- */
-    const member = reactive({
-        city: '',
-        district: '',
-    })
-
-    const saving = ref(false)
-    const savedAt = ref('')
-    /* ---- 縣市 / 鄉鎮選單 ---- */
-    const DISTRICTS = {
-        台北市: ['中正區', '大安區', '信義區', '士林區'],
-        新北市: ['板橋區', '新店區', '三重區', '永和區'],
-        桃園市: ['桃園區', '中壢區', '龜山區', '八德區']
-    }
-    const cities = Object.keys(DISTRICTS)
-    const districtOptions = computed(() => DISTRICTS[member.city] || [])
-        watch(() => member.city, () => {
-        if (!districtOptions.value.includes(member.district)) member.district = ''
-    })
-
-</script>
 

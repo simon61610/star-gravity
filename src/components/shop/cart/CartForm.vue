@@ -5,7 +5,7 @@
 -->
 
 <script setup>
-    import { ref, onMounted } from 'vue'
+    import { ref, computed, onMounted } from 'vue'
     import $ from 'jquery'
     
     // 商品假資料 => 要改用 storage 傳入
@@ -33,6 +33,22 @@
     )
 
     const products = productDetail.value
+
+
+    // 縣市假資料
+    const cities = ref([
+        { name: '台北市', districts: ['中正區', '大同區', '中山區', '松山區', '大安區'] },
+        { name: '新北市', districts: ['板橋區', '新莊區', '中和區', '永和區', '三重區'] },
+        { name: '桃園市', districts: ['桃園區', '中壢區', '平鎮區', '八德區'] },
+    ])
+
+    const selectedCity = ref('')
+    const selectedDistrict = ref('')
+
+    const districts = computed(() => {
+        const city = cities.value.find(c => c.name === selectedCity.value)
+        return city ? city.districts : []
+    })
 
 
     // 引用 jQuery 做 toggle
@@ -161,11 +177,20 @@
                     <div class="input-box">
                         <h3><span>*</span>地址</h3>
                         <div class="address">
-                            <select name="" id="">
-                                <option value=""></option>
+                            <!-- 縣市 -->
+                            <select id="" v-model="selectedCity">
+                                <option value="">請選擇縣市</option>
+                                <option v-for="city in cities" :value="city.name">
+                                    {{ city.name }}
+                                </option>
                             </select>
-                            <select name="" id="">
-                                <option value=""></option>
+
+                            <!-- 區 -->
+                            <select id="" v-model="selectedDistrict" :disabled="!selectedCity">
+                                <option value="">請選擇區域</option>
+                                <option v-for="district in districts" :value="district">
+                                    {{ district }}
+                                </option>
                             </select>
                         </div>
                         <input type="text" placeholder="請輸入真實地址">
@@ -440,8 +465,16 @@
                     }
                     .address {
                         select {
+                            font-size: $pcChFont-H4;
+                            padding: 12px 16px;
+                            border: 1px solid #888;
+                            border-radius: 8px;
+                            font-family: $chFont;
+                            cursor: pointer;
+                            margin-bottom: 16px;
+                            margin-right: 12px;
+
                             option {
-                                
                             }    
                         }
                     }

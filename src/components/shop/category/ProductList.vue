@@ -153,7 +153,7 @@
                 </div>
             </div>
         </div>
-        <div>  
+        <div class="pagination">  
             <Pagination
                 :modelValue="currentPage"
                 @update:modelValue="pageChange"
@@ -230,6 +230,40 @@
                     color: $primaryColor-500;
                 }
             }
+        }
+    }
+
+
+        @media (max-width: 431px) {
+        .product-items {
+            padding: 0 16px;
+            gap: 16px;
+            justify-content: center;
+
+            .item__card {
+                max-width: 45%;
+                // border: 1px solid red;
+
+                &__img {
+                    width: 100%;
+                    height: auto;
+                }
+                &__text {
+                    &--name {
+                        font-size: 16px;
+                    }
+                    &--spe-price {
+                        font-size: 14px;
+                    }
+                    &--price {
+                        font-size: 14px;
+                    }
+                }
+            }
+        }
+
+        .pagination {
+            // border: 1px solid red;
         }
     }
 </style>

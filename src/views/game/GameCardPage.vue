@@ -2,18 +2,29 @@
 import { ref, computed, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 
-// ===== 圖片（示意路徑，請改成你的實際檔案）=====
-import backSvg  from '@/assets/images/games/GameCardPage/game_card01.svg'
-import front01  from '@/assets/images/games/GameCardPage/game_card02.svg'
+// ===== 圖片（請改成你的實際檔案）=====
+import backSvg   from '@/assets/images/games/GameCardPage/game_card01.svg'
+import front01   from '@/assets/images/games/GameCardPage/game_card02.svg' // 先當作通用正面圖
+const frontFallback = front01
 
-// ===== 結果類別（共 5 種）=====
+// 若你已有五款正面圖，打開並改成你的路徑：
+import frontLove   from '@/assets/images/games/GameCardPage/front-love.svg'
+import frontCareer from '@/assets/images/games/GameCardPage/front-career.svg'
+import frontHealth from '@/assets/images/games/GameCardPage/front-health.svg'
+import frontWealth from '@/assets/images/games/GameCardPage/front-wealth.svg'
+import frontStudy  from '@/assets/images/games/GameCardPage/front-study.svg'
+
+// 類別 → 正面圖（目前先都用同一張；有五款圖時把對應值換掉）
+const FRONT_OF_TYPE = {
+  love:   frontLove,
+  career: frontCareer,
+  health: frontHealth,
+  wealth: frontWealth,
+  study:  frontStudy,
+}
+
+// ===== 結果類別（5 種）=====
 const TYPES = ['love', 'career', 'health', 'wealth', 'study']
-
-// 12 張牌 → 依素材配置對應類別（範例：平均分配；可自行調整）
-const TYPE_OF_CARD = [
-  'love','career','health','wealth','study','love',
-  'career','health','wealth','study','love','career'
-]
 
 // ===== 舞台/卡片位置（px）=====
 const STAGE = { w: 1400, h: 800 }
@@ -23,24 +34,26 @@ const SLOTS = { y: 200, gap: 250, tilt: [-8, 0, 8] }
 const CENTER = { offsetX: 0 }
 
 const total = 12
-const fronts = Array(total).fill(front01)
 
 const cards = ref(
   Array.from({ length: total }, (_, i) => ({
     i,
-    place: 'deck',     // 'deck' | 'slot'
-    slotIndex: -1,     // 0..2
+    place: 'deck',   // 'deck' | 'slot'
+    slotIndex: -1,   // 0..2
     flipped: false,
-    type: TYPE_OF_CARD[i]
+    type: null       // 一開始不指定；點擊時從剩餘類別隨機指定
   }))
 )
 
 const MAX_PICKS = 3
-const usedSlots = ref([])            // 純 JS，不要加泛型
-const pickedIndexes = ref([])        // 被抽中的卡 index
-const pickedTypes = ref(new Set())   // 確保類別不重複
+const usedSlots = ref([])           // 已用槽位
+const pickedIndexes = ref([])       // 抽到的卡 index
+const pickedTypes = ref(new Set())  // 已抽到的類別（避免重複）
 
 const canPickMore = computed(() => pickedIndexes.value.length < MAX_PICKS)
+const isFull = computed(() => pickedIndexes.value.length === MAX_PICKS)
+const ctaText = computed(() => (isFull.value ? '查看占卜結果' : '請依直覺抽出三張'))
+const onCtaClick = () => { if (isFull.value) goResult() } // 抽滿才導頁
 
 // 底部位置（水平置中直線）
 const deckPos = (idx) => {
@@ -71,14 +84,27 @@ const styleFor = (c, idx) => {
   }
 }
 
-// 點擊：移到上方 → 到位後翻面（同類別不可重複）
+// 依卡片類別取得正面圖
+const frontSrc = (c) => (c.type ? (FRONT_OF_TYPE[c.type] || frontFallback) : frontFallback)
+
+// 從尚未抽過的類別中，隨機挑一個
+const pickRandomAvailableType = () => {
+  const remaining = TYPES.filter(t => !pickedTypes.value.has(t))
+  if (remaining.length === 0) return null
+  const r = Math.floor(Math.random() * remaining.length)
+  return remaining[r]
+}
+
+// 點擊：指派隨機類別（不可與已抽重複）→ 移到槽位 → 翻面
 const onPick = async (idx) => {
   const card = cards.value[idx]
   if (!canPickMore.value) return
   if (card.place === 'slot' || card.flipped) return
 
-  // 防止選到已存在的「結果類別」
-  if (pickedTypes.value.has(card.type)) return
+  // 指派一個尚未出現過的類別
+  const type = pickRandomAvailableType()
+  if (!type) return
+  card.type = type
 
   // 找空槽位 (0..2)
   const slot = [0,1,2].find(s => !usedSlots.value.includes(s))
@@ -88,7 +114,7 @@ const onPick = async (idx) => {
   card.slotIndex = slot
   usedSlots.value.push(slot)
   pickedIndexes.value.push(idx)
-  pickedTypes.value.add(card.type)
+  pickedTypes.value.add(type)
 
   await nextTick()
   setTimeout(() => { card.flipped = true }, 600) // 與 CSS transition 對齊
@@ -112,7 +138,6 @@ const goResult = () => {
     console.warn('localStorage 寫入失敗：', e)
   }
 
-  // 以路由名稱 'gamestory' 導頁
   router.push({
     name: 'gamestory',
     query: {
@@ -121,7 +146,6 @@ const goResult = () => {
     },
   })
 }
-
 </script>
 
 <template>
@@ -134,16 +158,18 @@ const goResult = () => {
         // 如需舞台背景圖：backgroundImage: `url(${bgStage})`
       }"
     >
+      <!-- 整合版 CTA：未抽滿顯示提示；抽滿變成「查看占卜結果」可點擊 -->
       <button
-        class="cta" 
+        class="cta"
         :style="{ '--center-offset': CENTER.offsetX + 'px' }"
         type="button"
-        disabled
+        :disabled="!isFull"
+        @click="onCtaClick"
       >
-        請依直覺抽出三張牌
-        <span v-if="!canPickMore">（已抽滿 3 張）</span>
+        {{ ctaText }}
       </button>
 
+      <!-- 卡片 -->
       <button
         v-for="(c, idx) in cards"
         :key="c.i"
@@ -154,20 +180,10 @@ const goResult = () => {
         @click="onPick(idx)"
       >
         <div class="card-inner" :class="{ 'is-flipped': c.flipped }">
-          <img class="card-face card-front" :src="fronts[idx]" :alt="`卡片正面 ${idx + 1}`" />
+          <img class="card-face card-front" :src="frontSrc(c)" :alt="`卡片正面 ${idx + 1}`" />
           <img class="card-face card-back"  :src="backSvg" alt="卡片背面" />
         </div>
       </button>
-
-      <!-- 抽滿才可點的「查看結果」 -->
- <button
-  class="result-btn"
-  type="button"
-  :disabled="pickedIndexes.length !== 3"
-  @click="goResult"
->
-  {{ pickedIndexes.length === 3 ? '查看結果' : `已選 ${pickedIndexes.length}/3` }}
-</button>
     </div>
   </main>
 </template>
@@ -192,6 +208,8 @@ const goResult = () => {
   position: relative;
   background: no-repeat center / cover;
   overflow: hidden;
+
+
 }
 
 /* CTA 置中（依背景微調） */
@@ -208,6 +226,7 @@ const goResult = () => {
   background: #26264b;
   border: none;
   box-shadow: 0 6px 16px rgba(0, 0, 0, .25);
+  z-index: 1000; /* 確保不被卡片蓋住 */
 }
 .cta:disabled { opacity: .6; cursor: default; }
 
@@ -247,21 +266,4 @@ const goResult = () => {
   border-radius: 12px;
 }
 .card-front { transform: rotateY(180deg); }
-
-/* 查看結果按鈕 */
-.result-btn{
-  position: absolute;
-  left: 50%;
-  bottom: 24px;
-  transform: translateX(-50%);
-  padding: 12px 24px;
-  border-radius: 999px;
-  font-size: 18px;
-  font-weight: 700;
-  color: #fff;  
-  background: #E76F51;
-  border: none;
-  box-shadow: 0 6px 16px rgba(0,0,0,.25);
-}
-.result-btn:disabled { opacity: .6; cursor: default; }
 </style>
