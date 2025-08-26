@@ -1,9 +1,9 @@
 <!----我的收藏---->
 <script setup>
-    import { ref, computed } from 'vue'
+    import { ref, computed, onMounted } from 'vue'
     import Pagination from '@/components/common/Pagination.vue'
-    import shopToast from '@/components/common/shopToast.vue'  // 新增
-    import { showToast } from '@/composables/useToast'         // 新增
+    import shopToast from '@/components/common/shopToast.vue'  
+    import { showToast } from '@/composables/useToast'         
 
     // 先放 8 張假資料；之後接 API 只要改這個陣列即可
     const products = ref(
@@ -13,7 +13,6 @@
             price: 2500,
         }))
     )
-    // const products8 = computed(() => products.value.slice(0, 8))
 
     const formatTWD = (n) => `NT$${Number(n).toLocaleString('zh-TW')}`
 
@@ -42,21 +41,16 @@
         showToast('已取消收藏', { type: 'info', duration: 1800 })
         }
     }
-    // 直接購買 
-    // const showAdded = ref(false)
 
-    //     function onBuyNow () {
-    //     showAdded.value = true               // 顯示成功畫面
-    //     // 自動關閉（1.5 秒）
-    //     setTimeout(() => { showAdded.value = false }, 1500)
-    // }
-    // function closeAdded () {
-    //     showAdded.value = false
-    // }
     function onBuyNow () {
         // 這裡可放實際購物流程，成功後提示：
         showToast('已加入購物車！', { type: 'success', duration: 2000 })
     }
+
+    // 斷點430使用
+    onMounted(() => {
+        if (window.matchMedia('(max-width: 433px)').matches) pageSize.value = 4
+    })
 
 </script>
 
@@ -68,7 +62,7 @@
         <shopToast/>
 
         <div class="flex">
-            <article v-for="p in products" :key="p.id" class="card">
+            <article v-for="p in showProducts" :key="p.id" class="card">
                 
                 <div class="photoall">
                     <div class="thumb">
@@ -90,16 +84,6 @@
             </article>
             
             <!-- 自製小彈窗已改為 toast 呈現 -->
-            <!-- <div v-if="showAdded" class="cart-overlay" @click="closeAdded">
-                <div class="cart-modal" @click.stop>
-                    <div class="ok">✓</div>    
-                    <h3>已加入購物車</h3>
-                    <p class="hint">商品已加入購物車，您可繼續選購</p>
-                    <div class="modal-actions">
-                        <button class="btn outline" @click="closeAdded">知道了</button>
-                    </div>
-                </div>
-            </div> -->
             
             <!----分頁-------->
             <div class="pager">
@@ -154,6 +138,7 @@
     width: 170px;
     display: flex;
     flex-direction: column;
+    line-height: $linHeight-p;
 }
 .titleprice{
     height: 70px;
@@ -196,57 +181,96 @@
 .btn:active { 
     transform: translateY(1px); 
 }
-// 購物車小彈窗
-// .cart-overlay{
-//   position: fixed; inset: 0; z-index: 9999;
-//   background: rgba(0,0,0,.45);
-//   display: grid; place-items: center;
-// }
-// .cart-modal{
-//   width: min(320px, 86vw);
-//   background: #fff;
-//   color: #222;
-//   border-radius: 14px;
-//   padding: 20px 18px;
-//   text-align: center;
-//   box-shadow: 0 12px 30px rgba(0,0,0,.25);
-//   animation: pop .15s ease-out;
-// }
-// .ok{
-//   width: 44px; height: 44px; margin: 0 auto 8px;
-//   border-radius: 50%;
-//   background: #16a34a;     /* 綠色圈 */
-//   color: #fff; display: grid; place-items: center;
-//   font-weight: 700; font-size: 22px;
-// }
-// .hint{ 
-//     margin-top: 4px; 
-//     color:#666; 
-//     font-size:14px; 
-// }
-// .modal-actions{ 
-//     margin-top: 12px; 
-//     display:flex; 
-//     justify-content:center; 
-//     gap:8px; 
-// }
-// .btn.outline{
-//     background: transparent; 
-//     //   color:#444; 
-//     //   border:1px solid #ccc; 
-//     border-radius: 999px;
-//     padding: 8px 14px; 
-//     cursor: pointer;
-// }
 @keyframes pop { 
     from { transform: scale(.96); opacity: .6 } to { transform: none; opacity: 1 } 
 }
 // 分頁
 .pager{
     width: 700px;
-    // display: flex;
     justify-content: center;  
     padding-right: 4px; 
 }
+
+@media screen and (max-width: 433px) {
+    .products{
+        width: 100%;
+        height: auto;
+        padding: 12px;
+        box-sizing: border-box;
+    }
+    .flex{
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 20px;
+        row-gap: 20px;
+    }
+    /* 圖片 */
+    .card{
+        width: 100%;
+        height: auto;
+        margin: 0;
+    }
+    .photoall{
+        width: 100%;
+        align-items: stretch;
+    }
+    .thumb{
+        width: 100%;
+        max-width: 160px;
+        aspect-ratio: 1 / 1;     
+        overflow: hidden;
+        border-radius: 8px;
+        margin: 0 auto;
+    }
+    .thumb img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;     
+        display: block;
+    }
+    /* 文案字級稍微縮小、置中 */
+    .down{
+        width: 100%;
+    }
+    .titleprice{
+        height: auto;
+        margin-top: 8px;
+        color: $FontColor-white;
+    }
+    .title{
+        margin: 4px 0 2px;
+        font-size: 14px;
+        text-align: center;
+    }
+    .price{
+        font-size: 14px;
+        text-align: center;
+        opacity: .9;
+    }
+    /* 按鈕 */
+    .actions{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        width: 100%;
+        max-width: 160px;
+        margin: 10px auto;
+    }
+    .btn{
+        margin-top: 0;
+        padding: 8px 0;
+        font-size: 14px;
+        border-radius: 8px;
+    }
+    /* 分頁 */
+    .pager{
+        width: 100%;
+        padding: 8px 100px 16px;
+        display: flex;
+        justify-content: center;
+    }
+
+}
+
 </style>
 

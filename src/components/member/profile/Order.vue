@@ -59,10 +59,6 @@
     // 總筆數（給 Pagination 的 :total）
     const filteredTotal = computed(() => dataSource.value.length)
 
-    // const handleEdit = (index, row) => {
-    //     console.log(index, row)
-    // }
-
     // 表格顯示資料（按頁切 slice）
     const showATable = computed(() => {
         const start = (orderPage.value - 1) * pageSize.value
@@ -82,7 +78,7 @@
 
 </script>
 
-<template>    <!-----我的訂單---------->
+<template>   
         
     <!-----右邊表格-------->
     <div class="order-table-wrapper">
@@ -132,17 +128,46 @@
 }
 .pager{
     width: 800px;
-    // display: flex;
     justify-content: center;  
-    // padding-right: 4px; 
     padding-top: 10px;
 }
-//  .el-pager li.is-active,
-//   .el-pager .number.is-active {
-//     background-color: $primaryColor-500;
-//     border-color: $primaryColor-500;
-//     color: #fff;
-//     font-weight: 700;
-//   }
+
+@media screen and (max-width: 433px) {
+    .order-table-wrapper{
+        width: 100%;
+        padding: 0 12px;
+        box-sizing: border-box;
+    }
+    /* 表格 */
+    .order-table-box{
+        width: 100%;
+        padding-top: 12px;
+        overflow-x: auto;                 /* 水平卷軸 */
+        -webkit-overflow-scrolling: touch;
+    }
+    /* 表格本體設定最小寬，讓欄位不被壓扁 */
+    .order-table-box :deep(.el-table){
+        min-width: 680px;                
+        font-size: 14px;
+    }
+    /* 表格文字 */
+    .order-table-wrapper :deep(.el-table__header th){
+        font-size: 14px;
+        text-align: center;
+    }
+    .order-table-wrapper :deep(.el-table__cell){
+        font-size: 14px;
+        padding: 10px 8px;
+    }
+    /* 分頁 */
+    .pager{
+        width: 100%;
+        padding: 8px 0 16px;
+        display: flex;
+        justify-content: center;
+    }
+
+}
+
 </style>
 

@@ -4,7 +4,7 @@
       <h1>請選擇遊戲種類</h1>
       <div class="cards">
         <div class="card">
-              <img src="/src/assets/images/games/GameHomePage/gamecenter-door1.png" alt="星占卜">
+              <router-link to="/gamecard"><img src="/src/assets/images/games/GameHomePage/gamecenter-door1.png" alt="星占卜"></router-link>
           </div>
           <div class="card">
              <img src="/src/assets/images/games/GameHomePage/gamecenter-door2.png" alt="許願牆">
