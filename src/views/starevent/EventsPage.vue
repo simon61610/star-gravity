@@ -316,10 +316,10 @@ const placeTags = [
             }
 
         }
+    }
 
-
-
-
+    @media screen and (max-width: 431px) {
+        
     }
 
 

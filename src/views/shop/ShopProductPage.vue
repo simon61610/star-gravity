@@ -372,7 +372,7 @@
     }
 
 
-    @media (max-width: 431px) {
+    @media screen and (max-width: 431px) {
         .product-page {
         // ------------------- 上方 -------------------
             .container {

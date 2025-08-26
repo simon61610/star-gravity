@@ -36,7 +36,7 @@
         }
     }
 
-    @media (max-width: 431px) {
+    @media screen and (max-width: 431px) {
         .cart-banner {
             .title-box {
                 padding-top: 20px;

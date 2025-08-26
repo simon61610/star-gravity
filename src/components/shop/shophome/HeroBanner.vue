@@ -123,7 +123,7 @@ import prodSlides from '@/data/prodSlides'; // console.log(prodSlides) // Array
                     }
                 }
 
-                @media (max-width: 431px) {
+                @media screen and (max-width: 431px) {
 
                     .content {
                         width: 80%;

@@ -134,7 +134,7 @@ const categories = [
         } 
     }
 
-    @media(max-width: 431px){
+    @media screen and (max-width: 431px){
         .prod-cate {
             padding: 40px 16px;
 

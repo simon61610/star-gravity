@@ -519,7 +519,7 @@
         }
     }
 
-    @media (max-width: 431px){
+    @media screen and (max-width: 431px){
         .checkout-section {
         // --------- 上方: 購物清單 ---------
         .cart-list {

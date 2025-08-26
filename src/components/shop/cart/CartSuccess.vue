@@ -284,7 +284,7 @@
         }
     }
 
-    @media (max-width: 431px) {
+    @media screen and (max-width: 431px) {
         .success-section {
             padding: 20px 24px 0;
             display: flex;
