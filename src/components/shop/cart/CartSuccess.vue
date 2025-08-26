@@ -49,11 +49,11 @@
             <div class="text-box">
                 <h3>【 感謝您的惠顧 】</h3>
                 <ul>
-                    <li>到貨注意事項到貨注意事項到貨注意事項到貨注意事項到貨注意事項到貨注意事項到貨注意事項到貨注意事項到貨注意事項</li>
-                    <li>到貨注意事項到貨注意事項到貨注意事項到貨注意事項到貨注意事項到貨注意事項到貨注意事項到貨注意事項</li>
+                    <li>商品配送過程中如遇天候、交通或其他不可抗力因素，可能導致延遲送達，敬請理解並耐心等候，建議預留彈性時間。</li>
+                    <li>收件時請務必確認包裝是否完整，如有破損或異常，請立即拍照並與客服聯繫，以保障您的權益。</li>
                 </ul>
                 <h3>【 詐騙猖獗，小心詐騙 】</h3>
-                <p>詐騙提醒詐騙提醒詐騙提醒詐騙提醒詐騙提醒詐騙提醒詐騙提醒詐騙提醒詐騙提醒詐騙提醒詐騙提醒詐騙提醒</p>
+                <p>請留意近期詐騙猖獗，若接獲自稱客服或銀行來電，要求提供帳號密碼或轉帳匯款，務必提高警覺，以免受騙上當。</p>
             </div>
         </section>
 
@@ -182,82 +182,82 @@
         .shopping-details {
             align-self: stretch;
             .toggle-content{
-                    display: flex;
-                    flex-direction: column;
-                    .items{
-                        .item{
-                            padding: 16px 0;
-                            border-bottom: 2px solid #ccc;
-        
-                            // border: 1px solid red;
+                display: flex;
+                flex-direction: column;
+                .items{
+                    .item{
+                        padding: 16px 0;
+                        border-bottom: 2px solid #ccc;
+    
+                        // border: 1px solid red;
+                        display: flex;
+                        align-items: center;
+                        &__img { // 圖片
+                            display: block;
+                        }
+                        &__info { // 商品名稱與金額
                             display: flex;
+                            gap: 20px;
                             align-items: center;
-                            &__img { // 圖片
-                                display: block;
+                            // border: 1px solid red;
+                            flex-grow: 1;
+    
+    
+                            &__name {
+                                padding-left: 40px;
+                                font-size: $pcChFont-H4;
+                                line-height: 1.2;
                             }
-                            &__info { // 商品名稱與金額
+                            &__price {
                                 display: flex;
-                                gap: 20px;
-                                align-items: center;
-                                // border: 1px solid red;
+                                // border: 1px solid blue;
                                 flex-grow: 1;
-        
-        
-                                &__name {
-                                    padding-left: 40px;
-                                    font-size: $pcChFont-H4;
-                                    line-height: 1.2;
-                                }
-                                &__price {
+                                justify-content: space-between;
+                                // gap: 32px;
+                                align-items: center;
+                                .price-per-item {
                                     display: flex;
-                                    // border: 1px solid blue;
-                                    flex-grow: 1;
-                                    justify-content: space-between;
-                                    // gap: 32px;
-                                    align-items: center;
-                                    .price-per-item {
-                                        display: flex;
-                                        gap: 12px;
-                                        flex-direction: column;
-                                        text-align: center;
-                                        padding-left: 60px;
-                                        .price {
-                                            font-size: $pcChFont-H4;
-                                        }
-                                        .spe-price {
-                                            text-decoration: line-through;
-                                            color: #888;
-                                        }
-                                    }
-                                    .sub-count, .sub-price {
+                                    gap: 12px;
+                                    flex-direction: column;
+                                    text-align: center;
+                                    padding-left: 60px;
+                                    .price {
                                         font-size: $pcChFont-H4;
                                     }
+                                    .spe-price {
+                                        text-decoration: line-through;
+                                        color: #888;
+                                    }
                                 }
-                            }
-                        }
-                    }
-                    .cal-box {
-                        align-self: flex-end;
-                        width: 360px;
-                        padding-top: 32px;
-                        font-size: $pcChFont-H4;
-                        display: flex;
-                        flex-direction: column;
-                        gap: 24px;
-                        p {
-                            display: flex;
-                            justify-content: space-between;
-        
-                            &:last-child{
-                                padding: 32px 0;
-                                border-top: 1px solid #888;
+                                .sub-count, .sub-price {
+                                    font-size: $pcChFont-H4;
+                                }
                             }
                         }
                     }
                 }
+                .cal-box {
+                    align-self: flex-end;
+                    width: 360px;
+                    padding-top: 32px;
+                    font-size: $pcChFont-H4;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 24px;
+                    p {
+                        display: flex;
+                        justify-content: space-between;
+    
+                        &:last-child{
+                            padding: 32px 0;
+                            border-top: 1px solid #888;
+                        }
+                    }
+                }
+            }
         }
 
-        // ----- 購物明細 -----
+        // ----- 按鈕 -----
         .btn-box {
             font-size: $pcChFont-H4;
             display: flex;
@@ -279,6 +279,121 @@
                 background-color: $secondaryColor-orange;
                 &:hover {
                     background-color: $primaryColor-900;
+                }
+            }
+        }
+    }
+
+    @media (max-width: 431px) {
+        .success-section {
+            padding: 20px 24px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+
+            // ----- 購物成功文字 -----
+            .show-success {
+                .success-icon {
+                    img {
+                        width: 100px;
+                    }
+                    h2 {
+                    }
+                }
+                .order-number {
+                    font-size: 24px;
+                }
+                .member-center{
+                    span {
+                    }
+                }
+
+            }
+
+            // ----- 客戶提醒 -----
+            .customer-notices {
+                .text-box {
+                    font-size: 16px;
+                    h3 {}
+                    ul {
+                        li {
+                        }
+                    }
+                    p {
+                    }
+                }
+            }
+
+
+
+            // ----- 購物明細 -----
+            .shopping-details {
+                align-self: stretch;
+                .toggle-content{
+                    .items{
+                        .item{
+                            gap: 20px;
+                            &__img { // 圖片
+                                display: block;
+                            }
+                            &__info { // 商品名稱與金額
+                                align-items: flex-start;
+                                flex-direction: column;
+        
+        
+                                &__name {
+                                    padding-left: 12px;
+                                }
+                                &__price {
+                                    padding-left: 12px;
+                                    align-items: start;
+                                    flex-direction: column;
+                                    gap: 12px;
+                                    .price-per-item {
+                                        display: flex;
+                                        gap: 12px;
+                                        flex-direction: row;
+                                        text-align: left;
+                                        padding-left: 0;
+                                        .price {
+                                            font-size: $pcChFont-H4;
+                                        }
+                                        .spe-price {
+                                            text-decoration: line-through;
+                                            color: #888;
+                                        }
+                                    }
+                                    .sub-count, .sub-price {
+                                        font-size: 20px;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .cal-box {
+                        width: 100%;
+                        p {
+                        }
+                    }
+                    .toggle-inside {
+
+                        .arrow-inside {
+                        }
+                    }
+                }
+            }
+
+            // ----- 按鈕 -----
+            .btn-box {
+                flex-direction: column;
+                gap: 20px;
+                .back-home, .back-shop {
+                    flex-basis: 100%;
+                }
+                .back-home {
+                }
+                .back-shop {
                 }
             }
         }
