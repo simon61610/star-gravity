@@ -90,7 +90,7 @@ watch(
                 <li><router-link to="/Newpage">天文快訊</router-link></li>       <!--<li><router-link :to="{ name: 'NewpageView' }">天文快訊</router-link></li>--->
                 <li><router-link to="/gamesky">星視野</router-link></li>
                 <li><router-link to="/mapfirst">星據點</router-link></li>
-                <li><router-link to="/">星遊戲</router-link></li>
+                <li><router-link to="/gamehome">星遊戲</router-link></li>
                 <li><router-link to="/events">星星活動</router-link></li>
                 <li><router-link to="/shop">星空小舖</router-link></li>               
                 <li><router-link to="/loginfirst"><i class="fa-solid fa-user fa-lg"></i></router-link></li>
