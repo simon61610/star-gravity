@@ -36,7 +36,7 @@
 		<div v-show ="!loader.active">
 			<Header  v-if="$route.meta.layout !== 'backend' && $route.meta?.layout !== 'index'" />   <!--只要不是 backend 也不是 index，才顯示-->
 			
-			<router-view      />
+			<router-view/>
 			
 			<Footer  v-if="$route.meta.layout !== 'backend' && $route.meta?.layout !== 'index'"/>  
 		</div>
