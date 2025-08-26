@@ -109,4 +109,51 @@
     }
 
 
+    @media screen and (max-width: 431px) {
+        .success-section {
+            padding: 20px 24px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+
+            // ----- 報名成功文字 -----
+            .show-success {
+                .success-icon {
+                    img {
+                        width: 100px;
+                    }
+                    h2 {
+                    }
+                }
+                .order-number {
+                    font-size: 24px;
+                }
+                .member-center{
+                    span {
+                    }
+                }
+
+            }
+
+            // ----- 按鈕 -----
+            .btn-box {
+                flex-direction: column;
+                gap: 20px;
+                .back-home, .back-shop {
+                    flex-basis: 100%;
+                }
+                .back-home {
+                }
+                .back-shop {
+                }
+            }
+        }
+
+
+
+
+    }
+
+
 </style>

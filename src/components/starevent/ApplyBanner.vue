@@ -38,5 +38,20 @@
         
     }
 
+    @media screen and (max-width: 431px) {
+        .cart-banner {
+        aspect-ratio: 3 / 1;
+        .title-box {
+            padding-bottom: 10vw;
+            .decTitle--medium {
+                font-size: 60px;
+            }
+            .cnTitle--h5 {}
+        }
+    }
+
+        
+    }
+
 
 </style>

@@ -319,7 +319,108 @@ const placeTags = [
     }
 
     @media screen and (max-width: 431px) {
+        .eventhome-section {
+            
+            padding:0 16px 40px;
+            
+            .eventhome-banner {
+                flex-direction: column;
+                gap: 40px;
+                .banner-content {
+                    h1 {
+                        font-size: 88px;
+                    }
+                    h2 {
+                    }
+                }
+                img {
+                    align-self: auto;
+                    width: 60vw;
+                }
+            }
+
+            .main {
+                padding: 24px 24px;
+                .container {
+                    gap: 40px;
+                    // 選擇活動類型
+                    .event-type {
+                        padding-bottom: 40px;
         
+                        .select-title {}
+        
+                        .event-box {
+                            display: flex;
+                            flex-wrap: wrap;
+                            justify-content: auto;
+                            gap: 20px;
+                            .event-select {
+                                width: 45%;
+            
+                                img {
+                                    display: block;
+                                    width: 100%;
+                                    object-fit: cover;
+                                }
+                            }
+                        }
+                    }
+        
+                    // 活動項目區
+                    .event-list-section {
+                        width: 100%;
+                        gap: 16px;
+                        // header
+                        header {
+                            h2 {
+                            }
+                            .event-ctrl{
+                                padding-bottom: 20px;
+                                overflow: scroll;
+                                .place-tags{
+                                    .tag {
+                                        flex-shrink: 0;
+                                    }
+                                }
+                                .select-date {}
+                            }
+                        }
+        
+                        // 活動項目卡片區
+                        .event-list {
+                            flex-wrap: nowrap;
+                            justify-content: flex-start;
+                            gap: 20px;
+                            overflow: scroll;
+                            padding-bottom: 20px;
+                            .event-card {
+                                flex-shrink: 0;
+                                width: 300px;
+                                overflow: hidden;
+                                img {
+                                }
+                                .card-content {
+                                    .date {
+                                    }
+                                    .event-name {
+                                    }
+                                    .address {
+                                        .fa-location-dot {
+                                        }
+                                        p {
+                                        }
+                                    }
+                                    .tags {
+                                        .place-tag {}
+                                        .type-tag {}
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
 

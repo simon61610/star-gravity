@@ -151,7 +151,24 @@
 }
 
 
+@media screen and (max-width: 431px) {
+    
+    .registration-section {
+        .btn-box {
+            flex-direction: column-reverse;
+            gap: 16px;
+            align-items: center;
 
+            .previous-btn, .next-btn {
+            }
+            .previous-btn {
+            }
+            .next-btn {
+                width: 80vw;
+            }
+        }
+    }
+}
 
 
 

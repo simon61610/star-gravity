@@ -290,10 +290,114 @@
             }
         }
     }
+
+
+
+    @media screen and (max-width: 431px) {
+        .event-detail {
+            padding-bottom: 40px;
+            gap: 20px;
+
+            // 圖片選擇區
+            .pic-container {
+                img {
+                }
+                .selected-pic {
+                    margin-bottom: 20px;
+                }
+                .pic-box {
+                    width: 100%;
+                    overflow: scroll;
+                    justify-content: flex-start;
+                    gap: 8px;
+                    img {
+                        width: 160px;
+                    }
+                }
+            }
+
+
+            // 活動內容區
+            .container {
+                // border: 1px solid red;
+                gap: 40px;
+                main {
+                    border-radius: 0;
+                    padding: 24px 32px;
+        
+                    // 活動標題
+                    .title-box {
+                        .tags {
+                            margin-bottom: 16px;
+                            .type-tag, .place-tag {
+                            }
+                        }
+                        h1 {
+                            font-size: 32px;
+                        }
+                    }
+        
+                    // 活動資訊
+                    .info-box {
+                        flex-direction: column;
+                        gap: 32px;
+
+                        .event-info {
+                            width: 100%;
+                            flex-direction: column;
+                            padding: 0;
+                            border: none;
+                            gap: 24px;
+                            padding-bottom: 32px;
+                            border-bottom: 1px solid #ccc;
+        
+                            .box {
+                                width: 100%;
+                                box-sizing: border-box;
+                                .title {}
+                                p {}
+        
+                                // 分隔線
+                                &:not(:first-child) {}
+
+                                padding-left: 24px;
+                                border-left: 1px solid #ccc;
+                            }
+                        }
+        
+        
+                        // 報名按鈕
+                        .apply-btn-box {
+                            .btn {
+                                padding: 12px 20px;
+                                &:hover {}
+                            }
+                        }
+                    }
+        
+                    // 活動介紹
+                    .intro-box {
+                        h2 {}
+                        p {}
+                    }
+                }
+                // 回活動頁按鈕
+                .back-btn {
+                    width: 80vw;
+                }
+            }
+
+        }
+
+
+        .no-event {
+            padding: 52px;
+            p {
+                &:hover {
+                }
+            }
+        }
+    }
     
-
-
-
-
 
 </style>
