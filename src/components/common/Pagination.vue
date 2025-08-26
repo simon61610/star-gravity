@@ -38,6 +38,7 @@ function changePage(newpage){
 @import '@/assets/styles/main.scss';
 
 .elementbox{
+    width: 100%;
    margin-top: 36px;
    padding-bottom: 40px;
 }
