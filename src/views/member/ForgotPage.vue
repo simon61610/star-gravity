@@ -1,4 +1,63 @@
-<template>      <!-----忘記密碼輸入驗證碼------->
+<script setup>
+    
+    import { ref, computed, onBeforeUnmount } from 'vue'
+    import { useRouter, useRoute } from 'vue-router'
+
+    const router = useRouter()
+    const route  = useRoute()
+    /* ------ 狀態 --------- */
+    const code = ref('')               // 使用者輸入的驗證碼
+    const loading = ref(false)       // 與後端互動時的 loading
+    const countdown = ref(0)           // 重新發送倒數（秒）
+    let timer = null                   // setInterval 參考
+
+    // 這裡用 6 碼英數
+    const isCodeValid = computed(() => /^[z0-9]{6}$/.test(code.value))
+    
+    /* ----- 行為 -------- */
+    // 重新發送驗證碼（並開始倒數）
+    function resend() {
+        if (countdown.value > 0) return
+        countdown.value = 10
+        timer = setInterval(() => {
+            countdown.value--
+            if (countdown.value <= 0) clearInterval(timer)
+        }, 1000)
+        console.log('重新發送驗證碼')
+    }
+
+    // 送出驗證碼 → 成功後導到「重設密碼」頁
+    async function submit () {
+        if (!isCodeValid.value) {
+            alert('請輸入 6 碼驗證碼')
+            return
+    }
+        loading.value = true
+        try {
+            // TODO: 呼叫後端驗證驗證碼
+            // await api.verifyCode({ email: route.query.email, code: code.value })
+
+            // 導頁到 resetpassword（子路由）
+            router.push('/loginfirst/resetpassword')
+        } finally {
+            loading.value = false
+        }
+    }
+
+    // 回到「輸入信箱」頁
+    function changeEmail () {
+        router.push('/loginfirst/forget')
+    }
+
+    /* 離開頁面時，記得把計時器清掉 */
+    onBeforeUnmount(() => {
+        if (timer) clearInterval(timer)
+    })
+
+
+</script>
+
+<template>     
         <div class="all2">
             <div class="forget-two" >
                 <h2>忘記密碼</h2>
@@ -75,63 +134,83 @@
     width: 222px;
     height: 45px;
 }
+
+@media screen and (max-width: 433px) {
+    .all2{
+        padding-top: 24px;
+        min-height: 100vh;
+        padding-bottom: 40px;
+    }
+    .forget-two{
+        width: auto;
+        height: auto;
+        margin: 0 12px;
+    }
+    .forget-two h2{
+        font-size: 20px;
+        text-align: center;  
+    }
+    /* 驗證碼輸入 + 重新發送 */
+    .codeTo{
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        column-gap: 10px;
+        align-items: center;
+        justify-content: unset;
+        margin: 16px 0 0;
+        padding: 0 12px;
+        box-sizing: border-box;
+    }
+    .codeto{
+        width: 100%;
+        height: 44px;
+        font-size: $pcChFont-small;
+        padding-left: 12px;
+        box-sizing: border-box;  
+        text-transform: uppercase;
+    }
+    .btnbtn{
+        height: 40px;
+        padding: 0 12px;
+        width: auto;     /* 依字寬縮放 */
+        margin: 0;       /* 移除上邊距 */
+    }
+    /* 按鈕 */
+    .btntwo{
+        width: 100%;
+        padding: 0 12px;
+        margin-top: 16px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 10px;
+    }
+    .btn{
+        width: 100%;
+        height: 44px;
+        margin: 0;              /* 移除原本的外距 */
+        font-size: 16px;
+        border-radius: 999px;
+    }
+    .btn:disabled{ 
+        opacity: .6; 
+        cursor: not-allowed;    /* 未輸入就不會顯示點(顏色) */
+    } 
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
 </style>
 
-<script setup>
-    
-    import { ref, computed, onBeforeUnmount } from 'vue'
-    import { useRouter, useRoute } from 'vue-router'
-
-    const router = useRouter()
-    const route  = useRoute()
-    /* ------ 狀態 --------- */
-    const code = ref('')               // 使用者輸入的驗證碼
-    const loading = ref(false)       // 與後端互動時的 loading
-    const countdown = ref(0)           // 重新發送倒數（秒）
-    let timer = null                   // setInterval 參考
-
-    // 這裡用 6 碼英數
-    const isCodeValid = computed(() => /^[z0-9]{6}$/.test(code.value))
-    
-    /* ----- 行為 -------- */
-    // 重新發送驗證碼（並開始倒數）
-    function resend() {
-        if (countdown.value > 0) return
-        countdown.value = 10
-        timer = setInterval(() => {
-            countdown.value--
-            if (countdown.value <= 0) clearInterval(timer)
-        }, 1000)
-        console.log('重新發送驗證碼')
-    }
-
-    // 送出驗證碼 → 成功後導到「重設密碼」頁
-    async function submit () {
-        if (!isCodeValid.value) {
-            alert('請輸入 6 碼驗證碼')
-            return
-    }
-        loading.value = true
-        try {
-            // TODO: 呼叫後端驗證驗證碼
-            // await api.verifyCode({ email: route.query.email, code: code.value })
-
-            // 導頁到 resetpassword（子路由）
-            router.push('/loginfirst/resetpassword')
-        } finally {
-            loading.value = false
-        }
-    }
-
-    // 回到「輸入信箱」頁
-    function changeEmail () {
-        router.push('/loginfirst/forget')
-    }
-
-    /* 離開頁面時，記得把計時器清掉 */
-    onBeforeUnmount(() => {
-        if (timer) clearInterval(timer)
-    })
-
-
-</script>
