@@ -84,6 +84,7 @@ onUnmounted( ()=>{
     <div class="map-reviewBox">
          <!-- 叉叉按鈕 -->
         <img class="mapbox-close" src="../../assets/icons/icon-map-close.svg" alt="" @click="closeModel">
+        <img class="mapbox-close2" src="../../assets/icons/icon-map-cross2.svg" alt="" @click="closeModel">
         <h3 class="mapbox-back"  @click="backToDetail">
             <img class="mapbox-backTo" src="../../assets/icons/icon-map-goToBack.svg" alt="">
             返回上頁
@@ -166,12 +167,15 @@ onUnmounted( ()=>{
 
     display: flex;
 }
-.mapbox-close{
+.mapbox-close, .mapbox-close2{
     height: 32px;
 
     position: absolute;
     top: 12px;
     right: 16px;
+}
+.mapbox-close2{
+    display: none;
 }
 .mapbox-back{
     color: $FontColor-white;
@@ -353,6 +357,37 @@ onUnmounted( ()=>{
 .mapreview-list h6{
     font-size:$pcChFont-small ;
     align-self: flex-end;
+}
+
+@media screen and (max-width:430px) {
+    .map-reviewBox{
+        flex-direction: column;
+    }    
+    .mapbox-close{
+        display: none;
+    }
+    .mapbox-close2{
+        display: block;
+    }
+    .mapreview-title{
+        margin-bottom: 12px;
+    }
+    .mapreview-left{
+        width: 100%;
+        padding: 60px 24px 16px;
+        align-items: start;
+        box-sizing: border-box;
+    }
+    .mapreview-btn{
+        align-self: center;
+    }
+
+    .mapreview-right{
+        width: 100%;
+        padding: 12px 24px 24px;
+        height:58vh;
+        box-sizing: border-box;
+    }
 }
 
 </style>
