@@ -79,9 +79,11 @@
                     </div>
     
                     <p class="apply-btn-box">
-                        <div class="btn">
-                            <i class="fa-solid fa-star"></i> 立即報名
-                        </div>
+                        <router-link to="/eventregistration" class="router-link">
+                            <div class="btn">
+                                <i class="fa-solid fa-star"></i> 立即報名
+                            </div>
+                        </router-link>
                     </p>
     
                 </div>
@@ -91,10 +93,11 @@
                     <p>{{ eventData.desc }}</p>
                 </div>
             </main>
-
-            <div class="back-btn">
-                回到活動列表
-            </div>
+            <router-link to="/events" class="router-link">
+                <div class="back-btn">
+                    回到活動列表
+                </div>
+            </router-link>
         </div>
 
     </section>
@@ -265,7 +268,7 @@
                 color: white;
                 padding: 16px;
                 cursor: pointer;
-                align-self: center;
+                margin: 0 auto;
             }
         }
 
