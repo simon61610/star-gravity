@@ -1,3 +1,8 @@
+import event1 from '@/assets/images/events/home/event1.png'
+import event2 from '@/assets/images/events/home/event2.png'
+import event3 from '@/assets/images/events/home/event3.png'
+
+
 const eventlist = [
 {
         id: 1,
@@ -9,7 +14,7 @@ const eventlist = [
         address: '南投縣合歡山國家森林遊樂區',
         type: '銀河',
         place: '高山觀測',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 2,
@@ -21,7 +26,7 @@ const eventlist = [
         address: '嘉義縣阿里山國家風景區',
         type: '月相',
         place: '天文台',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 3,
@@ -33,7 +38,7 @@ const eventlist = [
         address: '桃園市石門水庫',
         type: '星座',
         place: '平地公園',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 4,
@@ -45,7 +50,7 @@ const eventlist = [
         address: '台北市大安森林公園',
         type: '銀河',
         place: '高山觀測',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 5,
@@ -57,7 +62,7 @@ const eventlist = [
         address: '基隆市和平島公園',
         type: '銀河',
         place: '海邊平台',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 6,
@@ -69,7 +74,7 @@ const eventlist = [
         address: '花蓮縣七星潭',
         type: '星座',
         place: '平地公園',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 7,
@@ -81,7 +86,7 @@ const eventlist = [
         address: '桃園市石門水庫',
         type: '流星雨',
         place: '高山觀測',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 8,
@@ -93,7 +98,7 @@ const eventlist = [
         address: '花蓮縣七星潭',
         type: '銀河',
         place: '海邊平台',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 9,
@@ -105,7 +110,7 @@ const eventlist = [
         address: '南投縣合歡山國家森林遊樂區',
         type: '流星雨',
         place: '天文台',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 10,
@@ -117,7 +122,7 @@ const eventlist = [
         address: '台中市大坑風景區',
         type: '銀河',
         place: '平地公園',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 11,
@@ -129,7 +134,7 @@ const eventlist = [
         address: '台中市大坑風景區',
         type: '月相',
         place: '平地公園',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 12,
@@ -141,7 +146,7 @@ const eventlist = [
         address: '南投縣合歡山國家森林遊樂區',
         type: '星座',
         place: '平地公園',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 13,
@@ -153,7 +158,7 @@ const eventlist = [
         address: '新竹市青青草原',
         type: '月相',
         place: '天文台',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 14,
@@ -165,7 +170,7 @@ const eventlist = [
         address: '新北市淡水漁人碼頭',
         type: '月相',
         place: '天文台',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 15,
@@ -177,7 +182,7 @@ const eventlist = [
         address: '台中市大坑風景區',
         type: '流星雨',
         place: '平地公園',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 16,
@@ -189,7 +194,7 @@ const eventlist = [
         address: '新竹市青青草原',
         type: '月相',
         place: '海邊平台',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 17,
@@ -201,7 +206,7 @@ const eventlist = [
         address: '南投縣合歡山國家森林遊樂區',
         type: '流星雨',
         place: '天文台',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 18,
@@ -213,7 +218,7 @@ const eventlist = [
         address: '高雄市壽山國家自然公園',
         type: '星座',
         place: '海邊平台',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 19,
@@ -225,7 +230,7 @@ const eventlist = [
         address: '花蓮縣七星潭',
         type: '星座',
         place: '海邊平台',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 20,
@@ -237,7 +242,7 @@ const eventlist = [
         address: '彰化縣八卦山風景區',
         type: '流星雨',
         place: '平地公園',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 21,
@@ -249,7 +254,7 @@ const eventlist = [
         address: '高雄市壽山國家自然公園',
         type: '星座',
         place: '高山觀測',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 22,
@@ -261,7 +266,7 @@ const eventlist = [
         address: '高雄市壽山國家自然公園',
         type: '月相',
         place: '平地公園',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 23,
@@ -273,7 +278,7 @@ const eventlist = [
         address: '南投縣合歡山國家森林遊樂區',
         type: '流星雨',
         place: '天文台',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 24,
@@ -285,7 +290,7 @@ const eventlist = [
         address: '台中市大坑風景區',
         type: '星座',
         place: '高山觀測',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 25,
@@ -297,7 +302,7 @@ const eventlist = [
         address: '苗栗縣飛牛牧場',
         type: '星座',
         place: '海邊平台',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 26,
@@ -309,7 +314,7 @@ const eventlist = [
         address: '屏東縣墾丁國家公園',
         type: '星座',
         place: '高山觀測',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 27,
@@ -321,7 +326,7 @@ const eventlist = [
         address: '彰化縣八卦山風景區',
         type: '月相',
         place: '天文台',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 28,
@@ -333,7 +338,7 @@ const eventlist = [
         address: '新北市淡水漁人碼頭',
         type: '流星雨',
         place: '高山觀測',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 29,
@@ -345,7 +350,7 @@ const eventlist = [
         address: '台南市四草綠色隧道',
         type: '星座',
         place: '平地公園',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 30,
@@ -357,7 +362,7 @@ const eventlist = [
         address: '新竹市青青草原',
         type: '星座',
         place: '高山觀測',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 31,
@@ -369,7 +374,7 @@ const eventlist = [
         address: '彰化縣八卦山風景區',
         type: '月相',
         place: '天文台',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 32,
@@ -381,7 +386,7 @@ const eventlist = [
         address: '新北市淡水漁人碼頭',
         type: '流星雨',
         place: '平地公園',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 33,
@@ -393,7 +398,7 @@ const eventlist = [
         address: '花蓮縣七星潭',
         type: '流星雨',
         place: '高山觀測',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 34,
@@ -405,7 +410,7 @@ const eventlist = [
         address: '新北市淡水漁人碼頭',
         type: '銀河',
         place: '天文台',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 35,
@@ -417,7 +422,7 @@ const eventlist = [
         address: '台北市大安森林公園',
         type: '銀河',
         place: '海邊平台',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 36,
@@ -429,7 +434,7 @@ const eventlist = [
         address: '台北市大安森林公園',
         type: '銀河',
         place: '海邊平台',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 37,
@@ -441,7 +446,7 @@ const eventlist = [
         address: '新竹市青青草原',
         type: '流星雨',
         place: '平地公園',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 38,
@@ -453,7 +458,7 @@ const eventlist = [
         address: '南投縣合歡山國家森林遊樂區',
         type: '星座',
         place: '平地公園',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 39,
@@ -465,7 +470,7 @@ const eventlist = [
         address: '台南市四草綠色隧道',
         type: '銀河',
         place: '天文台',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     },
 {
         id: 40,
@@ -477,7 +482,7 @@ const eventlist = [
         address: '台北市大安森林公園',
         type: '月相',
         place: '高山觀測',
-        imgurl: [ '/images/events/home/event1.png', '/images/events/home/event2.png', '/images/events/home/event3.png' ]
+        imgurl: [ event1, event2, event3 ]
     }
 ];
 
