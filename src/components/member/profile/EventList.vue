@@ -55,11 +55,6 @@
     // 分頁
     const eventPage = ref(1)
     const pageSize    = ref(8)
-
-    // const handleEdit = (index, row) => {
-    // console.log(index, row)
-    // }
-
     // 總筆數（給 Pagination 的 :total）
     const filteredTotal = computed(() => dataSource.value.length)
 
@@ -131,11 +126,45 @@
 // 分頁
 .pager{
     width: 800px;
-    // display: flex;
     justify-content: center;  
-    // padding-right: 4px; 
     padding-top: 10px;
 }
+
+@media screen and (max-width: 433px) {
+    .event-table-wrapper{
+        width: 100%;
+        padding: 0 12px;
+        box-sizing: border-box;
+    }
+    /* 表格 */
+    .event-table-box{
+        width: 100%;
+        padding-top: 12px;
+        overflow-x: auto;                 /* 水平卷軸 */
+        -webkit-overflow-scrolling: touch;
+    }
+    .event-table-box :deep(.el-table){
+        min-width: 680px;                
+        font-size: 14px;
+    }
+    .event-table-wrapper :deep(.el-table__header th){
+        font-size: 14px;
+        text-align: center;
+    }
+    .event-table-wrapper :deep(.el-table__cell){
+        font-size: 14px;
+        padding: 10px 8px;
+    }
+    /* 分頁 */
+    .pager{
+        width: 100%;
+        padding: 8px 0 16px;
+        display: flex;
+        justify-content: center;
+    }
+
+}
+
 </style>
 
 

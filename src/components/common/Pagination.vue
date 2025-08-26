@@ -26,6 +26,7 @@ function changePage(newpage){
         :page-size = "props.pageSize"  
         :current-page="props.modelValue"
         :hide-on-single-page="false"
+        :pager-count="5"
         @current-change="changePage"/>
     </div>           
          
@@ -37,6 +38,7 @@ function changePage(newpage){
 @import '@/assets/styles/main.scss';
 
 .elementbox{
+    width: 100%;
    margin-top: 36px;
    padding-bottom: 40px;
 }

@@ -2,17 +2,15 @@
 import { ref, onMounted,watch } from 'vue'
 import { useRoute } from 'vue-router'
 import bus from '@/composables/useMitt'
-
 import products from '@/data/products'
-
 import  logo from '@/assets/logos/logo.svg'
+const emit = defineEmits(['open'])
 const active = ref(false)
-
 const route = useRoute()
 console.log("route toRaw:", JSON.parse(JSON.stringify(route)))
 
 function toggleMenu() {
-  active.value = !active.value
+  active.value = !active.value;
 }
 //監聽所有路徑讓麵包選單切頁關閉
 watch(
@@ -80,12 +78,12 @@ watch(
 
 
 <template>
-    <nav class="navbar">
+    <nav class="navbar " >
         <div class="wrapper" :class="{active:active}">
             <div class="logo">
                 <router-link to="/"><img :src="logo" alt="星引力logo" width="120" height="50"/></router-link>
             </div>
-            <ul>
+            <ul :class ="{ 'is-open': active }">
                 <li><router-link to="/about">觀星初學指南</router-link></li>
                 <li><router-link to="/Newpage">天文快訊</router-link></li>       <!--<li><router-link :to="{ name: 'NewpageView' }">天文快訊</router-link></li>--->
                 <li><router-link to="/gamesky">星視野</router-link></li>
@@ -129,6 +127,11 @@ watch(
         display: flex;
         justify-content: space-between;
         align-items: center;
+        img{
+            width: 100px;
+            padding-left: 10px;
+        }
+       
 
         .hum{
             display: none;
@@ -139,6 +142,7 @@ watch(
             gap: 0px;
 
             li {
+                
                 font-size:$pcChFont-small;
                 display: flex;
                 align-items: center;
@@ -173,30 +177,34 @@ watch(
     opacity: 30%;
 }
 
-/*-------------斷點430--------------*/
-@media screen and (max-width: 431px){
+
+/*-------------斷點1201--------------*/
+@media screen and (max-width: 1201px){
+    ul {
+    display: none;
+    }
     .navbar{
-        z-index: 1000;
-        position: relative;
+       
         .wrapper{
             ul{ 
-                background-color: $primaryColor-500;
+                background-color:$primaryColor-500;
                 flex-direction: column;
                 position: absolute;
-                top: 56px;
+                top: 50px;
                 right: 0%;
               //  transform: translateX(100%);
-                width: 60%;
+                width: 100%;
                display: none;
               //  transform: translateY(-120%); // 往上藏起來
                 //opacity: 0;
                // visibility: hidden;
-                
+                z-index: 9999;
                 transition:3s;
                 
                 li{ 
                     width: 100%;
-                    a {
+                    a { 
+                        
                         width: 100%;
                         height: 100%;
                     }
@@ -214,11 +222,13 @@ watch(
             }
            
             .hum{
+                
                 display:block;
                 margin-right: 10px;
                 cursor: pointer;
 
                 .bar{
+                    
                 display: flex;
                 width: 36px;
                 height: 6px;
@@ -237,6 +247,12 @@ watch(
     .transition{
         transition: 1s;
     }
+
+
+	
+
+					
+
 }
 
 

@@ -375,4 +375,94 @@
     }
 
 
+    @media (max-width: 431px) {
+        .product-page {
+        // ------------------- 上方 -------------------
+            .container {
+                padding: 20px 16px;
+                flex-direction: column;
+                gap: 20px; 
+        
+                // ---------- 左：商品圖片 ----------
+                .product-gallery {
+                    // 商品照片
+                    &__pic {
+                        img {
+                            max-width: 398px;
+                        }
+                    }
+        
+                    // 商品縮圖
+                    &__thumbs {
+                        li {
+                            img{
+                                max-width: 80px;
+                            }
+                        }
+                    }
+                }
+
+                // ---------- 右：商品資訊 ----------
+                .product-detail {
+                    gap: 16px;
+                    
+                    &__title {
+                        font-size: 28px;
+                    }
+
+                    .detail-text {
+                        &__desc {}
+                        &__promotion {}
+                        &__marketing {}
+                    }
+
+                    .product-price {
+                        &__nospecial {}
+                    }
+
+                    // 購物車 & 追蹤按鈕
+                    &__btn {
+                        &__add, &__follow {
+                            font-size: 20px;
+                            padding: 12px 0;
+                            i {}
+                        }
+                        &__add {
+                            &:hover {}
+                        }
+                        &__follow {
+                            .fa-regular {}
+                        }
+                    }
+
+                    // 付款與送貨方式
+                    .accordion {}
+                }
+            }
+
+
+            // ------------------- 下方 -------------------
+            .product-info {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+
+            // ------------------- 沒有商品時出現 -------------------
+            .no-product {
+                text-align: center;
+                font-size: 52px;
+                padding: 20px;
+                color: white;
+                .back-cate {
+                    padding-top: 20px;
+                    cursor: pointer;
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+            }
+        }
+    }
+
+
 </style>

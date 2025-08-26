@@ -144,7 +144,7 @@ import  logo from '@/assets/logos/logo.svg'
 
         }
          .icon{
-                  
+                    
                     color: #FFFFFF;
                     margin-right: 600px;
                     padding-top: 140px;
@@ -172,6 +172,7 @@ import  logo from '@/assets/logos/logo.svg'
 
     /*右選單*/
     .footer-right-box{
+        
         display: flex;
         gap: 40px;
         align-items: last baseline;
@@ -204,16 +205,104 @@ import  logo from '@/assets/logos/logo.svg'
         }
     }
 }
+/*-------------斷點1150------------*/
+@media screen and (max-width: 1280px){
+    .main-footer-box{
+       justify-content: center !important;
+       
+        .footer-right-box{
+           
+
+            .footer-right-one{
+            
+                }
+            .footer-right-two{
+                
+                }
+
+        }
+        .icon{
+           
+            margin-right:300px  !important;
+        }
+       
+    }
+}
+/*-------------斷點905------------*/
+@media screen and (max-width: 905px){
+    .main-footer-box{
+       
+        .footer-right-box{
+           
+
+            .footer-right-one{
+            
+                }
+            .footer-right-two{
+                
+                }
+        }
+        .icon{
+           
+            margin-right:100px  !important;
+        }
+       
+    }
+}
+/*--------------斷點700---------------*/
+@media screen and (max-width: 700px){
+    .main-footer-box{
+        flex-direction: column;
+        align-items: center;
+       
+        .footer-right-box{
+           
+            display:  none;
+            .footer-right-one{
+            
+                }
+            .footer-right-two{
+                
+                }
+        }
+        .icon{
+            padding: 20px !important;
+            margin: 80px 0 0 !important;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+             i{  
+                        
+                        font-size: 24px;
+                        margin-left: 40px !important;
+                        color: $FontColor-gray;
+                        margin-top: 8px;
+                        }
+        }
+       
+    }
+    .footerend{
+        margin: 0 !important;
+        p{
+        margin: 0 !important;
+        padding: 0 16px !important;
+        }
+    }
+}
+
 /*-------------斷點430--------------*/
-@media screen and (max-width: 431px){
+@layer overrides{
+    @media screen and (max-width: 431px){
+    
     .footer{
+        
         padding: 16px;
         box-sizing: border-box;
         .main-footer-box{
             flex-direction: column;
             
             
-        .icon{
+        .icon {
             
             
             width: 100%;
@@ -243,15 +332,14 @@ import  logo from '@/assets/logos/logo.svg'
                 align-items: flex-start;
                 
                >.footer-left-Logo{
-                    
-                    margin-left: -60px;
+                   
                     max-width: none;
                     width: 350px ;
-                    text-align: center;
+                    text-align: center ;
                     
                     img{
                         margin: 0 auto;
-                        width: 250px;
+                        width: 350px !important;
                     }
                     
                 }
@@ -268,8 +356,12 @@ import  logo from '@/assets/logos/logo.svg'
         }
         .footerend{
             hr{ 
+                
                 margin: 0;
                 width: 100%;
+            }
+            p{
+                padding-top: 16px !important;
             }
 
         }
@@ -285,6 +377,9 @@ import  logo from '@/assets/logos/logo.svg'
 
 
 }
+
+}
+
 
 
 

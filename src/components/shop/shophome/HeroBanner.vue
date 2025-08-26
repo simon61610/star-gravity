@@ -121,6 +121,26 @@ import prodSlides from '@/data/prodSlides'; // console.log(prodSlides) // Array
 
                     }
                 }
+
+                @media (max-width: 431px) {
+
+                    .content {
+                        width: 80%;
+                        h1 {
+                            font-size: 16px;
+                            margin-bottom: 8px;
+                        }
+                        h2 {
+                            font-size: 16px;
+                            margin-bottom: 12px;
+                        }
+                        .btn {
+                            font-size: 14px;
+                            width: 100px;
+                            padding: 8px;
+                        }   
+                    }
+                }
             }
         }
 
@@ -133,4 +153,7 @@ import prodSlides from '@/data/prodSlides'; // console.log(prodSlides) // Array
             width: 100px;
         }
     }
+
+    
 </style>
+
