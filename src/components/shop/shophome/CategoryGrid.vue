@@ -127,8 +127,39 @@ const categories = [
                     }
                 }
             }
+        } 
+    }
+
+    @media(max-width: 431px){
+        .prod-cate {
+            padding: 40px 16px;
+
+            > p {
+                font-size: 28px;
+                font-weight: bold;
+                margin-bottom: 20px;
+            }
+
+            .cate-grid {
+                grid-template-columns: 1fr 1fr;
+                grid-auto-rows: 180px;
+
+                .item:first-child {
+                    grid-column: span 2;
+                    grid-row: span 1;
+                }
+
+                .item {
+                    p {
+                        opacity: 1;
+                        font-size: 18px;
+                        background-color: hsl(0, 0%, 0%, .4);
+                    }
+                }
+                
+            }
+
         }
-            
-            
+        
     }
 </style>
