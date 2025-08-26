@@ -16,16 +16,16 @@
     ])
 
     /* ---------- 點星顯示資訊卡 ---------- */
-    const activeIdx = ref(null)                  // 目前被點擊的星索引
-    const openCard  = (i) => { activeIdx.value = i }
-    const cardStyle = computed(() => {           // 卡片定位在該星右下角一點
-        if (activeIdx.value === null) return {}
-        const s = stars.value[activeIdx.value]
-            return {
-                left: `calc(${s.x}% + 40px)`,
-                top:  `calc(${s.y}% + 20px)`,
-        }
-    })
+    // const activeIdx = ref(null)                  // 目前被點擊的星索引
+    // const openCard  = (i) => { activeIdx.value = i }
+    // const cardStyle = computed(() => {           // 卡片定位在該星右下角一點
+    //     if (activeIdx.value === null) return {}
+    //     const s = stars.value[activeIdx.value]
+    //         return {
+    //             left: `calc(${s.x}% + 40px)`,
+    //             top:  `calc(${s.y}% + 20px)`,
+    //     }
+    // })
 
     /** 畫折線用的 points */
     const points = computed(() => stars.value.map(s => `${s.x},${s.y}`).join(' '))
@@ -85,7 +85,7 @@
         litIndex.value = -1
     }
 
-    /* ----------------- 亮線動畫：用 dashoffset 做「從前端到後端亮起」 ----------------- */
+    /* ----------------- 亮線動畫 ----------------- */
     const pathLen = ref(0)                 // polyline 總長度
         onMounted(async () => {
         await nextTick()
@@ -162,13 +162,14 @@
                     class="star"
                     :class="{ lit: i <= litIndex || sticky.has(i), just: justLit.has(i) }"
                     :style="{ fontSize: s.size + 'px' }"
-                    @click="openCard(i)"
+                    
                     >
                     ★
                 </div>
+                <!-- @click="openCard(i)" --> <!---上方新增卡片-->
 
                 <!-- 浮動資訊卡（放在 v-for 外面，只顯示一份）） -->
-                <div
+                <!-- <div
                     v-if="activeIdx !== null"
                     class="info-card"
                     :style="cardStyle"
@@ -178,7 +179,7 @@
                        {{ stars[activeIdx].label }}（星等 {{ stars[activeIdx].mag }}）
                     </h4>
                     <img v-if="stars[activeIdx].img" :src="stars[activeIdx].img" alt="star" />
-                </div>
+                </div> -->
             </div>
         </section>
 
@@ -193,10 +194,9 @@
 .wrapper{
     width: 100%;
     box-sizing: border-box;
-    // height: 3000px;
     background-color: $bgColor-shop;
 }
-/* 畫布：先切版，大小可依需要調整或改成 100% 寬 */
+/* 星等圖 */
 .constellation{
     position: relative;
     width:  min(560px, 84vw);
@@ -248,7 +248,7 @@
         filter  .8s cubic-bezier(.22,.61,.36,1),
         transform .8s cubic-bezier(.22,.61,.36,1);
     text-shadow: 0 1px 2px rgba(0,0,0,.45);
-    pointer-events:auto;            /* 確保可點擊（父層不擋事件） */
+    // pointer-events:auto;            /* 確保可點擊（父層不擋事件） */
 }
 /* 光暈層：暗時小、亮時會放大 */
 .star::before{
@@ -295,22 +295,22 @@
     100% { box-shadow: 0 0 14px 4px rgba(255,240,160,.25); }
 }
 /* 卡片 */
-.info-card{
-    position: absolute;
-    transform: translate(-50%, -50%);
-    background: rgba(15,18,35,.86);
-    color: #fff;
-    padding: 12px 14px;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.45);
-    min-width: 180px;
-    pointer-events: auto;    
-}
-.info-card img{
-    display:block;
-    width: 220px;
-    margin-top: 8px;
-    border-radius: 8px;
-}
+// .info-card{
+//     position: absolute;
+//     transform: translate(-50%, -50%);
+//     background: rgba(15,18,35,.86);
+//     color: #fff;
+//     padding: 12px 14px;
+//     border-radius: 10px;
+//     box-shadow: 0 10px 30px rgba(0,0,0,.45);
+//     min-width: 180px;
+//     pointer-events: auto;    
+// }
+// .info-card img{
+//     display:block;
+//     width: 220px;
+//     margin-top: 8px;
+//     border-radius: 8px;
+// }
 </style>
 

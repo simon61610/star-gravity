@@ -1,6 +1,6 @@
 <script setup>   
     import { useRoute, useRouter } from 'vue-router'
-    import { ref, computed } from 'vue'
+    import { ref, computed, onMounted } from 'vue'
 
     const router = useRouter()
     const route = useRoute()
@@ -11,10 +11,14 @@
     const loading = ref(false)
 
     // 驗證碼
-    const captchaCode = ref('TJD102')
+    const captchaCode = ref('')
     const genCode = () => Math.random().toString(36).slice(2, 8).toUpperCase()
+     // 頁面載入時會重新跑一次
+    onMounted(() => {
+        captchaCode.value = genCode()   
+    })
 
-    /* 基本檢查參數 */
+    /* 信箱基本檢查樣式 */
     const MIN_PWD_LEN = 6
     const emailRe = /\S+@\S+\.\S+/
 
@@ -22,7 +26,6 @@
         captchaCode.value = genCode()
     }
 
-    // 當前路徑剛好是 /loginfirst 才顯示登入表單
     const showLogin = computed(() => route.path === '/loginfirst')
 
     // 判斷在哪頁
@@ -58,7 +61,6 @@
             localStorage.setItem('auth', '1')
 
             // 登入成功 → 導到會員中心
-            // 若你的實際路由名稱不同，改這裡
             router.replace('/membercenter/personal')
         } catch (e) {
             alert('登入失敗，請稍後再試')
@@ -112,7 +114,7 @@
                     <!--登入按鈕 -->
                     <button class="login-btn" type="submit" :disabled="loading">確認</button>
     
-                    <!--忘記密碼 --> <!----連結到忘記密碼forget畫面----->
+                    <!--忘記密碼 --> 
                     <div class="forgot">
                         <RouterLink class="forget-link"   to="/loginfirst/forget">忘記密碼?</RouterLink>
                     </div>
@@ -136,7 +138,7 @@
                 </button>
             </div>
         </div> 
-        <section class="content"  v-else>
+        <section class="content" v-else>
             <RouterView />
         </section>
     </div>
@@ -148,11 +150,13 @@
 .login-all{
     font-family: $chFont;
     width: 100%;
-    height: calc(100vh - 50px);
-    overflow-y: auto;           /* 把捲動限制在這個容器 */
+    height: auto;               /* 讓內容自然長高 */
+    min-height: 100dvh;         /* 撐滿視窗 */
+    overflow: visible;          /* 不在此層產生卷軸 */
     box-sizing: border-box;
     background-image: url(@/assets/images/member/login-bgi.png);
     background-size: cover;
+    background-position: center;
     margin-top: 0;
 }
 .tabs{
@@ -214,9 +218,6 @@
     font-size: $pcChFont-small;
     padding-left: 14px;
 }
-// .custom-placeholder{
-//     height: 50px;
-// }
 .custom-placeholder ::v-deep(.el-input__inner::placeholder) {
     color: #000; 
     opacity: 0.5; 
@@ -363,7 +364,7 @@
         margin-top: 16px;
         padding: 0 4px;
     }
-    /* 表單欄位：全寬、較低高度 */
+    /* 表單欄位 */
     .email-1, .captcha-1{
         width: 100%;
         height: 44px;
@@ -371,7 +372,7 @@
         padding-left: 12px;
         box-sizing: border-box;
     }
-    /* 覆蓋 el-input 在 template 內的 inline 寬度（手機改全寬）*/
+    /* 覆蓋 el-input 在 template 內的 inline 寬度*/
     .custom-placeholder{
         width: 100% !important;
         height: auto !important;

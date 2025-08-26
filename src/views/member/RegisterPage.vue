@@ -11,8 +11,13 @@
            pwd1.value === pwd2.value
     })
     // 驗證碼
-    const captchaCode = ref('TJD102')
+    const captchaCode = ref('')
     const genCode = () => Math.random().toString(36).slice(2, 8).toUpperCase()
+    // 頁面載入時會重新跑一次
+    onMounted(() => {
+        captchaCode.value = genCode()   
+    })
+    
     // 欄位
     const name = ref('')
     const phone = ref('')
@@ -22,8 +27,8 @@
     const captcha = ref('')
     // 送出
     const handleRegister = () => {
-    if (!canSubmit.value) return
-    alert('註冊成功！（假資料測試）')
+        if (!canSubmit.value) return
+        alert('註冊成功！（假資料測試）')
     }
 
     /* ---- 假後端：取會員註冊資料 ---- */
@@ -31,7 +36,7 @@
         return new Promise(resolve => {
             setTimeout(() => {
             resolve({
-                name: '王小明',                // 先顯示
+                name: '王小明',                
                 phone: '0912-345-678',
                 city: '台北市',
                 district: '大安區',
@@ -54,7 +59,7 @@
     const savedAt = ref('')
     /* ---- 縣市 / 鄉鎮選單 ---- */
     const DISTRICTS = {
-        台北市: ['中正區', '大安區', '信義區', '士林區'],
+        台北市: ['中山區', '大安區', '信義區', '士林區'],
         新北市: ['板橋區', '新店區', '三重區', '永和區'],
         桃園市: ['桃園區', '中壢區', '龜山區', '八德區']
     }
@@ -66,13 +71,8 @@
 
 </script>
 
-<template>      <!----註冊畫面----->
-    <!-- <div class="register-all"> -->
-
-        <div class="tabs">
-            <!-- <button class="tabs-btn-active button--normal" data-tab="login">登入</button>
-            <button class="tabs-btn button--normal"  data-tab="register">註冊</button> -->
-        </div>
+<template>      
+    <div class="register-all">
 
         <div class="second-area">
             <form @submit.prevent="handleRegister">
@@ -123,7 +123,7 @@
                         <el-input
                           v-model="pwd1"
                           class="custom-placeholder"
-                          style="width: 578px; height: 50px; font-size: 14px;"
+                          style="height: 50px; font-size: 14px;"
                           type="password"
                           placeholder="請輸入密碼(至少6碼)"
                           show-password
@@ -133,7 +133,7 @@
                         <el-input
                           v-model="pwd2"
                           class="custom-placeholder"
-                          style="width: 578px; height: 50px; font-size: 14px;"
+                          style="height: 50px; font-size: 14px;"
                           type="password"
                           placeholder="請再次輸入密碼"
                           show-password
@@ -159,7 +159,7 @@
             </form>
         </div>
     
-    <!-- </div> -->
+    </div>
 </template>
 
 
@@ -169,19 +169,18 @@
 
 .register-all{
     width: 100%;
-    min-height: calc(100vh + 100px);
-    // overflow-y: auto;           /* 把捲動限制在這個容器 */
-    // box-sizing: border-box;
-    background-image: url(../../assets/images/member/login-bgi.png);  
-    background-size: cover;
+    min-height: 100dvh;                 
+    overflow: visible;                   /* 不在此層產生內捲軸 */
+    padding-top: 0;
     margin-top: 0;
+    overflow-x: hidden;
+    padding-left: 10px;
 }
 .tabs{
     display: flex;
     gap: 12px;
     justify-content: center;
     text-align: center;
-    // padding-top: 40px;
 }
 .tabs-btn-active{    // 登入鈕
     border: none;
@@ -200,10 +199,16 @@
     color: $FontColor-white;
 }
 .second-area{
-    width: 600px;
-    margin: 0 auto;
-    margin-top: 10px;
-    padding-left: 16px;
+    width: min(100%, 600px);
+    max-width: 600px;
+    margin: 10px auto 0;
+    padding: 0 12px;
+}
+/* Element Plus 寬度 */
+.custom-placeholder, .custom-placeholder ::v-deep(.el-input__wrapper){
+    width: 100%;
+    max-width: 576px;
+    box-sizing: border-box;
 }
 // 姓名
 .name{
@@ -211,7 +216,8 @@
     margin-bottom: 20px;
 }
 .name-1{
-    width: 558px;
+    width: 100%;
+    max-width: 558px;
     height: 50px;
     font-size: $pcChFont-small;
     padding-left: 14px;
@@ -287,17 +293,21 @@
     gap: 10px;
     margin: 0 auto;
     margin-top: 20px;
+    align-items: center
 }
 .captcha-2{
-    width: 385px;
+    flex: 1 1 0;
+    min-width: 0;
+    width: 100%;
     height: 45px;
     font-size: $pcChFont-small;
     padding-left: 12px;
+    box-sizing: border-box;
 }
 .captcha-code-1{
     background-color: $FontColor-gray;
     font-size: $pcChFont-small;
-    width: 100px;
+    width: 96px;
     height: 50px;
     text-align: center;
     line-height: 50px;
@@ -305,9 +315,10 @@
 .refresh-btn-1{
     background-color: transparent;
     border: none;
+    flex: 0 0 auto;
 }
 .refresh-btn-1 img{
-    width: 30px;
+    width: 28px;
 }
 .register-btn{
     background-color: $primaryColor-500;
@@ -324,18 +335,17 @@
 
 @media screen and (max-width: 433px) {
     .register-all{
-        min-height: 100vh;
-        padding: 16px 12px 40px;
-        background-position: center;
-        background-size: cover;
+        min-height: 100dvh;
+        padding: 0 6px 40px;
+        background: none;
+        overflow-x: hidden;
     }
-    /* 分頁條若未使用可忽略 */
     .tabs{
         gap: 8px;
         padding: 0 4px;
         margin-top: 12px;
     }
-    /* 內容區改為全寬 */
+    /* 內容區 */
     .second-area{
         width: 100%;
         margin-top: 12px;
@@ -344,6 +354,7 @@
      /* 輸入格 */
     .name-1, .phone-1, .adress-2, .email-2, .captcha-2{
         width: 100%;
+        max-width: 390px;
         height: 44px;
         font-size: 14px;
         padding-left: 12px;
@@ -358,7 +369,7 @@
         font-size: 14px;
         line-height: 1.6;
     }
-    /* 縣市/鄉鎮：兩欄等分（小於 360px 會自動換行） */
+    /* 縣市/鄉鎮 */
     .join-city{
         margin-top: 16px;
         display: grid;
@@ -367,12 +378,13 @@
     }
     .select-city{
         width: 100%;
+        max-width: 181px;
         height: 44px;
         padding-left: 12px;
         font-size: 14px;
         box-sizing: border-box;
     }
-    /* 密碼 el-input：覆蓋 inline style，手機改全寬 */
+    /* 密碼 el-input */
     .password-area{
         margin-top: 8px;
     }
@@ -385,6 +397,7 @@
     }
     .custom-placeholder ::v-deep(.el-input__wrapper){
         width: 100% !important;
+        max-width: 390px;
         height: 44px;
         padding-left: 12px;
         box-sizing: border-box;
@@ -394,7 +407,7 @@
         height: 44px;
         font-size: 14px;
     }
-    /* 驗證碼區：三欄 */
+    /* 驗證碼 */
     .captcha-group-1{
         display: grid;
         grid-template-columns: 1fr 96px 32px;
@@ -412,8 +425,7 @@
         width: 24px;
         height: 24px;
     }
-
-    /* 送出鈕：全寬、取消左邊距 */
+    /* 送出按鈕 */
     .register-btn{
         width: 100%;
         height: 44px;
@@ -422,18 +434,7 @@
         border-radius: 999px;
     }
 
-
-
-
-
-
 }
-
-
-
-
-
-
 
 </style>
 
