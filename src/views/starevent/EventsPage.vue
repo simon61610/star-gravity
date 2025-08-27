@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 
 // 圖檔
 import meteorShower from '@/assets/images/events/home/eventType_meteor-shower.png'
@@ -16,26 +16,63 @@ import Pagination from '@/components/common/Pagination.vue';
 // 假資料
 import eventlist from '@/data/eventlist';
 
+// 預設分類
+const selectedType = ref('流星雨')
+const selectedPlace = ref('全部')
+
+const changeType = (eventType) => {
+    selectedType.value = eventType.label
+    selectedPlace.value = '全部' // 每次重選類別，重新變成全部地點
+}
+
+// 篩選類型
+const filterEvents = computed(() => {
+    let result =  eventlist.filter(event => event.type == selectedType.value)
+    if(selectedPlace.value !== '全部'){
+        result = result.filter(event => event.place == selectedPlace.value)
+    }
+    return result
+})
+
+// 切分頁
 const currentPage = ref(1)
 const pageSize = ref(6)
 
 const showItems = computed (() => {
     const start = (currentPage.value - 1) * pageSize.value // 從第幾筆開始
-    return eventlist.slice(start, start + pageSize.value) // 顯示的商品陣列
+    return filterEvents.value.slice(start, start + pageSize.value) // 顯示的商品陣列
 })
 
 const pageChange = (newpage)=> {
     currentPage.value = newpage
 }
 
+watch(() => selectedType.value, () => {
+    currentPage.value = 1
+    /* window.scrollTo({ 
+        top: 0, 
+        behavior: 'smooth' // 平滑滾動 
+    }) */
+
+    const eventHeader = document.querySelector('#eventHeader')
+    
+    eventHeader.scrollIntoView(
+        {
+            behavior: 'smooth',
+        }
+    )
+})
+
+
+
 
 
 // 切版用
 const eventIcon = [
-    { name: 'meteor-shower', imgUrl: meteorShower},
-    { name: 'moon', imgUrl: moon},
-    { name: 'star-signs', imgUrl: starSigns},
-    { name: 'galaxy', imgUrl: galaxy},
+    { name: 'meteor-shower', imgUrl: meteorShower, label: '流星雨'},
+    { name: 'moon', imgUrl: moon, label: '月相'},
+    { name: 'star-signs', imgUrl: starSigns, label: '星座'},
+    { name: 'galaxy', imgUrl: galaxy, label: '銀河'},
 ]
 
 const placeTags = [
@@ -70,7 +107,7 @@ const placeTags = [
                 <div class="event-type">
                     <h1 class="select-title">熱門觀星主題</h1>
                     <div class="event-box">
-                        <div v-for="(eventType, index) in eventIcon" class="event-select">
+                        <div v-for="(eventType, index) in eventIcon" class="event-select" :class="{active: selectedType == eventType.label}" @click="changeType(eventType)">
                             <img :src="eventType.imgUrl" alt="">
                         </div>
                     </div>
@@ -80,12 +117,12 @@ const placeTags = [
                 <div class="event-list-section">
     
                     <!-- Header -->
-                    <header>
-                        <h2>流星雨</h2>
+                    <header id="eventHeader">
+                        <h2>{{ selectedType }}</h2>
         
                         <div class="event-ctrl">
                             <div class="place-tags">
-                                <div class="tag" v-for="(tag, index) in placeTags">{{ tag.name }}</div>
+                                <div class="tag" :class="{active: selectedPlace == tag.name}" v-for="(tag, index) in placeTags" @click="selectedPlace = tag.name">{{ tag.name }}</div>
                             </div>
                             <div class="select-date">
         
@@ -95,6 +132,7 @@ const placeTags = [
         
                     <!-- 活動項目卡片區 -->
                     <div class="event-list">
+                        <!-- <div class="event-card" v-for="event in showItems"> -->
                         <div class="event-card" v-for="event in showItems">
                             <RouterLink :to="`/events/${event.id}` "class="router-link" > 
                             <img :src="event.imgurl[0]" alt="">
@@ -121,7 +159,7 @@ const placeTags = [
 
                         :pageSize="pageSize"
 
-                        :total="eventlist.length"
+                        :total="filterEvents.length"
                     
                     
                     />
@@ -204,12 +242,19 @@ const placeTags = [
                         // border: 1px solid red;
                         display: flex;
                         justify-content: space-between;
-        
+                        
                         .event-select {
+                            opacity: .3;
                             background-color: $primaryColor-500;
                             border-radius: 999px;
                             cursor: pointer;
-        
+                            transition: all .3s ease;
+                            
+
+                            &.active {
+                                opacity: 1;
+                            }
+
                             img {
                                 display: block;
                             }
@@ -220,6 +265,7 @@ const placeTags = [
                 // 活動項目區
                 .event-list-section {
                     // border: 1px solid red;
+                    width: 100%;
                     display: flex;
                     flex-direction: column;
                     gap: 28px;
@@ -247,6 +293,12 @@ const placeTags = [
                                     border: 2px solid white;
                                     border-radius: 999px;
                                     cursor: pointer;
+                                    transition: background-color .3s ease;
+
+                                    &.active {
+                                        border: 1px solid $secondaryColor-orange;
+                                        background-color: $secondaryColor-orange;
+                                    }
                                 }
                             }
                             .select-date {}
@@ -255,10 +307,11 @@ const placeTags = [
     
                     // 活動項目卡片區
                     .event-list {
+                        // border: 1px solid green; 
                         display: flex;
                         flex-wrap: wrap;
                         // justify-content: space-between;
-                        justify-content: center;
+                        justify-content: flex-start;
                         gap: 40px;
                         .event-card {
                             cursor: pointer;

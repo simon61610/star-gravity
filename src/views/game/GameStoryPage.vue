@@ -233,6 +233,7 @@ const goProduct = () => {
 
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
+     gap: 2px;
   }
 }
 
@@ -282,8 +283,8 @@ const goProduct = () => {
 /* 手機版：置中疊放，並調整尺寸與高度保留 */
 @media (max-width: 900px) {
   .cards {
-    --card-w: 160px;
-    --card-h: 256px;
+    --card-w: 200px;
+    --card-h: 320px;
 
     --back-y: 8px;
     --front-y: 28px;

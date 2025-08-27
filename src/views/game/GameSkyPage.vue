@@ -34,19 +34,37 @@ function showall(){
 </script>
 
 <template>
-  <div class="sky">
-    <ConstellationCard  :constellation="currentConstellation" ref="cardRef" :show-lines="showLines" />
-    <ZodiacBar  @select-constellation="selectConstellation" @draw-next ="DrawNext"  @toggle-lines="toggle" @showAllLines="showall"/>
-    <!-- <StarsCanvas :stars="currentConstellation.stars"  :lines="currentConstellation.lines"/> -->
+  <div class="bgc">
+    <div class="sky">
+      <ConstellationCard  :constellation="currentConstellation" ref="cardRef" :show-lines="showLines" />
+      <!-- <StarsCanvas :stars="currentConstellation.stars"  :lines="currentConstellation.lines"/> -->
+    </div>
+    <div class="zod">
+      <ZodiacBar  @select-constellation="selectConstellation" @draw-next ="DrawNext"  @toggle-lines="toggle" @showAllLines="showall"/>
+    </div>
   </div>
 </template>
 
 <style>
+.bgc{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
 .sky{
+  width: 100%;  
+  background-size: 100% 100%;
   background-image: url(@/assets/images/games/GameSkyPage/gamesky_bg.svg);
   background-repeat: no-repeat;    /* 不重複 */
   background-size: cover;          /* 填滿容器 */
-  background-position: center;     /* 置中對齊 */
+  background-position:center;     /* 置中對齊 */
+  overflow-x: hidden;
+  
+}
+
+.zod{
+  width: 100%;
+  background-color: black;
 }
 
 

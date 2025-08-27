@@ -53,7 +53,6 @@ import RegisterPage from '@/views/member/RegisterPage.vue'
 import ResetPasswordPage from '@/views/member/ResetPasswordPage.vue'
 
 
-
 // ------------------ 以下是王牌浩竣的 VIP 區，閒雜人等請勿靠近  ------------------
 
 //--------------------文章 Article -----------------------
@@ -88,46 +87,12 @@ const routes = [
 
 
 // ------------------ 觀星指南 aboutstar ------------------
-{path: '/about', name: 'about', component: AboutStarPage,
-  meta: { 
-        useLoader: true,
-        loaderLogo: 'ORION',                                  // 可選：徽章文字
-        loaderFeatures: { pulsar: true, rings: true, moon: true },//pulsar雷達  , rings 行星環
-        loaderPalette: {
-        bg: '#05060eff',          
-        star: '#f2ecff',          
-        accent: '#a1a7ff',        
-        accent2: '#dc59acbc',       
-        glass: 'rgba(231, 149, 149, 0.69)', 
-        glassBorder: 'rgba(255, 255, 255, 0.3)', 
-        moon: '#b1c83cff' ,      
-        ring:'#4694ddff',
-        planet:'#11d486ff'      
-        }  
-      }
-},
+{path: '/about', name: 'about', component: AboutStarPage,},
 
 
 
 // ------------------ 星據點 Map ------------------
-{path: '/mapfirst', name: 'mapfirst', component: MapFirstPage ,
-  meta: { 
-        useLoader: true,
-        loaderLogo: 'ORION',                                  // 可選：徽章文字
-        loaderFeatures: { pulsar: true, rings: true, moon: true },//pulsar雷達  , rings 行星環
-        loaderPalette: {
-        bg: '#05060eff',          
-        star: '#f2ecff',          
-        accent: '#a1a7ff',        
-        accent2: '#dc59acbc',       
-        glass: 'rgba(231, 149, 149, 0.69)', 
-        glassBorder: 'rgba(255, 255, 255, 0.3)', 
-        moon: '#b1c83cff' ,      
-        ring:'#4694ddff',
-        planet:'#11d486ff'      
-        }  
-      }
-},
+{path: '/mapfirst', name: 'mapfirst', component: MapFirstPage ,},
 {path: '/mapmain', name: 'mapmain', component: MapMainPage},
 
 
@@ -173,48 +138,14 @@ const routes = [
 { path: '/gamestory', name: 'gamestory', component: GameStoryPage },
 
 // ------------------ 星星活動 starevent ------------------
-{path: '/events', name: 'events', component: EventsPage,
-  meta: { 
-        useLoader: true,
-        loaderLogo: 'ORION',                                  // 可選：徽章文字
-        loaderFeatures: { pulsar: true, rings: true, moon: true },//pulsar雷達  , rings 行星環
-        loaderPalette: {
-        bg: '#05060eff',          
-        star: '#f2ecff',          
-        accent: '#a1a7ff',        
-        accent2: '#dc59acbc',       
-        glass: 'rgba(231, 149, 149, 0.69)', 
-        glassBorder: 'rgba(255, 255, 255, 0.3)', 
-        moon: '#b1c83cff' ,      
-        ring:'#4694ddff',
-        planet:'#11d486ff'      
-        }  
-      }
-},
+{path: '/events', name: 'events', component: EventsPage,},
 {path: '/events/:id', name: 'event', component: EventDetailPage},
 {path: '/eventregistration', name: 'eventregistration', component: EventRegistrationPage},
 {path: '/eventsuccess', name: 'eventsuccess', component: EventRegistrationSuccessPage},
 
 
 // ------------------ 星空小舖 shop ------------------
-{ path: '/shop', name: 'shop', component: ShopHomePage,
-  meta: { 
-        useLoader: true,
-        loaderLogo: 'ORION',                                  // 可選：徽章文字
-        loaderFeatures: { pulsar: true, rings: true, moon: true },//pulsar雷達  , rings 行星環
-        loaderPalette: {
-        bg: '#05060eff',          
-        star: '#f2ecff',          
-        accent: '#a1a7ff',        
-        accent2: '#dc59acbc',       
-        glass: 'rgba(231, 149, 149, 0.69)', 
-        glassBorder: 'rgba(255, 255, 255, 0.3)', 
-        moon: '#b1c83cff' ,      
-        ring:'#4694ddff',
-        planet:'#11d486ff'      
-        }  
-      }
- },
+{ path: '/shop', name: 'shop', component: ShopHomePage,},
 { path: '/shop/category', name: 'category', component: ShopCategoryPage },
 { path: '/shop/category/product/:id?', name: 'product', component: ShopProductPage },
 { path: '/cartpage',  // 購物車與步驟頁面
@@ -262,20 +193,12 @@ const routes = [
       path: '/Newpage',    // 
       name: 'Newpage',     //
       component: Newpage,
-      meta: { 
-        useLoader: true,
-        loaderLogo: 'ORION',                                  // 可選：徽章文字
-        loaderFeatures: { pulsar: true, rings: true, moon: true },//pulsar雷達  , rings 行星環
-        loaderPalette: {
-        bg: '#05060eff',          // 背景
-        star: '#f2ecff',          // 星點
-        accent: '#a1a7ff',        // 外環漸層尾端
-        accent2: '#dc59acbc',       // 外環漸層起點
-        glass: 'rgba(231, 149, 149, 0.69)', // 玻璃擬態底色
-        glassBorder: 'rgba(255, 255, 255, 0.3)', // 玻璃擬態邊線
-        moon: '#22b98cff' ,      // 月面顏色
-        ring:'#13bb3dff'       }  
-      }
+    },
+
+    {
+    path: '/article',
+    name: 'ArticleList',    // 
+    redirect: '/Newpage'    // 讓頁面導到Newpage
     },
 
     {
@@ -341,7 +264,7 @@ const routes = [
      {
        path: '/',    
        name: 'IndexPage',     
-      component: () => import('@/views/index/IndexPage.vue'),
+        component: () => import('@/views/index/IndexPage.vue'),
        meta:{layout:'index',
         useLoader: true,
         loaderLogo: 'ORION',                                  // 可選：徽章文字
@@ -375,7 +298,7 @@ const router = createRouter({
 
 
 //建立路由守衛 這是一個回呼涵式 
-/* router.beforeEach((to,from,next) => {
+ router.beforeEach((to,from,next) => {
   const token = localStorage.getItem('admin_token') //定義一個token 到 localStorage 裡面去取出 admin_token 的值
   if(!token && to.meta.requiresAuth){ 
     next({name:'AdminLoginPage'}) 
@@ -413,7 +336,7 @@ const router = createRouter({
       set(p)
     }, 70) // 每 200ms 加 5%
   }
-}) */
+}) 
 
 export default router
 
