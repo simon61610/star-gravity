@@ -284,14 +284,22 @@ function aaa(){
     width: 100%;
     height: 100%;
     overflow-y: auto;
-    // height: 820px;
-
-    // border: 2px solid $primaryColor-500;
     background-color:$bgColor-white ;
 
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+
+    &::-webkit-scrollbar {
+            width: 8px;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: $primaryColor-500;
+            border-radius: 10px;
+            /* 重點：加邊框讓滾軸往內縮 */
+            border: 1px solid transparent;
+            background-clip: content-box;
+        }
 
 }
 .mapbox-close{
@@ -513,7 +521,7 @@ function aaa(){
 }
     //單一小格左邊文字
 .singleReview-leftContent{
-    max-width: 350px;
+    // max-width: 350px;
     display: flex;
     flex-direction: column;
     gap: 4px ;
