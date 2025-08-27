@@ -323,6 +323,18 @@ onUnmounted( ()=>{
     border-top: 1px solid $primaryColor-100;
 
     overflow-y: auto;
+
+    &::-webkit-scrollbar {
+            width: 8px;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: $primaryColor-500;
+            border-radius: 10px;
+            /* 重點：加邊框讓滾軸往內縮 */
+            border: 1px solid transparent;
+            background-clip: content-box;
+        }
+
     
 }   
 .mapreview-list li{

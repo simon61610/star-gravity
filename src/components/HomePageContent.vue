@@ -89,7 +89,7 @@ function slideNext (){
     }
 }
 function checkScreenSize(){
-    if( window.innerWidth <= 430 ){
+    if( window.innerWidth <= 435 ){
         isMobile.value = true
     }else {
         isMobile.value = false 
@@ -112,9 +112,9 @@ onUnmounted(()=>{
     <!-- 緣起? -->
     <div class="home-begining">
         <!-- 背景小星星 -->
-        <img class="begining-bgStars" src="../assets/images/home/index-stars.svg" alt="">
+        <img class="begining-bgStars" src="@/assets/images/home/index-stars.svg" alt="">
         <!-- 人類 -->
-        <img class="begining-person" src="../assets/images/home/index-people.svg" alt="人類">
+        <img class="begining-person" src="@/assets/images/home/index-people.svg" alt="人類">
 
         <!-- 流星 -->
         <div class="testbox">
@@ -151,7 +151,7 @@ onUnmounted(()=>{
             <div class="home-guildExtract">
                 <ul class="guildExtract-block">
                     <li>
-                        <img src="../assets/images/home/index_bigIcon1.svg" alt="指南1">
+                        <img src="@/assets/images/home/index_bigIcon1.svg" alt="指南1">
                     </li>
                     <li>
                         <h2 class=" cnTitle--h2">觀星初學指南</h2>
@@ -163,7 +163,7 @@ onUnmounted(()=>{
                 </ul>
                 <ul class="guildExtract-block">
                     <li>
-                        <img src="../assets/images/home/index_bigIcon2.svg" alt="指南2">
+                        <img src="@/assets/images/home/index_bigIcon2.svg" alt="指南2">
                     </li>
                     <li>
                         <h2 class=" cnTitle--h2">星據點</h2>
@@ -175,7 +175,7 @@ onUnmounted(()=>{
                 </ul>
                 <ul class="guildExtract-block">
                     <li>
-                        <img src="../assets/images/home/index_bigIcon3.svg" alt="指南3">
+                        <img src="@/assets/images/home/index_bigIcon3.svg" alt="指南3">
                     </li>
                      <li>
                         <h2 class=" cnTitle--h2">星空小舖</h2>
@@ -191,7 +191,7 @@ onUnmounted(()=>{
         <!-- 天文快訊 -->
         <div class="home-news">
             <!-- 左邊照片 -->
-             <img class="home-news-photo" src="../assets/images/aboutstar/lunar eclipse.png" alt="天文快訊">
+             <img class="home-news-photo" src="@/assets/images/aboutstar/lunar eclipse.png" alt="天文快訊">
             <!-- 右邊描述 -->
             <div class="home-news-rightSide">
                 <h1 class="news-rightSide-title decTitle--medium">NEWS</h1>
@@ -211,7 +211,7 @@ onUnmounted(()=>{
                 <button class="sky-leftSide-button button--normal">查看更多</button>
             </div>
             <!-- 右邊圖片 -->
-            <img class="home-sky-photo" src="../assets/images/aboutstar/constellation-4.png" alt="四季星空">
+            <img class="home-sky-photo" src="@/assets/images/aboutstar/constellation-4.png" alt="四季星空">
         </div>
 
         <!-- 活動資訊 -->
@@ -227,14 +227,14 @@ onUnmounted(()=>{
                     v-if="!isMobile"
                     @click="slidePrev"
                     :class="{ 'disable': !canSlidePrev }">
-                    <img class="activity-a-img" src="../assets/images/news/article-content-back.svg" alt="上一個">
+                    <img class="activity-a-img" src="@/assets/images/news/article-content-back.svg" alt="上一個">
                 </a>
                 <!-- 近日活動清單 -->
                 <div class="activity-list">
                     <a v-for="activity in showActivities" 
                         class="list-singleInfo" 
                         href="#">
-                        <img class="singleInfo-photo" src="../assets/images/aboutstar/star space.png" alt="活動資訊圖">
+                        <img class="singleInfo-photo" src="@/assets/images/aboutstar/star space.png" alt="活動資訊圖">
                         <div class="singleInfo-content">
                             <!-- <h3 class="activity-list-datetime">{{activity.date}}</h3> -->
                             <h3 class="activity-list-datetime">{{activity.date}}</h3>
@@ -250,7 +250,7 @@ onUnmounted(()=>{
                     v-if="!isMobile"
                     @click="slideNext"
                     :class="{ 'disable': !canSlideNext }">
-                    <img class="activity-a-img2" src="../assets/images/news/article-content-back.svg" alt="下一個">
+                    <img class="activity-a-img2" src="@/assets/images/news/article-content-back.svg" alt="下一個">
                 </a>
             </div>
         </div>
@@ -258,7 +258,7 @@ onUnmounted(()=>{
 </template>
 
 <style scoped lang="scss">
-@import '../assets/styles/main.scss';
+@import '@/assets/styles/main.scss';
 
 // -------------------PC----------------------
 //緣起
@@ -266,7 +266,7 @@ onUnmounted(()=>{
     width: 100%;
     height: 100vh;
 
-    background-image: url(../assets/images/home/index-bg02.svg);
+    background-image: url(@/assets/images/home/index-bg02.svg);
 
     position: relative;
 }
@@ -344,7 +344,7 @@ onUnmounted(()=>{
     // border: 1px solid #fff;
     width: 80vh;
     height: 32vh;
-    background-image: url(../assets/images/home/index-starShot.svg);
+    background-image: url(@/assets/images/home/index-starShot.svg);
 
     position: absolute;
     top: 2.5vh;
@@ -365,7 +365,7 @@ onUnmounted(()=>{
 
     display: block;
     // border: 1px solid red;
-    background-image: url(../assets/images/home/index-starLightCycle1.svg);
+    background-image: url(@/assets/images/home/index-starLightCycle1.svg);
 
     position: absolute;
     top: 40%;
@@ -380,7 +380,7 @@ onUnmounted(()=>{
 
     display: block;
     // border: 1px solid red;
-    background-image: url(../assets/images/home/index-starLight01.svg);
+    background-image: url(@/assets/images/home/index-starLight01.svg);
 
     position: absolute;
     top: 35%;
@@ -688,8 +688,9 @@ onUnmounted(()=>{
         width: 430px;
         padding: 24px;
         box-sizing: border-box;
-        top: 40%;
+        top: auto;
         left: 0;
+        bottom: 10%;
         z-index: 10;
     }
     .home-guide{
@@ -743,18 +744,15 @@ onUnmounted(()=>{
     }
 
     .home-contentBlock .home-activity{
-        width: 100vw;
+        width: 85vw;
         padding: 0px 0px 36px;
         box-sizing: border-box;
-        margin: 0 auto;
         display: flex;
         flex-direction: column;
 
     }
     .home-contentBlock .home-activity .activity-content{
         justify-content: start;
-    //     width: 380px;
-    //     gap: 0;
         overflow-x: auto;
     }
     .home-contentBlock .home-activity .activity-title{
@@ -764,12 +762,10 @@ onUnmounted(()=>{
         display: none;
     }
     .home-contentBlock .home-activity .activity-list{
-        // overflow-x: auto;
-        // gap: 12px;
+        width: 100%;
     }
     .home-contentBlock .home-activity .activity-list .list-singleInfo{
-        padding: 12px;
-        box-sizing: border-box;
+        width: 85vw;
     }
 
 
