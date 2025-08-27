@@ -13,6 +13,7 @@ import 'swiper/css/effect-fade'
 import prodSlides from '@/data/prodSlides'; // console.log(prodSlides) // Array
 
 
+
 </script>
 
 
@@ -122,7 +123,7 @@ import prodSlides from '@/data/prodSlides'; // console.log(prodSlides) // Array
                     }
                 }
 
-                @media (max-width: 431px) {
+                @media screen and (max-width: 431px) {
 
                     .content {
                         width: 80%;

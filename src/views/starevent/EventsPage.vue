@@ -1,6 +1,12 @@
 <script setup>
 
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
+
+// 圖檔
+import meteorShower from '@/assets/images/events/home/eventType_meteor-shower.png'
+import moon from '@/assets/images/events/home/eventType_moon.png'
+import starSigns from '@/assets/images/events/home/eventType_star-signs.png'
+import galaxy from '@/assets/images/events/home/eventType_galaxy.png'
 
 // 組件
 import EventCarousel from '@/components/starevent/eventPage/EventCarousel.vue';
@@ -10,26 +16,63 @@ import Pagination from '@/components/common/Pagination.vue';
 // 假資料
 import eventlist from '@/data/eventlist';
 
+// 預設分類
+const selectedType = ref('流星雨')
+const selectedPlace = ref('全部')
+
+const changeType = (eventType) => {
+    selectedType.value = eventType.label
+    selectedPlace.value = '全部' // 每次重選類別，重新變成全部地點
+}
+
+// 篩選類型
+const filterEvents = computed(() => {
+    let result =  eventlist.filter(event => event.type == selectedType.value)
+    if(selectedPlace.value !== '全部'){
+        result = result.filter(event => event.place == selectedPlace.value)
+    }
+    return result
+})
+
+// 切分頁
 const currentPage = ref(1)
 const pageSize = ref(6)
 
 const showItems = computed (() => {
     const start = (currentPage.value - 1) * pageSize.value // 從第幾筆開始
-    return eventlist.slice(start, start + pageSize.value) // 顯示的商品陣列
+    return filterEvents.value.slice(start, start + pageSize.value) // 顯示的商品陣列
 })
 
 const pageChange = (newpage)=> {
     currentPage.value = newpage
 }
 
+watch(() => selectedType.value, () => {
+    currentPage.value = 1
+    /* window.scrollTo({ 
+        top: 0, 
+        behavior: 'smooth' // 平滑滾動 
+    }) */
+
+    const eventHeader = document.querySelector('#eventHeader')
+    
+    eventHeader.scrollIntoView(
+        {
+            behavior: 'smooth',
+        }
+    )
+})
+
+
+
 
 
 // 切版用
 const eventIcon = [
-    { name: 'meteor-shower', imgUrl: '/images/events/home/eventType_meteor-shower.png'},
-    { name: 'moon', imgUrl: '/images/events/home/eventType_moon.png'},
-    { name: 'star-signs', imgUrl: '/images/events/home/eventType_star-signs.png'},
-    { name: 'galaxy', imgUrl: '/images/events/home/eventType_galaxy.png'},
+    { name: 'meteor-shower', imgUrl: meteorShower, label: '流星雨'},
+    { name: 'moon', imgUrl: moon, label: '月相'},
+    { name: 'star-signs', imgUrl: starSigns, label: '星座'},
+    { name: 'galaxy', imgUrl: galaxy, label: '銀河'},
 ]
 
 const placeTags = [
@@ -64,7 +107,7 @@ const placeTags = [
                 <div class="event-type">
                     <h1 class="select-title">熱門觀星主題</h1>
                     <div class="event-box">
-                        <div v-for="(eventType, index) in eventIcon" class="event-select">
+                        <div v-for="(eventType, index) in eventIcon" class="event-select" :class="{active: selectedType == eventType.label}" @click="changeType(eventType)">
                             <img :src="eventType.imgUrl" alt="">
                         </div>
                     </div>
@@ -74,12 +117,12 @@ const placeTags = [
                 <div class="event-list-section">
     
                     <!-- Header -->
-                    <header>
-                        <h2>流星雨</h2>
+                    <header id="eventHeader">
+                        <h2>{{ selectedType }}</h2>
         
                         <div class="event-ctrl">
                             <div class="place-tags">
-                                <div class="tag" v-for="(tag, index) in placeTags">{{ tag.name }}</div>
+                                <div class="tag" :class="{active: selectedPlace == tag.name}" v-for="(tag, index) in placeTags" @click="selectedPlace = tag.name">{{ tag.name }}</div>
                             </div>
                             <div class="select-date">
         
@@ -89,6 +132,7 @@ const placeTags = [
         
                     <!-- 活動項目卡片區 -->
                     <div class="event-list">
+                        <!-- <div class="event-card" v-for="event in showItems"> -->
                         <div class="event-card" v-for="event in showItems">
                             <RouterLink :to="`/events/${event.id}` "class="router-link" > 
                             <img :src="event.imgurl[0]" alt="">
@@ -115,7 +159,7 @@ const placeTags = [
 
                         :pageSize="pageSize"
 
-                        :total="eventlist.length"
+                        :total="filterEvents.length"
                     
                     
                     />
@@ -198,12 +242,19 @@ const placeTags = [
                         // border: 1px solid red;
                         display: flex;
                         justify-content: space-between;
-        
+                        
                         .event-select {
+                            opacity: .3;
                             background-color: $primaryColor-500;
                             border-radius: 999px;
                             cursor: pointer;
-        
+                            transition: all .3s ease;
+                            
+
+                            &.active {
+                                opacity: 1;
+                            }
+
                             img {
                                 display: block;
                             }
@@ -214,6 +265,7 @@ const placeTags = [
                 // 活動項目區
                 .event-list-section {
                     // border: 1px solid red;
+                    width: 100%;
                     display: flex;
                     flex-direction: column;
                     gap: 28px;
@@ -241,6 +293,12 @@ const placeTags = [
                                     border: 2px solid white;
                                     border-radius: 999px;
                                     cursor: pointer;
+                                    transition: background-color .3s ease;
+
+                                    &.active {
+                                        border: 1px solid $secondaryColor-orange;
+                                        background-color: $secondaryColor-orange;
+                                    }
                                 }
                             }
                             .select-date {}
@@ -249,10 +307,11 @@ const placeTags = [
     
                     // 活動項目卡片區
                     .event-list {
+                        // border: 1px solid green; 
                         display: flex;
                         flex-wrap: wrap;
                         // justify-content: space-between;
-                        justify-content: center;
+                        justify-content: flex-start;
                         gap: 40px;
                         .event-card {
                             cursor: pointer;
@@ -310,10 +369,111 @@ const placeTags = [
             }
 
         }
+    }
 
+    @media screen and (max-width: 431px) {
+        .eventhome-section {
+            
+            padding:0 16px 40px;
+            
+            .eventhome-banner {
+                flex-direction: column;
+                gap: 40px;
+                .banner-content {
+                    h1 {
+                        font-size: 88px;
+                    }
+                    h2 {
+                    }
+                }
+                img {
+                    align-self: auto;
+                    width: 60vw;
+                }
+            }
 
-
-
+            .main {
+                padding: 24px 24px;
+                .container {
+                    gap: 40px;
+                    // 選擇活動類型
+                    .event-type {
+                        padding-bottom: 40px;
+        
+                        .select-title {}
+        
+                        .event-box {
+                            display: flex;
+                            flex-wrap: wrap;
+                            justify-content: auto;
+                            gap: 20px;
+                            .event-select {
+                                width: 45%;
+            
+                                img {
+                                    display: block;
+                                    width: 100%;
+                                    object-fit: cover;
+                                }
+                            }
+                        }
+                    }
+        
+                    // 活動項目區
+                    .event-list-section {
+                        width: 100%;
+                        gap: 16px;
+                        // header
+                        header {
+                            h2 {
+                            }
+                            .event-ctrl{
+                                padding-bottom: 20px;
+                                overflow: scroll;
+                                .place-tags{
+                                    .tag {
+                                        flex-shrink: 0;
+                                    }
+                                }
+                                .select-date {}
+                            }
+                        }
+        
+                        // 活動項目卡片區
+                        .event-list {
+                            flex-wrap: nowrap;
+                            justify-content: flex-start;
+                            gap: 20px;
+                            overflow: scroll;
+                            padding-bottom: 20px;
+                            .event-card {
+                                flex-shrink: 0;
+                                width: 300px;
+                                overflow: hidden;
+                                img {
+                                }
+                                .card-content {
+                                    .date {
+                                    }
+                                    .event-name {
+                                    }
+                                    .address {
+                                        .fa-location-dot {
+                                        }
+                                        p {
+                                        }
+                                    }
+                                    .tags {
+                                        .place-tag {}
+                                        .type-tag {}
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
 

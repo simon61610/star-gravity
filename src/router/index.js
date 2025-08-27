@@ -67,21 +67,89 @@ import Newpage from '@/views/new/Newpage.vue'
 
 const routes = [
 // ------------------ 首頁 homepage ------------------
-{path: '/', name: 'homepage', component: HomePage},
+{path: '/homepage', name: 'homepage', component: HomePage,
+  meta: { 
+        useLoader: true,
+        loaderLogo: 'ORION',                                  // 可選：徽章文字
+        loaderFeatures: { pulsar: true, rings: true, moon: true },//pulsar雷達  , rings 行星環
+        loaderPalette: {
+        bg: '#05060eff',          
+        star: '#f2ecff',          
+        accent: '#a1a7ff',        
+        accent2: '#dc59acbc',       
+        glass: 'rgba(231, 149, 149, 0.69)', 
+        glassBorder: 'rgba(255, 255, 255, 0.3)', 
+        moon: '#b1c83cff' ,      
+        ring:'#4694ddff',
+        planet:'#11d486ff'      
+        }  
+      }
+},
 
 
 // ------------------ 觀星指南 aboutstar ------------------
-{path: '/about', name: 'about', component: AboutStarPage},
+{path: '/about', name: 'about', component: AboutStarPage,
+  meta: { 
+        useLoader: true,
+        loaderLogo: 'ORION',                                  // 可選：徽章文字
+        loaderFeatures: { pulsar: true, rings: true, moon: true },//pulsar雷達  , rings 行星環
+        loaderPalette: {
+        bg: '#05060eff',          
+        star: '#f2ecff',          
+        accent: '#a1a7ff',        
+        accent2: '#dc59acbc',       
+        glass: 'rgba(231, 149, 149, 0.69)', 
+        glassBorder: 'rgba(255, 255, 255, 0.3)', 
+        moon: '#b1c83cff' ,      
+        ring:'#4694ddff',
+        planet:'#11d486ff'      
+        }  
+      }
+},
 
 
 
 // ------------------ 星據點 Map ------------------
-{path: '/mapfirst', name: 'mapfirst', component: MapFirstPage},
+{path: '/mapfirst', name: 'mapfirst', component: MapFirstPage ,
+  meta: { 
+        useLoader: true,
+        loaderLogo: 'ORION',                                  // 可選：徽章文字
+        loaderFeatures: { pulsar: true, rings: true, moon: true },//pulsar雷達  , rings 行星環
+        loaderPalette: {
+        bg: '#05060eff',          
+        star: '#f2ecff',          
+        accent: '#a1a7ff',        
+        accent2: '#dc59acbc',       
+        glass: 'rgba(231, 149, 149, 0.69)', 
+        glassBorder: 'rgba(255, 255, 255, 0.3)', 
+        moon: '#b1c83cff' ,      
+        ring:'#4694ddff',
+        planet:'#11d486ff'      
+        }  
+      }
+},
 {path: '/mapmain', name: 'mapmain', component: MapMainPage},
 
 
 // ------------------ 星遊戲 game ------------------
-{path: '/gamehome', name: 'gamehome', component: GameHomePage},
+{path: '/gamehome', name: 'gamehome', component: GameHomePage,
+  meta: { 
+        useLoader: true,
+        loaderLogo: 'ORION',                                  // 可選：徽章文字
+        loaderFeatures: { pulsar: true, rings: true, moon: true },//pulsar雷達  , rings 行星環
+        loaderPalette: {
+        bg: '#05060eff',          
+        star: '#f2ecff',          
+        accent: '#a1a7ff',        
+        accent2: '#dc59acbc',       
+        glass: 'rgba(231, 149, 149, 0.69)', 
+        glassBorder: 'rgba(255, 255, 255, 0.3)', 
+        moon: '#b1c83cff' ,      
+        ring:'#4694ddff',
+        planet:'#11d486ff'      
+        }  
+      }
+},
 {path: '/gamecard', name: 'gamecard', component: GameCardPage},
 {path: '/gamewish', name: 'gamewish', component: GameWishPage},
 {path: '/gamesky', name: 'gamesky', component: GameSkyPage,
@@ -105,14 +173,48 @@ const routes = [
 { path: '/gamestory', name: 'gamestory', component: GameStoryPage },
 
 // ------------------ 星星活動 starevent ------------------
-{path: '/events', name: 'events', component: EventsPage},
+{path: '/events', name: 'events', component: EventsPage,
+  meta: { 
+        useLoader: true,
+        loaderLogo: 'ORION',                                  // 可選：徽章文字
+        loaderFeatures: { pulsar: true, rings: true, moon: true },//pulsar雷達  , rings 行星環
+        loaderPalette: {
+        bg: '#05060eff',          
+        star: '#f2ecff',          
+        accent: '#a1a7ff',        
+        accent2: '#dc59acbc',       
+        glass: 'rgba(231, 149, 149, 0.69)', 
+        glassBorder: 'rgba(255, 255, 255, 0.3)', 
+        moon: '#b1c83cff' ,      
+        ring:'#4694ddff',
+        planet:'#11d486ff'      
+        }  
+      }
+},
 {path: '/events/:id', name: 'event', component: EventDetailPage},
 {path: '/eventregistration', name: 'eventregistration', component: EventRegistrationPage},
 {path: '/eventsuccess', name: 'eventsuccess', component: EventRegistrationSuccessPage},
 
 
 // ------------------ 星空小舖 shop ------------------
-{ path: '/shop', name: 'shop', component: ShopHomePage },
+{ path: '/shop', name: 'shop', component: ShopHomePage,
+  meta: { 
+        useLoader: true,
+        loaderLogo: 'ORION',                                  // 可選：徽章文字
+        loaderFeatures: { pulsar: true, rings: true, moon: true },//pulsar雷達  , rings 行星環
+        loaderPalette: {
+        bg: '#05060eff',          
+        star: '#f2ecff',          
+        accent: '#a1a7ff',        
+        accent2: '#dc59acbc',       
+        glass: 'rgba(231, 149, 149, 0.69)', 
+        glassBorder: 'rgba(255, 255, 255, 0.3)', 
+        moon: '#b1c83cff' ,      
+        ring:'#4694ddff',
+        planet:'#11d486ff'      
+        }  
+      }
+ },
 { path: '/shop/category', name: 'category', component: ShopCategoryPage },
 { path: '/shop/category/product/:id?', name: 'product', component: ShopProductPage },
 { path: '/cartpage',  // 購物車與步驟頁面
@@ -172,8 +274,7 @@ const routes = [
         glass: 'rgba(231, 149, 149, 0.69)', // 玻璃擬態底色
         glassBorder: 'rgba(255, 255, 255, 0.3)', // 玻璃擬態邊線
         moon: '#22b98cff' ,      // 月面顏色
-        ring:'#13bb3dff'       
-        }  
+        ring:'#13bb3dff'       }  
       }
     },
 
@@ -237,23 +338,25 @@ const routes = [
       ]
     },
     //-----index分流導頁-------
-    // {
-    //   path: '/',    
-    //   name: 'IndexPage',     
-    //   component: () => import('@/views/index/IndexPage.vue'),
-    //   meta:{layout:'index'}
-    // },
-
-   
-   
-
-
-
-
-
-
-
-
+     {
+       path: '/',    
+       name: 'IndexPage',     
+      component: () => import('@/views/index/IndexPage.vue'),
+       meta:{layout:'index',
+        useLoader: true,
+        loaderLogo: 'ORION',                                  // 可選：徽章文字
+        loaderFeatures: { pulsar: true, rings: true, moon: true },//pulsar雷達  , rings 行星環
+        loaderPalette: {
+        bg: '#05060eff',          // 背景
+        star: '#f2ecff',          // 星點
+        accent: '#a1a7ff',        // 外環漸層尾端
+        accent2: '#dc59acbc',       // 外環漸層起點
+        glass: 'rgba(231, 149, 149, 0.69)', // 玻璃擬態底色
+        glassBorder: 'rgba(255, 255, 255, 0.3)', // 玻璃擬態邊線
+        moon: '#22b98cff' ,      // 月面顏色
+        ring:'#13bb3dff'       }  
+       }
+     },
 
 
 ] // routes 的陣列結尾
@@ -272,7 +375,7 @@ const router = createRouter({
 
 
 //建立路由守衛 這是一個回呼涵式 
-router.beforeEach((to,from,next) => {
+/* router.beforeEach((to,from,next) => {
   const token = localStorage.getItem('admin_token') //定義一個token 到 localStorage 裡面去取出 admin_token 的值
   if(!token && to.meta.requiresAuth){ 
     next({name:'AdminLoginPage'}) 
@@ -284,7 +387,7 @@ router.beforeEach((to,from,next) => {
                    
   if (to.meta.useLoader === true) {      // 預設不顯示：只有 true 才顯示        
     show({                                                  // 顯示 Loader
-      progress: 15,                                         // 初始進度
+      progress: 10,                                         // 初始進度
       palette: to.meta.loaderPalette,                       // 頁面自訂配色（若有）
       features: to.meta.loaderFeatures,                     // 頁面自訂特效（若有）
       logoText: to.meta.loaderLogo                          // 頁面自訂徽章（若有）
@@ -302,12 +405,15 @@ router.beforeEach((to,from,next) => {
       if (p >= 100) {
         p = 100
         clearInterval(timer)
-        setTimeout(() => hide(), .5) // 1s 之後淡出
+        setTimeout(() => {
+        hide()
+        window.dispatchEvent(new Event('vanta-init')) //在全域 window 上廣播一個事件，事件名稱叫 vanta-init
+        },.5) // 1s 之後淡出
       }
       set(p)
     }, 70) // 每 200ms 加 5%
   }
-})
+}) */
 
 export default router
 

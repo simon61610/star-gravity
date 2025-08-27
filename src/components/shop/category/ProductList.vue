@@ -234,7 +234,7 @@
     }
 
 
-        @media (max-width: 431px) {
+    @media screen and (max-width: 431px) {
         .product-items {
             padding: 0 16px;
             gap: 16px;

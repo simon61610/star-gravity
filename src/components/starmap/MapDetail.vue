@@ -25,9 +25,9 @@ const fourReviewList = computed(()=>{
 })
 //取得預報的天氣圖案
 function getWeatherIcon(weather) {
-    if(weather.includes('雷')){
+    if(weather.includes('雷')|| weather.includes('陣')){
         return thunderIcon
-    }else if(weather.includes('雲') && weather.includes('晴')){
+    }else if(weather.includes('雨') && weather.includes('晴')){
         return sunnrRainyIcon
     }else if(weather.includes('雨') ){
         return rainIcon
@@ -284,14 +284,22 @@ function aaa(){
     width: 100%;
     height: 100%;
     overflow-y: auto;
-    // height: 820px;
-
-    // border: 2px solid $primaryColor-500;
     background-color:$bgColor-white ;
 
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+
+    &::-webkit-scrollbar {
+            width: 8px;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: $primaryColor-500;
+            border-radius: 10px;
+            /* 重點：加邊框讓滾軸往內縮 */
+            border: 1px solid transparent;
+            background-clip: content-box;
+        }
 
 }
 .mapbox-close{
@@ -513,7 +521,7 @@ function aaa(){
 }
     //單一小格左邊文字
 .singleReview-leftContent{
-    max-width: 350px;
+    // max-width: 350px;
     display: flex;
     flex-direction: column;
     gap: 4px ;
@@ -564,9 +572,16 @@ function aaa(){
         gap: 36px;
     }
     .map-detail-weather{
-        justify-content: start;
+        flex-wrap: nowrap;
+
     }
-    
+    .weather-5days h5{
+        font-size: 14px;
+    }
+    .live-weather{
+        font-size: 36px;
+    }
+
     .map-detial-trait{
         gap: 24px;
     }

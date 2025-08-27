@@ -15,7 +15,6 @@
     // ==================== 商品類型篩選 ====================
     // =====================================================
     const selectedCate = ref(null)
-    const showCategoryList = ref(true)
 
     // 接收事件的處理函數
     const selected = (selectedObj) => {
@@ -23,6 +22,12 @@
         console.log(selectedCate.value) // Proxy(Object) {main: '天文望遠鏡', sub: '基礎入門型'}
     }
     // template 用 selected-cate 當作屬性，準備傳值給子
+
+    // ========== 手機分類開關
+    const isCateOpen = ref(false)
+    const toggleCate = () => {
+        isCateOpen.value = !isCateOpen.value
+    }
 
 </script>
 
@@ -34,14 +39,14 @@
         <section class="product-section">
             <CategoryToolbar />
             <div class="main-section">
-                <div class="category-list" v-show="showCategoryList">
+                <div class="category-list m-list" :class="{open: isCateOpen}">
                     <CategoryList @select="selected"/>
                 </div>           
                 <ProductList :selected-cate = "selectedCate"/>
             </div>
 
             <!-- 浮動按鈕 -->
-            <div class="m-cate-btn">
+            <div class="m-cate-btn" @click="toggleCate">
                 <i class="fa-solid fa-bag-shopping"></i>
             </div>
         </section>
@@ -68,7 +73,7 @@
 
     .m-cate-btn {
         color: white;
-        background-color: $primaryColor-500;
+        background-color: $secondaryColor-orange;
         width: 40px;
         height: 40px;
         border-radius: 50%;
@@ -80,15 +85,29 @@
         right: 20px;
         bottom: 20px;
         display: none;
+        z-index: 20;
 
     }
 
 
-    @media (max-width: 431px) {
+    @media screen and (max-width: 431px) {
 
-        // 暫時先消失
-        .category-list {
-            display: none;
+        .m-list {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            // display: none;
+            z-index: 10;
+            background-color: $primaryColor-500;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            height: 100%;
+            transition: right .3s ease;
+        }
+
+        .m-list.open {
+            right: 0;
         }
 
         .m-cate-btn {

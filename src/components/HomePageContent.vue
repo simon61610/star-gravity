@@ -1,8 +1,11 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
+import eventlist from "@/data/eventlist";
+
+const activities = ref(eventlist.slice(0, 6))
 
 //假數據
-const activities =ref([
+/* const activities =ref([
     {
         id: 1,
         date: '2025.05.20',
@@ -37,21 +40,40 @@ const activities =ref([
         name: '活動名稱5',
         description: '這是第五個活動描述這是第五個活動描述這是第五個活動描述',
         image: '../assets/images/aboutstar/star space.png'
+    },
+    {
+        id: 6,
+        date: '2025.05.28',
+        name: '活動名稱6',
+        description: '這是第六個活動描述這是第六個活動描述這是第六個活動描述',
+        image: '../assets/images/aboutstar/star space.png'
     }
-])
+]) */
 
 //定義響應式變數
 const currentIndex = ref(0)
-const itemsPerPage = 3
+const isMobile = ref(false)
 
-const showActivities = computed(()=>{    
-    return activities.value.slice(currentIndex.value, currentIndex.value + itemsPerPage )
+const showActivities = computed(()=>{  
+    if( isMobile.value === true ){
+        return activities.value
+    }else{
+        return activities.value.slice(currentIndex.value, currentIndex.value + itemsPerPage.value )
+    }
 })
 const canSlidePrev = computed(()=>{
     return currentIndex.value > 0
 })
 const canSlideNext = computed(()=>{
-    return currentIndex.value < activities.value.length - itemsPerPage
+    return currentIndex.value < activities.value.length - itemsPerPage.value
+})
+
+const itemsPerPage = computed(()=>{
+    if( isMobile.value === true ){
+        return activities.value.length
+    }else{
+        return 3
+    }
 })
 //事件監聽
 function slidePrev (){
@@ -66,7 +88,22 @@ function slideNext (){
         currentIndex.value++
     }
 }
+function checkScreenSize(){
+    if( window.innerWidth <= 435 ){
+        isMobile.value = true
+    }else {
+        isMobile.value = false 
+    }
+}
 
+//生命週期
+onMounted(()=>{
+    checkScreenSize()
+    window.addEventListener('resize', checkScreenSize)
+})
+onUnmounted(()=>{
+    window.removeEventListener('resize', checkScreenSize)
+})
 
 </script>
 
@@ -75,9 +112,9 @@ function slideNext (){
     <!-- 緣起? -->
     <div class="home-begining">
         <!-- 背景小星星 -->
-        <img class="begining-bgStars" src="../assets/images/home/index-stars.svg" alt="">
+        <img class="begining-bgStars" src="@/assets/images/home/index-stars.svg" alt="">
         <!-- 人類 -->
-        <img class="begining-person" src="../assets/images/home/index-people.svg" alt="人類">
+        <img class="begining-person" src="@/assets/images/home/index-people.svg" alt="人類">
 
         <!-- 流星 -->
         <div class="testbox">
@@ -88,7 +125,14 @@ function slideNext (){
         <div class="begining-text">
             <h1 class="decTitle--medium">ABOUT</h1>
             <h2 class="cnTitle--h2">緣起</h2>
-            <p class="cnContent--18px">一段崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是一段崩潰的團專之旅，</p>
+            <!-- <p class="cnContent--18px">一段崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是一段崩潰的團專之旅，</p> -->
+            <p class="cnContent--18px">
+                觀星聽起來浪漫又遙遠，其實只要有一點指引，就能輕鬆抬頭看見屬於自己的宇宙。
+                <br><br>
+                「星引力」的誕生，正是希望讓這件事變得簡單、親近又有趣。
+                <br><br>
+                不需要昂貴的器材，也不需要專業背景，只要保有一點時間與好奇心，就能重新認識夜晚，並被滿天星斗深深吸引。
+            </p>
         </div>
 
     </div>
@@ -100,40 +144,45 @@ function slideNext (){
             <div class="home-guideTitle">
                 <h1 class="guideTitle-en decTitle--medium">GUILD</h1>
                 <h2 class="guideTitle-cn cnTitle--h2 ">觀星指南</h2>
+                <button class="guideTitle-button button--normal">查看更多</button>
             </div>
+            
             <!-- 指南三項 -->
             <div class="home-guildExtract">
                 <ul class="guildExtract-block">
                     <li>
-                        <img src="../assets/images/home/index_bigIcon1.svg" alt="指南1">
+                        <img src="@/assets/images/home/index_bigIcon1.svg" alt="指南1">
                     </li>
                     <li>
-                        <h2 class=" cnTitle--h2">觀星指南1</h2>
+                        <h2 class=" cnTitle--h2">觀星初學指南</h2>
                     </li>
                     <li>
-                        <p class="cnContent--18px">這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述</p>
-                    </li>
-                </ul>
-                <ul class="guildExtract-block">
-                    <li>
-                        <img src="../assets/images/home/index_bigIcon2.svg" alt="指南2">
-                    </li>
-                    <li>
-                        <h2 class=" cnTitle--h2">觀星指南2</h2>
-                    </li>
-                    <li>
-                        <p class="cnContent--18px">這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述</p>
+                        <!-- <p class="cnContent--18px">這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述</p> -->
+                        <p class="cnContent--18px">我們提供入門知識與觀測技巧，讓初學者能快速掌握重點，一起踏入觀星的行列。我們提供清晰的指引，幫助任何人都能抬頭看見熟悉的星空，感受宇宙的魅力。</p>
                     </li>
                 </ul>
                 <ul class="guildExtract-block">
                     <li>
-                        <img src="../assets/images/home/index_bigIcon3.svg" alt="指南3">
+                        <img src="@/assets/images/home/index_bigIcon2.svg" alt="指南2">
+                    </li>
+                    <li>
+                        <h2 class=" cnTitle--h2">星據點</h2>
+                    </li>
+                    <li>
+                        <!-- <p class="cnContent--18px">這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述</p> -->
+                        <p class="cnContent--18px">在星據點，你可以找到適合觀星的地點資訊，包含交通便利性、天氣與地點評價，讓星空愛好者能更輕鬆找到理想的觀測場所。我們提供貼近需求的建議，避免盲目摸索，讓觀星體驗更順利。</p>
+                    </li>
+                </ul>
+                <ul class="guildExtract-block">
+                    <li>
+                        <img src="@/assets/images/home/index_bigIcon3.svg" alt="指南3">
                     </li>
                      <li>
-                        <h2 class=" cnTitle--h2">觀星指南3</h2>
+                        <h2 class=" cnTitle--h2">星空小舖</h2>
                     </li>
                     <li>
-                        <p class="cnContent--18px">這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述</p>
+                        <!-- <p class="cnContent--18px">這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述</p> -->
+                        <p class="cnContent--18px">精選多樣望遠鏡、雙筒鏡與觀星配件，搭配清楚的介紹與比較，幫助初學者找到合適的工具。我們提供方便的一站式選購，讓準備觀星不再繁瑣，簡單就能踏出探索宇宙的第一步。</p>
                     </li>
                 </ul>
             </div>
@@ -142,12 +191,12 @@ function slideNext (){
         <!-- 天文快訊 -->
         <div class="home-news">
             <!-- 左邊照片 -->
-             <img class="home-news-photo" src="../assets/images/aboutstar/lunar eclipse.png" alt="天文快訊">
+             <img class="home-news-photo" src="@/assets/images/aboutstar/lunar eclipse.png" alt="天文快訊">
             <!-- 右邊描述 -->
             <div class="home-news-rightSide">
                 <h1 class="news-rightSide-title decTitle--medium">NEWS</h1>
                 <h2 class="news-rightSide-title2 cnTitle--h2">天文快訊</h2>
-                <p class="news-rightSide-text cnContent--18px">天文快訊內容天文快訊內容天文快訊內容天文快訊內容天文快訊內容天文快訊內容天文快訊內容天文快訊內容天文快訊內容天文快訊內容</p>
+                <p class="news-rightSide-text cnContent--18px">最新的天文觀測與星象消息，包含流星雨、行星衝、日食與月食等第一手資訊，讓抬頭看星不再錯過精彩瞬間。天文快訊將提供清楚的時間、地點與觀測建議，幫助愛好者在最佳時刻捕捉夜空的美麗。</p>
                 <button class="news-rightSide-button button--normal">查看更多</button>
             </div>
         </div>
@@ -157,12 +206,12 @@ function slideNext (){
             <!-- 左邊描述 -->
             <div class="home-sky-leftSide">
                 <h1 class="sky-leftSide-title decTitle--medium">FOUR SEASONS</h1>
-                <h2 class="sky-leftSide-title2 cnTitle--h2">四季星空模擬圖</h2>
-                <p class="sky-leftSide-text cnContent--18px">星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹</p>
+                <h2 class="sky-leftSide-title2 cnTitle--h2">星視野</h2>
+                <p class="sky-leftSide-text cnContent--18px">以互動星空圖呈現十二星座的樣貌，不僅能清楚看到星座的樣子，還能點擊圖示展開「星連星」的效果，讓星座線條一目了然，一起快速理解星座的形狀與故事，享受觀星的樂趣與臨場感。</p>
                 <button class="sky-leftSide-button button--normal">查看更多</button>
             </div>
             <!-- 右邊圖片 -->
-            <img class="home-sky-photo" src="../assets/images/aboutstar/constellation-4.png" alt="四季星空">
+            <img class="home-sky-photo" src="@/assets/images/aboutstar/constellation-4.png" alt="四季星空">
         </div>
 
         <!-- 活動資訊 -->
@@ -175,26 +224,33 @@ function slideNext (){
             <div class="activity-content">
                 <!-- 左滑鍵 -->
                 <a class="activity-a"
+                    v-if="!isMobile"
                     @click="slidePrev"
                     :class="{ 'disable': !canSlidePrev }">
-                    <img class="activity-a-img" src="../assets/images/news/article-content-back.svg" alt="上一個">
+                    <img class="activity-a-img" src="@/assets/images/news/article-content-back.svg" alt="上一個">
                 </a>
                 <!-- 近日活動清單 -->
                 <div class="activity-list">
-                    <a v-for="activity in showActivities" class="list-singleInfo" href="#">
-                        <img class="singleInfo-photo" src="../assets/images/aboutstar/star space.png" alt="活動資訊圖">
+                    <a v-for="activity in showActivities" 
+                        class="list-singleInfo" 
+                        href="#">
+                        <img class="singleInfo-photo" src="@/assets/images/aboutstar/star space.png" alt="活動資訊圖">
                         <div class="singleInfo-content">
+                            <!-- <h3 class="activity-list-datetime">{{activity.date}}</h3> -->
                             <h3 class="activity-list-datetime">{{activity.date}}</h3>
-                            <h3 class="activity-list-activityName">{{activity.name}}</h3>
-                            <p class="activity-list-info cnConten--18px">{{ activity.description }}</p>
+                            <!-- <h3 class="activity-list-activityName">{{activity.name}}</h3> -->
+                            <h3 class="activity-list-activityName">{{activity.title}}</h3>
+                            <!-- <p class="activity-list-info cnConten--18px">{{ activity.description }}</p> -->
+                            <p class="activity-list-info cnConten--18px">{{ activity.desc }}</p>
                         </div>
                     </a>
                 </div>
                 <!-- 右滑鍵 -->
                 <a class="activity-a"
+                    v-if="!isMobile"
                     @click="slideNext"
                     :class="{ 'disable': !canSlideNext }">
-                    <img class="activity-a-img2" src="../assets/images/news/article-content-back.svg" alt="下一個">
+                    <img class="activity-a-img2" src="@/assets/images/news/article-content-back.svg" alt="下一個">
                 </a>
             </div>
         </div>
@@ -202,17 +258,15 @@ function slideNext (){
 </template>
 
 <style scoped lang="scss">
+@import '@/assets/styles/main.scss';
 
-@import '../assets/styles/main.scss';
+// -------------------PC----------------------
 //緣起
-.special-effects{
-    overflow: hidden;
-}
 .home-begining{
     width: 100%;
     height: 100vh;
 
-    background-image: url(../assets/images/home/index-bg02.svg);
+    background-image: url(@/assets/images/home/index-bg02.svg);
 
     position: relative;
 }
@@ -290,7 +344,7 @@ function slideNext (){
     // border: 1px solid #fff;
     width: 80vh;
     height: 32vh;
-    background-image: url(../assets/images/home/index-starShot.svg);
+    background-image: url(@/assets/images/home/index-starShot.svg);
 
     position: absolute;
     top: 2.5vh;
@@ -311,7 +365,7 @@ function slideNext (){
 
     display: block;
     // border: 1px solid red;
-    background-image: url(../assets/images/home/index-starLightCycle1.svg);
+    background-image: url(@/assets/images/home/index-starLightCycle1.svg);
 
     position: absolute;
     top: 40%;
@@ -326,7 +380,7 @@ function slideNext (){
 
     display: block;
     // border: 1px solid red;
-    background-image: url(../assets/images/home/index-starLight01.svg);
+    background-image: url(@/assets/images/home/index-starLight01.svg);
 
     position: absolute;
     top: 35%;
@@ -369,6 +423,9 @@ function slideNext (){
 
     // 第一區 觀星指南
     .home-guide {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
         padding: 36px 0;
     }
     //標題
@@ -387,6 +444,10 @@ function slideNext (){
         padding-bottom: 20px;
         color: $FontColor-white;
     }
+    .guideTitle-button{
+        margin: 0 100px 20px;
+        
+    }
     //指南三項
     .home-guildExtract {
         padding: 0 60px;
@@ -403,7 +464,8 @@ function slideNext (){
         padding: 20px;
     }
     .guildExtract-block img {
-        width: 80%;
+        width: 15vw;
+        aspect-ratio: 1 / 1;
         display: block;
         margin: 0 auto;
     }
@@ -554,10 +616,12 @@ function slideNext (){
                 .singleInfo-photo {
                     width: 100%;
                     border-radius: 20px;
+                    width: 300px;
                 }
 
                 h3 {
                     font-size: $pcChFont-H3;
+                    line-height: 1.2;
                 }
 
                 .singleInfo-content {
@@ -565,6 +629,16 @@ function slideNext (){
                     display: flex;
                     flex-direction: column;
                     gap: 12px;
+                    .activity-list-info {
+                        display: -webkit-box;
+                        line-height: 1.5;
+                        // display: -webkit-box;
+                        -webkit-box-orient: vertical;
+                        -webkit-line-clamp: 4;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+
                 }
             }
         }
@@ -581,6 +655,122 @@ function slideNext (){
                     0 0 30px rgba(145, 135, 185, 0.4);
     }
 }
+
+
+//...........RWD.............
+@media screen and (max-width:431px) {
+    .home-contentBlock button{
+        width: 100%;
+    }
+
+    .home-begining{
+        overflow: hidden;
+    }
+    .begining-person{
+        height: 70vh;
+        left: 50%;
+        translate: -70%;
+        z-index: 1;
+    }
+    .begining-bgStars{
+        display: none;
+    }
+    .testbox{
+        top:6.5vh;
+        left:47%;
+        z-index: 0;
+
+    }
+    .testbox::before{
+        top: 35%;
+    }
+    .begining-text{
+        width: 430px;
+        padding: 24px;
+        box-sizing: border-box;
+        top: auto;
+        left: 0;
+        bottom: 10%;
+        z-index: 10;
+    }
+    .home-guide{
+        max-width: 85vw;
+        margin: 0 auto;
+    }
+    .home-contentBlock .home-guideTitle{
+        margin-top:24px;
+        flex-direction: column;
+        align-items: start;
+    }
+    .home-contentBlock .home-guildExtract{
+        flex-direction: column;
+        padding:0px;
+        gap:0px;
+    }
+    .home-contentBlock .guideTitle-cn{
+        padding-bottom: 0;
+    }
+
+    .home-contentBlock .guideTitle-button{
+        margin: 0;
+        align-self: start;
+    }
+
+    .home-contentBlock .home-news{
+        flex-direction: column;
+        gap: 12px;
+    }
+    .home-contentBlock .home-news-rightSide{
+        gap: 16px;
+    }
+    .home-contentBlock .home-sky{
+        flex-direction: column-reverse;
+        gap: 12px;
+    }
+    .home-contentBlock .home-sky-leftSide{
+        justify-content: start;
+        gap: 16px;
+    }
+    .home-contentBlock .home-sky-photo{
+        width: 380px;
+        height: 380px;
+    }
+    .home-contentBlock .home-activity .activity-title2{
+        margin-top: 12px;
+        text-align: left;
+    }
+    .home-contentBlock .home-activity .activity-title{
+        text-align: left;
+    }
+
+    .home-contentBlock .home-activity{
+        width: 85vw;
+        padding: 0px 0px 36px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+
+    }
+    .home-contentBlock .home-activity .activity-content{
+        justify-content: start;
+        overflow-x: auto;
+    }
+    .home-contentBlock .home-activity .activity-title{
+        font-size: 88px;
+    }
+    .home-contentBlock .home-activity .activity-content .activity-a{
+        display: none;
+    }
+    .home-contentBlock .home-activity .activity-list{
+        width: 100%;
+    }
+    .home-contentBlock .home-activity .activity-list .list-singleInfo{
+        width: 85vw;
+    }
+
+
+}
+
 
 
 </style>

@@ -5,9 +5,6 @@
 3. 寫上 thumbs 點擊後切換圖片的功能
 4. 寫上圖片超出要能滑動的功能
 5. 加上商品資料的綁定
-6. Toast 訊息
-7. 隨路由引入的商品名稱與內容待改
-8. 等於 nul
 -->
 
 <script setup>
@@ -375,7 +372,7 @@
     }
 
 
-    @media (max-width: 431px) {
+    @media screen and (max-width: 431px) {
         .product-page {
         // ------------------- 上方 -------------------
             .container {
@@ -443,22 +440,12 @@
 
             // ------------------- 下方 -------------------
             .product-info {
-                max-width: 1200px;
-                margin: 0 auto;
             }
 
             // ------------------- 沒有商品時出現 -------------------
             .no-product {
-                text-align: center;
-                font-size: 52px;
-                padding: 20px;
-                color: white;
+                font-size: 28px;
                 .back-cate {
-                    padding-top: 20px;
-                    cursor: pointer;
-                    &:hover {
-                        text-decoration: underline;
-                    }
                 }
             }
         }

@@ -93,11 +93,12 @@ function cencelReview(){   //這邊要判斷是不是會員
 <style scoped lang="scss">
 @import '../../assets/styles/main.scss';
 
+
 .mapreview-writePlace{
     width: 430px;
     max-height: 90%;
     border: 2px solid $primaryColor-100;
-    border-radius: 20px;
+    border-radius: 10px;
 
     display: flex;
     flex-direction: column;
@@ -119,6 +120,18 @@ function cencelReview(){   //這邊要判斷是不是會員
     z-index: 300;
 
     overflow-y: auto;
+
+    &::-webkit-scrollbar {
+            width: 8px;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: $primaryColor-500;
+            border-radius: 10px;
+            /* 重點：加邊框讓滾軸往內縮 */
+            border: 1px solid transparent;
+            background-clip: content-box;
+        }
+
 }
 .mapreview-writePlace h3{
     font-size: $pcChFont-H3;

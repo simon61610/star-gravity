@@ -8,8 +8,16 @@ const vantaEffect = ref(null)
 let meteorInterval = null  //給初值
 let container = null  //給初值
 
-onMounted(() => {     //掛載vanta特效
-    vantaEffect.value = window.VANTA.NET({
+
+
+onMounted(() => {
+  window.addEventListener('vanta-init', initVanta) //當全域 window 收到 vanta-init 事件時，就執行 initVanta()
+})
+
+
+function initVanta(){
+  if (vantaEffect.value) return //如果已經初始化過就直接跳過
+      vantaEffect.value = window.VANTA.NET({
       el: vantaRef.value,
       mouseControls: true,
       touchControls: true,
@@ -22,14 +30,44 @@ onMounted(() => {     //掛載vanta特效
       color: 0xd9c6cf,
       maxDistance: 1.0,
       spacing: 16.0,
-    })
+     })
 
 
   container = vantaRef.value //定義容器
-  if (container) {
-    meteorInterval = setInterval(createMeteor, 1000) // 300ms 一顆
-  }
-})
+   if (container) {
+     meteorInterval = setInterval(createMeteor, 1000) // 300ms 一顆
+   }
+
+}
+
+// onMounted(() => {     //掛載vanta特效
+
+//     vantaEffect.value = window.VANTA.NET({
+//       el: vantaRef.value,
+//       mouseControls: true,
+//       touchControls: true,
+//       gyroControls: false,
+//       backgroundColor: 0x0a0f1f,
+//       scale: 1.0,
+//       scaleMobile: 1.0,
+//       speed: 0,
+//       points: 18.0,
+//       color: 0xd9c6cf,
+//       maxDistance: 1.0,
+//       spacing: 16.0,
+
+      
+//     })
+
+
+//   container = vantaRef.value //定義容器
+//   if (container) {
+//     meteorInterval = setInterval(createMeteor, 1000) // 300ms 一顆
+//   }
+  
+// })
+
+
 
 // 「清理」函式，同時給路由切換與元件卸載呼叫
 function cleanup() {
@@ -55,8 +93,10 @@ onBeforeRouteLeave((_to, _from, next) => {
 
 // 元件被卸載時也再保險清一次
 onBeforeUnmount(() => {
+  window.removeEventListener('vanta-init', initVanta)
   cleanup()
 })
+
 
 
 

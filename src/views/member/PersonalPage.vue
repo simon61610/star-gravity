@@ -1,7 +1,7 @@
 <script setup>
-    import { useRoute } from 'vue-router'
+    import { useRoute, useRouter } from 'vue-router'
     import { computed } from 'vue'
-    import { UserFilled } from '@element-plus/icons-vue'
+    import { UserFilled, SwitchButton } from '@element-plus/icons-vue'
 
     const props = defineProps({
         username: { type: String, default: '小姐/先生' },
@@ -31,16 +31,23 @@
         reader.readAsDataURL(f)
     }
     // 送到後端（示範：改成你的 API 即可）
-    async function save() {
-        if (!file.value) return alert('請先選擇圖片')
-        // const fd = new FormData()
-        // fd.append('avatar', file.value)
-        // await axios.post('/api/me/avatar', fd)
+    // async function save() {
+    //     if (!file.value) return alert('請先選擇圖片')
+    //     // const fd = new FormData()
+    //     // fd.append('avatar', file.value)
+    //     // await axios.post('/api/me/avatar', fd)
 
-        alert(`（示範）已準備上傳：${file.value.name}`)
-        // 上傳成功後可清空或保留預覽
-        // file.value = null
-        // preview.value = ''
+    //     alert(`（示範）已準備上傳：${file.value.name}`)
+    //     // 上傳成功後可清空或保留預覽
+    //     // file.value = null
+    //     // preview.value = ''
+    // }
+
+    // 登出
+    const router = useRouter()
+    function logout() {
+        alert('已登出')
+        router.push('/loginfirst')   // 登出後跳轉到登入頁
     }
 </script>
 
@@ -58,8 +65,14 @@
                     <!-- <span class="edit-tag">更換頭像</span> -->
                 </label>
 
-                <div class="buttons">
+                <!-- <div class="buttons">
                     <button @click="save" :disabled="!file">儲存</button>
+                </div> -->
+                <!-- 登出 -->
+                <div class="buttons">
+                    <button @click="logout" class="logout-btn" >
+                        <el-icon><SwitchButton /></el-icon>
+                    </button>
                 </div>
                 <!-- 帳號 -->
                 <p class="username">{{ username }}</p>
@@ -105,14 +118,14 @@
 .personal{
     font-family: $chFont;
     width: 100%;
-    height: calc(100vh - 80px);
-    overflow-y: auto;           /* 把捲動限制在這個容器 */
+    height: auto; 
+    min-height: calc(100vh - 80px);
+    overflow-y: visible;
     box-sizing: border-box;
     background-image: url(@/assets/images/member/login-bgi.png);
     background-size: cover;
 }
 .leftright{
-    // max-width: 1200px;
     justify-content: center;
     align-items: center;
     display: flex;
@@ -148,7 +161,7 @@
     position: absolute; 
     inset: 0; 
     opacity: 0; 
-    cursor: pointer; /* 整圈可點 */
+    cursor: pointer; 
 }
 // 圖像中間+
 .placeholder{ 
@@ -156,10 +169,18 @@
     font-size: $pcChFont-H1;
     color: $inputColor-focus;
 }
-// 儲存
-.buttons{ 
-    margin-top: 10px; 
-    text-align: center; 
+// 登出
+.logout-btn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 32px; 
+    padding-left: 58px;
+    padding-top: 14px;
+    color: $primaryColor-500;
+    &:hover {
+        color: $secondaryColor-orange;
+    }
 }
 // 顯示小姐/先生文字
 .username{
@@ -218,8 +239,11 @@
         height: 96px;
         margin: 0 auto;
     }
-    .buttons{ 
-        margin-top: 8px;
+    // .buttons{ 
+    //     margin-top: 8px;
+    // }
+    .logout-btn{
+        padding-right: 57px;
     }
     .username{
         padding: 8px 0 0;
@@ -263,13 +287,5 @@
 
 
 }
-
-
-
-
-
-
-
-
 
 </style>

@@ -513,4 +513,97 @@
         }
     }
 
+
+    @media screen and (max-width: 431px) {
+        
+        .checkout-section {
+
+            .cart-list {
+                h1 {}
+                .toggle-total {
+
+                    .total {}
+                    .count {}
+
+                    .count.open {}
+                }
+                .toggle-content{
+                    .items{
+                        .item{
+                            gap: 20px;
+                            &__img { // 圖片
+                                display: block;
+                            }
+                            &__info { // 商品名稱與金額
+                                align-items: flex-start;
+                                flex-direction: column;
+        
+        
+                                &__name {
+                                    padding-left: 12px;
+                                }
+                                &__price {
+                                    padding-left: 12px;
+                                    align-items: start;
+                                    flex-direction: column;
+                                    gap: 12px;
+                                    .price-per-item {
+                                        display: flex;
+                                        gap: 12px;
+                                        flex-direction: row;
+                                        text-align: left;
+                                        padding-left: 0;
+                                        .price {
+                                            font-size: $pcChFont-H4;
+                                        }
+                                        .spe-price {
+                                            text-decoration: line-through;
+                                            color: #888;
+                                        }
+                                    }
+                                    .sub-count, .sub-price {
+                                        font-size: 20px;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .cal-box {
+                        width: 100%;
+                        p {
+                        }
+                    }
+                    .toggle-inside {
+
+                        .arrow-inside {
+                        }
+                    }
+                }
+            }
+
+            .receipt-info {
+                h1 {}
+                &__form {
+                    .input-box {
+                        .address {
+                            select {
+                                width: 100%;
+                                option {
+                                }    
+                            }
+                        }
+                    }
+                }
+            }
+
+
+
+            .btn-box {
+                flex-direction: column-reverse;
+                gap: 20px;
+                align-items: center;
+            }
+        }    
+    }
+
 </style>

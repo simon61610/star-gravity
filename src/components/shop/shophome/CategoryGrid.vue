@@ -1,31 +1,37 @@
 <script setup>
 
+import binoculars from '@/assets/images/shop/shophome-binoculars.jpg'
+import souvenirs from '@/assets/images/shop/shophome-souvenirs.jpg'
+import telescope from '@/assets/images/shop/shophome-telescope.jpg'
+import tripod from '@/assets/images/shop/shophome-tripod.png'
+import accessory from '@/assets/images/shop/shophome-accessory.png'
+
 
 // 分類資料，圖片放在 public，不用打包轉換
 const categories = [
     { 
         name: '天文望遠鏡', 
-        img: '/images/shop/shophome-telescope.jpg', 
+        img: telescope, 
         path: '/shop/category' 
     },
     { 
         name: '雙筒/單筒望遠鏡', 
-        img: '/images/shop/shophome-binoculars.jpg', 
+        img: binoculars, 
         path: '/shop/category' 
     },
     { 
         name: '腳架', 
-        img: 'https://placehold.co/220x220', 
+        img: tripod, 
         path: '/shop/category' 
     },
     { 
         name: '配件', 
-        img: 'https://placehold.co/220x220', 
+        img: accessory, 
         path: '/shop/category' 
     },
     { 
         name: '書籍/小物', 
-        img: '/images/shop/shophome-souvenirs.jpg', 
+        img: souvenirs, 
         path: '/shop/category' 
     }
 ]
@@ -130,7 +136,7 @@ const categories = [
         } 
     }
 
-    @media(max-width: 431px){
+    @media screen and (max-width: 431px){
         .prod-cate {
             padding: 40px 16px;
 

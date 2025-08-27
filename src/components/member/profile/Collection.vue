@@ -83,17 +83,18 @@
                 </div>
             </article>
             
-            <!-- 自製小彈窗已改為 toast 呈現 -->
             
-            <!----分頁-------->
-            <div class="pager">
-                <Pagination
-                :modelValue="collectionPage"
-                @update:modelValue="pagechange"
-                :page-size="pageSize"
-                :total="filteredTotal"
+        </div>
+        <!-- 自製小彈窗已改為 toast 呈現 -->
+            
+        <!----分頁-------->
+        <div class="pager">
+            <Pagination
+            :modelValue="collectionPage"
+            @update:modelValue="pagechange"
+            :page-size="pageSize"
+            :total="filteredTotal"
             />
-            </div>
         </div>
     </div>
 
@@ -107,26 +108,47 @@
 .products{
     padding: 12px;
     width: 700px;
-    height: 500px;
+    // height: 500px;
+    height: auto;            /* 內容多就自然撐開 */
+    min-height: 500px;       /* 保留原本大致視覺高度 */
+    overflow-y: visible;     /* 明確指定不要在這層裁切/滾動 */
+    box-sizing: border-box;  /* 尺寸更可控 */
 }
 .flex {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));     /* 固定4欄 */
     column-gap: 16px;   /* 左右間距 */
-    row-gap: 140px;     /* 上下間距 */
+    row-gap: 32px;     /* 上下間距 */
 }
 .card{
-    width: 120px;
-    height: 120px;
+    // width: 120px;
+    // height: 120px;
+    // margin: 0;
+
+    /* width: 120px; */        /* 交給 grid 分欄，不需固定卡片寬 */
+    /* height: 120px; */       /* ← 移除固定高度 */
+    width: 100%;
+    height: auto;
     margin: 0;
+    /* （可選）讓卡片內的東西垂直堆疊時不會被切掉 */
+    overflow: visible;
 }
 /* 圖片 */
 .photoall{
-    width: 170px;
+    // width: 170px;
+    // display: flex;
+    // flex-direction: column;
+    // justify-content: center;
+    // align-items: center;
+
+    /* 讓內部寬度在每格中置中顯示，但不硬卡卡片大小 */
+    width: 100%;
+    max-width: 170px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin: 0 auto;
 }
 .thumb img{
     width: 120px;
@@ -186,9 +208,18 @@
 }
 // 分頁
 .pager{
-    width: 700px;
-    justify-content: center;  
-    padding-right: 4px; 
+    // width: 700px;
+    // justify-content: center;  
+    // padding-right: 4px; 
+
+    width: 100%;
+    max-width: 700px;
+    margin: 16px auto 0;
+    display: flex;
+    justify-content: center;
+    padding: 0 50px;
+    position: relative;
+    z-index: 1;
 }
 
 @media screen and (max-width: 433px) {
@@ -265,7 +296,7 @@
     /* 分頁 */
     .pager{
         width: 100%;
-        padding: 8px 100px 16px;
+        padding: 8px 0 16px;
         display: flex;
         justify-content: center;
     }

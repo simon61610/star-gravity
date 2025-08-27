@@ -94,71 +94,77 @@ onUnmounted(()=>{
 </script>
 
 <template>
-    <div class="backToTop" @click="scrollToTop" v-show="showbackToTop">
-        <h3>top</h3>
-    </div>
-
-    <!-- Q&A -->
-    <!-- <div class="QA">
-        <h3 class="QATitle" @click="showQABox">{{boxText}}</h3>
-        <div class="QAbox" v-show="showBox">
-            <div v-for="value in 8" class="QAbox-content">
-                <h2 class="cnContent--14px">怎麼退費</h2>
-                <p class="cnContent--14px">不能推費住54324532wawadacawc不能推費住54324532wawadacawc不能推費住54324532wawadacawc</p>
-            </div>
-            <AccordionItem
-              v-for="(item, index) in qaList"
-              :key="index"
-              :title="item.q"
-              :defaultOpen="false"
-            >
-              <p class="cnContent--20px">{{ item.a }}</p>
-            </AccordionItem>
+    <div class="wrapper">
+        <div class="backToTop" @click="scrollToTop" v-show="showbackToTop">
+            <h3>top</h3>
         </div>
-    </div> -->
-    
 
-    <!-- 動畫效果大區-->
-    <Section class="special-effects">
-       
-        <!-- 視差滾動區塊 -->
-        <div class="home-firstBlock">
-            <img class="firstBlock-moon" src="../assets/images/home/index-moon.svg" alt="月亮">
-            <!-- 星連星 -->
-            <img class="firstBlock-star1" src="../assets/images/home/index-star01.svg" alt="星座A">
-            <img class="firstBlock-star2" src="../assets/images/home/index-star02.svg" alt="星座B">
-            <!-- 海與背景山 -->
-            <div class="firstBlock-sea"></div>
-            <img class="firstBlock-backMontain1" src="../assets/images/home/index-MountainBackLeft.svg" alt="左山景">
-            <img class="firstBlock-backMontain2" src="../assets/images/home/index-MountainBackright.svg" alt="右山景">
-            <!-- 前景燈塔與山 -->
-            <img class="firstBlock-tower" src="../assets/images/home/index-lightHouse.svg" alt="燈塔">
-            <img class="firstBlock-towerMountain" src="../assets/images/home/index-MountainInfron.svg" alt="前景山">
-            <!-- 文字 -->
-            <div class="firstBlock-text">
-                <div class="firstBlock-texth1">
-                    <h1 class="cnTitle--sm">星</h1>
-                    <h1 class="cnTitle--sm">之</h1>
-                    <h1 class="cnTitle--sm">所</h1>
-                    <h1 class="cnTitle--sm">引</h1>
+        <!-- Q&A -->
+        <!-- <div class="QA">
+            <h3 class="QATitle" @click="showQABox">{{boxText}}</h3>
+            <div class="QAbox" v-show="showBox">
+                <div v-for="value in 8" class="QAbox-content">
+                    <h2 class="cnContent--14px">怎麼退費</h2>
+                    <p class="cnContent--14px">不能推費住54324532wawadacawc不能推費住54324532wawadacawc不能推費住54324532wawadacawc</p>
                 </div>
-                <p>每個人都是被星星溫柔牽引的旅人</p>
+                <AccordionItem
+                v-for="(item, index) in qaList"
+                :key="index"
+                :title="item.q"
+                :defaultOpen="false"
+                >
+                <p class="cnContent--20px">{{ item.a }}</p>
+                </AccordionItem>
             </div>
-        </div>
-
+        </div> -->
         
 
-    </Section>
+        <!-- 動畫效果大區-->
+        <Section class="special-effects">
+        
+            <!-- 視差滾動區塊 -->
+            <div class="home-firstBlock">
+                <img class="firstBlock-moon" src="@/assets/images/home/index-moon.svg" alt="月亮">
+                <!-- 星連星 -->
+                <img class="firstBlock-star1" src="@/assets/images/home/index-star01.svg" alt="星座A">
+                <img class="firstBlock-star2" src="@/assets/images/home/index-star02.svg" alt="星座B">
+                <!-- 海與背景山 -->
+                <div class="firstBlock-sea"></div>
+                <img class="firstBlock-backMontain1" src="@/assets/images/home/index-MountainBackLeft.svg" alt="左山景">
+                <img class="firstBlock-backMontain2" src="@/assets/images/home/index-MountainBackright.svg" alt="右山景">
+                <!-- 前景燈塔與山 -->
+                <img class="firstBlock-tower" src="@/assets/images/home/index-lightHouse.svg" alt="燈塔">
+                <img class="firstBlock-towerMountain" src="@/assets/images/home/index-MountainInfron.svg" alt="前景山">
+                <!-- 文字 -->
+                <div class="firstBlock-text">
+                    <div class="firstBlock-texth1">
+                        <h1 class="cnTitle--sm">星</h1>
+                        <h1 class="cnTitle--sm">之</h1>
+                        <h1 class="cnTitle--sm">所</h1>
+                        <h1 class="cnTitle--sm">引</h1>
+                    </div>
+                    <p>每個人都是被星星溫柔牽引的旅人</p>
+                </div>
+            </div>
+
+            
+
+        </Section>
 
 
-    <!-- 大div 包裹四區塊-->
-    <HomePageContent/>
+        <!-- 大div 包裹四區塊-->
+        <HomePageContent class="homePageContent"/>
 
 
+    </div>
 </template>
 
 <style scoped lang="scss">
-@import '../assets/styles/main.scss';
+@import '@/assets/styles/main.scss';
+.wrapper{
+    overflow: hidden;
+}
+
 // .scrollDist {
 //   height: 900vh; /* 卷軸區域 */
 //   background: lightblue;
@@ -186,7 +192,7 @@ onUnmounted(()=>{
 //Q$A
 .QA {
     &Title{
-        // background-image: url('../assets/icons/icon-guide_star.svg');
+        // background-image: url('@/assets/icons/icon-guide_star.svg');
         width: 50px;
         height: 50px;
         position: fixed;
@@ -249,7 +255,7 @@ onUnmounted(()=>{
 //視差滾動特效區
 .home-firstBlock{
     // overflow-x: hidden;
-    background-image: url('../assets/images/home/index-bgp1.png');
+    background-image: url('@/assets/images/home/index-bgp1.png');
     background-size: cover;
     background-color: $primaryColor-100;
     width: 100%;
@@ -315,7 +321,7 @@ onUnmounted(()=>{
     width: 100%;
     height: 20vh;
 
-    background-image: url(../assets/images/home/index-sea.svg);
+    background-image: url(@/assets/images/home/index-sea.svg);
     background-size: cover;
 
     position: absolute;
@@ -380,6 +386,51 @@ onUnmounted(()=>{
     font-size: $pcChFont-p;
     letter-spacing: 12px;
 }
+
+//..............RWD..................
+@media screen and (max-width:435px) {
+    .home-firstBlock{
+        .firstBlock-moon{
+            position: absolute;
+            width: 120px;
+            top: 5%;
+        }
+        .firstBlock-star1{
+            position: absolute;
+            height: 80px;
+        }
+        .firstBlock-star2{
+            position: absolute;
+            height: 100px;
+            top:400px;
+            left: 10%;
+        }
+        .firstBlock-sea{
+            position: absolute;
+            height: 80px;
+        }
+        .firstBlock-backMontain1{
+            position: absolute;
+            width: 70%;
+            bottom: 60px;
+        }
+        .firstBlock-backMontain2{
+            display: none;
+        }
+        .firstBlock-tower{
+            position: absolute;
+            bottom: 48px;
+            right: 6%;
+        }
+        .firstBlock-towerMountain{
+            position: absolute;
+            height: 150px;
+        }
+    }
+
+}
+
+
 
 
 
