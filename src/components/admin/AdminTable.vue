@@ -42,10 +42,6 @@ const handleEdit = (index, row) => { //偵測編輯按鈕編輯哪個資料
 }
 
 
-
-
-
-
 </script>
 
 <template>

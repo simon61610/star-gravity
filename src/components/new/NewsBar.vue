@@ -109,6 +109,16 @@ const emit = defineEmits(['changeCategory'])
          }
     
 }
+/*-------------斷點1070---------------*/
+@media screen and (max-width: 1070px){
+    .article-list{
+        padding: 0 10px;
+        .article-category{
+            padding-right: 20px;
+        }
+    }
+}
+
 /*-------------斷點430--------------*/
 @media screen and (max-width: 431px){
 .article-list-wrapper{

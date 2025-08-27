@@ -2,24 +2,20 @@
 //import testimg from '@/assets/images/110093480_m.jpg'; // Assuming the image is in the assets folder
 import { onMounted, ref, } from 'vue'
 
-//function toglike(){   //點擊+1方程式
-    //liked.value = !liked.value  //如果點擊了表是true
-  //  likeCount.value += liked.value ? 1 : -1; // 如果是true就+1 反之-1}
-
     onMounted(()=>{
         props.articles.forEach(article => {   // ← 用 forEach，把每篇文章跑一遍
         const count = localStorage.getItem(`likeCount_${article.id}`)
-        if (count) {
+        if (count) { //判斷 localStorage 裡有沒有計數
         article.likeCount = parseInt(count)
         } else {
         article.likeCount = 0 // 預設 0
         }
 
         const likedStatus = localStorage.getItem(`liked_${article.id}`)
-        if (likedStatus) {
-        article.liked = likedStatus === 'true'
+        if (likedStatus) {    //判斷 localStorage 裡有沒有這個 key
+        article.liked = likedStatus === 'true'   //有的話就使用儲存狀態的值
         } else {
-        article.liked = false
+        article.liked = false  //沒有就使用預設
         }
             })
         })
@@ -112,7 +108,7 @@ const props = defineProps({
                         
                             <div>
                                 <button @click="toglike(article)">
-                                    <p><i :class='["fa-regular fa-star", liked ? "fa-duotone fa-solid fa-star":"fa-regular fa-star"]'></i></p> 
+                                    <p><i :class="article.liked ? 'fa-solid fa-star' : 'fa-regular fa-star'"></i></p> 
                                     <span>{{ article.likeCount }}</span>
                                 </button>                     
                             </div>
@@ -271,6 +267,9 @@ const props = defineProps({
                         color: white;
                         background-color:$primaryColor-900 ;
                         border: none;      /* 移除邊框 */
+                        &:hover{
+                            cursor: pointer;
+                        }
       
                     }
                       span{
@@ -325,6 +324,23 @@ const props = defineProps({
 
 
     }
+
+}
+
+/*-------------斷點1070---------------*/
+@media screen and (max-width: 1070px){
+.news-article-wrapper{
+    
+    .news-article-list{
+        max-width: 700px !important;
+        gap: 60px !important;
+    }
+    .news-article-img{
+        
+        max-width: 600px !important;
+        margin-top: 20px;
+    }
+}
 
 }
 
