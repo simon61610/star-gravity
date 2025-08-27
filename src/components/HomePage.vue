@@ -1,6 +1,10 @@
 <script setup>
 import { onMounted, ref ,onUnmounted } from 'vue'
 import HomePageContent from './HomePageContent.vue';
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
+
 
 //定義響應式變數
 const showbackToTop = ref(false)
@@ -14,7 +18,9 @@ function scrollToTop(){
     })
 }
 function controlScroll(){
-    showbackToTop.value = window.scrollY > 300
+    showbackToTop.value = window.scrollY > 1500
+    // console.log(window.scrollY);
+    
 }
 function showQABox(){
     if( showBox.value === false){
@@ -29,25 +35,174 @@ function showQABox(){
 //生命週期
 onMounted(()=>{
     window.addEventListener('scroll', controlScroll)
-
-
-    // // 視差滾動
-    //     gsap.timeline({
-    //     scrollTrigger: {
-    //     trigger: '.scrollDist',
-    //     start: '0 0',
-    //     end: '100% 100%',
-    //     scrub: 1
-    //     }
-    // })
-    // .fromTo('.firstBlock-text',      { y:   0 }, { y: -300 }, 0)
-    // .fromTo('.firstBlock-star1',   { y: 100 }, { y: -800 }, 0)
-    // .fromTo('.firstBlock-star2',   { y:-150 }, { y: -500 }, 0)
-    // .fromTo('.firstBlock-backMontain1',   { x: -30 }, { x: 100 }, 0)
-    // .fromTo('.firstBlock-backMontain2',  { y: -10 }, { y: -100 }, 0)
-    // .fromTo('.firstBlock-tower',  { x: 320 }, { x: -550 }, 0)
+        
+        
+    gsap.registerPlugin(ScrollTrigger, ScrollToPlugin)
+    // console.log('GSAP 插件註冊完成')
     
+    // 獲取元素
+    const moon = document.querySelector('.firstBlock-moon')
+    const star1 = document.querySelector('.firstBlock-star1') 
+    const star2 = document.querySelector('.firstBlock-star2')
+    const sea = document.querySelector('.firstBlock-sea')
+    const backMontain1 = document.querySelector('.firstBlock-backMontain1')
+    const backMontain2 = document.querySelector('.firstBlock-backMontain2')
+    const tower = document.querySelector('.firstBlock-tower')
+    const towerMountain = document.querySelector('.firstBlock-towerMountain')
+    const firstBlockText = document.querySelector('.firstBlock-text')
 
+    // console.log('所有元素檢查完成')
+    
+    // 設定所有元素的初始位置（在畫面外）
+    gsap.set(moon, {
+        left: '50%',   
+        top: '45%', 
+        x: '-50%',     
+        y: '-40%',      
+        opacity: 1,
+        scale: 1.3 ,
+    })
+
+    gsap.set(star1, {
+        right: '20%',     
+        top: '35%',     
+        opacity: 0
+    })
+
+    gsap.set(star2, {
+        left: '15%',
+        top: "75%",      
+        opacity: 0
+    })
+
+    gsap.set(backMontain1, {
+        left: '-100%',
+        bottom: '-100%',
+        opacity: 0.5
+    })
+
+    gsap.set(backMontain2, {
+        bottom: '-100%',
+        right: '-100%',
+        opacity: 0.5
+    })
+
+    gsap.set(sea, {
+        x: '0%',     
+        y: '50%',      
+        opacity: 0
+    })
+
+    gsap.set(firstBlockText, {
+        left:'50%',
+        bottom: '20%',
+        x: '-50%',
+        opacity: 0,
+    })
+
+    gsap.set(tower, {
+        right:'-5%',
+        bottom:'5%',       
+        opacity: 0
+    })
+
+    gsap.set(towerMountain, {
+        right: '-100%',    
+        bottom: '-50%',
+        opacity: 0.5
+    })
+    
+    // console.log('初始位置設定完成')
+    
+    // 創建時間軸 - 修正滾動觸發設定
+    const tl = gsap.timeline({
+        scrollTrigger: {
+            trigger: '.special-effects', // 改為觸發整個 special-effects 區域
+            start: 'top top',
+            end: 'bottom bottom', // 改為相對於容器底部
+            scrub: 1,
+            pin: '.home-firstBlock', // 固定第一個場景
+            pinSpacing: true,
+            // markers: true,
+            // onStart: () => console.log('🚀 ScrollTrigger 開始！'),
+            // onUpdate: (self) => console.log('📊 進度:', Math.round(self.progress * 100) + '%'),
+            // onComplete: () => console.log('✅ ScrollTrigger 完成！')
+        }
+    })
+    
+    // 第一階段：元素進入畫面
+    tl.to(moon, {
+        left: '20%',
+        top: "25%",
+        opacity: 1,
+        scale: 1 ,
+        duration: 1,
+        ease: "power2.out"
+    }, 0)
+    .to(star1, {
+        right: '30%',      // 向右偏移 85%（相當於 right: 15%）
+        top: '10%', 
+        opacity: 1,
+        duration: 1,
+        ease: "power2.out"
+    }, 0.2)
+    .to(star2, {
+        left: '20%',
+        top: "55%",
+        opacity: 1,
+        duration: 1,
+        ease: "power2.out"
+    }, 0.4)
+    
+    // 背景元素進入
+    .to(backMontain1, {
+        // x: '0%',
+        left: 0,
+        bottom: '18%',
+        opacity: 1,
+        duration: 1.5,
+        ease: "power2.out"
+    }, 1)
+    .to(backMontain2, {
+        bottom: '15%',
+        right: 0,
+        opacity: 1,
+        duration: 1.5,
+        ease: "power2.out"
+    }, 1)
+    .to(sea, {
+        y: '0%',
+        opacity: 1,
+        duration: 1,
+        ease: "power2.out"
+    }, 1.1)
+    
+    // 前景元素
+    .to(firstBlockText, {
+        left: '50%',
+        top: '40%',
+        opacity: 1,
+        duration: 1,
+        ease: "power2.out"
+    }, 2.5)
+    .to(tower, {
+        right: '15%',
+        bottom:'25%',
+        opacity: 1,
+        duration: 1.5,
+        ease: "power2.out",
+    }, 2.5)
+    .to(towerMountain, {
+        right:0,
+        bottom:0,
+        opacity: 1,
+        duration: 1.5,
+        ease: "power2.out"
+    }, 1.8)
+    
+        
+    // console.log('🎬 時間軸創建完成')
+    
 
     // // === 箭頭按鈕效果 ===
     // const arrowBtn = document.querySelector('#arrow-btn')
@@ -120,7 +275,7 @@ onUnmounted(()=>{
         
 
         <!-- 動畫效果大區-->
-        <Section class="special-effects">
+        <section class="special-effects">
         
             <!-- 視差滾動區塊 -->
             <div class="home-firstBlock">
@@ -149,11 +304,13 @@ onUnmounted(()=>{
 
             
 
-        </Section>
+        </section>
 
 
         <!-- 大div 包裹四區塊-->
-        <HomePageContent class="homePageContent"/>
+        <div class="homePageContent">
+            <HomePageContent/>
+        </div>    
 
 
     </div>
@@ -163,8 +320,19 @@ onUnmounted(()=>{
 @import '@/assets/styles/main.scss';
 .wrapper{
     overflow: hidden;
+    // overflow: visible;
 }
-
+.special-effects{
+    min-height: 400vh; 
+}
+.homePageContent{
+    // position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100vh;
+    z-index: 100;
+}
 // .scrollDist {
 //   height: 900vh; /* 卷軸區域 */
 //   background: lightblue;
@@ -259,7 +427,8 @@ onUnmounted(()=>{
     background-size: cover;
     background-color: $primaryColor-100;
     width: 100%;
-    height: calc(100vh - 50px);
+    height:100vh;
+    // height: calc(100vh - 50px);
 
     position: relative;
 
@@ -267,16 +436,16 @@ onUnmounted(()=>{
         width: 25vh;
 
         position: absolute;
-        left: 15%;
-        top: 10%;
+        //left: 15%;
+        //top: 10%;
     }
 
     .firstBlock-star1{
         height: 15vh;
 
         position: absolute;
-        right: 20%;
-        top: 8%;
+        //right: 20%;
+        //top: 8%;
 
         animation: star1 5s linear infinite;
     }
@@ -285,8 +454,8 @@ onUnmounted(()=>{
         height: 15vh;
 
         position: absolute;
-        left: 25%;
-        top: 45%;
+        //left: 25%;
+        //top: 45%;
 
         animation: star2 4s linear infinite;
     }
@@ -333,32 +502,32 @@ onUnmounted(()=>{
     width: 25vw;
     
     position: absolute;
-    bottom: 18%;
-    z-index: 1;
+    //bottom: 18%;
+    //z-index: 1;
 
 }
 .firstBlock-backMontain2{
     width: 70vw;
 
     position: absolute;
-    bottom: 15%;
-    right: 0;
+    //bottom: 15%;
+    //right: 0;
     z-index: 1;
 }
     //前景
 .firstBlock-tower{
     height: 42vh;
     position: absolute;
-    right: 25vh;
-    bottom: 25vh;
+    //right: 25vh;
+    //bottom: 25vh;
     z-index: 20;
     
 }
 .firstBlock-towerMountain{
     height: 40vh;
     position: absolute;
-    right: 0;
-    bottom: 0;
+    //right: 0;
+    //bottom: 0;
     z-index: 20;
 }
     //文字
@@ -370,9 +539,9 @@ onUnmounted(()=>{
     gap: 28px;
     align-items: center;
     position: absolute;
-    left: 50%;
-    top: 30%;
-    translate: -50% 0;
+    //left: 50%;
+    //top: 30%;
+    //translate: -50% 0;
     z-index: 50;
 }
 .firstBlock-texth1{

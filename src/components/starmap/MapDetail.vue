@@ -55,7 +55,7 @@ function getSixDays(){
     let weekDay = ''
     let date = ''
     sixDaysArray.value = []
-    for( let i=1 ; i<6 ; i++){
+    for( let i=1 ; i<7 ; i++){
         let j = i*2
         tem = weatherData.value.records.Locations[0].Location[0].WeatherElement[0].Time[j].ElementValue[0].Temperature //當天氣溫
         wea = weatherData.value.records.Locations[0].Location[0].WeatherElement[12].Time[j].ElementValue[0].Weather //當天氣溫
@@ -149,8 +149,8 @@ function aaa(){
                                 <div>{{temperature}}°C</div>
                             </div>
                         </div>
-                        <!-- 五天預報 -->
-                        <div class="weather-5days">  <!--共五個div排列-->
+                        <!-- 六天預報 -->
+                        <div class="weather-6days">  
                             <div v-for="(day, index) in sixDaysArray" class="daily-weather">
                                 <h5>週{{day['星期']}}</h5>
                                 <!-- <p class="cnContent--18px">{{day['溫度']}}</p> -->
@@ -226,7 +226,7 @@ function aaa(){
                         <div class="singleReview-leftContent">
                             <h5>{{review.會員名稱}}</h5>
                             <span> <!--到時候img 用v-for跑 評論多少跑幾次-->
-                                <img v-for="value in review.評論分數" src="@/assets/icons/icon-filledStar.svg" alt="星星">
+                                <img v-for="value in review.評論分數" src="@/assets/icons/icon-guide_star.svg" alt="星星">
                             </span>
                             <p class="cnContent--14px">{{ review.評論內容 }}</p>
                         </div>
@@ -377,7 +377,8 @@ function aaa(){
     // 3. 預報
 .map-detail-weather{
     width: 100%;
-    max-width: 500px;
+    justify-items: center;
+    flex-grow: 1;
 
     display: flex;
     gap: 20px;
@@ -421,11 +422,11 @@ function aaa(){
     width: 65px;
 }
     //五天預報
-.weather-5days{
+.weather-6days{
     display: flex;
     gap:2px;
 }
-.weather-5days h5{
+.weather-6days h5{
     font-size:$pcChFont-p ;
     line-height: 150%;
     background-color: $primaryColor-500;
@@ -528,6 +529,10 @@ function aaa(){
 }
 .singleReview-leftContent h5{
     font-size: $pcChFont-p;
+    // color: $primaryColor-800;
+}
+.singleReview-leftContent p{
+    color: $primaryColor-500;
 }
 .singleReview-leftContent span img{
     width: 12px;
@@ -575,7 +580,7 @@ function aaa(){
         flex-wrap: nowrap;
 
     }
-    .weather-5days h5{
+    .weather-6days h5{
         font-size: 14px;
     }
     .live-weather{

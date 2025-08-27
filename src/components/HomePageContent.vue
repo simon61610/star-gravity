@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import eventlist from "@/data/eventlist";
+import { control } from "leaflet";
 
 const activities = ref(eventlist.slice(0, 6))
 
@@ -53,6 +54,7 @@ const activities = ref(eventlist.slice(0, 6))
 //定義響應式變數
 const currentIndex = ref(0)
 const isMobile = ref(false)
+const showSatrshoot = ref(false)
 
 const showActivities = computed(()=>{  
     if( isMobile.value === true ){
@@ -75,6 +77,7 @@ const itemsPerPage = computed(()=>{
         return 3
     }
 })
+
 //事件監聽
 function slidePrev (){
     if(canSlidePrev.value){
@@ -95,11 +98,23 @@ function checkScreenSize(){
         isMobile.value = false 
     }
 }
+function controlStar(){
+    const homeContentBlock = document.querySelector('.home-contentBlock')
+    const homeBlockRectTop = homeContentBlock.getBoundingClientRect().top
+    if(homeBlockRectTop < 954){
+        showSatrshoot.value = true
+    }
+}
 
 //生命週期
 onMounted(()=>{
     checkScreenSize()
     window.addEventListener('resize', checkScreenSize)
+    window.addEventListener('scroll', controlStar)
+    window.scrollTo({
+        top: 0,
+    })
+    
 })
 onUnmounted(()=>{
     window.removeEventListener('resize', checkScreenSize)
@@ -117,7 +132,8 @@ onUnmounted(()=>{
         <img class="begining-person" src="@/assets/images/home/index-people.svg" alt="人類">
 
         <!-- 流星 -->
-        <div class="testbox">
+        <div class="testbox"    
+            :class="{ 'active' : showSatrshoot }">
             <!-- <img class="begining-starShot" src="../assets/images/home/index-starShot.svg" alt="流星"> -->
         </div>
         
@@ -144,7 +160,7 @@ onUnmounted(()=>{
             <div class="home-guideTitle">
                 <h1 class="guideTitle-en decTitle--medium">GUILD</h1>
                 <h2 class="guideTitle-cn cnTitle--h2 ">觀星指南</h2>
-                <button class="guideTitle-button button--normal">查看更多</button>
+                <!-- <button class="guideTitle-button button--normal">查看更多</button> -->
             </div>
             
             <!-- 指南三項 -->
@@ -265,7 +281,6 @@ onUnmounted(()=>{
 .home-begining{
     width: 100%;
     height: 100vh;
-
     background-image: url(@/assets/images/home/index-bg02.svg);
 
     position: relative;
@@ -353,9 +368,10 @@ onUnmounted(()=>{
     transform: translate(65vw, -30vh) rotate(24deg);
     
     z-index: 25;
+}
 
-    // animation: moveX 2.5s linear forwards;
-    animation: moveStar 2s linear forwards; 
+.active{
+    animation: moveStar 2s linear forwards;
 }
 
 .testbox::after{
@@ -426,7 +442,7 @@ onUnmounted(()=>{
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding: 36px 0;
+        padding: 72px 0;
     }
     //標題
     .home-guideTitle {
