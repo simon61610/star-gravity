@@ -120,13 +120,15 @@ const activeTab = ref('intro')
 
 /* 版面 */
 .scene {
+  
   position: relative;
   width: 100%;
-  min-height: 588px;
-  overflow: hidden;
+  min-height: 588px ;
+  overflow: hidden ;
   
 }
 .bg {
+  
   position: absolute; 
   inset: 0;
   width: 100%; 
@@ -135,6 +137,7 @@ const activeTab = ref('intro')
   z-index: 0;
 }
 .hill {
+  
   position: absolute; 
   left: 0; 
   right: 0; 

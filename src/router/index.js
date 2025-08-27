@@ -193,7 +193,12 @@ const routes = [
       path: '/Newpage',    // 
       name: 'Newpage',     //
       component: Newpage,
-      
+    },
+
+    {
+    path: '/article',
+    name: 'ArticleList',    // 
+    redirect: '/Newpage'    // 讓頁面導到Newpage
     },
 
     {

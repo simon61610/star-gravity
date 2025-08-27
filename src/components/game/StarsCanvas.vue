@@ -114,12 +114,14 @@ watch(
 .Stars-Canvs-line.animate { transition: stroke-dashoffset 0.55s linear; } /* 播放才有動畫 */
 
 .Stars-Canvs-box{
+    
     width: 100% !important;    
     display: flex !important;
     justify-content: center;
     align-items: center;
     
     .Stars-Canvs-wapper{
+    
     max-width: 500px;
     margin-left: 300px;
     width: 100% !important;
