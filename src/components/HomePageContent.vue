@@ -1,8 +1,11 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from "vue";
+import eventlist from "@/data/eventlist";
+
+const activities = ref(eventlist.slice(0, 6))
 
 //假數據
-const activities =ref([
+/* const activities =ref([
     {
         id: 1,
         date: '2025.05.20',
@@ -45,7 +48,7 @@ const activities =ref([
         description: '這是第六個活動描述這是第六個活動描述這是第六個活動描述',
         image: '../assets/images/aboutstar/star space.png'
     }
-])
+]) */
 
 //定義響應式變數
 const currentIndex = ref(0)
@@ -122,7 +125,14 @@ onUnmounted(()=>{
         <div class="begining-text">
             <h1 class="decTitle--medium">ABOUT</h1>
             <h2 class="cnTitle--h2">緣起</h2>
-            <p class="cnContent--18px">一段崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是一段崩潰的團專之旅，</p>
+            <!-- <p class="cnContent--18px">一段崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是崩潰的團專之旅，它的起源是一段崩潰的團專之旅，</p> -->
+            <p class="cnContent--18px">
+                觀星聽起來浪漫又遙遠，其實只要有一點指引，就能輕鬆抬頭看見屬於自己的宇宙。
+                <br><br>
+                「星引力」的誕生，正是希望讓這件事變得簡單、親近又有趣。
+                <br><br>
+                不需要昂貴的器材，也不需要專業背景，只要保有一點時間與好奇心，就能重新認識夜晚，並被滿天星斗深深吸引。
+            </p>
         </div>
 
     </div>
@@ -144,10 +154,11 @@ onUnmounted(()=>{
                         <img src="../assets/images/home/index_bigIcon1.svg" alt="指南1">
                     </li>
                     <li>
-                        <h2 class=" cnTitle--h2">觀星指南1</h2>
+                        <h2 class=" cnTitle--h2">觀星初學指南</h2>
                     </li>
                     <li>
-                        <p class="cnContent--18px">這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述</p>
+                        <!-- <p class="cnContent--18px">這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述</p> -->
+                        <p class="cnContent--18px">我們提供入門知識與觀測技巧，讓初學者能快速掌握重點，一起踏入觀星的行列。我們提供清晰的指引，幫助任何人都能抬頭看見熟悉的星空，感受宇宙的魅力。</p>
                     </li>
                 </ul>
                 <ul class="guildExtract-block">
@@ -155,10 +166,11 @@ onUnmounted(()=>{
                         <img src="../assets/images/home/index_bigIcon2.svg" alt="指南2">
                     </li>
                     <li>
-                        <h2 class=" cnTitle--h2">觀星指南2</h2>
+                        <h2 class=" cnTitle--h2">星據點</h2>
                     </li>
                     <li>
-                        <p class="cnContent--18px">這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述</p>
+                        <!-- <p class="cnContent--18px">這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述</p> -->
+                        <p class="cnContent--18px">在星據點，你可以找到適合觀星的地點資訊，包含交通便利性、天氣與地點評價，讓星空愛好者能更輕鬆找到理想的觀測場所。我們提供貼近需求的建議，避免盲目摸索，讓觀星體驗更順利。</p>
                     </li>
                 </ul>
                 <ul class="guildExtract-block">
@@ -166,10 +178,11 @@ onUnmounted(()=>{
                         <img src="../assets/images/home/index_bigIcon3.svg" alt="指南3">
                     </li>
                      <li>
-                        <h2 class=" cnTitle--h2">觀星指南3</h2>
+                        <h2 class=" cnTitle--h2">星空小舖</h2>
                     </li>
                     <li>
-                        <p class="cnContent--18px">這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述</p>
+                        <!-- <p class="cnContent--18px">這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述這是一段描述</p> -->
+                        <p class="cnContent--18px">精選多樣望遠鏡、雙筒鏡與觀星配件，搭配清楚的介紹與比較，幫助初學者找到合適的工具。我們提供方便的一站式選購，讓準備觀星不再繁瑣，簡單就能踏出探索宇宙的第一步。</p>
                     </li>
                 </ul>
             </div>
@@ -183,7 +196,7 @@ onUnmounted(()=>{
             <div class="home-news-rightSide">
                 <h1 class="news-rightSide-title decTitle--medium">NEWS</h1>
                 <h2 class="news-rightSide-title2 cnTitle--h2">天文快訊</h2>
-                <p class="news-rightSide-text cnContent--18px">天文快訊內容天文快訊內容天文快訊內容天文快訊內容天文快訊內容天文快訊內容天文快訊內容天文快訊內容天文快訊內容天文快訊內容</p>
+                <p class="news-rightSide-text cnContent--18px">最新的天文觀測與星象消息，包含流星雨、行星衝、日食與月食等第一手資訊，讓抬頭看星不再錯過精彩瞬間。天文快訊將提供清楚的時間、地點與觀測建議，幫助愛好者在最佳時刻捕捉夜空的美麗。</p>
                 <button class="news-rightSide-button button--normal">查看更多</button>
             </div>
         </div>
@@ -193,8 +206,8 @@ onUnmounted(()=>{
             <!-- 左邊描述 -->
             <div class="home-sky-leftSide">
                 <h1 class="sky-leftSide-title decTitle--medium">FOUR SEASONS</h1>
-                <h2 class="sky-leftSide-title2 cnTitle--h2">四季星空模擬圖</h2>
-                <p class="sky-leftSide-text cnContent--18px">星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹星空圖介紹</p>
+                <h2 class="sky-leftSide-title2 cnTitle--h2">星視野</h2>
+                <p class="sky-leftSide-text cnContent--18px">以互動星空圖呈現十二星座的樣貌，不僅能清楚看到星座的樣子，還能點擊圖示展開「星連星」的效果，讓星座線條一目了然，一起快速理解星座的形狀與故事，享受觀星的樂趣與臨場感。</p>
                 <button class="sky-leftSide-button button--normal">查看更多</button>
             </div>
             <!-- 右邊圖片 -->
@@ -223,9 +236,12 @@ onUnmounted(()=>{
                         href="#">
                         <img class="singleInfo-photo" src="../assets/images/aboutstar/star space.png" alt="活動資訊圖">
                         <div class="singleInfo-content">
+                            <!-- <h3 class="activity-list-datetime">{{activity.date}}</h3> -->
                             <h3 class="activity-list-datetime">{{activity.date}}</h3>
-                            <h3 class="activity-list-activityName">{{activity.name}}</h3>
-                            <p class="activity-list-info cnConten--18px">{{ activity.description }}</p>
+                            <!-- <h3 class="activity-list-activityName">{{activity.name}}</h3> -->
+                            <h3 class="activity-list-activityName">{{activity.title}}</h3>
+                            <!-- <p class="activity-list-info cnConten--18px">{{ activity.description }}</p> -->
+                            <p class="activity-list-info cnConten--18px">{{ activity.desc }}</p>
                         </div>
                     </a>
                 </div>
@@ -448,7 +464,8 @@ onUnmounted(()=>{
         padding: 20px;
     }
     .guildExtract-block img {
-        width: 80%;
+        width: 15vw;
+        aspect-ratio: 1 / 1;
         display: block;
         margin: 0 auto;
     }
@@ -599,10 +616,12 @@ onUnmounted(()=>{
                 .singleInfo-photo {
                     width: 100%;
                     border-radius: 20px;
+                    width: 300px;
                 }
 
                 h3 {
                     font-size: $pcChFont-H3;
+                    line-height: 1.2;
                 }
 
                 .singleInfo-content {
@@ -610,6 +629,16 @@ onUnmounted(()=>{
                     display: flex;
                     flex-direction: column;
                     gap: 12px;
+                    .activity-list-info {
+                        display: -webkit-box;
+                        line-height: 1.5;
+                        // display: -webkit-box;
+                        -webkit-box-orient: vertical;
+                        -webkit-line-clamp: 4;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+
                 }
             }
         }
@@ -629,7 +658,7 @@ onUnmounted(()=>{
 
 
 //...........RWD.............
-@media screen and (max-width:430px) {
+@media screen and (max-width:431px) {
     .home-contentBlock button{
         width: 100%;
     }
@@ -739,7 +768,6 @@ onUnmounted(()=>{
         // gap: 12px;
     }
     .home-contentBlock .home-activity .activity-list .list-singleInfo{
-        width: 360px;
         padding: 12px;
         box-sizing: border-box;
     }
