@@ -4,7 +4,7 @@ import { ref, onMounted, computed, watch, defineProps, defineEmits } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import taiwanMap from '@/assets/images/map/starmap-taiwan.svg'
-import customMarker from '../../assets/icons/icon-map-pin.png'
+import customMarker from '@/assets/icons/icon-map-pin.png'
 import markerShadow from 'leaflet/dist/images/marker-shadow.png' 
 
 // ========== 2. Props & Emits ==========
@@ -120,9 +120,9 @@ function updateMapMarkers(locations) {
     marklist = []
     const customIcon = L.icon({
         iconUrl: customMarker,
-        iconSize: [50, 50],
-        iconAnchor: [25, 50],
-        popupAnchor: [0, -50],
+        iconSize: [45, 45],
+        iconAnchor: [22.5, 45],
+        popupAnchor: [0, -45],
         shadowUrl: markerShadow, // 可以選擇要不要加陰影
         shadowSize: [50, 50],
         shadowAnchor: [16, 51]
@@ -311,7 +311,7 @@ function showLocationDetail(location) {
                 <!-- 搜尋框 -->
                 <div class="locationSection">
                     <div class="location-search">
-                        <img class="map-search-icon" src="../../assets/icons/icon-map-search.svg" alt="">
+                        <img class="map-search-icon" src="@/assets/icons/icon-map-search.svg" alt="">
                         <input type="text" id="" class="inputPlace" :disabled=" region !== '全台'" :placeholder="region !== '全台' ? '選擇全台,才可輸入' : '請輸入地點名稱'" v-model="searchText" @focus="handleFocus" @blur="handleBlur">
                         <!-- 動態生成選項 -->
                         <ul v-if="placeList" class="starPlace-list">
@@ -350,7 +350,7 @@ function showLocationDetail(location) {
                              <!--以下點擊後才顯示-->
                             <transition name="accordion">
                                 <div v-show="activeIndex === locationList.findIndex(item => item === location)" class="location-singlePlace-more" >
-                                    <img class="location-singlePlace-photo" src="../../assets/images/map/map-tainanPhoto.jpg" alt="" @click="showMore(index)">
+                                    <img class="location-singlePlace-photo" src="@/assets/images/map/map-tainanPhoto.jpg" alt="" @click="showMore(index)">
 
                                     <a class="seeMore" href="#" @click.prevent="showLocationDetail(location)">
                                         更多資訊
@@ -623,7 +623,7 @@ input[type="text"]:disabled {
 
 }
 .locationList ul{
-    
+    cursor: pointer;
     display: flex;
     gap: 24px;
     flex-direction: column;
@@ -725,7 +725,7 @@ input[type="text"]:disabled {
     height: 90vh;
     // background-color: #ccc;
     z-index: 2;
-    // background-image: url(../../assets/images/map/starmap-taiwan.svg);
+    // background-image: url(@/assets/images/map/starmap-taiwan.svg);
     // background-size: cover;
 }
 .leaflet-container {

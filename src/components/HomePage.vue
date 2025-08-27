@@ -124,17 +124,17 @@ onUnmounted(()=>{
         
             <!-- 視差滾動區塊 -->
             <div class="home-firstBlock">
-                <img class="firstBlock-moon" src="../assets/images/home/index-moon.svg" alt="月亮">
+                <img class="firstBlock-moon" src="@/assets/images/home/index-moon.svg" alt="月亮">
                 <!-- 星連星 -->
-                <img class="firstBlock-star1" src="../assets/images/home/index-star01.svg" alt="星座A">
-                <img class="firstBlock-star2" src="../assets/images/home/index-star02.svg" alt="星座B">
+                <img class="firstBlock-star1" src="@/assets/images/home/index-star01.svg" alt="星座A">
+                <img class="firstBlock-star2" src="@/assets/images/home/index-star02.svg" alt="星座B">
                 <!-- 海與背景山 -->
                 <div class="firstBlock-sea"></div>
-                <img class="firstBlock-backMontain1" src="../assets/images/home/index-MountainBackLeft.svg" alt="左山景">
-                <img class="firstBlock-backMontain2" src="../assets/images/home/index-MountainBackright.svg" alt="右山景">
+                <img class="firstBlock-backMontain1" src="@/assets/images/home/index-MountainBackLeft.svg" alt="左山景">
+                <img class="firstBlock-backMontain2" src="@/assets/images/home/index-MountainBackright.svg" alt="右山景">
                 <!-- 前景燈塔與山 -->
-                <img class="firstBlock-tower" src="../assets/images/home/index-lightHouse.svg" alt="燈塔">
-                <img class="firstBlock-towerMountain" src="../assets/images/home/index-MountainInfron.svg" alt="前景山">
+                <img class="firstBlock-tower" src="@/assets/images/home/index-lightHouse.svg" alt="燈塔">
+                <img class="firstBlock-towerMountain" src="@/assets/images/home/index-MountainInfron.svg" alt="前景山">
                 <!-- 文字 -->
                 <div class="firstBlock-text">
                     <div class="firstBlock-texth1">
@@ -160,7 +160,7 @@ onUnmounted(()=>{
 </template>
 
 <style scoped lang="scss">
-@import '../assets/styles/main.scss';
+@import '@/assets/styles/main.scss';
 .wrapper{
     overflow: hidden;
 }
@@ -192,7 +192,7 @@ onUnmounted(()=>{
 //Q$A
 .QA {
     &Title{
-        // background-image: url('../assets/icons/icon-guide_star.svg');
+        // background-image: url('@/assets/icons/icon-guide_star.svg');
         width: 50px;
         height: 50px;
         position: fixed;
@@ -255,7 +255,7 @@ onUnmounted(()=>{
 //視差滾動特效區
 .home-firstBlock{
     // overflow-x: hidden;
-    background-image: url('../assets/images/home/index-bgp1.png');
+    background-image: url('@/assets/images/home/index-bgp1.png');
     background-size: cover;
     background-color: $primaryColor-100;
     width: 100%;
@@ -321,7 +321,7 @@ onUnmounted(()=>{
     width: 100%;
     height: 20vh;
 
-    background-image: url(../assets/images/home/index-sea.svg);
+    background-image: url(@/assets/images/home/index-sea.svg);
     background-size: cover;
 
     position: absolute;
@@ -388,21 +388,22 @@ onUnmounted(()=>{
 }
 
 //..............RWD..................
-@media screen and (max-width:430px) {
+@media screen and (max-width:435px) {
     .home-firstBlock{
         .firstBlock-moon{
             position: absolute;
-            width: 25vw;
+            width: 120px;
+            top: 5%;
         }
         .firstBlock-star1{
             position: absolute;
-            height: 10vh;
+            height: 80px;
         }
         .firstBlock-star2{
             position: absolute;
-            height: 10vh;
-            top:60%;
-            left: 20%;
+            height: 100px;
+            top:400px;
+            left: 10%;
         }
         .firstBlock-sea{
             position: absolute;
@@ -410,7 +411,7 @@ onUnmounted(()=>{
         }
         .firstBlock-backMontain1{
             position: absolute;
-            width: 70vw;
+            width: 70%;
             bottom: 60px;
         }
         .firstBlock-backMontain2{
@@ -419,7 +420,7 @@ onUnmounted(()=>{
         .firstBlock-tower{
             position: absolute;
             bottom: 48px;
-            right: 48px;
+            right: 6%;
         }
         .firstBlock-towerMountain{
             position: absolute;
