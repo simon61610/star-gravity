@@ -57,8 +57,8 @@ function getSixDays(){
     sixDaysArray.value = []
     for( let i=1 ; i<7 ; i++){
         let j = i*2
-        tem = weatherData.value.records.Locations[0].Location[0].WeatherElement[0].Time[j].ElementValue[0].Temperature //當天氣溫
-        wea = weatherData.value.records.Locations[0].Location[0].WeatherElement[12].Time[j].ElementValue[0].Weather //當天氣溫
+        tem = weatherData.value.records.Locations[0].Location[0].WeatherElement[0].Time[j].ElementValue[0].Temperature //氣溫
+        wea = weatherData.value.records.Locations[0].Location[0].WeatherElement[12].Time[j].ElementValue[0].Weather //天氣
         date = weatherData.value.records.Locations[0].Location[0].WeatherElement[12].Time[j].StartTime
         const dayIndex = new Date(date).getDay();
         weekDay = weekdays[dayIndex]
@@ -153,8 +153,8 @@ function aaa(){
                         <div class="weather-6days">  
                             <div v-for="(day, index) in sixDaysArray" class="daily-weather">
                                 <h5>週{{day['星期']}}</h5>
-                                <!-- <p class="cnContent--18px">{{day['溫度']}}</p> -->
                                 <img class="weather-icon" :src="getWeatherIcon(day.天氣)"></img>
+                                <p class="cnContent--14px">{{day['溫度']}}°C</p>
                             </div>
                         </div>
                     </div>
@@ -166,13 +166,13 @@ function aaa(){
                     <!-- 景點特色等文字介紹 -->
                     <div class="map-detial-trait">
                         <div class="trait1">
-                            <h5>景點特色</h5>
+                            <h5>景點特色：</h5>
                             <p>{{props.selectedLocation.features}}</p>
                         </div>
 
                         <div class="trait2">
                             <div class="transportation">
-                                <h5>交通方式</h5>
+                                <h5>交通方式：</h5>
                                 <div class="transport">
                                     <span v-if="props.selectedLocation.publicTrans">
                                         <img src="@/assets/icons/icon-map-bus.svg" alt="">
@@ -184,12 +184,12 @@ function aaa(){
                                     </span>
                                 </div>
                             </div>
-                            <span>{{props.selectedLocation.reminders}}</span>
+                            <span>小提醒：{{props.selectedLocation.reminders}}</span>
                             
                         </div>
 
                         <div class="trait3">
-                            <h5>揪團活動</h5>
+                            <h5>揪團活動：</h5>
                             <p>敬請期待</p>
                         </div>
                     </div>
@@ -578,13 +578,14 @@ function aaa(){
     }
     .map-detail-weather{
         flex-wrap: nowrap;
+        gap: 8px;
 
     }
     .weather-6days h5{
         font-size: 14px;
     }
     .live-weather{
-        font-size: 36px;
+        font-size: 24px;
     }
 
     .map-detial-trait{

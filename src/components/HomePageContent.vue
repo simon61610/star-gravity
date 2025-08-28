@@ -101,7 +101,7 @@ function checkScreenSize(){
 function controlStar(){
     const homeContentBlock = document.querySelector('.home-contentBlock')
     const homeBlockRectTop = homeContentBlock.getBoundingClientRect().top
-    if(homeBlockRectTop < 954){
+    if(homeBlockRectTop < 1200){
         showSatrshoot.value = true
     }
 }
@@ -280,7 +280,7 @@ onUnmounted(()=>{
 //緣起
 .home-begining{
     width: 100%;
-    height: 100vh;
+    height: 105vh;
     background-image: url(@/assets/images/home/index-bg02.svg);
 
     position: relative;
@@ -362,7 +362,7 @@ onUnmounted(()=>{
     background-image: url(@/assets/images/home/index-starShot.svg);
 
     position: absolute;
-    top: 2.5vh;
+    top: 8vh;
     left: 41%;
 
     transform: translate(65vw, -30vh) rotate(24deg);
@@ -692,7 +692,7 @@ onUnmounted(()=>{
         display: none;
     }
     .testbox{
-        top:6.5vh;
+        top:12vh;
         left:47%;
         z-index: 0;
 
@@ -717,6 +717,7 @@ onUnmounted(()=>{
         margin-top:24px;
         flex-direction: column;
         align-items: start;
+        gap: 16px;
     }
     .home-contentBlock .home-guildExtract{
         flex-direction: column;

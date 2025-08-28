@@ -49,11 +49,11 @@ import { componentSizes } from 'element-plus';
 
 //假數據
 const locationList = ref([
-  { id: 1, region: '南部', scene: '市郊', name:'南瀛天文館', img: '../../assets/images/map/map-tainanPhoto.jpg', features:'親子友善、望遠鏡觀測、設施完善', reminders:'建議傍晚入園，攜帶防蚊用品' ,score:4.7, address:"台南市大內區34-2號", publicTrans:true ,coords:[ 385 , 380], lat: 23.11786, lon: 120.39165, city:'臺南市'},
-  { id: 2, region: '北部', scene: '山間', name:'陽明山',img: '../../assets/images/map/map-taipeiPhoto.jpg', features:'高海拔清涼、星空視野佳、適合拍攝星軌', reminders:'搭乘台灣好行小9公車，末班車 22:50（平日與假日相同），務必搭此班返程。' ,score:4.5, address:"台北市士林區竹子湖", publicTrans:true ,coords:[ 880 , 630], lat: 25.16925, lon: 121.57635, city:'臺北市'},
-  { id: 3, region: '中部', scene: '山間', name:'杉林溪',img: '../../assets/images/map/map-taichungPhoto.jpg', features:'自然環境清幽、住宿方便', reminders:'園區需付費，夜晚氣溫較低' ,score:4.3, address:"南投縣溪頭", publicTrans:true ,coords:[ 510 , 470], lat: 23.63708, lon: 120.79492, city:'南投縣'},
-  { id: 4, region: '東部', scene: '海邊', name:'三仙台',img: '../../assets/images/map/map-taichungPhoto.jpg', features:'海岸風光、星空與拱橋同框', reminders:'地面不平、夜晚需照明設備' ,score:4.2, address:"台東縣", publicTrans:false ,coords:[ 385 , 595], lat: 22.06348, lon: 121.52598, city:'臺東縣'},
-  { id: 5, region: '離島', scene: '海邊', name:'蘭嶼',img: '../../assets/images/map/map-taichungPhoto.jpg', features:'適合觀測銀河、流星雨與夏季星座', reminders:'當地尊重原民文化，避免夜間喧嘩' ,score:4.0, address:"台東縣蘭嶼", publicTrans:false ,coords:[ 122 , 635], lat: 23.12393, lon: 121.40900, city:'臺東縣'},
+  { id: 1, region: '南部', scene: '市郊', name:'南瀛天文館', img: '../../assets/images/map/map-tainanPhoto.jpg', features:'親子友善、望遠鏡觀測、設施完善', reminders:'建議傍晚入園，攜帶防蚊用品' ,score:4.7, address:"台南市大內區34-2號", publicTrans:1 ,coords:[ 385 , 380], lat: 23.11786, lon: 120.39165, city:'臺南市'},
+  { id: 2, region: '北部', scene: '山間', name:'陽明山',img: '../../assets/images/map/map-taipeiPhoto.jpg', features:'高海拔清涼、星空視野佳、適合拍攝星軌', reminders:'搭乘台灣好行小9公車，末班車 22:50（平日與假日相同），務必搭此班返程。' ,score:4.5, address:"台北市士林區竹子湖", publicTrans:1 ,coords:[ 880 , 630], lat: 25.16925, lon: 121.57635, city:'臺北市'},
+  { id: 3, region: '中部', scene: '山間', name:'杉林溪',img: '../../assets/images/map/map-taichungPhoto.jpg', features:'自然環境清幽、住宿方便', reminders:'園區需付費，夜晚氣溫較低' ,score:4.3, address:"南投縣溪頭", publicTrans:1 ,coords:[ 510 , 470], lat: 23.63708, lon: 120.79492, city:'南投縣'},
+  { id: 4, region: '東部', scene: '海邊', name:'三仙台',img: '../../assets/images/map/map-taichungPhoto.jpg', features:'海岸風光、星空與拱橋同框', reminders:'地面不平、夜晚需照明設備' ,score:4.2, address:"台東縣", publicTrans:0 ,coords:[ 385 , 595], lat: 22.06348, lon: 121.52598, city:'臺東縣'},
+  { id: 5, region: '離島', scene: '海邊', name:'蘭嶼',img: '../../assets/images/map/map-taichungPhoto.jpg', features:'適合觀測銀河、流星雨與夏季星座', reminders:'當地尊重原民文化，避免夜間喧嘩' ,score:4.0, address:"台東縣蘭嶼", publicTrans:0 ,coords:[ 122 , 635], lat: 23.12393, lon: 121.40900, city:'臺東縣'},
 ])
 const mockReviews = ref([
     // 地點ID: 1 (南瀛天文館) - 2筆評論
