@@ -66,26 +66,7 @@ import Newpage from '@/views/new/Newpage.vue'
 
 const routes = [
 // ------------------ 首頁 homepage ------------------
-{path: '/homepage', name: 'homepage', component: HomePage,
-  meta: { 
-        useLoader: true,
-        loaderLogo: 'ORION',                                  // 可選：徽章文字
-        loaderFeatures: { pulsar: true, rings: true, moon: true },//pulsar雷達  , rings 行星環
-        loaderPalette: {
-        bg: '#05060eff',          
-        star: '#f2ecff',          
-        accent: '#a1a7ff',        
-        accent2: '#dc59acbc',       
-        glass: 'rgba(231, 149, 149, 0.69)', 
-        glassBorder: 'rgba(255, 255, 255, 0.3)', 
-        moon: '#b1c83cff' ,      
-        ring:'#4694ddff',
-        planet:'#11d486ff'      
-        }  
-      }
-},
-
-
+{path: '/homepage', name: 'homepage', component: HomePage,},
 // ------------------ 觀星指南 aboutstar ------------------
 {path: '/about', name: 'about', component: AboutStarPage,},
 

@@ -66,8 +66,7 @@ const activeTab = ref('intro')
           class="tabs__btn"
           :class="{ 'tabs__btn--on': activeTab === tab.key }"
           type="button"
-          @click="activeTab = tab.key"
-        >
+          @click="activeTab = tab.key">
           {{ tab.label }}
         </button>
       </nav>

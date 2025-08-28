@@ -72,10 +72,9 @@ function showall(){
 
 
 @media (max-width: 430px) {
-  .sky{
-    
+  .bgc{
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column-reverse !important;
 
   }
 }

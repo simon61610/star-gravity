@@ -18,6 +18,8 @@ const props = defineProps({
 })
 
 const isAnimating = ref(false) //控制星座動畫顯示開關
+const show = ref(false) 
+
 
 //線段直接全部顯示
 const showAllLines = () => {
@@ -63,9 +65,20 @@ function lineLength(a, b) {
 watch(
   () => [props.stars, props.lines],
   () => {
+    show.value = false
+    void nextTick(() => {   // 等 DOM 更新
+      show.value = true  // 馬上淡入
+    })
+
     isAnimating.value = false //星點資訊變化了關閉樣式
-    currentStep.value = 0 }, //星點資訊變化了就清0
+    currentStep.value = 0 
+  
+    
+  
+  
+  }, //星點資訊變化了就清0
    { deep: true } // 監聽物件內部變化
+    
  )
 
 
@@ -74,9 +87,12 @@ watch(
 
 <template>
     <div class="Stars-Canvs-box">
+      <div class="Stars-Canvs-alret">
+        <h1>請往下面選單，選擇你喜歡的星座</h1>
+      </div>
         <svg class="Stars-Canvs-wapper"
         viewBox="0 0 759 546"
-        preserveAspectRatio="xMidYMid meet">
+        preserveAspectRatio="xMidYMid meet" :class="{ show }">
            
             <image class="figure" :href="bg" x='0' y="0" width="759" height="546"  />
             <circle  v-for="(star,i) in stars" 
@@ -117,18 +133,49 @@ watch(
     
     width: 100% !important;    
     display: flex !important;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    .Stars-Canvs-alret{
+      
+      width: 100%;
+      text-align: center;
+      animation: alreat  6s   ease-in-out 1 forwards;
+      h1{
+        font-size: 24px;
+        margin-left: 250px;
+        margin-bottom: 50px;
+        color: aliceblue;
+        font-weight: bolder;
+      }
+    }
+
+    @keyframes alreat {
+      0%{ opacity: 1; }
+
+      40%{ opacity: 0.8;}
+
+      70%{ opacity: 0.5;}
+
+      90%{opacity: 0.2}
+
+      100%{opacity: 0;}
+      
+    }
     
-    .Stars-Canvs-wapper{
+  .Stars-Canvs-wapper{
     
     max-width: 500px;
     margin-left: 300px;
     width: 100% !important;
-    
-}
-}
-
+    opacity: 0;
+    transition: opacity .5s ease-in-out;
+    &.show{
+      opacity: 1;
+    }
+   
+    } 
+  }
 
 // .Stars-Canvs-line{
 //     transition: stroke-dashoffset 0.5s ease
@@ -137,6 +184,9 @@ watch(
 @media (max-width: 431px){
   .Stars-Canvs-box{
     
+    .Stars-Canvs-alret{
+      display:none;
+    }
     .Stars-Canvs-wapper{
     
     margin-left: 0px;

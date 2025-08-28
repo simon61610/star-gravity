@@ -21,6 +21,9 @@ function DrawNext() {
   emit('draw-next')
 }
 
+// 這行追蹤選中的星座
+const selectedZodiac = ref('Aries')
+
 /*線段顯示程式*/
 function showAllLines() {
   // 呼叫子層的 
@@ -123,13 +126,15 @@ const zodiacInfo = ref([
         </div>
       </div>
     <div class="zodiac">
-      <ul class="zodiac__list" aria-label="十二星座清單">
-        <li class="zodiac__item" v-for="zodiac in zodiacInfo" :key="zodiac.id"  @click="() => { console.log('emit id:', zodiac.id); $emit('select-constellation', zodiac.id) }">
+      <ul class="zodiac__list" aria-label="十二星座清單" >
+        <li class="zodiac__item" :class="{ 'zodiac__item__on': selectedZodiac === zodiac.id }" v-for="zodiac in zodiacInfo" :key="zodiac.id"  @click="() => { console.log('emit id:', zodiac.id); selectedZodiac = zodiac.id; $emit('select-constellation', zodiac.id) }">
           <img class="zodiac__icon" :src="zodiac.imgurl" :alt="zodiac.eng">
           <div class="zodiac__text"><strong>{{ zodiac.eng }}</strong><span>{{ zodiac.ch }}</span></div>
         </li>
       </ul>
     </div>
+
+
   </section>
 </template>
 
@@ -172,6 +177,7 @@ const zodiacInfo = ref([
   margin: 0;
 }
 
+
 .zodiac__item {
   display: grid;
   grid-template-columns: 44px 1fr; /* icon 44px */
@@ -182,6 +188,10 @@ const zodiacInfo = ref([
     cursor: pointer;
     background-color: rgba(193, 133, 226, 0.504);
   }
+}
+
+.zodiac__item__on{
+  background:rgba(193, 133, 226, 0.504);
 }
 
 .zodiac__icon {
