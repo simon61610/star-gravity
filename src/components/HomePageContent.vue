@@ -1,7 +1,6 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import eventlist from "@/data/eventlist";
-import { control } from "leaflet";
 
 const activities = ref(eventlist.slice(0, 6))
 

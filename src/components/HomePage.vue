@@ -10,6 +10,7 @@ import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
 const showbackToTop = ref(false)
 const showBox = ref(false)
 const boxText = ref('Q&A')
+
 //監聽事件
 function scrollToTop(){
     window.scrollTo({
@@ -19,8 +20,25 @@ function scrollToTop(){
 }
 function controlScroll(){
     showbackToTop.value = window.scrollY > 1500
-    // console.log(window.scrollY);
     
+    // const homePageContent = document.querySelector('.homePageContent')
+    // const specialEffects = document.querySelector('.special-effects')
+    // let pcRectTop = homePageContent.getBoundingClientRect().top
+    // let seHeight = specialEffects.getBoundingClientRect().height
+    // let subtract = window.scrollY - pcRectTop
+    // let subtract2 = seHeight - window.scrollY
+    // if( subtract < 0 ){
+    //     // console.log(window.innerHeight);
+    //     console.log(subtract2);
+    //     if( subtract2 < 2000){
+    //         window.scrollTo({
+    //             top:seHeight + 50,
+    //             behavior: "smooth",
+    //         })
+    //     }
+    // }
+    // console.log(seHeight);
+    // console.log(window.scrollY);
 }
 function showQABox(){
     if( showBox.value === false){
@@ -35,7 +53,7 @@ function showQABox(){
 //生命週期
 onMounted(()=>{
     window.addEventListener('scroll', controlScroll)
-        
+
         
     gsap.registerPlugin(ScrollTrigger, ScrollToPlugin)
     // console.log('GSAP 插件註冊完成')
