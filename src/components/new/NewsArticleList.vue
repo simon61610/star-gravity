@@ -86,9 +86,9 @@ const props = defineProps({
             <div class="news-article-list" v-for="article in props.articles" :key="article.id">
 
 
-                    <div class="news-article-img">    <!--抓陣列資料前者article陣列裡的物品,後者是整個陣列-->
+                    <router-link router-link :to= "{ name: 'ArticleDetailpage', params: { id: article.id } }" class="news-article-img">    <!--抓陣列資料前者article陣列裡的物品,後者是整個陣列-->
                         <img :src=article.img alt=""/>  
-                    </div>
+                    </router-link>
 
 
                     <div class="news-article-header">
@@ -115,7 +115,9 @@ const props = defineProps({
 
                         </div>
 
-                        <div class="news-article-h2"><h2>{{article.title}}</h2></div>
+                        <router-link :to="{ name: 'ArticleDetailpage', params: { id: article.id } }" class="news-article-h2">
+                            <h2>{{article.title}}</h2>
+                        </router-link>
                         <hr>
 
                         <router-link :to= "{ name: 'ArticleDetailpage', params: { id: article.id } }"
@@ -214,12 +216,13 @@ const props = defineProps({
             
 
             .news-article-h2{ 
-                margin-top: 10px;
+                margin-top: 20px ;
+                margin-bottom: 20px;
                 color:$FontColor-white;
                 font-size:$pcChFont-H3;
                 font-weight: 500;
-
-               
+                text-decoration: none;
+                display: block;
 
                 } 
               

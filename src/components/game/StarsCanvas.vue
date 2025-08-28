@@ -1,4 +1,5 @@
 <script setup>
+import ariesbg from '@/assets/images/games/GameSkyPage/zodiac-sky/gamesky_aries.svg'
 import {ref,onMounted,watch,nextTick} from 'vue'
 const props = defineProps({
     stars:{
@@ -11,14 +12,18 @@ const props = defineProps({
     },
     bg: {   
     type: String,
-    default: ''
+    default: () => ariesbg
     },
     showLines:Boolean
   
 })
 
+onMounted(() => {
+  console.log('子層 bg 預設值:', props.bg)
+})
+
 const isAnimating = ref(false) //控制星座動畫顯示開關
-const show = ref(false) 
+const show = ref() 
 
 
 //線段直接全部顯示
@@ -94,7 +99,7 @@ watch(
         viewBox="0 0 759 546"
         preserveAspectRatio="xMidYMid meet" :class="{ show }">
            
-            <image class="figure" :href="bg" x='0' y="0" width="759" height="546"  />
+            <image class="figure" :href="bg"   x='0' y="0" width="759" height="546"  />
             <circle  v-for="(star,i) in stars" 
             :key="i"
             :cx="0+(star.x/100 * 759)"
@@ -168,8 +173,8 @@ watch(
     max-width: 500px;
     margin-left: 300px;
     width: 100% !important;
-    opacity: 0;
-    transition: opacity .5s ease-in-out;
+    opacity: 1;
+    transition: opacity 1s ease-in-out;
     &.show{
       opacity: 1;
     }

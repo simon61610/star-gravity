@@ -68,7 +68,7 @@ async function copyurl(){    // async....await  非同步操作 複製網址程�
 
         <div class="article-content-box">
             <div class="article-content-img" >
-                <img :src=testimg alt="" />
+                <img :src=article.img alt="" />
             </div>
 
             <div class="article-content-tag">

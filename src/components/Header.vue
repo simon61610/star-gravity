@@ -7,8 +7,16 @@ import  logo from '@/assets/logos/logo.svg'
 const emit = defineEmits(['open'])
 const active = ref(false)
 const route = useRoute()
+const currentActive = ref(null)
 console.log("route toRaw:", JSON.parse(JSON.stringify(route)))
 
+const toggleactive = (index)=>{
+    if(currentActive.value === index){
+        currentActive.value = null
+    }else{
+        currentActive.value = index
+    }
+}
 function toggleMenu() {
   active.value = !active.value;
 }
@@ -81,18 +89,18 @@ watch(
     <nav class="navbar " >
         <div class="wrapper" :class="{active:active}">
             <div class="logo">
-                <router-link to="/"><img :src="logo" alt="星引力logo" width="120" height="50"/></router-link>
+                <router-link to="/homepage"><img :src="logo" alt="星引力logo" width="120" height="50"/></router-link>
             </div>
-            <ul :class ="{ 'is-open': active }">
-                <li><router-link to="/about">觀星初學指南</router-link></li>
-                <li><router-link to="/Newpage">天文快訊</router-link></li>       <!--<li><router-link :to="{ name: 'NewpageView' }">天文快訊</router-link></li>--->
-                <li><router-link to="/gamesky">星視野</router-link></li>
-                <li><router-link to="/mapfirst">星據點</router-link></li>
-                <li><router-link to="/gamehome">星遊戲</router-link></li>
-                <li><router-link to="/events">星星活動</router-link></li>
-                <li><router-link to="/shop">星空小舖</router-link></li>               
-                <li><router-link to="/loginfirst"><i class="fa-solid fa-user fa-lg"></i></router-link></li>
-                <li><router-link to="/"><i class="fa-solid fa-arrow-right-from-bracket"></i></router-link></li>
+            <ul :class ="{ 'is-open': active}" @click="toggleMenu">
+                <li :class ="{ 'menu-active': currentActive === 1}" @click="toggleactive(1)"><router-link to="/about">觀星初學指南</router-link></li>
+                <li :class ="{ 'menu-active': currentActive === 2}" @click="toggleactive(2)"><router-link to="/Newpage">天文快訊</router-link></li>       <!--<li><router-link :to="{ name: 'NewpageView' }">天文快訊</router-link></li>--->
+                <li :class ="{ 'menu-active': currentActive === 3}" @click="toggleactive(3)"><router-link to="/gamesky">星視野</router-link></li>
+                <li :class ="{ 'menu-active': currentActive === 4}" @click="toggleactive(4)"><router-link to="/mapfirst">星據點</router-link></li>
+                <li :class ="{ 'menu-active': currentActive === 5}" @click="toggleactive(5)"><router-link to="/gamehome">星遊戲</router-link></li>
+                <li :class ="{ 'menu-active': currentActive === 6}" @click="toggleactive(6)"><router-link to="/events">星星活動</router-link></li>
+                <li :class ="{ 'menu-active': currentActive === 7}" @click="toggleactive(7)"><router-link to="/shop">星空小舖</router-link></li>               
+                <li ><router-link to="/loginfirst"><i class="fa-solid fa-user fa-lg"></i></router-link></li>
+                <li ><router-link to="/"><i class="fa-solid fa-arrow-right-from-bracket"></i></router-link></li>
                 <li>
                     <router-link to="/cartpage/cart">
                         <i class="fa-solid fa-cart-shopping fa-lg"></i> ( {{cartCount}} )
@@ -140,9 +148,13 @@ watch(
         ul {
             display: flex;
             gap: 0px;
-
+          
             li {
-                
+                &.menu-active{
+                border-radius: 10px;
+                background-color: $primaryColor-900;
+                }
+
                 font-size:$pcChFont-small;
                 display: flex;
                 align-items: center;
@@ -150,6 +162,11 @@ watch(
                 width: 120px;
                 height: 50px;
                 text-decoration: none;
+              
+       
+               
+          
+                
 
                 a {
                     display: flex;
@@ -219,6 +236,7 @@ watch(
              //   opacity: 1;
               //  top:56px;
                // right: 0%;
+               
             }
            
             .hum{
