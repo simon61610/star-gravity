@@ -4,6 +4,7 @@ import HomePageContent from './HomePageContent.vue';
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
+import { subtract } from 'lodash-es';
 
 
 //定義響應式變數
@@ -18,27 +19,34 @@ function scrollToTop(){
         behavior:'smooth'
     })
 }
+
+let lastScroll = 0  //設定初始滑動為0
 function controlScroll(){
     showbackToTop.value = window.scrollY > 1500
     
-    // const homePageContent = document.querySelector('.homePageContent')
-    // const specialEffects = document.querySelector('.special-effects')
-    // let pcRectTop = homePageContent.getBoundingClientRect().top
-    // let seHeight = specialEffects.getBoundingClientRect().height
-    // let subtract = window.scrollY - pcRectTop
-    // let subtract2 = seHeight - window.scrollY
-    // if( subtract < 0 ){
-    //     // console.log(window.innerHeight);
-    //     console.log(subtract2);
-    //     if( subtract2 < 2000){
-    //         window.scrollTo({
-    //             top:seHeight + 50,
-    //             behavior: "smooth",
-    //         })
-    //     }
-    // }
-    // console.log(seHeight);
-    // console.log(window.scrollY);
+    const specialEffects = document.querySelector('.special-effects')
+    const homePageContent = document.querySelector('.homePageContent')
+    let seHeight = specialEffects.getBoundingClientRect().height   //視差滾動區的高度
+    let homePageContentTop = homePageContent.getBoundingClientRect().top  //下方靜態區與視窗頂部的距離
+    let windowHeight = window.innerHeight 
+    
+    let currentScroll = window.scrollY 
+    let subtract = lastScroll - currentScroll  
+        // console.log(subtract);
+    let distance = homePageContentTop-windowHeight  // 差多少會進入視窗畫面
+    //判斷是否為下滑狀態
+    if( subtract < 0 ){ 
+        //判斷何時可以直接上滑到頂   
+        if( distance < 30 && distance > 0 ){
+            window.scrollTo({
+                top: seHeight+50 ,
+                behavior:"smooth" 
+            })
+        }
+    }
+    lastScroll = currentScroll //滑到多少 就以這距離為初始 繼續和之後的滑動比較
+  
+    
 }
 function showQABox(){
     if( showBox.value === false){
