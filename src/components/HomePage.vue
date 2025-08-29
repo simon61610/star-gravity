@@ -52,6 +52,19 @@ function showQABox(){
 }
 //生命週期
 onMounted(()=>{
+    const test = document.querySelector('.test')
+    fetch('/pdo/test.php')
+            .then( resp => resp.json() )
+            .then( (members)=>{
+                for( let member of members){
+                    test.innerHTML += `
+                        <p>${member.name}</p>
+                    `
+                }
+            })
+
+
+
     window.addEventListener('scroll', controlScroll)
 
         
@@ -400,9 +413,12 @@ onUnmounted(()=>{
 
 
 
+
 </script>
 
 <template>
+    <div class="test">123</div>
+
     <div class="wrapper">
         <div class="backToTop" @click="scrollToTop" v-show="showbackToTop">
             <h3>top</h3>
