@@ -36,12 +36,22 @@ function controlScroll(){
     let distance = homePageContentTop-windowHeight  // 差多少會進入視窗畫面
     //判斷是否為下滑狀態
     if( subtract < 0 ){ 
-        //判斷何時可以直接上滑到頂   
-        if( distance < 30 && distance > 0 ){
-            window.scrollTo({
-                top: seHeight+50 ,
-                behavior:"smooth" 
-            })
+        //判斷視窗寬度
+        if( window.innerWidth <=435){
+            //判斷何時可以直接上滑到頂
+            if( distance < 300 && distance > 0 ){
+                window.scrollTo({
+                    top: seHeight+50 ,
+                    behavior:"smooth" 
+                })
+            }
+        }else{
+            if( distance < 30 && distance > 0 ){
+                window.scrollTo({
+                    top: seHeight+50 ,
+                    behavior:"smooth" 
+                })
+            }
         }
     }
     lastScroll = currentScroll //滑到多少 就以這距離為初始 繼續和之後的滑動比較
