@@ -27,6 +27,6 @@ header('Content-Type: application/json; charset=UTF-8');
     $members = $pstmt->fetchAll();
 
 
-    echo json_encode( $members, JSON_UNESCAPED_UNICODE ) ;
+    echo json_encode( $members) ;
 
 ?>

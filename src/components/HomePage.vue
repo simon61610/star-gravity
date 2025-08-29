@@ -53,7 +53,7 @@ function showQABox(){
 //生命週期
 onMounted(()=>{
     const test = document.querySelector('.test')
-    fetch('/pdo/test.php')
+    fetch('pdo/test.php')
             .then( resp => resp.json() )
             .then( (members)=>{
                 for( let member of members){
