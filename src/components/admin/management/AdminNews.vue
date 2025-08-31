@@ -1,8 +1,12 @@
   <script setup>
-  import {ref} from 'vue'
+  import {ref,computed} from 'vue'
   import AdminTable from '@/components/admin/AdminTable.vue'
+  import {articleAPI} from '@/api/articleAPI.js'
+  import { Plus } from '@element-plus/icons-vue'
   import img from '@/assets/images/news/news-article-a1.jpg';
-
+  const Newstable = ref([]);
+  const fileList = ref([]);
+  const emit = defineEmits(["added"])
   const props = defineProps({
     search: { type: String, default: '' }
   })
@@ -11,31 +15,46 @@
 
   //欄位定義
   const columns = [
-      {label:'文章編號',prop:'id'},
-      {label:'上架日期',prop:'publishDate'},
+      {label:'文章編號',prop:'ID'},  //prop要對應資料庫欄位的名稱
+      {label:'上架日期',prop:'publish_date'},
       {label:'標題',prop:'title'},
       {label:'文章分類',prop:'category'},
-      {label:'文章狀態',prop:'status'},
-      {label:'最後更新日期',prop:'updatedAt'  },
+      {label:'文章狀態',prop:'is_active'},
+      {label:'最後更新日期',prop:'updated_at'  },
       {label:'標籤',prop:'tags',slot:'tag', align:'right'},
-      {label:'編輯查看',prop:'actions',slot:'edit', align:'right'},
-    
+      {label:'編輯查看',prop:'actions',slot:'edit', align:'right'} 
   ]
 
-  //欄位資料
-  const Newstable = ref([ 
-      {
-      id: '1',
-      publishDate: '2025/08/16',
-      title: '什麼是血色月亮!?',
-      status: '上架',
-      category:'天象事件',
-      updatedAt:'2025/08/17',
-      img:img,
-      content:'測試文章內容',
-      tag:['星星','月亮','太陽']
+  //顯示資料庫資料
+  articleAPI('get')
+   .then(res =>{
+            console.log(res.data)
+            Newstable.value = res.data
+            }  
+        )
 
-  } ,])
+//過濾搜尋文章
+  const filteredArticles = computed(() => {
+  if (!props.search) return Newstable.value
+  return Newstable.value.filter(a =>
+    String(a.ID).includes(props.search)
+  )
+})
+
+  //欄位資料
+  // const Newstable = ref([ 
+  //     {
+  //     id: '1',
+  //     publishDate: '2025/08/16',
+  //     title: '什麼是血色月亮!?',
+  //     status: '上架',
+  //     category:'天象事件',
+  //     updatedAt:'2025/08/17',
+  //     img:img,
+  //     content:'測試文章內容',
+  //     tag:['星星','月亮','太陽']
+
+  // } ,])
 
 
   const selected_tag = ref(null)
@@ -56,16 +75,16 @@
       console.log(' 子層 addArticle 被呼叫了！')
       console.log(row, index)
       console.log('傳進來的 row:', row)
+      // selected_article.value = {
+      //   id:Newstable.value.length + 1,
+      //   publishDate:'',
+      //   updatedAt:'',
+      //   category:'',
+      //   status:'',
+      //   title:'',
+      //   img:'',
+      //   content:''}
       selected_article.value = {
-        id:Newstable.value.length + 1,
-        publishDate:'',
-        updatedAt:'',
-        category:'',
-        status:'',
-        title:'',
-        img:'',
-        content:''}
-      /*selected_article.value = {
         id:row.id,
         publishDate:row.publishDate,
         updatedAt:row.updatedAt,
@@ -75,12 +94,56 @@
         img:row.img,
         content:row.content
 
-      }*/
+      }
+
+  
   /*打開燈箱*/
     showarticle.value = true;
   }
 
-  defineExpose({ articleEdit })
+  const articleadd = ()=>{
+    selected_article.value = {
+        category:'',
+        is_active:'',
+        title:'',
+        image:'',
+        content:''}
+    fileList.value = []   // 清空，讓＋出現
+    showarticle.value = true;
+  } 
+  //上傳圖片上傳成功時
+const handleSuccess = (res, file) => {
+  console.log("上傳成功:", res)
+  selected_article.value.image = res?.url || URL.createObjectURL(file.raw)
+  
+  // 讓 el-upload 的 fileList 也有資料，圖片才會顯示
+  fileList.value = [{
+    name: file.name,
+    url: res?.url || URL.createObjectURL(file.raw)
+  }]
+  // if (res.success && res.url) {
+  //   // 讓 el-upload 認得這張圖
+  //   file.url = res.url
+
+  //   // 直接覆蓋 fileList (只保留一張圖)
+  //   fileList.value = [file]
+
+  //   // 存到文章資料裡 (跟 DB 對應的欄位)
+  //   selected_article.value.image = res.url
+  // }
+
+}
+
+// 上傳失敗時
+const handleError = (err) => {
+  console.error("上傳失敗:", err)
+}
+
+
+
+
+
+  defineExpose({ articleEdit, articleadd })
 
   /*---------------彈窗關閉----------------*/
   const showtag = ref(false);
@@ -91,17 +154,25 @@
   }
 
   /*---------------儲存功能------------------*/
-  function save(table,selected) {
-                                                         //findIndex()是JS函數 找不到就回傳 -1
-    const idx = table.findIndex(a => String(a.id) === String(selected.id) )
+  function save(selected) {
+  console.log("save 被觸發了", selected)
+  if(!selected || !selected.id){  //沒有ID 表示新增
+    articleAPI('add',selected)
+    .then(res =>{
+            Newstable.value.push(res.data)
+            showarticle.value = false
+          }  
+        )
+  }
+    // const idx = table.findIndex(a => String(a.id) === String(selected.id) )
     
-    console.log(idx) //找更改資料的那筆資料對於 membertable[idx] 是在第idx位置
-    if (idx !== -1) {                                       //如果idx不是-1 表示有這筆資料
-      table[idx] = {...selected }  //membertable.value[idx] 這是整個資料陣列  = {}　→資料的值
-    }else{
-      table.push({...selected})
-    }
-    showarticle.value = false
+    // console.log(idx) //找更改資料的那筆資料對於 membertable[idx] 是在第idx位置
+    // if (idx !== -1) {                                       //如果idx不是-1 表示有這筆資料
+    //   table[idx] = {...selected }  //membertable.value[idx] 這是整個資料陣列  = {}　→資料的值
+    // }else{
+    //   table.push({...selected})
+    // }
+    // showarticle.value = false
   }
 
   /*--------------標籤動態新增element push--------------*/
@@ -128,12 +199,13 @@
     inputVisible.value = false
     inputValue.value = ""
   }
-
+ 
+  /*-------------------圖片新增--------------*/
 
   </script>
 
   <template>
-      <AdminTable :columns="columns" :data="Newstable" :search="props.search">
+      <AdminTable :columns="columns" :data="filteredArticles" :search="props.search">
           <template #tag="{ row, $index }">
             <el-button size="small" @click="tagEdit(row, $index)"> 
               編輯標籤 
@@ -206,7 +278,7 @@
 
               <div class="Admin-article-status">
                 <h2>上架與草稿</h2>
-                <select name="status" id="status" v-model="selected_article.status">
+                <select name="status" id="status" v-model="selected_article.is_active">
                   <option value="">選擇狀態</option>
                   <option value="上架" >上架</option>
                   <option value="草稿" >草稿</option>
@@ -222,23 +294,25 @@
 
             <div class="Admin-article-image">
               <h2>圖片:</h2>
-              <el-upload class="upload-demo" action="#"  list-type="picture-card"
+              <el-upload class="upload-demo" action="http://localhost/start/upload.php"  
+                list-type="picture-card"
                 :on-success="handleSuccess"
                 :on-error="handleError"
-                :src="selected_article.img"
-                >
-                <el-icon><Plus />+</el-icon>
+                :file-list="fileList"
+                :limit="1"
+                > 
+                <el-icon v-if="fileList.length === 0"><Plus /></el-icon>
               </el-upload>
             </div>
 
             <div class="Admin-article-content">
               <h2>內文:</h2>
-              <textarea name="" id="">{{ selected_article.content }}</textarea>
+              <textarea name="" id="" v-model="selected_article.content"></textarea>
             </div>
 
             <div class='Admin-News-button Admin-article-actions'>
               <button type="button" @click="close('article')" >關閉</button>
-              <button type="button" @click="save(Newstable, selected_article)">儲存</button>
+              <button type="button" @click="save(selected_article)">儲存</button>
             </div>
 
           </div>       
@@ -276,13 +350,27 @@
       }
       .Admin-article-image{
         
+        gap: 12px;
         display: flex;
-        ::v-deep(.el-upload){
-          margin-left: 10px;
+        :deep(.el-upload-list--picture-card .el-upload-list__item){
           width: 480px;
+          height: 270px;
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: 1;
+        }
+        :deep(.el-upload--picture-card) {
+          position: relative;
+          width: 480px;
+          height: 270px;
+        }
+        // ::v-deep(.el-upload){
+        //   margin-left: 10px;
+        //   width: 480px;
 
           
-        }
+        // }
       }
       .Admin-article-content{
         

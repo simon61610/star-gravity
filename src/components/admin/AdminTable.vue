@@ -32,7 +32,7 @@ const filterTableData = computed(() => //這是用來過濾搜尋的table結果
   props.data.filter(    //props.data = 原資料 filter()篩選
     (data) => 
       !props.search ||  //這邊決定顯示的資料 條件1. (沒回傳=沒搜尋)如果沒搜尋全顯示
-      String(data.id ?? '').includes(String(props.search)) //假設有搜尋執行這段 舉例假設有字串ID叫123 後面搜尋框只要符合其中1或2或3 就顯示
+      String(data.ID ?? data.id ?? '').includes(String(props.search)) //假設有搜尋執行這段 舉例假設有字串ID叫123 後面搜尋框只要符合其中1或2或3 就顯示
   )
 )
 

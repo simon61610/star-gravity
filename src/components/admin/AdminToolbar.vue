@@ -28,7 +28,7 @@ const clearinput = () => emit('update:search','') //清空search
             </div>
 
             <div>
-                <slot name="add"/>
+              <slot name="add"/>
             </div>
         </div>
 
