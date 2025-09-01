@@ -1,9 +1,9 @@
   <script setup>
-  import {ref,computed} from 'vue'
+  import {ref,computed,nextTick} from 'vue'
   import AdminTable from '@/components/admin/AdminTable.vue'
   import {articleAPI} from '@/api/articleAPI.js'
+  import {tagAPI} from '@/api/tagAPI.js'
   import { Plus } from '@element-plus/icons-vue'
-  import img from '@/assets/images/news/news-article-a1.jpg';
   const Newstable = ref([]);
   const fileList = ref([]);
   const emit = defineEmits(["added"])
@@ -63,8 +63,7 @@
   /*----------------tag編輯按鈕+資料渲染------------------*/
   const tagEdit = (row, index) => { //偵測編輯按鈕編輯哪個資料
       console.log(index, row)
-      
-      selected_tag.value = {...row }
+      selected_article.value = {...row }
   /*打開燈箱*/
     showtag.value = true;
   }
@@ -85,13 +84,13 @@
       //   img:'',
       //   content:''}
       selected_article.value = {
-        id:row.id,
+        ID:row.ID,
         publishDate:row.publishDate,
         updatedAt:row.updatedAt,
         category:row.category,
-        status:row.status,
+        is_active:row.is_active,
         title:row.title,
-        img:row.img,
+        image:row.image,
         content:row.content
 
       }
@@ -112,10 +111,10 @@
     showarticle.value = true;
   } 
   //上傳圖片上傳成功時
-const handleSuccess = (res, file) => {
-  console.log("上傳成功:", res)
-  selected_article.value.image = res?.url || URL.createObjectURL(file.raw)
-  
+  const handleSuccess = (res, file) => {
+    console.log("上傳成功:", res)
+    selected_article.value.image = res?.url || URL.createObjectURL(file.raw)
+    
   // 讓 el-upload 的 fileList 也有資料，圖片才會顯示
   fileList.value = [{
     name: file.name,
@@ -139,10 +138,6 @@ const handleError = (err) => {
   console.error("上傳失敗:", err)
 }
 
-
-
-
-
   defineExpose({ articleEdit, articleadd })
 
   /*---------------彈窗關閉----------------*/
@@ -153,17 +148,25 @@ const handleError = (err) => {
     if (type === 'article') showarticle.value = false
   }
 
-  /*---------------儲存功能------------------*/
+  /*---------------儲存與編輯功能------------------*/
   function save(selected) {
-  console.log("save 被觸發了", selected)
-  if(!selected || !selected.id){  //沒有ID 表示新增
-    articleAPI('add',selected)
+  if(!selected || !selected.ID){  //沒有ID 表示新增
+    return articleAPI('add',selected)
     .then(res =>{
             Newstable.value.push(res.data)
             showarticle.value = false
           }  
         )
-  }
+    } else{
+      return articleAPI('update',selected)
+      .then(res =>{
+        const index = Newstable.value.findIndex(a => a.ID ===selected.ID) 
+        if(index !== -1){
+          Newstable.value[index] = {...selected}
+        }
+        showarticle.value = false
+      })
+    }
     // const idx = table.findIndex(a => String(a.id) === String(selected.id) )
     
     // console.log(idx) //找更改資料的那筆資料對於 membertable[idx] 是在第idx位置
@@ -176,10 +179,10 @@ const handleError = (err) => {
   }
 
   /*--------------標籤動態新增element push--------------*/
-  const inputValue = ref("")  //輸入框
+  const inputValue = ref("")  // 用來綁定 <el-input> 的輸入值
   const dynamicTags = ref([])   //儲存tag陣列
-  const inputVisible = ref(false)
-  const InputRef = ref(null)
+  const inputVisible = ref(false) // 控制輸入框是否顯示
+  const InputRef = ref(null)   // 拿 input 元素做 focus
 
   const handleClose = (tag) => {
     dynamicTags.value.splice(dynamicTags.value.indexOf(tag), 1)
@@ -198,6 +201,21 @@ const handleError = (err) => {
     }
     inputVisible.value = false
     inputValue.value = ""
+  }
+ //標籤儲存
+  const saveTag = ()=>{
+    tagAPI('add',{ 
+      article_id: selected_article.value.ID,   
+      tag_name: dynamicTags.value,
+     })
+      .then(res=>{
+        console.log('儲存成功',res.data)
+        showtag.value = false;
+      })
+      .catch(err=>{
+        console.log('儲存失敗',err)
+      })
+
   }
  
   /*-------------------圖片新增--------------*/
@@ -252,7 +270,7 @@ const handleError = (err) => {
             
               <div class='Admin-News-button'>
                 <button type="button" @click="close('tag')" >關閉</button>
-                <button type="button" @click="save(tag, selected_tag.id)">儲存</button>
+                <button type="button" @click="saveTag">儲存</button>
               </div>       
           </form>
       </div>
@@ -268,8 +286,8 @@ const handleError = (err) => {
 
               <div class="Admin-article-category">
                 <h2>文章分類</h2>
-                <select name="category" id="" v-model="selected_article.category">
-                  <option value="">選擇分類</option>
+                <select name="category" id="" v-model="selected_article.category" >
+                  <option value="" disabled selected>選擇分類</option>
                   <option value="天象事件">天象事件</option>
                   <option value="知識新知">知識新知</option>
                   <option value="生活應用">生活應用</option>
@@ -278,8 +296,8 @@ const handleError = (err) => {
 
               <div class="Admin-article-status">
                 <h2>上架與草稿</h2>
-                <select name="status" id="status" v-model="selected_article.is_active">
-                  <option value="">選擇狀態</option>
+                <select name="is_active" id="status" v-model="selected_article.is_active" required>
+                  <option value="" disabled >選擇狀態</option>
                   <option value="上架" >上架</option>
                   <option value="草稿" >草稿</option>
                 </select>
