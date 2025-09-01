@@ -76,7 +76,7 @@
                             <span class="tip-text">城市的光害會嚴重影響觀星效果，<br>應選擇遠離市區、光害較少的地方。</span>
                         </p>
                         <p class="tip">
-                            <span class="tip-label">地勢高：</span>
+                            <span class="tip-label">地勢較高：</span>
                             <span class="tip-text">山區或高原地區，空氣稀薄，視野開<br>闊，是理想的觀星地點。</span>
                         </p>
                         <p class="tip">
@@ -274,12 +274,17 @@
 .tip{
     line-height: $linHeight-p;
     margin-top: 5px;
+    display: flex;
+    align-items: flex-start; 
+    margin-bottom: 8px;
 }
 .tip-label{
     color: $primaryColor-500;
 }
 .tip-text{
     color: $FontColor-white;    
+    flex: 1;
+    margin-left: 4px; 
 }
 // 3. 星星地方
 .container-third{
