@@ -63,7 +63,17 @@
   /*----------------tag編輯按鈕+資料渲染------------------*/
   const tagEdit = (row, index) => { //偵測編輯按鈕編輯哪個資料
       console.log(index, row)
-      selected_article.value = {...row }
+      tagAPI('get',{ article_id: row.ID })
+        .then(res =>{
+            console.log(res.data)
+
+
+            dynamicTags.value = res.data
+            .filter(t => t.ID === row.ID && t.tag_name)          // 
+            .map(t => t.tag_name)             // 只取出文字
+          }  
+        )
+       selected_article.value = {...row }
   /*打開燈箱*/
     showtag.value = true;
   }
@@ -100,13 +110,14 @@
     showarticle.value = true;
   }
 
+  //文章新增
   const articleadd = ()=>{
     selected_article.value = {
         category:'',
         is_active:'',
         title:'',
         image:'',
-        content:''}
+        content:'' }
     fileList.value = []   // 清空，讓＋出現
     showarticle.value = true;
   } 
@@ -210,6 +221,7 @@ const handleError = (err) => {
      })
       .then(res=>{
         console.log('儲存成功',res.data)
+        dynamicTags.value = [];
         showtag.value = false;
       })
       .catch(err=>{
