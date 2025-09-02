@@ -45,10 +45,15 @@ articleAPI('get')
 
 // 搜尋過濾文章
 const filteredArticles = computed(() => {
-  if (!props.search) return Newstable.value
-  return Newstable.value.filter(a =>
-    String(a.ID).includes(props.search)
-  )
+  if (props.search) {
+    // 有搜尋字串 → 過濾
+    return Newstable.value.filter(a =>
+      String(a.ID).includes(props.search) //針對Newstable.value陣列裡面的id做比較  例如 String("123") .includes(45) 不符合所以不顯示
+    )
+  } else {
+    // 沒搜尋字串 → 全部顯示
+    return Newstable.value
+  }
 })
 
 /* ======================= 文章編輯 / 新增 ======================= */
@@ -109,12 +114,12 @@ defineExpose({ articleEdit, articleadd })
 // 編輯 Tag
 const tagEdit = (row, index) => {
   console.log(index, row)
-  tagAPI('get', { article_id: row.ID })
+  tagAPI('get', { article_id: row.ID }) //tagAPI('action,data={}') data表示我要向後端索取什麼資料 這裡我要取得文章ID
     .then(res => {
       console.log(res.data)
       dynamicTags.value = res.data
-        .filter(t => t.ID === row.ID && t.tag_name) // 過濾出對應文章的 tag
-        .map(t => t.tag_name)                      // 只取出文字
+        .filter(t => t.ID === row.ID && t.tag_name) // js用法迭代陣列過濾出對應文章的 tag
+        .map(t => t.tag_name)                      // js用法迭代陣列只取出文字
     })
   selected_article.value = { ...row }
   showtag.value = true // 打開燈箱
