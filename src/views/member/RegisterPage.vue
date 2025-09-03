@@ -1,15 +1,38 @@
 <script setup>
     import { ref, onMounted, reactive, computed, watch } from 'vue'
+    import { ElMessage } from 'element-plus'
+
+     // ✅ 統一管理後端 API 位址（注意大小寫與實際路徑一致）
+    const API_BASE = 'http://localhost'
+    const REGISTER_API = `${API_BASE}/PDO/Member/register.php`
 
     // 密碼
     const pwd1 = ref('')  
     const pwd2 = ref('')
+
     // 判斷密碼同樣才可以送出
+    // const canSubmit = computed(() => {    
+    // return pwd1.value.length > 0 &&
+    //        pwd2.value.length > 0 &&
+    //        pwd1.value === pwd2.value
+    // })
+
+    // 可送出：密碼一致 + 最基本欄位都有
     const canSubmit = computed(() => {    
-    return pwd1.value.length > 0 &&
-           pwd2.value.length > 0 &&
-           pwd1.value === pwd2.value
+        return (
+            pwd1.value.length >= 6 &&
+            pwd2.value.length >= 6 &&
+            pwd1.value === pwd2.value &&
+            name.value.trim() &&
+            phone.value.trim() &&
+            gender.value &&
+            member.city &&
+            member.area &&
+            address.value.trim() &&
+            email.value.trim()
+        )
     })
+
     // 驗證碼
     const captchaCode = ref('')
     const genCode = () => Math.random().toString(36).slice(2, 8).toUpperCase()
@@ -26,9 +49,83 @@
     const email = ref('')
     const captcha = ref('')
     // 送出
-    const handleRegister = () => {
-        if (!canSubmit.value) return
-        alert('註冊成功！（假資料測試）')
+    // const handleRegister = () => {
+    //     if (!canSubmit.value) return
+    //     alert('註冊成功！（假資料測試）')
+    // }
+
+    // 檔案上傳：準備 <input type="file"> 對應的 ref
+    // const file = ref(null)               // ← 接住 <input type="file"> 的檔案對象
+
+    // 狀態
+    const loading = ref(false)
+    // 送出：改為呼叫後端 PHP
+    const handleRegister = async () => {
+        if (!canSubmit.value) {
+            ElMessage.error('欄位未完成或密碼不一致')
+            return
+        }
+        // 驗證碼（不分大小寫）
+        if (captcha.value.trim().toUpperCase() !== captchaCode.value.trim().toUpperCase()) {
+            ElMessage.error('驗證碼錯誤')
+            captcha.value = ''
+            captchaCode.value = genCode()
+            return
+        }
+        try {
+            loading.value = true
+            const form = new FormData()
+            form.append('name', name.value.trim())
+            form.append('email', email.value.trim())
+            form.append('password', pwd1.value)
+            form.append('phone', phone.value.trim())
+            form.append('city', member.city)
+            form.append('area', member.area)
+            form.append('address', address.value.trim())
+            form.append('gender', gender.value)
+            // if (file?.value) form.append('image', file.value)
+            // 檔案欄位：只有真的選了檔案才附上
+            // if (file?.value instanceof File) form.append('image', file.value)
+
+            // 依你的實際路徑調整
+            // const res = await fetch('http://localhost/PDO/Member/register.php', 
+            const res = await fetch(REGISTER_API, {
+                method: 'POST',
+                body: form,
+            })
+            // const data = await res.json()
+            // const data = await res.json().catch(() => ({}))
+            // 有些失敗時非 JSON（如 500 HTML），要保護性解析
+            let data = {}
+            const text = await res.text()
+            try { data = JSON.parse(text) } catch { data = { ok: false, message: text } }
+
+            if (!res.ok || !data.ok) {
+                // throw new Error(data.message || '註冊失敗')
+                const msg = Array.isArray(data.errors) && data.errors.length
+                ? data.errors[0]
+                : (data.message || `註冊失敗（HTTP ${res.status}）`)
+                throw new Error(msg)
+            }
+            ElMessage.success('註冊成功')
+            
+            // 清空表單
+            name.value = ''
+            phone.value = ''
+            gender.value = ''
+            member.city = ''
+            member.area = ''
+            address.value = ''
+            email.value = ''
+            pwd1.value = ''
+            pwd2.value = ''
+            captcha.value = ''
+            captchaCode.value = genCode()
+        } catch (err) {
+            ElMessage.error(err.message || '伺服器發生錯誤')
+        } finally {
+            loading.value = false
+        }
     }
 
     /* ---- 假後端：取會員註冊資料 ---- */
@@ -39,7 +136,7 @@
                 name: '王小明',                
                 phone: '0912-345-678',
                 city: '台北市',
-                district: '大安區',
+                area: '大安區',
                 address: '仁愛路三段 123 號'
             })
             }, 300)
@@ -52,21 +149,21 @@
     /* ---- 狀態 ---- */
     const member = reactive({
         city: '',
-        district: '',
+        area: '',
     })
 
     const saving = ref(false)
     const savedAt = ref('')
     /* ---- 縣市 / 鄉鎮選單 ---- */
-    const DISTRICTS = {
+    const AREAS = {
         台北市: ['中山區', '大安區', '信義區', '士林區'],
         新北市: ['板橋區', '新店區', '三重區', '永和區'],
         桃園市: ['桃園區', '中壢區', '龜山區', '八德區']
     }
-    const cities = Object.keys(DISTRICTS)
-    const districtOptions = computed(() => DISTRICTS[member.city] || [])
+    const cities = Object.keys(AREAS)
+    const areaOptions = computed(() => AREAS[member.city] || [])
         watch(() => member.city, () => {
-        if (!districtOptions.value.includes(member.district)) member.district = ''
+        if (!areaOptions.value.includes(member.area)) member.area = ''
     })
 
 </script>
@@ -97,15 +194,15 @@
                <!------選擇縣市--------->
                 <div class="join-city">
                     <div class="select">
-                        <select v-model="member.city" class="select-city">
+                        <select v-model="member.city" class="select-city" required>
                         <option value="">縣市</option>
                         <option v-for="c in cities" :key="c" :value="c">{{ c }}</option>
                         </select>
                     </div>
                     <div class="select">
-                        <select v-model="member.district" class="select-city">
+                        <select v-model="member.area" class="select-city" required>
                         <option value="">鄉鎮</option>
-                        <option v-for="d in districtOptions" :key="d" :value="d">{{ d }}</option>
+                        <option v-for="d in areaOptions" :key="d" :value="d">{{ d }}</option>
                         </select>
                     </div>
                 </div>
@@ -149,12 +246,15 @@
                     <div class="captcha-code-1">{{ captchaCode }}</div>
             
                     <!-- 刷新按鈕 -->
-                    <button class="refresh-btn-1" @click="captchaCode = genCode()">
+                    <button class="refresh-btn-1" type="button" @click="captchaCode = genCode()">
                         <img src="@/assets/icons/refresh.svg" alt="">
                     </button>
                 </div>
                 <!-- 送出按鈕 -->
-                <button class="register-btn" type="submit">送出</button>
+                <!-- <button class="register-btn" type="submit">送出</button> -->
+                <button class="register-btn" type="submit" :disabled="loading || !canSubmit">
+                    {{ loading ? '送出中...' : '送出' }}
+                </button>
                 
             </form>
         </div>

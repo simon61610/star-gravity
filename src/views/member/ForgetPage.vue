@@ -3,6 +3,7 @@
     import { useRouter } from 'vue-router'
     import { ElMessage } from 'element-plus' 
     import { ref } from 'vue'
+    import axios from 'axios'
 
     const router = useRouter()
     const email = ref('')
@@ -15,31 +16,74 @@
         router.push('/loginfirst') // 直接到登入頁
     }
 
+    // 呼叫後端 API 發送驗證碼
     async function sendData() {
         if (!isValidEmail(email.value)) {
-            ElMessage ? ElMessage.error('請輸入有效的 Email') : alert('請輸入有效的 Email')
+            ElMessage.error('請輸入有效的 Email')
             return
         }
+
         loading.value = true
+
         try {
-            // TODO: 換成真的 API
-            // await axios.post('/api/auth/forgot', { email: email.value })
-            await new Promise((r) => setTimeout(r, 500)) // 模擬呼叫
-
-            // FIX: 導到「第二步」的 forgot 子頁，路徑在 /loginfirst/forgot
+        // 🔑 呼叫後端 API (你需要自己在 PHP 寫一個 /api/auth/forgot 接口)
+        const res = await axios.post('/api/auth/forgot', { email: email.value })
+        
+        // 後端回應統一用訊息，不管 email 存不存在
+        if (res.data?.ok) {
+        ElMessage.success('驗證碼已發送，請檢查您的信箱')
+        // 跳到輸入驗證碼的頁面，例如 /loginfirst/forgot-step2
             router.push({
-                path: '/loginfirst/forgot',
-                query: { sent: '1', email: email.value } // NOTE: 看你要不要在下一頁讀取這些 query
+                path: '/loginfirst/forgot-step2',
+                query: { email: email.value }
             })
-
-            // 帶著參數到 ForgotPage，進頁後會彈出「驗證碼已發送」
-            // router.push({ path: '/forgot', query: { sent: '1', email: email.value } })
+        }   else {
+                ElMessage.error(res.data?.msg || '傳送失敗，請稍後再試')
+            }
         } catch (e) {
-            ElMessage ? ElMessage.error('傳送失敗，請稍後再試') : alert('傳送失敗，請稍後再試')
+            console.error(e)
+            ElMessage.error('系統錯誤，請稍後再試')
         } finally {
             loading.value = false
         }
-    }
+
+
+
+
+
+
+
+    }    
+
+
+
+
+
+
+
+    // async function sendData() {
+    //     if (!isValidEmail(email.value)) {
+    //         ElMessage ? ElMessage.error('請輸入有效的 Email') : alert('請輸入有效的 Email')
+    //         return
+    //     }
+    //     loading.value = true
+    //     try {
+    //         await axios.post('/api/auth/forgot', { email: email.value })
+    //         await new Promise((r) => setTimeout(r, 500)) // 模擬呼叫
+
+    //         router.push({
+    //             path: '/loginfirst/forgot',
+    //             query: { sent: '1', email: email.value }
+    //         })
+
+    //         // 帶著參數到 ForgotPage，進頁後會彈出「驗證碼已發送」
+    //         // router.push({ path: '/forgot', query: { sent: '1', email: email.value } })
+    //     } catch (e) {
+    //         ElMessage ? ElMessage.error('傳送失敗，請稍後再試') : alert('傳送失敗，請稍後再試')
+    //     } finally {
+    //         loading.value = false
+    //     }
+    // }
 
 </script>
 
