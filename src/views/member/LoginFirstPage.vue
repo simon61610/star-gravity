@@ -5,6 +5,10 @@
     const router = useRouter()
     const route = useRoute()
 
+    // 統一 API 位址
+    const API_BASE   = 'http://localhost'
+    const LOGIN_API  = `${API_BASE}/PDO/Member/login.php`
+
     const email = ref('')
     const pwd1 = ref('')
     const captcha = ref('')
@@ -51,17 +55,41 @@
 
         loading.value = true
         try {
-            // TODO: 這裡換成你的後端 API
-            // await axios.post('/api/login', { email: email.value, password: pwd1.value })
+        //     // TODO: 這裡換成你的後端 API
+        //     // await axios.post('/api/login', { email: email.value, password: pwd1.value })
 
-            // demo：模擬呼叫
-            await new Promise(r => setTimeout(r, 500))
+        //     // demo：模擬呼叫
+        //     await new Promise(r => setTimeout(r, 500))
 
-            // demo：存登入狀態（若有路由守衛可使用）
-            localStorage.setItem('auth', '1')
+        //     // demo：存登入狀態（若有路由守衛可使用）
+        //     localStorage.setItem('auth', '1')
 
-            // 登入成功 → 導到會員中心
-            router.replace('/membercenter/personal')
+        //     // 登入成功 → 導到會員中心
+        //     router.replace('/membercenter/personal')
+        // 呼叫後端php
+        const res = await fetch(LOGIN_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',   
+            mode: 'cors',
+            body: JSON.stringify({
+                email: email.value.trim(),
+                password: pwd1.value
+            })
+        })
+        let data = {}
+        const text = await res.text()
+        try { data = JSON.parse(text) } catch { data = { ok: false, message: text } }
+        
+        if (!res.ok || !data.ok) {
+            const msg = data.message || `登入失敗（HTTP ${res.status}）`
+            throw new Error(msg)
+        }
+        // 成功：存狀態與使用者資訊（含 account_status / account_status_text）
+        localStorage.setItem('auth', '1')
+        if (data.user) localStorage.setItem('user', JSON.stringify(data.user))
+        router.replace('/membercenter/personal')
+
         } catch (e) {
             alert('登入失敗，請稍後再試')
         } finally {
