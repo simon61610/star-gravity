@@ -1,14 +1,19 @@
-<!-- 待新增字數限制功能 -->
-
-
+<!-- 
+待新增字數限制功能
+-->
 
 <script setup>
-import {ref} from 'vue'
+import { ref, computed } from 'vue'
+import axios from 'axios';
+
+// 組件
 import AdminTable from '@/components/admin/AdminTable.vue';
 
 const props = defineProps({
   search: { type: String, default: '' }
 })
+
+// ==========================================================
 
 //欄位定義
 const columns = [
@@ -23,7 +28,9 @@ const columns = [
     {label:'編輯查看',prop:'actions', slot:'編輯', align:'right'},
 ]
 
-const Shoptable = ref([ 
+const Shoptable = ref([]) // 暫時給的，待刪除
+
+/* const Shoptable = ref([ 
     {
         id: '01',
         category: '天文望遠鏡',
@@ -33,8 +40,9 @@ const Shoptable = ref([
         stock:'1000',
         status:'上架',
     } ,
-])
+]) */
 
+// ==========================================================
 
 // 控制彈窗開關
 const show = ref(false)
@@ -49,6 +57,70 @@ const close = () => {
 
 defineExpose({ openModal })
 
+// ==========================================================
+
+// 照片上傳
+const images = ref([null, null, null])
+
+const fileChange = (e, index) => {
+    const file = e.target.files[0]
+    // console.log(file)
+
+    let readFile = new FileReader()
+    readFile.readAsDataURL(file)
+
+    readFile.addEventListener('load', () => {
+        images.value[index] = readFile.result
+        // console.log(readFile.result)
+    })
+}
+
+// ==========================================================
+// 表單物件
+const name = ref('') // 商品名稱
+const category_name = ref('null') //商品類別
+const description = ref('') // 商品描述
+const promotion = ref('') // 全店優惠活動
+const original_price = ref('0') // 原價
+const discount = ref('100') // 折扣
+const sale_price = computed(() => { //售價
+    return original_price.value * (discount.value / 100)
+})
+const stock = ref('0') // 庫存
+const is_active = ref('0') // 上下架
+const introduction = ref('') // 商品說明
+
+
+// ==========================================================
+
+// 先用一個物件存放資料
+const product = computed(() => ({
+    name: name.value,
+    category_name: category_name.value,
+    original_price: original_price.value,
+    discount: discount.value,
+    sale_price: sale_price.value,
+    promotion: promotion.value,
+    description: description.value,
+    introduction: introduction.value,
+    stock: stock.value,
+    is_active: is_active.value,
+    images: images.value // Array
+}))
+
+const save = async () => {
+    // console.log(product.value)
+    const res = await axios.post('http://localhost/starshop/admin/product_add.php' , product.value)
+    // const res = await axios.post('pdo/starshop/admin/product_add.php' , product.value)
+
+    console.log(res.data)
+    alert(res.data.message)
+
+    close()
+}
+
+
+
 </script>
 
 
@@ -62,6 +134,7 @@ defineExpose({ openModal })
     </AdminTable>
 
     <div v-if="show" class="Admin-product-modal"  @click.self="close">
+    <!-- <div class="Admin-product-modal"  @click.self="close"> -->
 
         <section class="prod-form">
             <header>
@@ -82,7 +155,7 @@ defineExpose({ openModal })
                     <!-- -------------------------- -->
                     <div class="prod-name input-box">
                         <h2 class="label-name">商品名稱</h2>
-                        <input name="name">
+                        <input name="name" v-model="name">
                     </div>
 
                     <!-- -------------------------- -->
@@ -91,29 +164,29 @@ defineExpose({ openModal })
                         <div class="category-box">
                             <div class="radio-box">
                                 <h3>天文望遠鏡</h3>
-                                <label><input type="radio" name="category_name">基礎入門型</label>
-                                <label><input type="radio" name="category_name">進階專業型</label>
+                                <label><input type="radio" v-model="category_name" value="基礎入門型">基礎入門型</label>
+                                <label><input type="radio" v-model="category_name" value="進階專業型">進階專業型</label>
                             </div>
                             <div class="radio-box">
                                 <h3>雙筒/單筒望遠鏡</h3>
-                                <label><input type="radio" name="category_name">單筒望遠鏡</label>
-                                <label><input type="radio" name="category_name">雙筒望遠鏡</label>
+                                <label><input type="radio" v-model="category_name" value="單筒望遠鏡">單筒望遠鏡</label>
+                                <label><input type="radio" v-model="category_name" value="雙筒望遠鏡">雙筒望遠鏡</label>
                             </div>
                             <div class="radio-box">
                                 <h3>腳架</h3>
-                                <label><input type="radio" name="category_name">一般三腳架</label>
-                                <label><input type="radio" name="category_name">天文三腳架</label>
+                                <label><input type="radio" v-model="category_name" value="一般三腳架">一般三腳架</label>
+                                <label><input type="radio" v-model="category_name" value="天文三腳架">天文三腳架</label>
                             </div>
                             <div class="radio-box">
                                 <h3>配件</h3>
-                                <label><input type="radio" name="category_name">星座盤</label>
-                                <label><input type="radio" name="category_name">指北針</label>
-                                <label><input type="radio" name="category_name">紅光手電筒</label>
+                                <label><input type="radio" v-model="category_name" value="星座盤">星座盤</label>
+                                <label><input type="radio" v-model="category_name" value="指北針">指北針</label>
+                                <label><input type="radio" v-model="category_name" value="紅光手電筒">紅光手電筒</label>
                             </div>
                             <div class="radio-box">
                                 <h3>書籍/小物</h3>
-                                <label><input type="radio" name="category_name">觀星教學書籍</label>
-                                <label><input type="radio" name="category_name">星空小物</label>
+                                <label><input type="radio" v-model="category_name" value="觀星教學書籍">觀星教學書籍</label>
+                                <label><input type="radio" v-model="category_name" value="星空小物">星空小物</label>
                             </div>
                         </div>
                     </div>
@@ -121,55 +194,55 @@ defineExpose({ openModal })
                     <!-- -------------------------- -->
                     <div class="prod-desc input-box">
                         <h2 class="label-name">商品描述</h2>
-                        <textarea name="description"></textarea>
+                        <textarea v-model="description" rows="5"></textarea>
                     </div>
 
                     <!-- -------------------------- -->
                     <div class="prod-desc input-box">
                         <h2 class="label-name">全店優惠活動</h2>
-                        <textarea name="promotion"></textarea>
+                        <textarea v-model="promotion" rows="5"></textarea>
                     </div>
 
-                    
-                    <!-- -------------------------- -->
-                    <div class="prod-discount input-box">
-                        <h2 class="label-name">商品折扣</h2>
-                        <input name="discount">
-                    </div>
-                    
                     <!-- -------------------------- -->
                     <div class="prod-original-price input-box">
                         <h2 class="label-name">原價</h2>
-                        <input name="original_price">
+                        <input v-model.number.lazy="original_price">
                     </div>
 
                     <!-- -------------------------- -->
+                    <div class="prod-discount input-box">
+                        <h2 class="label-name">商品折扣</h2>
+                        <input class="discount-input" v-model.number.lazy="discount">%
+                    </div>
+                    
+                    <!-- -------------------------- -->
                     <div class="prod-sale-price input-box">
                         <h2 class="label-name">售價</h2>
-                        <input name="sale_price" disabled>
+                        <input name="sale_price" v-model.number.lazy="sale_price" disabled>
                     </div>
 
                     <!-- -------------------------- -->
                     <div class="prod-stock input-box">
                         <h2 class="label-name">庫存數量</h2>
-                        <input name="stock">
+                        <input v-model.number.lazy="stock">
                     </div>
 
                     <!-- -------------------------- -->
                     <div class="active input-box">
                         <h2 class="label-name">上下架</h2>
-                        <select name="is_active">
-                            <option>上架</option>
-                            <option>下架</option>
+                        <select v-model="is_active">
+                            <option :value="1">上架</option>
+                            <option :value="0">下架</option>
                         </select>
                     </div>
 
                     <!-- -------------------------- -->
 
                     <div class="img-boxes">
-                        <div class="img-box" v-for="box in 3">
-                            <div class="add">+</div>
-                            <input type="file" class="the-file">
+                        <div class="img-box" v-for="(image, index) in images">
+                            <div class="add" v-if="!image">+</div>
+                            <img :src="image" alt="" v-if="image">
+                            <input type="file" class="the-file" @change="(e) => fileChange(e, index)">
                         </div>
                     </div>
                 </div>
@@ -179,7 +252,7 @@ defineExpose({ openModal })
 
             <div class="prod-text">
                 <h1 class="title">商品說明</h1>
-                <textarea name="introduction"></textarea>
+                <textarea v-model="introduction" rows="5"></textarea>
             </div>
 
             <!-- =================================================== -->
@@ -257,9 +330,15 @@ defineExpose({ openModal })
                     textarea {
                         width: 100%;
                         resize: none;
-                        height: 100px;
+                        // height: 100px;
                         padding: 8px 12px;
                         font-size: 16px;
+                    }
+
+                    .discount-input {
+                        width: 28px;
+                        margin-right: 4px;
+                        text-align: center;
                     }
                 }
 
@@ -317,6 +396,11 @@ defineExpose({ openModal })
                             top: 50%;
                             left: 50%;
                             transform: translate(-50%, -50%);
+                        }
+                        img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
                         }
                         input {
                             width: 100%;

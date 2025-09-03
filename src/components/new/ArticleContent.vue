@@ -3,6 +3,7 @@
 // Imports 模組匯入
 // =======================
 import back from '@/assets/images/news/article-content-back.svg'
+import { tagAPI } from '@/api/tagAPI.js'
 import { useRoute } from 'vue-router'  // 取得目前路由資訊
 import { ref, onMounted, watch } from 'vue'
 
@@ -64,6 +65,29 @@ async function copyurl() {
     alert('複製失敗，請手動複製')
   }
 }
+
+//資料庫標籤取得
+const dynamicTags = ref([]) 
+
+watch(
+  () => props.article?.ID, //監聽父層傳進來得文章ID
+  (newID) => { //ID有變化執行下面這段
+    if (newID) {
+      tagAPI('get', { article_id: newID })
+        .then(res => {
+          console.log('後端回傳:', res.data)
+          console.log('當前文章 ID:', newID)
+          dynamicTags.value = res.data
+
+            .filter(t => Number(t.ID) === Number(newID)) //過濾文章對應ID 用number轉成數字確保型態一樣 
+            .map(t => t.tag_name)
+
+          console.log('過濾後 dynamicTags:', dynamicTags.value)
+        })
+    }
+  },
+  { immediate: true } //每有變化就立即執行
+)
 </script>
 
 
@@ -90,11 +114,9 @@ async function copyurl() {
                 <img :src=props.article.image alt="" />
             </div>
 
-            <div class="article-content-tag">
+            <div v-if="dynamicTags.length" class="article-content-tag">
                 <ul>
-                    <li>#宇宙大爆炸</li>
-                    <li>#宇宙大爆炸</li>
-                    <li>#宇宙大爆炸</li>
+                    <li v-for="tag in dynamicTags" :key="tag">#{{ tag }}</li>
                 </ul>
             </div>
 
