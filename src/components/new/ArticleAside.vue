@@ -1,30 +1,47 @@
 <script setup>
-import testimg from '@/assets/images/news/news-article-a1.jpg';
-import {articles as articlesDate} from '@/data/articles'
-import { ref, computed, watch } from 'vue' 
-import { useRoute } from 'vue-router'
-const articles = ref(articlesDate) 
-const route = useRoute()
-// const id = Number(route.params.id)
-const article = computed(() => {
-  return articles.value.find(a => a.id === Number(route.params.id))
+// =======================
+// Imports 匯入模組
+// =======================
+import { ref, computed, watch } from 'vue'
+// =======================
+// Props 定義（從父層接收）
+// =======================
+const props = defineProps({
+  article: { type: Object, required: true },
+  articles: { type: Array, required: true }
 })
-
-
-
-// 固定三種 tag
+// =======================
+// 固定三種文章分類 tag
+// =======================
 const tags = ['天象事件', '知識新知', '生活應用']
-
+// =======================
+// 相關文章計算邏輯
+// - 依照三種分類 (tags) 篩選文章
+// - 排除掉目前這篇
+// - 每個分類取最新一篇
+// =======================
 const relatedArticles = computed(() => {
-  if (!article.value) return []
-  return tags.map(tag => {
-    return articles.value.find(a => a.tag === tag && a.id !== article.value.id)
-  }).filter(Boolean)
+  if (!props.articles || props.articles.length === 0 || !props.article) return [] //條件1.沒有文章清單 2.文章清單是空 3.目前的文章不存在  回傳空陣列
+
+  return tags
+    .map(cat => { //逐步處理tag陣列裡每個分類 (map特性會把處理元素包成陣列)
+      // 篩出該分類的文章，排除掉目前這篇
+      const filtered = props.articles.filter(
+        a => a.category === cat && a.ID !== props.article.ID //選到分類跟目前處理的分類一樣 且 ID要不同(也就是要排除自己正在看的這篇)
+      )
+      // 按照日期排序，取最新一篇
+      filtered.sort((a, b) => new Date(b.publish_date) - new Date(a.publish_date))//文章排序
+      return filtered[0] || null   //filtered[0] 就是「該分類裡最新的一篇文章」。
+    })
+    .filter(Boolean) // 過濾掉沒有文章的分類 (null 在 js的Falsy家族 永遠是false)
 })
-
-
-
+//程式的原型  const relatedArticles = computed(()=>{ 
+//  if(){
+//     return tags.map(...裡面做了篩選跟排序).filter(...這裡過濾null)   }
+//  }) 
 </script>
+
+
 
 <template>
     <aside class="article-aside">
@@ -35,42 +52,18 @@ const relatedArticles = computed(() => {
         <div class="article-aside-wapper">
             <ul class="article-aside-ul">
                 
-                    <router-link :to= "{ name: 'ArticleDetailpage', params: { id: a.id } }" class="article-aside-li"  v-for="a in relatedArticles"   
-                        :key="a.id "  >
+                    <router-link :to= "{ name: 'ArticleDetailpage', params: { id: a.ID } }" class="article-aside-li"  v-for="a in relatedArticles"   
+                        :key="a.ID "  >
                         <header class="article-aside-h3">
-                            <h3 class="label--blue">{{ a.tag}}</h3>
+                            <h3 class="label--blue">{{ a.category}}</h3>
                         </header>
                         <figure class="article-aside-img">
-                            <img :src="a.img" alt="">
+                            <img :src="a.image" alt="">
                         </figure>
                         <div class="article-aside-h5">
                             <h5>{{ a.title }}</h5>
                         </div>
                     </router-link>
-                
-                <!-- <li class="article-aside-li">
-                    <header class="article-aside-h3">
-                        <h3 class="label--blue">知識新知</h3>
-                    </header>
-                    <figure class="article-aside-img">
-                        <img :src=testimg alt="">
-                    </figure>
-                    <div class="article-aside-h5">
-                        <h5>5/24 下午1600 日全蝕發生!</h5>
-                    </div>
-                </li>
-                
-                <li class="article-aside-li">
-                    <header class="article-aside-h3">
-                        <h3 class="label--blue">生活應用</h3>
-                    </header>
-                    <figure class="article-aside-img">
-                        <img :src=testimg alt="">
-                    </figure>
-                    <div class="article-aside-h5">
-                        <h5>5/24 下午1600 日全蝕發生!</h5>
-                    </div>
-                </li> -->
             </ul>
         </div>
     </aside>

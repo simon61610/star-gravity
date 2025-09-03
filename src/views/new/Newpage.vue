@@ -46,8 +46,6 @@ const filterArticles = computed(()=>{
     }
 })
 
-
-
 /*---分頁器筆數計算--*/
     const showArticles = computed(()=>{
         const start = (currentPage.value - 1) * pageSize.value  //從第X頁的第X筆開始 例如:第一頁會從(1-1)*4 第0筆資料開始 
@@ -80,6 +78,8 @@ const filterArticles = computed(()=>{
       </main> 
   </div>
 </template>
+
+
 
 <style scoped>
 /*專屬背景圖*/

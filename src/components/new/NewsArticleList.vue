@@ -14,7 +14,7 @@ const props = defineProps({
         props.articles.forEach(article => {   // ← 用 forEach，把每篇文章跑一遍
         const count = localStorage.getItem(`likeCount_${article.ID}`)
         if (count) { //判斷 localStorage 裡有沒有計數
-        article.likeCount = parseInt(count)
+        article.likeCount = parseInt(count,10)
         } else {
         article.likeCount = 0 // 預設 0
         }
@@ -29,17 +29,14 @@ const props = defineProps({
         })
         
         function toglike(article){   //點擊+1方程式
+             if (typeof article.likeCount !== 'number') {
+                article.likeCount = 0  // 防呆，避免 NaN
+            }
             article.liked = !article.liked  //如果點擊了表是true
             article.likeCount += article.liked ? 1 : -1; // 如果是true就+1 反之-1}
             localStorage.setItem(`likeCount_${article.ID}`, article.likeCount ) //儲存讚到localstorage
             localStorage.setItem(`liked_${article.ID}`,article.liked) //儲存點讚狀態到localStorage
         }
-
-
-
-
-
-
 </script>
 
 
