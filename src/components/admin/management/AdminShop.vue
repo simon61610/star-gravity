@@ -4,6 +4,9 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import axios from 'axios';
+
+// 組件
 import AdminTable from '@/components/admin/AdminTable.vue';
 
 const props = defineProps({
@@ -24,6 +27,8 @@ const columns = [
     {label:'上下架',prop:'status'},
     {label:'編輯查看',prop:'actions', slot:'編輯', align:'right'},
 ]
+
+const Shoptable = ref([]) // 暫時給的，待刪除
 
 /* const Shoptable = ref([ 
     {
@@ -82,8 +87,39 @@ const sale_price = computed(() => { //售價
     return original_price.value * (discount.value / 100)
 })
 const stock = ref('0') // 庫存
-const is_active = ref('下架') // 上下架
+const is_active = ref('0') // 上下架
 const introduction = ref('') // 商品說明
+
+
+// ==========================================================
+
+// 先用一個物件存放資料
+const product = computed(() => ({
+    name: name.value,
+    category_name: category_name.value,
+    original_price: original_price.value,
+    discount: discount.value,
+    sale_price: sale_price.value,
+    promotion: promotion.value,
+    description: description.value,
+    introduction: introduction.value,
+    stock: stock.value,
+    is_active: is_active.value,
+    images: images.value // Array
+}))
+
+const save = async () => {
+    // console.log(product.value)
+    const res = await axios.post('http://localhost/starshop/admin/product_add.php' , product.value)
+    // const res = await axios.post('pdo/starshop/admin/product_add.php' , product.value)
+
+    console.log(res.data)
+    alert(res.data.message)
+
+    close()
+}
+
+
 
 </script>
 
@@ -195,8 +231,8 @@ const introduction = ref('') // 商品說明
                     <div class="active input-box">
                         <h2 class="label-name">上下架</h2>
                         <select v-model="is_active">
-                            <option>上架</option>
-                            <option>下架</option>
+                            <option :value="1">上架</option>
+                            <option :value="0">下架</option>
                         </select>
                     </div>
 
