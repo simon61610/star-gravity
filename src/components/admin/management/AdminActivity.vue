@@ -63,8 +63,17 @@ const peopleEdit = (row, index) => { //偵測編輯按鈕編輯哪個資料
 }
 
 
-/*----------------活動列表---------------------------*/
+/*----------------活動編輯列表---------------------------*/
 const handleEdit = (row, index) => { //偵測編輯按鈕編輯哪個資料
+    console.log(index, row)
+
+/*打開燈箱*/
+  showActivity.value = true;
+
+}
+
+/*----------------活動新增列表---------------------------*/
+const handleadd = (row, index) => { //偵測編輯按鈕編輯哪個資料
     console.log(index, row)
 
 /*打開燈箱*/
@@ -72,7 +81,7 @@ const handleEdit = (row, index) => { //偵測編輯按鈕編輯哪個資料
 }
 
 
-
+defineExpose({ handleEdit, handleadd }) //暴露方法給父層
 /*----------------刪除功能--------------------*/
 function delEdit(id) {
   // 找到 index
@@ -280,7 +289,7 @@ function close(type) {
 .Admin-activity-form {
 
     width: 1000px;        
-    height: 800px;
+    height: 700px;
     
     .Admin-Activity-wapper {
         margin: 0 auto;

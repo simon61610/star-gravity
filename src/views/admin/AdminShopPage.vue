@@ -5,6 +5,12 @@
  //   import AdminSidebar from '@/components/admin/AdminSidebar.vue';
     import AdminShop from '@/components/admin/management/AdminShop.vue';
     const search = ref('')
+
+    const shopRef = ref(null)
+
+    const openAdd = () => {
+        shopRef.value.openModal()
+    }
     
 </script>
 
@@ -22,11 +28,18 @@
                     v-model:search="search"
                     title="商城管理">
                         <template #add>
-                            <el-button type="warning" size="small"  style="font-size: 16px ; color:black ;width: 144px; height:40px; border-radius:10px">新增</el-button> <!---template如果有具名(例如#add)就一定要被外層包起來--->
+                            <el-button 
+                                type="warning"
+                                size="small" 
+                                style="font-size: 16px ; color:black ;width: 144px; height:40px; border-radius:10px"
+                                @click="openAdd"
+                            >
+                                新增
+                            </el-button> <!---template如果有具名(例如#add)就一定要被外層包起來--->
                         </template>          
                     </AdminToolbar>
                
-                <AdminShop :search="search"/>
+                <AdminShop :search="search" ref="shopRef" />
 
             </div>
 

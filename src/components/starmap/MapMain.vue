@@ -130,6 +130,7 @@ function updateMapMarkers(locations) {
 
     // 重新添加標記
     locations.forEach((location, index) => {
+        //有資料庫後                          ↓croods_y　　　　　↓croods_ｘ
         const marker = L.marker([location.coords[0], location.coords[1]] , {icon: customIcon }).addTo(map)
         marker.bindPopup(location.name)
         marklist.push(marker)
