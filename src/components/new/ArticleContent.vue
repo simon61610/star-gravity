@@ -2,35 +2,37 @@
 import testimg from '@/assets/images/news/news-article-a1.jpg';
 import back from '@/assets/images/news/article-content-back.svg'
 import { useRoute } from 'vue-router'  //取得目前「路由資訊」資料 {} → 具名匯出
-import { articles } from '@/data/articles.js' //抓物件資料
+// import { articles } from '@/data/articles.js' //抓物件資料
 import { ref,onMounted,watch } from 'vue'
 
 const router = useRoute(); //回傳當前路由物件
 const id = Number(router.params.id) //params useRoute的參數之一 裡面存放動態路由 Number()字串轉數字
-const article = articles.find(a => a.id === id)  //文章ID對應
+// const article = articles.find(a => a.id === id)  //文章ID對應
 
 const likeCount = ref(0)   // ← 這樣才有變數可以用
 const liked = ref(false)   // ← 這是點讚狀態
 
-
+const props = defineProps({
+  article: { type: Object, required: true }
+})
 
 
 
 /*抓讚數資料*/
 onMounted(() => {
   // 讀取 localStorage
-  const count = localStorage.getItem(`likeCount_${article.id}`)
+  const count = localStorage.getItem(`likeCount_${props.article.id}`)
 likeCount.value = count ? parseInt(count) : 0
 
-const likedStatus = localStorage.getItem(`liked_${article.id}`)
+const likedStatus = localStorage.getItem(`liked_${props.article.id}`)
 liked.value = likedStatus === 'true'
 })
 
 function toglike() {
   liked.value = !liked.value
   likeCount.value += liked.value ? 1 : -1
-    localStorage.setItem(`likeCount_${article.id}`, likeCount.value)
-    localStorage.setItem(`liked_${article.id}`, liked.value)
+    localStorage.setItem(`likeCount_${props.article.id}`, likeCount.value)
+    localStorage.setItem(`liked_${props.article.id}`, liked.value)
 } 
 
 /*複製網址 */
@@ -53,11 +55,11 @@ async function copyurl(){    // async....await  非同步操作 複製網址程�
     <section class="article-content-section">
         <div class="article-title-box">
             <div class="article-title-h2">
-                <h2>{{article.title}}</h2>
+                <h2>{{props.article.title}}</h2>
             </div>  
             <div class="article-subtitle-box">
                 <div class="article-subtitle-h4">
-                    <h4>發佈時間:{{article.time}}</h4>
+                    <h4>發佈時間:{{props.article.publish_date}}</h4>
                 </div>
                 <div class="article-subtitle-icon">
                     <i class="fa-regular fa-star" @click="toglike" ><span>{{likeCount}}</span></i>
@@ -68,7 +70,7 @@ async function copyurl(){    // async....await  非同步操作 複製網址程�
 
         <div class="article-content-box">
             <div class="article-content-img" >
-                <img :src=article.img alt="" />
+                <img :src=props.article.image alt="" />
             </div>
 
             <div class="article-content-tag">
@@ -80,7 +82,7 @@ async function copyurl(){    // async....await  非同步操作 複製網址程�
             </div>
 
             <div class="article-content-p cnContent cnContent--18px">
-                <p>{{ article.content }}</p>
+                <p>{{ props.article.content }}</p>
             </div>
 
             <router-link to= "/Newpage" class="article-content-back">

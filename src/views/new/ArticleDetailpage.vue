@@ -1,13 +1,32 @@
 <script setup>
 import ArticleAside from '@/components/new/ArticleAside.vue';
 import ArticleContent from '@/components/new/ArticleContent.vue';
+import axios from "axios";
+import { useRoute } from 'vue-router'
+import { ref, onMounted } from 'vue'
+
+const article = ref(null)
+const route = useRoute()
+
+onMounted(() => {
+  axios.get(`http://localhost/start/newsgetall.php?id=${route.params.id}`)
+    .then(res => {
+      article.value = res.data.article
+    })
+    .catch((err)=>{
+            console.log(err,'資料抓取失敗')
+    })
+})
+
+
 
 </script>
 
 <template>
     <main>
         <section class="article-page-body">
-            <ArticleContent :id="$route.params.id" :key="$route.params.id"/> <!--id是負責傳給子層資訊對應接收  key是給vue標示已經不頁-->
+            <ArticleContent  v-if="article" :article="article"/>  <!---v-if作用 等真的有東西(非null)才顯示文章嫩榮 ----->
+            <!-- <ArticleContent :id="$route.params.id" :key="$route.params.id"/>  -->
             <ArticleAside/>
         </section>
     </main>
