@@ -1,6 +1,7 @@
 <script setup>
     import { ref, onMounted, reactive, computed, watch } from 'vue'
     import { ElMessage } from 'element-plus'
+    import { useRouter } from 'vue-router'
 
      // ✅ 統一管理後端 API 位址（注意大小寫與實際路徑一致）
     const API_BASE = 'http://localhost'
@@ -59,6 +60,8 @@
 
     // 狀態
     const loading = ref(false)
+    const router  = useRouter()  
+
     // 送出：改為呼叫後端 PHP
     const handleRegister = async () => {
         if (!canSubmit.value) {
@@ -107,20 +110,24 @@
                 : (data.message || `註冊失敗（HTTP ${res.status}）`)
                 throw new Error(msg)
             }
-            ElMessage.success('註冊成功')
+            // ElMessage.success('註冊成功')
             
-            // 清空表單
-            name.value = ''
-            phone.value = ''
-            gender.value = ''
-            member.city = ''
-            member.area = ''
-            address.value = ''
-            email.value = ''
-            pwd1.value = ''
-            pwd2.value = ''
-            captcha.value = ''
-            captchaCode.value = genCode()
+            // // 清空表單
+            // name.value = ''
+            // phone.value = ''
+            // gender.value = ''
+            // member.city = ''
+            // member.area = ''
+            // address.value = ''
+            // email.value = ''
+            // pwd1.value = ''
+            // pwd2.value = ''
+            // captcha.value = ''
+            // captchaCode.value = genCode()
+
+            ElMessage.success('註冊成功，請重新登入')
+            router.replace('/loginfirst')
+
         } catch (err) {
             ElMessage.error(err.message || '伺服器發生錯誤')
         } finally {

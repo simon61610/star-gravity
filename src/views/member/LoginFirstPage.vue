@@ -9,6 +9,10 @@
     const API_BASE   = 'http://localhost'
     const LOGIN_API  = `${API_BASE}/PDO/Member/login.php`
 
+     // localStorage keys
+    const LS_AUTH  = 'auth'
+    const LS_USER  = 'user'
+
     const email = ref('')
     const pwd1 = ref('')
     const captcha = ref('')
@@ -17,9 +21,10 @@
     // 驗證碼
     const captchaCode = ref('')
     const genCode = () => Math.random().toString(36).slice(2, 8).toUpperCase()
-     // 頁面載入時會重新跑一次
+
+    // 頁面載入時會重新跑一次
     onMounted(() => {
-        captchaCode.value = genCode()   
+        captchaCode.value = genCode()  
     })
 
     /* 信箱基本檢查樣式 */
@@ -86,15 +91,23 @@
             throw new Error(msg)
         }
         // 成功：存狀態與使用者資訊（含 account_status / account_status_text）
-        localStorage.setItem('auth', '1')
-        if (data.user) localStorage.setItem('user', JSON.stringify(data.user))
+        // localStorage.setItem('auth', '1')
+        // if (data.user) localStorage.setItem('user', JSON.stringify(data.user))
+        // router.replace('/membercenter/personal')
+        localStorage.setItem(LS_AUTH, '1')
+            if (data.user) {
+            localStorage.setItem(LS_USER, JSON.stringify(data.user))
+        }
+        // 成功才清掉註冊暫存 email
+        // localStorage.removeItem(LS_REGISTER_EMAIL)
+        // 成功才導頁到會員中心
         router.replace('/membercenter/personal')
-
         } catch (e) {
             alert('登入失敗，請稍後再試')
         } finally {
             loading.value = false
         }
+
     }
 </script>
 
