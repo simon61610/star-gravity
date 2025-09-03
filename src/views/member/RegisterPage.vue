@@ -3,20 +3,16 @@
     import { ElMessage } from 'element-plus'
     import { useRouter } from 'vue-router'
 
-     // ✅ 統一管理後端 API 位址（注意大小寫與實際路徑一致）
+     // 統一管理後端 API 位址（注意大小寫與實際路徑一致）
     const API_BASE = 'http://localhost'
     const REGISTER_API = `${API_BASE}/PDO/Member/register.php`
+
+    // 註冊後，把 email 暫存起來，登入頁會自動帶入
+    const LS_REGISTER_EMAIL = 'registerEmail'
 
     // 密碼
     const pwd1 = ref('')  
     const pwd2 = ref('')
-
-    // 判斷密碼同樣才可以送出
-    // const canSubmit = computed(() => {    
-    // return pwd1.value.length > 0 &&
-    //        pwd2.value.length > 0 &&
-    //        pwd1.value === pwd2.value
-    // })
 
     // 可送出：密碼一致 + 最基本欄位都有
     const canSubmit = computed(() => {    
@@ -49,14 +45,9 @@
     const address = ref('')      
     const email = ref('')
     const captcha = ref('')
-    // 送出
-    // const handleRegister = () => {
-    //     if (!canSubmit.value) return
-    //     alert('註冊成功！（假資料測試）')
-    // }
 
-    // 檔案上傳：準備 <input type="file"> 對應的 ref
-    // const file = ref(null)               // ← 接住 <input type="file"> 的檔案對象
+    // 檔案上傳
+    // const file = ref(null)              
 
     // 狀態
     const loading = ref(false)
@@ -90,40 +81,26 @@
             // 檔案欄位：只有真的選了檔案才附上
             // if (file?.value instanceof File) form.append('image', file.value)
 
-            // 依你的實際路徑調整
-            // const res = await fetch('http://localhost/PDO/Member/register.php', 
+            // 依實際路徑調整
             const res = await fetch(REGISTER_API, {
                 method: 'POST',
                 body: form,
             })
-            // const data = await res.json()
-            // const data = await res.json().catch(() => ({}))
+
             // 有些失敗時非 JSON（如 500 HTML），要保護性解析
             let data = {}
             const text = await res.text()
             try { data = JSON.parse(text) } catch { data = { ok: false, message: text } }
 
             if (!res.ok || !data.ok) {
-                // throw new Error(data.message || '註冊失敗')
                 const msg = Array.isArray(data.errors) && data.errors.length
                 ? data.errors[0]
                 : (data.message || `註冊失敗（HTTP ${res.status}）`)
                 throw new Error(msg)
             }
-            // ElMessage.success('註冊成功')
-            
-            // // 清空表單
-            // name.value = ''
-            // phone.value = ''
-            // gender.value = ''
-            // member.city = ''
-            // member.area = ''
-            // address.value = ''
-            // email.value = ''
-            // pwd1.value = ''
-            // pwd2.value = ''
-            // captcha.value = ''
-            // captchaCode.value = genCode()
+
+            // 成功：把 email 暫存，登入頁可自動帶入
+            localStorage.setItem(LS_REGISTER_EMAIL, email.value.trim())
 
             ElMessage.success('註冊成功，請重新登入')
             router.replace('/loginfirst')
@@ -136,22 +113,22 @@
     }
 
     /* ---- 假後端：取會員註冊資料 ---- */
-    function fetchMember() {
-        return new Promise(resolve => {
-            setTimeout(() => {
-            resolve({
-                name: '王小明',                
-                phone: '0912-345-678',
-                city: '台北市',
-                area: '大安區',
-                address: '仁愛路三段 123 號'
-            })
-            }, 300)
-        })
-        }
-        function updateMember(payload) {
-        return new Promise(resolve => setTimeout(() => resolve({ ok: true }), 500))
-    }
+    // function fetchMember() {
+    //     return new Promise(resolve => {
+    //         setTimeout(() => {
+    //         resolve({
+    //             name: '王小明',                
+    //             phone: '0912-345-678',
+    //             city: '台北市',
+    //             area: '大安區',
+    //             address: '仁愛路三段 123 號'
+    //         })
+    //         }, 300)
+    //     })
+    //     }
+    //     function updateMember(payload) {
+    //     return new Promise(resolve => setTimeout(() => resolve({ ok: true }), 500))
+    // }
 
     /* ---- 狀態 ---- */
     const member = reactive({
@@ -159,8 +136,6 @@
         area: '',
     })
 
-    const saving = ref(false)
-    const savedAt = ref('')
     /* ---- 縣市 / 鄉鎮選單 ---- */
     const AREAS = {
         台北市: ['中山區', '大安區', '信義區', '士林區'],
