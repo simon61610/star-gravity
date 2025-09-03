@@ -3,18 +3,36 @@ import ArticleAside from '@/components/new/ArticleAside.vue';
 import ArticleContent from '@/components/new/ArticleContent.vue';
 import axios from "axios";
 import { useRoute } from 'vue-router'
-import { ref, onMounted } from 'vue'
-
+import { ref, onMounted,watch } from 'vue'
+const articles = ref([])
 const article = ref(null)
 const route = useRoute()
 
 onMounted(() => {
-  axios.get(`http://localhost/start/newsgetall.php?id=${route.params.id}`)
+    axios.get(`http://localhost/start/newsgetall.php?id=${route.params.id}`)
+        .then(res => {
+        article.value = res.data.article
+        })
+        .catch((err)=>{
+        console.log(err,'資料單篇失敗')
+        })
+
+    axios.get(`http://localhost/start/newssearch.php`)
+        .then(res => {
+            articles.value = res.data
+        })
+        .catch((err)=>{
+        console.log(err,'資料全部失敗')
+        })
+})
+
+watch(() => route.params.id, async (newId) => {  //監聽單篇文章id 
+  axios.get(`http://localhost/start/newsgetall.php?id=${newId}`)
     .then(res => {
       article.value = res.data.article
     })
-    .catch((err)=>{
-            console.log(err,'資料抓取失敗')
+    .catch((err) => {
+      console.log(err, '資料單篇失敗')
     })
 })
 
@@ -25,9 +43,9 @@ onMounted(() => {
 <template>
     <main>
         <section class="article-page-body">
-            <ArticleContent  v-if="article" :article="article"/>  <!---v-if作用 等真的有東西(非null)才顯示文章嫩榮 ----->
+            <ArticleContent  v-if="article" :article="article"/>  <!---v-if作用 等真的有東西(非null)才顯示文章內容 ----->
             <!-- <ArticleContent :id="$route.params.id" :key="$route.params.id"/>  -->
-            <ArticleAside/>
+            <ArticleAside    v-if="article && articles.length"   :articles="articles" :article="article"/>
         </section>
     </main>
 </template>
