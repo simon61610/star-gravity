@@ -28,7 +28,7 @@ onMounted(()=>{
     setTimeout(()=>{          //利用時間延遲讓父層能抓到資料
         props.articles.forEach(article => {
         axios.post(
-            "http://localhost/start/like.php", 
+            "pdo/news/like.php", 
                 
                 {   
                     token: userToken,
