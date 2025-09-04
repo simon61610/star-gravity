@@ -167,6 +167,7 @@ const save = async () => {
     // console.log(product.value)
     const res = await axios.post('http://localhost/starshop/admin/product_add.php' , formData)
     // const res = await axios.post('pdo/starshop/admin/product_add.php' , formData)
+    
     // const res = await axios.post('http://localhost/starshop/admin/product_add.php' , product.value)
     // const res = await axios.post('pdo/starshop/admin/product_add.php' , product.value)
 
