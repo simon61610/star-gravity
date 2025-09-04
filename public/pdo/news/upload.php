@@ -1,7 +1,7 @@
 <?php
 
 
-include('../../pdo.php');
+include('pdo.php');
 // header("Content-Type: application/json; charset=UTF-8");
 // header("Access-Control-Allow-Origin: *"); 
 // header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
@@ -13,8 +13,8 @@ include('../../pdo.php');
 
 // include('db.php');
 
-$savepath = "C:/xampp/htdocs/start/testimg/"; 
-$baseUrl = "http://localhost/start/testimg/";
+$savepath = $_SERVER['DOCUMENT_ROOT'] . "/tjd102/g1/pao/news/image/"; 
+$baseUrl = "/tjd102/g1/pao/news/image/";
 $webUrl = $baseUrl . basename($_FILES["file"]["name"]);
 $move_uploaded = $savepath . basename($_FILES["file"]["name"]); //定義圖檔案路徑還沒有檔案
 

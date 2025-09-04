@@ -1,8 +1,8 @@
 
 import axios from "axios";
 
-
-const base = "http://localhost/start";
+const base = "pdo/news";
+// const base = "http://localhost/start";
 
 export function articleAPI(action,data={}){
     switch (action) {

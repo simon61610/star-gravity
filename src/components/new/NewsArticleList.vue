@@ -55,7 +55,7 @@ onMounted(()=>{
         const action = article.liked ? "unlike" : "like";
         
         axios.post(
-            "http://localhost/start/like.php", 
+            "pdo/news/like.php", 
             {
             token: userToken,
             article_id: article.ID,

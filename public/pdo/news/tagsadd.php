@@ -1,7 +1,7 @@
 <?php
 
 
-include('../../pdo.php');
+include('pdo.php');
 // include('cors.php');
 // include('db.php');
 
