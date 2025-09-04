@@ -63,7 +63,7 @@
                 <h1 @click="fetchData" style="cursor: pointer;">測試抓資料</h1>
                 <div>商品名稱: {{ testProduct.name }}</div>
                 <div>商品金額: {{ testProduct.sale_price }}</div>
-                <img :src="'/pdo' + testProduct.image">
+                <img :src="'pdo' + testProduct.image">
             </div>
 
             <AdminSidebar/>

@@ -79,7 +79,9 @@
             //Web根目錄真實路徑
             $ServerRoot = $_SERVER["DOCUMENT_ROOT"];
             //檔案最終存放位置
-            $filePath = $ServerRoot . "/starshop/images/" . $fileName;
+            // $filePath = $ServerRoot . "/starshop/images/" . $fileName;
+            $filePath = $ServerRoot . "/tjd102/g1/pdo/starshop/images/" . $fileName;
+
             //將暫存檔搬移到正確位置
             move_uploaded_file($filePath_Temp, $filePath);
 
