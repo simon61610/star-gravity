@@ -1,6 +1,7 @@
 <script setup>
 //import testimg from '@/assets/images/110093480_m.jpg'; // Assuming the image is in the assets folder
 import { onMounted, ref, } from 'vue'
+import axios from "axios";
 
 //--------------------------接收父層文章渲染回傳值-------------------------//
 const props = defineProps({
@@ -10,33 +11,98 @@ const props = defineProps({
   }
 }) 
 
-    onMounted(()=>{
-        props.articles.forEach(article => {   // ← 用 forEach，把每篇文章跑一遍
-        const count = localStorage.getItem(`likeCount_${article.ID}`)
-        if (count) { //判斷 localStorage 裡有沒有計數
-        article.likeCount = parseInt(count,10)
-        } else {
-        article.likeCount = 0 // 預設 0
-        }
+//---------------------------建立一個token--------------------------------//
+function getUserToken() {
+  let token = localStorage.getItem("userToken"); //將 token 存到localStorage
+  if (!token) {  //如果沒有token 產生一個
+    token = crypto.randomUUID(); // 產生唯一 ID
+    localStorage.setItem("userToken", token); //儲存方式 userToken:UUID
+  }
+  return token;
+}
+const userToken = getUserToken();
 
-        const likedStatus = localStorage.getItem(`liked_${article.ID}`)
-        if (likedStatus) {    //判斷 localStorage 裡有沒有這個 key
-        article.liked = likedStatus === 'true'   //有的話就使用儲存狀態的值
-        } else {
-        article.liked = false  //沒有就使用預設
-        }
+//---------------------------按贊程式連接資料庫----------------------------//
+
+onMounted(()=>{  
+    setTimeout(()=>{          //利用時間延遲讓父層能抓到資料
+        props.articles.forEach(article => {
+        axios.post(
+            "http://localhost/start/like.php", 
+                
+                {   
+                    token: userToken,
+                    article_id: article.ID,
+                    action: "get"
+                },
+
+                {headers: { "Content-Type": "application/json" }}
+                )
+
+            .then(res => {
+            article.likeCount = res.data.likeCount;
+            article.liked = res.data.liked;
+            })
+            .catch((err)=>{
+            console.log(err,'查詢失敗')
             })
         })
+
+    },500)
+    
+})
+    function togglike(article){
+        const action = article.liked ? "unlike" : "like";
         
-        function toglike(article){   //點擊+1方程式
-             if (typeof article.likeCount !== 'number') {
-                article.likeCount = 0  // 防呆，避免 NaN
+        axios.post(
+            "http://localhost/start/like.php", 
+            {
+            token: userToken,
+            article_id: article.ID,
+            action: action
+            },
+            {headers: { "Content-Type": "application/json" }}
+            )
+
+        .then(res =>{
+            if (res.data.success) {
+            article.liked = res.data.liked;
+            article.likeCount = res.data.likeCount ;
+            } else {
+            alert(res.data.message);
             }
-            article.liked = !article.liked  //如果點擊了表是true
-            article.likeCount += article.liked ? 1 : -1; // 如果是true就+1 反之-1}
-            localStorage.setItem(`likeCount_${article.ID}`, article.likeCount ) //儲存讚到localstorage
-            localStorage.setItem(`liked_${article.ID}`,article.liked) //儲存點讚狀態到localStorage
-        }
+        });
+       
+    }
+    // onMounted(()=>{
+    //     props.articles.forEach(article => {   // ← 用 forEach，把每篇文章跑一遍
+    //     const count = localStorage.getItem(`likeCount_${article.ID}`)
+    //     if (count) { //判斷 localStorage 裡有沒有計數
+    //     article.likeCount = parseInt(count,10)
+    //     } else {
+    //     article.likeCount = 0 // 預設 0
+    //     }
+
+    //     const likedStatus = localStorage.getItem(`liked_${article.ID}`)
+    //     if (likedStatus) {    //判斷 localStorage 裡有沒有這個 key
+    //     article.liked = likedStatus === 'true'   //有的話就使用儲存狀態的值
+    //     } else {
+    //     article.liked = false  //沒有就使用預設
+    //     }
+    //         })
+    //     })
+        
+
+
+    //     function toglike(article){   //點擊+1方程式
+    //          if (typeof article.likeCount !== 'number') {
+    //             article.likeCount = 0  // 防呆，避免 NaN
+    //         }
+    //         article.liked = !article.liked  //如果點擊了表是true
+    //         article.likeCount += article.liked ? 1 : -1; // 如果是true就+1 反之-1}
+    //         localStorage.setItem(`likeCount_${article.ID}`, article.likeCount ) //儲存讚到localstorage
+    //         localStorage.setItem(`liked_${article.ID}`,article.liked) //儲存點讚狀態到localStorage
+    //     }
 </script>
 
 
@@ -105,7 +171,7 @@ const props = defineProps({
                             </div>
                         
                             <div>
-                                <button @click="toglike(article)">
+                                <button @click="togglike(article)">
                                     <p><i :class="article.liked ? 'fa-solid fa-star' : 'fa-regular fa-star'"></i></p> 
                                     <span>{{ article.likeCount }}</span>
                                 </button>                     
