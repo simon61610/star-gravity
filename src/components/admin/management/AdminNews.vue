@@ -93,14 +93,29 @@ const articleadd = () => {
 // 上傳圖片 - 成功
 const handleSuccess = (res, file) => {
   console.log("上傳成功:", res)
-  selected_article.value.image = res?.url || URL.createObjectURL(file.raw)
 
-  // 讓 el-upload 的 fileList 也有資料，圖片才會顯示
-  fileList.value = [{
-    name: file.name,
-    url: res?.url || URL.createObjectURL(file.raw)
-  }]
+  if (res.success && res.url) {
+    selected_article.value.image = res.url
+
+    // 替換掉之前的 blob
+    fileList.value = [{
+      name: file.name,
+      url: res.url
+    }]
+  } else {
+    console.error("後端回傳錯誤:", res)
+  }
 }
+// const handleSuccess = (res, file) => {
+//   console.log("上傳成功:", res)
+//   selected_article.value.image = res?.url || URL.createObjectURL(file.raw)
+
+//   // 讓 el-upload 的 fileList 也有資料，圖片才會顯示
+//   fileList.value = [{
+//     name: file.name,
+//     url: res?.url || URL.createObjectURL(file.raw)
+//   }]
+// }
 
 // 上傳圖片 - 失敗
 const handleError = (err) => {
@@ -286,7 +301,7 @@ const saveTag = () => {
 
             <div class="Admin-article-image">
               <h2>圖片:</h2>
-              <el-upload class="upload-demo"  action="/tjd102/g1/pao/news/upload.php"  
+              <el-upload class="upload-demo"  action="/tjd102/g1/pdo/news/upload.php"  
                 list-type="picture-card"
                 :on-success="handleSuccess"
                 :on-error="handleError"

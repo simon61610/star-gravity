@@ -13,8 +13,8 @@ include('../pdo.php');
 
 // include('db.php');
 
-$savepath = $_SERVER['DOCUMENT_ROOT'] . "/tjd102/g1/pao/news/image/"; 
-$baseUrl = "/tjd102/g1/pao/news/image/";
+$savepath = $_SERVER['DOCUMENT_ROOT'] . "/tjd102/g1/pdo/news/image/"; 
+$baseUrl = "/tjd102/g1/pdo/news/image/";
 $webUrl = $baseUrl . basename($_FILES["file"]["name"]);
 $move_uploaded = $savepath . basename($_FILES["file"]["name"]); //定義圖檔案路徑還沒有檔案
 
