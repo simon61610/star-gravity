@@ -23,6 +23,8 @@ const fourReviewList = computed(()=>{
         return props.locationReviews.slice(0 , 4)
     }
 })
+
+
 //取得預報的天氣圖案
 function getWeatherIcon(weather) {
     if(weather.includes('雷')|| weather.includes('陣')){
@@ -45,8 +47,11 @@ function closeModel(){
 }
    //開啟更多評論
 function showReview(){
-    emit('showReview')
+    emit('showReview')   
+    console.log(fourReviewList.value); 
 }
+
+const locationName = props.selectedLocation.city  //額外把縣市名稱拿出來, 不然氣象API中直接用props.selectedLocation.city會報錯
 function getSixDays(){
     if (!weatherData.value.records) return;
     let tem = ''
@@ -79,7 +84,7 @@ const getWeather = async()=>{
         const response = await axios.get('https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-D0047-091?Authorization=CWA-CF702105-AC4A-4F92-9483-D47FBE37A110', {
             params: {
             Authorization: API_KEY,
-            LocationName: props.selectedLocation.city,
+            LocationName: locationName,
             format: 'JSON',
             }   
         })
@@ -135,7 +140,7 @@ function aaa(){
                 <div class="mapbox-Up-row1">
                     <!-- 地點名稱 -->
                     <div class="map-detial-title">
-                        <h1 class="cnTitle--h1" @click="aaa">{{props.selectedLocation.name}}</h1>
+                        <h1 class="cnTitle--h1" @click="aaa">{{props.selectedLocation.location_name}}</h1>
                         <h3 class="cnTitle--h5">{{props.selectedLocation.address}}</h3>
                     </div>
 
@@ -196,7 +201,7 @@ function aaa(){
 
                     <!-- 4. google map -->
                     <div class="map-detail-googleMap">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3669.439320800984!2d120.39162959999999!3d23.1176119!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x346e637f463eae97%3A0xdd0aaa4d9685c88d!2z5Y2X54Cb5aSp5paH6aSo!5e0!3m2!1szh-TW!2stw!4v1754911767971!5m2!1szh-TW!2stw" width="600" height="450" style="border:0;" allowfullscreen="true" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        <iframe :src="props.selectedLocation.mapURL"></iframe>
                     </div>
 
 
@@ -224,14 +229,14 @@ function aaa(){
                     <div v-for="review in fourReviewList" class="mapbox-singleReview">
                         <!-- 左邊文字評論 -->
                         <div class="singleReview-leftContent">
-                            <h5>{{review.會員名稱}}</h5>
+                            <h5>{{review.name}}</h5>
                             <span> <!--到時候img 用v-for跑 評論多少跑幾次-->
-                                <img v-for="value in review.評論分數" src="@/assets/icons/icon-guide_star.svg" alt="星星">
+                                <img v-for="value in review.score" src="@/assets/icons/icon-guide_star.svg" alt="星星">
                             </span>
-                            <p class="cnContent--14px">{{ review.評論內容 }}</p>
+                            <p class="cnContent--14px">{{ review.content }}</p>
                         </div>
                         <!-- 右邊照片 -->
-                        <div v-if="!review.圖片" class="singleReview-rightPhoto">
+                        <div v-if="review.image" class="singleReview-rightPhoto">
                             <img src="../../assets/images/map/map-reviewleft.jpg" alt="">
                         </div>
                     </div>

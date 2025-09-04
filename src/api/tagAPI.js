@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const base = "http://localhost/start";
+const base = "pdo/news";
+// const base = "http://localhost/start";
 
 export function tagAPI(action,data={}){
     switch (action) {

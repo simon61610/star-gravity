@@ -45,13 +45,13 @@ const sortedReviews = computed(()=>{
         switch(sortType.value){
             case "newest": 
                 console.log('📅 按最新排序完成')
-                return reviews.sort((a, b) => new Date(b.時間) - new Date(a.時間))                
+                return reviews.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))                
             case "rating_low": 
                 console.log('⭐ 按評分低到高排序完成')
-                return reviews.sort((a, b) => a.評論分數 - b.評論分數)  
+                return reviews.sort((a, b) => a.score - b.score)  
             case "rating_high": 
                 console.log('⭐ 按評分高到低排序完成')
-                return reviews.sort((a, b) => b.評論分數 - a.評論分數)
+                return reviews.sort((a, b) => b.score - a.score)
             default:
                 console.log('📝 使用預設排序')
                 return reviews   
@@ -94,7 +94,7 @@ onUnmounted( ()=>{
         <!-- 左半邊 -->
         <div class="mapreview-left">
             <div class="mapreview-title">
-                <h1>{{selectedLocation.name}}</h1>
+                <h1>{{selectedLocation.location_name}}</h1>
                 <h3>
                     <img src="../../assets/icons/icon-map-whitestar.svg" alt="">
                     {{selectedLocation.score}}
@@ -123,15 +123,15 @@ onUnmounted( ()=>{
             <!-- 評論列表 -->
             <ul class="mapreview-list">
                 <li v-for="review in sortedReviews">
-                    <h4>{{review.會員名稱}}</h4>
+                    <h4>{{review.name}}</h4>
                     <span class="review-score"> <!--到時候img 用v-for跑 評論幾分跑幾次-->
-                        <img v-for="value in review.評論分數" src="../../assets/icons/icon-filledStar.svg" alt="星星">
+                        <img v-for="value in review.score" src="../../assets/icons/icon-filledStar.svg" alt="星星">
                     </span>
                     <p class="cnContent--18px">
-                        {{review.評論內容}}
+                        {{review.content}}
                     </p>
                     <img v-if="review.圖片" class="review-photo" src="../../assets/images/map/map-reviewleft.jpg" alt="" @click="enlargePhoto($event.target)">
-                    <h6>{{review.時間}}</h6>
+                    <h6>{{review.created_at}}</h6>
                 </li>  
             </ul>
         </div>
@@ -208,7 +208,7 @@ onUnmounted( ()=>{
     align-items: center;
      justify-content: space-between;
 
-    background-image: url(../../assets/images/map/map-reviewleft.jpg);
+    background-image: url(@/assets/images/map/map-reviewleft.jpg);
 }
 
 .mapreview-title{

@@ -136,8 +136,8 @@ function save(selected) {
   } else { // 有 ID → 更新
     return articleAPI('update', selected)
       .then(res => {
-        const index = Newstable.value.findIndex(a => a.ID === selected.ID)
-        if (index !== -1) {
+        const index = Newstable.value.findIndex(a => a.ID === selected.ID) //筆對資料是否有這個value
+        if (index !== -1) { //如果index不等於-1 表示有資料
           Newstable.value[index] = { ...selected }
         }
         showarticle.value = false
