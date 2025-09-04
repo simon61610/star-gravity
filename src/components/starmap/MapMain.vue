@@ -16,6 +16,7 @@ const region = ref('全台')
 const selectedScenes = ref([])
 const searchText = ref('')
 const placeholder = ref('')
+const baseURL = import.meta.env.BASE_URL
 
 // ========== template狀態數據 ==========
 const isEntering = ref(true)
@@ -329,7 +330,7 @@ function handleSceneChange(scene, event) {
                              <!--以下點擊後才顯示-->
                             <transition name="accordion">
                                 <div v-show="activeIndex === locationList.findIndex(item => item === location)" class="location-singlePlace-more" >
-                                    <img class="location-singlePlace-photo" :src="`${import.meta.env.BASE_URL}tjd102/g1/images/map/${location.image}`" alt="" @click="showMore(index)">
+                                    <img class="location-singlePlace-photo" :src="`${baseURL}images/map/${location.image}`" alt="" @click="showMore(index)">
 
                                     <a class="seeMore" href="#" @click.prevent="showLocationDetail(location)">
                                         更多資訊
