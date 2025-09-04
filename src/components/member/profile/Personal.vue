@@ -2,40 +2,22 @@
     import { ref, onMounted, reactive, computed, watch } from 'vue'
     import { UserFilled } from '@element-plus/icons-vue'
 
-    /* ---- 假後端：取會員註冊資料 ---- */
-    // function fetchMember() {
-    //     return new Promise(resolve => {
-    //         setTimeout(() => {
-    //         resolve({
-    //             name: '王小明',                // 先顯示
-    //             phone: '0912-345-678',
-    //             city: '台北市',
-    //             district: '大安區',
-    //             address: '仁愛路三段 123 號'
-    //         })
-    //         }, 300)
-    //     })
-    //     }
-    //     function updateMember(payload) {
-    //     return new Promise(resolve => setTimeout(() => resolve({ ok: true }), 500))
-    // }
     // 後端 API（和你登入/註冊同一台）
     const API_BASE = 'http://localhost'
     const UPDATE_API = `${API_BASE}/PDO/Member/update_profile.php`
+    const PROFILE_API= `${API_BASE}/PDO/Member/profile.php`
 
     // localStorage keys
-    const LS_AUTH = 'auth'
-    const LS_USER = 'user'
+    // const LS_AUTH = 'auth'
+    // const LS_USER = 'user'
+
+    // localStorage：現在只使用 token 來判斷是否登入
+    const LS_TOKEN = 'token'
 
     /* ---- 狀態 ---- */
     const member = reactive({
-        // name: '',
-        // phone: '',
-        // city: '',
-        // district: '',
-        // address: ''
-        ID: '',        // 後端可用 ID 辨識
-        email: '',     // 或用 email 辨識
+        ID: '',        
+        email: '',     
         name: '',
         phone: '',
         city: '',
@@ -59,55 +41,50 @@
         桃園市: ['桃園區', '中壢區', '龜山區', '八德區']
     }
     const cities = Object.keys(DISTRICTS)
-    // const districtOptions = computed(() => DISTRICTS[member.city] || [])
-    //     watch(() => member.city, () => {
-    //     if (!districtOptions.value.includes(member.district)) member.district = ''
-    // })
+
     const areaOptions = computed(() => DISTRICTS[member.city] || [])
     watch(() => member.city, () => {
         if (!areaOptions.value.includes(member.area)) member.area = ''
     })
         
     /* ---- 載入會員資料 ---- */
-    // onMounted(async () => {
-    //     const data = await fetchMember()
-    //     Object.assign(member, data)
-    // })
-    onMounted(() => {
-        // 未登入就回登入頁
-        if (localStorage.getItem(LS_AUTH) !== '1') {
+    onMounted(async () => {
+        // 只檢查是否登入；沒登入才回登入頁
+        if (!localStorage.getItem(LS_TOKEN)) {
             window.location.replace('/loginfirst')
             return
         }
+        // 用 Session 向後端拿會員基本資料
         try {
-            const raw = localStorage.getItem(LS_USER)
-            const u = raw ? JSON.parse(raw) : null
-            if (!u) throw new Error('no user')
-            // 從登入時保存的 user 帶入
-            member.ID       = u.ID
+            const res  = await fetch(PROFILE_API, {
+                method: 'GET',
+                credentials: 'include',
+                mode: 'cors'
+            })
+            const raw = await res.text()
+            let data = {} 
+            try { 
+                data = JSON.parse(raw) 
+            } catch { 
+                data = { ok:false, message: text } 
+            }
+            if (!data.ok || !data.user) throw new Error(data.message || '讀取失敗')
+
+            const u = data.user
+            member.ID       = u.ID || ''
             member.email    = u.email || ''
             member.name     = u.name || ''
             member.phone    = u.phone || ''
             member.city     = u.city || ''
-            member.area     = u.area || ''     
+            member.area     = u.area || ''
             member.address  = u.address || ''
-        }   catch {
+        }   catch (e) {
+                alert((e && e.message) ? e.message : '讀取會員資料失敗，請重新登入')
                 window.location.replace('/loginfirst')
             }
     })
 
-
-    /* ---- 儲存 ---- */
-    // async function save() {
-    //     saving.value = true
-    //     await updateMember({ ...member })
-    //     saving.value = false
-    //     const now = new Date()
-    //     savedAt.value =
-    //     String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0')
-    // }
-
-    /* ---- 儲存（更新到資料庫並同步 localStorage） ---- */
+    /* ---- 儲存（更新到資料庫；不再動 localStorage） ---- */
     async function save() {
         if (!canSave.value) { alert('請把欄位填完整'); return }
         try{
@@ -127,21 +104,21 @@
                     address: member.address.trim()
                 })
             })
-            const raw = await res.text()
-            let data; try { data = JSON.parse(raw) } catch { data = { ok:false, message: raw } }
-            if (!res.ok || !data.ok) throw new Error(data.message || `更新失敗（HTTP ${res.status}）`)
+            
 
             // 更新 localStorage
-            const uraw = localStorage.getItem(LS_USER)
-            if (uraw) {
-                const u = JSON.parse(uraw)
-                u.name    = member.name
-                u.phone   = member.phone
-                u.city    = member.city
-                u.area    = member.area    
-                u.address = member.address
-                localStorage.setItem(LS_USER, JSON.stringify(u))
-            }
+            // const uraw = localStorage.getItem(LS_USER)
+            // if (uraw) {
+            //     const u = JSON.parse(uraw)
+            //     u.name    = member.name
+            //     u.phone   = member.phone
+            //     u.city    = member.city
+            //     u.area    = member.area    
+            //     u.address = member.address
+            //     localStorage.setItem(LS_USER, JSON.stringify(u))
+            // }
+
+            // 不再更新 localStorage（我們只存 token）
             alert('已儲存！')
             const now = new Date()
             savedAt.value = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0')
