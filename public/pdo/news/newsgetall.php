@@ -1,6 +1,6 @@
 <?php
 
-include('pdo.php');
+include('../pdo.php');
 // include('cors.php');
 // include('db.php');
 
@@ -10,7 +10,7 @@ $ID = $_GET['id'] ?? null ;
 
 
 if($ID){
-        $sql = "select * from  article where ID = ?" ;
+        $sql = "select * from  Article where ID = ?" ;
 
         //執行並查詢，會回傳查詢結果的物件
         $statement = $pdo->prepare($sql);

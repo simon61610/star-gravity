@@ -1,5 +1,5 @@
 <?php
-include('pdo.php');
+include('../pdo.php');
 // include('cors.php');
 // include('db.php');
 
@@ -12,13 +12,13 @@ $is_active = $data['is_active'] ?? '';
 $title = $data['title'] ?? '';
 $image = $data['image'] ?? '';
 $content = $data['content'] ?? '';
-$tags = $data['tags'] ?? '';
+
 
 
 //建立SQL語法
 
-$sql = "UPDATE article SET `category`= ?,`is_active`= ? , `title`=? , `image`=? , `content`=? ,
-`tags`=?  where `id` = ? ";
+$sql = "UPDATE Article SET `category`= ?,`is_active`= ? , `title`=? , `image`=? , `content`=? ,
+  where `id` = ? ";
 
 
 //執行並查詢，會回傳查詢結果的物件
@@ -28,8 +28,7 @@ $statement -> bindValue(2,$is_active);
 $statement -> bindValue(3,$title);
 $statement -> bindValue(4,$image);
 $statement -> bindValue(5,$content);
-$statement -> bindValue(6,$tags);
-$statement -> bindValue(7,$ID);
+$statement -> bindValue(6,$ID);
 $statement -> execute();
 // $statement -> execute([$category, $is_active, $title, $image, $content, $tags, $ID]);
 

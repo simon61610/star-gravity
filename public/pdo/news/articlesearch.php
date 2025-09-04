@@ -1,11 +1,11 @@
 <?php
-include('pdo.php');
+include('../pdo.php');
 // include('cors.php');
 // include('db.php');
 
 //建立SQL語法
 
-$sql = "select * from  article" ;
+$sql = "select * from  Article" ;
 
 
 //執行並查詢，會回傳查詢結果的物件
