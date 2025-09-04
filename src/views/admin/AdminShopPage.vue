@@ -19,7 +19,8 @@
     const testProduct = ref([])
 
     const fetchData = async () => {
-        const res = await axios.get('http://localhost/starshop/admin/test.php')
+        // const res = await axios.get('http://localhost/starshop/admin/test.php')
+        const res = await axios.get('pdo/starshop/admin/test.php')
 
         const data = res.data
         testProduct.value = data[0]
