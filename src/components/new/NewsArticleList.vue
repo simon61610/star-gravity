@@ -2,16 +2,24 @@
 //import testimg from '@/assets/images/110093480_m.jpg'; // Assuming the image is in the assets folder
 import { onMounted, ref, } from 'vue'
 
+//--------------------------接收父層文章渲染回傳值-------------------------//
+const props = defineProps({
+  articles: {
+    type: Array,
+    required: true  //如果沒傳值會警告
+  }
+}) 
+
     onMounted(()=>{
         props.articles.forEach(article => {   // ← 用 forEach，把每篇文章跑一遍
-        const count = localStorage.getItem(`likeCount_${article.id}`)
+        const count = localStorage.getItem(`likeCount_${article.ID}`)
         if (count) { //判斷 localStorage 裡有沒有計數
-        article.likeCount = parseInt(count)
+        article.likeCount = parseInt(count,10)
         } else {
         article.likeCount = 0 // 預設 0
         }
 
-        const likedStatus = localStorage.getItem(`liked_${article.id}`)
+        const likedStatus = localStorage.getItem(`liked_${article.ID}`)
         if (likedStatus) {    //判斷 localStorage 裡有沒有這個 key
         article.liked = likedStatus === 'true'   //有的話就使用儲存狀態的值
         } else {
@@ -21,24 +29,14 @@ import { onMounted, ref, } from 'vue'
         })
         
         function toglike(article){   //點擊+1方程式
+             if (typeof article.likeCount !== 'number') {
+                article.likeCount = 0  // 防呆，避免 NaN
+            }
             article.liked = !article.liked  //如果點擊了表是true
             article.likeCount += article.liked ? 1 : -1; // 如果是true就+1 反之-1}
-            localStorage.setItem(`likeCount_${article.id}`, article.likeCount ) //儲存讚到localstorage
-            localStorage.setItem(`liked_${article.id}`,article.liked) //儲存點讚狀態到localStorage
+            localStorage.setItem(`likeCount_${article.ID}`, article.likeCount ) //儲存讚到localstorage
+            localStorage.setItem(`liked_${article.ID}`,article.liked) //儲存點讚狀態到localStorage
         }
-
-
-
-
-//--------------------------接收父層文章渲染回傳值-------------------------//
-const props = defineProps({
-  articles: {
-    type: Array,
-    required: true  //如果沒傳值會警告
-  }
-}) 
-
-
 </script>
 
 
@@ -83,11 +81,11 @@ const props = defineProps({
     </div>------->
         <div class="news-article-wrapper">
 
-            <div class="news-article-list" v-for="article in props.articles" :key="article.id">
+            <div class="news-article-list" v-for="article in props.articles" :key="article.ID">
 
 
-                    <router-link router-link :to= "{ name: 'ArticleDetailpage', params: { id: article.id } }" class="news-article-img">    <!--抓陣列資料前者article陣列裡的物品,後者是整個陣列-->
-                        <img :src=article.img alt=""/>  
+                    <router-link :to= "{ name: 'ArticleDetailpage', params: { id: article.ID } }" class="news-article-img">    <!--抓陣列資料前者article陣列裡的物品,後者是整個陣列-->
+                        <img :src=article.image alt=""/>  
                     </router-link>
 
 
@@ -97,10 +95,10 @@ const props = defineProps({
 
                             <div class="news-article-title">
 
-                                <h3 class="label--blue">{{article.tag}}</h3>
+                                <h3 class="label--blue">{{article.category}}</h3>
 
                                 <div class="news-article-time">
-                                    <p>{{article.time}}</p>
+                                    <p>{{article.publish_date}}</p>
                                 </div>
                                 
                             
@@ -115,12 +113,12 @@ const props = defineProps({
 
                         </div>
 
-                        <router-link :to="{ name: 'ArticleDetailpage', params: { id: article.id } }" class="news-article-h2">
+                        <router-link :to="{ name: 'ArticleDetailpage', params: { id: article.ID } }" class="news-article-h2">
                             <h2>{{article.title}}</h2>
                         </router-link>
                         <hr>
 
-                        <router-link :to= "{ name: 'ArticleDetailpage', params: { id: article.id } }"
+                        <router-link :to= "{ name: 'ArticleDetailpage', params: { id: article.ID } }"
                             class="router-link-card">
 
                             <div class="news-article-content">

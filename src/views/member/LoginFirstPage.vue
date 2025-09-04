@@ -5,6 +5,17 @@
     const router = useRouter()
     const route = useRoute()
 
+    // 統一 API 位址
+    const API_BASE   = 'http://localhost'
+    const LOGIN_API  = `${API_BASE}/PDO/Member/login.php`
+
+    // localStorage keys
+    // const LS_AUTH  = 'auth'
+    // const LS_USER  = 'user'
+
+    // localStorage key：只存 token（是否登入就看有沒有 token）
+    const LS_TOKEN = 'token'
+
     const email = ref('')
     const pwd1 = ref('')
     const captcha = ref('')
@@ -13,9 +24,10 @@
     // 驗證碼
     const captchaCode = ref('')
     const genCode = () => Math.random().toString(36).slice(2, 8).toUpperCase()
-     // 頁面載入時會重新跑一次
+
+    // 頁面載入時驗證碼會重新跑一次
     onMounted(() => {
-        captchaCode.value = genCode()   
+        captchaCode.value = genCode()  
     })
 
     /* 信箱基本檢查樣式 */
@@ -32,7 +44,6 @@
     const isLogin    = computed(() => route.path === '/loginfirst')
     const isRegister = computed(() => route.path === '/loginfirst/register')
     const isAuthBg   = computed(() => isLogin.value || isRegister.value) // ← 登入/註冊都有 LOGIN 大字與背景
-    // const isOverlay  = computed(() => new Set(['forget','forgot','resetpassword']).has(route.name))
 
     /* 按下確認才會執行 */
     const handleSubmit = async () => {
@@ -51,22 +62,69 @@
 
         loading.value = true
         try {
-            // TODO: 這裡換成你的後端 API
-            // await axios.post('/api/login', { email: email.value, password: pwd1.value })
+            // 呼叫後端php
+            const res = await fetch(LOGIN_API, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',   
+                // mode: 'cors',
+                body: JSON.stringify({
+                    email: email.value.trim(),
+                    password: pwd1.value
+                })
+            })
+            let data = null
+            const text = await res.text()
+            try{
+                data = JSON.parse(text)
+            } catch {
+                data = { ok: false, message: text }
+            }
+            
+            if (!res.ok || !data.ok) {
+                alert(data.message || '登入失敗')
+                // 失敗：清空密碼、刷新驗證碼，比較友善
+                pwd1.value = ''
+                captcha.value = ''
+                refreshCode()
+                return
+            }
+            
+            
+            // 成功：存狀態與使用者資訊
+            // localStorage.setItem(LS_AUTH, '1')
+            // if (data.user) {
+            //     const u = {
+            //         ID: data.user.ID,
+            //         name: data.user.name,
+            //         email: data.user.email,
+            //         phone: data.user.phone,
+            //         city: data.user.city,
+            //         area: data.user.area,
+            //         address: data.user.address
+            //     }
+            //     localStorage.setItem(LS_USER, JSON.stringify(u))
+            // }
 
-            // demo：模擬呼叫
-            await new Promise(r => setTimeout(r, 500))
+            // 成功：只存 token（後端用 Session 記住 memberID）
+            // php 會回 { ok:true, token:'...' }
+            if (!data.token) {
+                alert('登入失敗（缺少 token）')
+                return
+            }
+            localStorage.setItem(LS_TOKEN, data.token)
 
-            // demo：存登入狀態（若有路由守衛可使用）
-            localStorage.setItem('auth', '1')
-
-            // 登入成功 → 導到會員中心
+            // 成功才導到會員中心
             router.replace('/membercenter/personal')
-        } catch (e) {
-            alert('登入失敗，請稍後再試')
-        } finally {
-            loading.value = false
+            } catch (e) {
+                alert(e?.message || '登入失敗，請稍後再試')
+                pwd1.value = ''
+                captcha.value = ''
+                refreshCode()
+            } finally {
+                loading.value = false
         }
+
     }
 </script>
 

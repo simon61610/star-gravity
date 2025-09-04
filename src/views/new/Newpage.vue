@@ -1,20 +1,40 @@
 <script setup>
-import { ref,computed } from 'vue'
+import { ref,computed,onMounted } from 'vue'
 import testimg from '@/assets/images/news/news-article-a1.jpg'; // Assuming the image is in the assets folder
 import NewsBanner from '@/components/new/NewsBanner.vue';
 import NewsBar from '@/components/new/NewsBar.vue'; 
 import NewsArticleList from '@/components/new/NewsArticleList.vue';
 import Pagination from '@/components/common/Pagination.vue';
-import {articles as articlesDate} from '@/data/articles' //從外部匯入js檔案 然後因為需要響應式變化 利用as重新命名
+import axios from "axios";
+//import {articles as articlesDate} from '@/data/articles' //從外部匯入js檔案 然後因為需要響應式變化 利用as重新命名
 
-const articles = ref(articlesDate)  //幫 articles 加上響應式變化ref
+const articles = ref([])  //幫 articles 加上響應式變化ref
 const currentPage = ref(1);  //目前所在頁面
 const pageSize = ref(4);  //每頁顯示數量 
+
+//----------------------------連接資料庫渲染文章--------------------------//
+
+onMounted(() => {
+    axios.get("http://localhost/start/newssearch.php"
+    )
+        .then((res)=>{
+            articles.value = res.data
+        })
+        .catch((err)=>{
+            console.log(err,'資料抓取失敗')
+        })
+})
+
+
 
 /*文章分類*/
 const categories = ref( ['全部文章','天象事件','知識新知','生活應用'] ) 
 const selectedCategory = ref('全部文章')  //選擇的分類
 
+/* 1. 更新選中的切換分類 */
+function changeCategory(cat){
+    selectedCategory.value = cat   
+}
 
 /* 2 .文章過濾切換 */
 const filterArticles = computed(()=>{ 
@@ -22,14 +42,9 @@ const filterArticles = computed(()=>{
         return articles.value //顯示所有文章
     }
     else{
-        return articles.value.filter(a => a.tag === selectedCategory.value)  //如果點其他分類 顯示符合的tag分類
+        return articles.value.filter(a => a.category === selectedCategory.value)  //如果點其他分類 顯示符合的tag分類
     }
 })
-
-/* 1. 更新選中的切換分類 */
-function changeCategory(cat){
-    selectedCategory.value = cat   
-}
 
 /*---分頁器筆數計算--*/
     const showArticles = computed(()=>{
@@ -38,7 +53,9 @@ function changeCategory(cat){
         console.log(` 目前第${currentPage.value}頁 顯示${start} 到 ${end-1}筆`) //驗證用而已
         return filterArticles.value.slice(start, start + pageSize.value)  // 保險使用 slice複製陣列 [開始,結束] 確保資料不會因為切頁被刪除回不去
     })
-    
+
+
+
 </script>
 
 <template>
@@ -61,6 +78,8 @@ function changeCategory(cat){
       </main> 
   </div>
 </template>
+
+
 
 <style scoped>
 /*專屬背景圖*/

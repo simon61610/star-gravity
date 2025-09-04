@@ -10,7 +10,10 @@ export function tagAPI(action,data={}){
                 headers: { "Content-Type": "application/json" }
             })
 
-        case "update":
+        case "get":
+            return axios.get(`${base}/tagssearch.php`, data, {    //語法 axios.post(url, data, config)
+                
+            })
           
 
     }
