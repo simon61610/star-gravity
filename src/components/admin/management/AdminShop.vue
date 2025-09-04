@@ -59,20 +59,39 @@ defineExpose({ openModal })
 
 // ==========================================================
 
+// 照片預覽
+const imagesPreview = ref([null, null, null])
 // 照片上傳
-const images = ref([null, null, null])
+const imagesFiles = ref([null, null, null])
+
+
 
 const fileChange = (e, index) => {
     const file = e.target.files[0]
     // console.log(file)
 
-    let readFile = new FileReader()
+    // 儲存 File 物件，之後用 formData
+    imagesFiles.value[index] = file
+
+    const readFile = new FileReader()
     readFile.readAsDataURL(file)
 
     readFile.addEventListener('load', () => {
-        images.value[index] = readFile.result
+        imagesPreview.value[index] = readFile.result // 圖片顯示
         // console.log(readFile.result)
+
+        // 處理base64字串，傳到後端
+        /* 
+        const imageBase64 = readFile.result
+        images.value[index] = {
+            name: file.name,
+            type: file.type,
+            data:  imageBase64.split(',')[1]
+        } 
+        */
     })
+
+    // console.log(images.value)
 }
 
 // ==========================================================
@@ -94,6 +113,8 @@ const introduction = ref('') // 商品說明
 // ==========================================================
 
 // 先用一個物件存放資料
+
+/* 
 const product = computed(() => ({
     name: name.value,
     category_name: category_name.value,
@@ -106,7 +127,8 @@ const product = computed(() => ({
     stock: stock.value,
     is_active: is_active.value,
     images: images.value // Array
-}))
+})) 
+
 
 const save = async () => {
     // console.log(product.value)
@@ -117,8 +139,42 @@ const save = async () => {
     alert(res.data.message)
 
     close()
-}
+} 
+*/
 
+const save = async () => {
+
+    // 用 FormData 儲存
+    const formData = new FormData()
+
+    formData.append("name", name.value)
+    formData.append("category_name", category_name.value)
+    formData.append("original_price", original_price.value)
+    formData.append("discount", discount.value)
+    formData.append("sale_price", sale_price.value)
+    formData.append("promotion", promotion.value)
+    formData.append("description", description.value)
+    formData.append("introduction", introduction.value)
+    formData.append("stock", stock.value)
+    formData.append("is_active", is_active.value)
+
+    imagesFiles.value.forEach((file, i) => {
+        if (file) {
+            formData.append("images[]", file)
+        }
+    })
+
+    // console.log(product.value)
+    const res = await axios.post('http://localhost/starshop/admin/product_add.php' , formData)
+    // const res = await axios.post('pdo/starshop/admin/product_add.php' , formData)
+    // const res = await axios.post('http://localhost/starshop/admin/product_add.php' , product.value)
+    // const res = await axios.post('pdo/starshop/admin/product_add.php' , product.value)
+
+    console.log(res.data)
+    alert(res.data.message)
+
+    close()
+} 
 
 
 </script>
@@ -239,7 +295,7 @@ const save = async () => {
                     <!-- -------------------------- -->
 
                     <div class="img-boxes">
-                        <div class="img-box" v-for="(image, index) in images">
+                        <div class="img-box" v-for="(image, index) in imagesPreview">
                             <div class="add" v-if="!image">+</div>
                             <img :src="image" alt="" v-if="image">
                             <input type="file" class="the-file" @change="(e) => fileChange(e, index)">
