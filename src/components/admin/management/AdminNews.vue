@@ -286,7 +286,7 @@ const saveTag = () => {
 
             <div class="Admin-article-image">
               <h2>圖片:</h2>
-              <el-upload class="upload-demo" action="http://localhost/start/upload.php"  
+              <el-upload class="upload-demo"  action="/tjd102/g1/pao/news/upload.php"  
                 list-type="picture-card"
                 :on-success="handleSuccess"
                 :on-error="handleError"

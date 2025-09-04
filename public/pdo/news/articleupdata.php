@@ -17,7 +17,7 @@ $content = $data['content'] ?? '';
 
 //建立SQL語法
 
-$sql = "UPDATE Article SET `category`= ?,`is_active`= ? , `title`=? , `image`=? , `content`=? ,
+$sql = "UPDATE Article SET `category`= ?,`is_active`= ? , `title`=? , `image`=? , `content`=? 
   where `id` = ? ";
 
 
