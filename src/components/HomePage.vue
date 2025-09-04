@@ -241,8 +241,12 @@ onMounted(()=>{
     })
 
      mm.add("(max-width: 435px)", () => {        
+        gsap.set([moon, star1, star2, sea, backMontain1, tower, towerMountain, firstBlockText], {
+            clearProps: "all"
+        })
         // 手機版初始位置設定（不同於桌面版）
         gsap.set(moon, {
+            position: 'absolute',
             left: '50%',   // 手機版月亮位置不同
             top: '50%', 
             x: '-50%',     
@@ -252,34 +256,40 @@ onMounted(()=>{
         })
 
         gsap.set(star1, {
+             position: 'absolute',
             right: '10%',  // 手機版星星位置調整
             top: '50%',     
             opacity: 0
         })
 
         gsap.set(star2, {
+             position: 'absolute',
             left: '5%',    // 手機版星星位置調整
             top: "85%",      
             opacity: 0
         })
 
         gsap.set(backMontain1, {
+             position: 'absolute',
             left: '-80%',  // 手機版山的進入方式不同
             bottom: '-80%',
             opacity: 0.3
         })
 
         gsap.set(backMontain2, {
+             position: 'absolute',
             display: 'none' // 手機版隱藏第二座山
         })
 
         gsap.set(sea, {
+             position: 'absolute',
             x: '0%',     
             y: '80%',    // 手機版海的位置不同
             opacity: 0
         })
 
         gsap.set(firstBlockText, {
+             position: 'absolute',
             left:'50%',
             bottom: '30%', // 手機版文字位置不同
             x: '-50%',
@@ -288,6 +298,7 @@ onMounted(()=>{
         })
 
         gsap.set(tower, {
+             position: 'absolute',
             right:'-10%',  // 手機版燈塔進入方式不同
             bottom:'-15%',       
             opacity: 0,
@@ -295,6 +306,7 @@ onMounted(()=>{
         })
 
         gsap.set(towerMountain, {
+             position: 'absolute',
             right: '-120%', // 手機版前景山進入方式不同
             bottom: '-30%',
             opacity: 0.3
@@ -309,6 +321,7 @@ onMounted(()=>{
                 scrub: 0.5,  // 手機版滾動更靈敏
                 pin: '.home-firstBlock',
                 pinSpacing: true,
+                anticipatePin: 1,
             }
         })
         
@@ -735,26 +748,26 @@ onUnmounted(()=>{
         height: 100vh !important;
 
         .firstBlock-moon{
-            position: absolute;
+            // position: absolute;
             width: 120px;
-            top: 5%;
+            // top: 5%;
         }
         .firstBlock-star1{
-            position: absolute;
+            // position: absolute;
             height: 80px;
         }
         .firstBlock-star2{
-            position: absolute;
+            // position: absolute;
             height: 100px;
             top:400px;
             left: 10%;
         }
         .firstBlock-sea{
-            position: absolute;
+            // position: absolute;
             height: 80px;
         }
         .firstBlock-backMontain1{
-            position: absolute;
+            // position: absolute;
             width: 70%;
             bottom: 60px;
         }
@@ -762,12 +775,12 @@ onUnmounted(()=>{
             display: none;
         }
         .firstBlock-tower{
-            position: absolute;
+            // position: absolute;
             bottom: 48px;
             right: 6%;
         }
         .firstBlock-towerMountain{
-            position: absolute;
+            // position: absolute;
             height: 150px;
         }
     }
