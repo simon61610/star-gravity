@@ -94,7 +94,6 @@ function handleShowDetail(location) {
     })
     .then( resp => resp.json() )
     .then( reviews => { 
-        // console.log(reviews);
         locationReviews.value = reviews
      })
     // console.log(selectedLocationId.value)    //確認選擇的location id
