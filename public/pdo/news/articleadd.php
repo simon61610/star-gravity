@@ -35,6 +35,6 @@ $respbody = [
     "image"=>$image,
     "content"=>$content, ];
 //處理回傳的結果
-echo json_encode($respbody); 
+echo json_encode($respbody,JSON_UNESCAPED_UNICODE); 
 
 ?>

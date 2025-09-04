@@ -17,7 +17,7 @@ $statement -> execute();
 
 //處理回傳的結果
 $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
-echo json_encode($rows); 
+echo json_encode($rows,JSON_UNESCAPED_UNICODE); 
 
 
 

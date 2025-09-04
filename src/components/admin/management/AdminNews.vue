@@ -14,6 +14,7 @@ const props = defineProps({
 })
 
 // 狀態變數
+const uploadRef = ref(null)
 const Newstable = ref([])        // 文章列表資料
 const fileList = ref([])         // 上傳圖片 fileList
 const selected_tag = ref(null)   // 選中的 tag
@@ -73,6 +74,14 @@ const articleEdit = (row, index) => {
     image: row.image,
     content: row.content
   }
+  fileList.value = row.image
+  ? [{
+      name: row.image,
+      url: row.image,
+      status: 'success', // 舊圖，標記成功，讓 el-upload 顯示但不會重傳
+      uid: Date.now()    // ★ 一定要有 uid，el-upload 才能追蹤
+    }]
+  : []
 
   showarticle.value = true // 打開燈箱
 }
@@ -100,8 +109,11 @@ const handleSuccess = (res, file) => {
     // 替換掉之前的 blob
     fileList.value = [{
       name: file.name,
-      url: res.url
+      url: res.url,
+      status: 'success'
     }]
+     // ★上傳成功 → 繼續存文章
+    save(selected_article.value)
   } else {
     console.error("後端回傳錯誤:", res)
   }
@@ -122,6 +134,12 @@ const handleError = (err) => {
   console.error("上傳失敗:", err)
 }
 
+
+const handleChange = (file, fileListNow) => {
+  console.log("挑檔案:", file)
+  console.log("最新 fileList:", fileListNow)
+  fileList.value = fileListNow // 這樣新檔案 (ready) 才能進來
+}
 // 暴露方法給父層
 defineExpose({ articleEdit, articleadd })
 
@@ -142,6 +160,17 @@ const tagEdit = (row, index) => {
 
 /* ======================= 儲存文章 ======================= */
 function save(selected) {
+  console.log('=== SAVE DEBUG ===')
+  console.log('uploadRef:', uploadRef.value)
+  console.log('uploadFiles:', uploadRef.value?.uploadFiles)
+  console.log('fileList:', fileList.value)
+
+  const hasNewFile = fileList.value.some(f => f.status === 'ready') // 判斷是否有新檔
+  if (uploadRef.value && hasNewFile) {
+    // 有新圖 → 先上傳，上傳成功後 handleSuccess 再呼叫 save()
+    return uploadRef.value.submit()
+  }
+
   if (!selected || !selected.ID) { // 沒有 ID → 新增
     return articleAPI('add', selected)
       .then(res => {
@@ -301,12 +330,16 @@ const saveTag = () => {
 
             <div class="Admin-article-image">
               <h2>圖片:</h2>
-              <el-upload class="upload-demo"  action="/tjd102/g1/pdo/news/upload.php"  
+              <el-upload class="upload-demo"  action="https://tibamef2e.com/tjd102/g1/pdo/news/upload.php"  
                 list-type="picture-card"
+                ref="uploadRef"
+                :auto-upload="false"
                 :on-success="handleSuccess"
                 :on-error="handleError"
                 :file-list="fileList"
                 :limit="1"
+                :on-change="handleChange"
+                name="file"
                 > 
                 <el-icon v-if="fileList.length === 0"><Plus /></el-icon>
               </el-upload>

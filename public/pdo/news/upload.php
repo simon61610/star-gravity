@@ -13,6 +13,7 @@ include('../pdo.php');
 
 // include('db.php');
 
+
 $savepath = $_SERVER['DOCUMENT_ROOT'] . "/tjd102/g1/pdo/news/image/"; 
 $baseUrl = "/tjd102/g1/pdo/news/image/";
 $webUrl = $baseUrl . basename($_FILES["file"]["name"]);
@@ -23,12 +24,12 @@ if (move_uploaded_file($_FILES["file"]["tmp_name"], $move_uploaded)) {
     echo json_encode([
         "success" => true,
         "url" => $webUrl
-    ]);
+    ],JSON_UNESCAPED_UNICODE);
 } else {
     echo json_encode([
         "success" => false,
         "error" => "Upload failed"
-    ]);
+    ],JSON_UNESCAPED_UNICODE);
 }
 
 
