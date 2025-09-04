@@ -1,6 +1,7 @@
 <script setup>
     import { ref, onMounted, reactive, computed, watch } from 'vue'
     import { UserFilled } from '@element-plus/icons-vue'
+    import { isLoggedIn } from '@/composables/useAuth'
 
     // 後端 API（和你登入/註冊同一台）
     const API_BASE = 'http://localhost'
@@ -50,7 +51,7 @@
     /* ---- 載入會員資料 ---- */
     onMounted(async () => {
         // 只檢查是否登入；沒登入才回登入頁
-        if (!localStorage.getItem(LS_TOKEN)) {
+        if (!isLoggedIn.value) {
             window.location.replace('/loginfirst')
             return
         }

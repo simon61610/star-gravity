@@ -1,11 +1,15 @@
 <script setup>   
     import { useRoute, useRouter } from 'vue-router'
     import { ref, computed, onMounted } from 'vue'
+    // import { setLogin } from '@/composables/useAuth'
+
+    // setLogin(data.token)
 
     const router = useRouter()
     const route = useRoute()
 
     // 統一 API 位址
+    // const LOGIN_API  = '/PDO/Member/login.php'
     const API_BASE   = 'http://localhost'
     const LOGIN_API  = `${API_BASE}/PDO/Member/login.php`
 
@@ -89,22 +93,6 @@
                 refreshCode()
                 return
             }
-            
-            
-            // 成功：存狀態與使用者資訊
-            // localStorage.setItem(LS_AUTH, '1')
-            // if (data.user) {
-            //     const u = {
-            //         ID: data.user.ID,
-            //         name: data.user.name,
-            //         email: data.user.email,
-            //         phone: data.user.phone,
-            //         city: data.user.city,
-            //         area: data.user.area,
-            //         address: data.user.address
-            //     }
-            //     localStorage.setItem(LS_USER, JSON.stringify(u))
-            // }
 
             // 成功：只存 token（後端用 Session 記住 memberID）
             // php 會回 { ok:true, token:'...' }
