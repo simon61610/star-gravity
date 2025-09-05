@@ -163,6 +163,26 @@ const resetForm = () => {
 
 const save = async () => {
 
+    // 檢查是否都有輸入
+    if( !name.value || category_name.value === 'null' || !description.value || !promotion.value || !original_price.value || !discount.value || !introduction.value){
+        alert("請輸入完整商品資料")
+        return
+    }
+
+    // 檢查至少一張圖片
+    let hasImage = false
+    for(let i = 0; i < imagesFiles.value.length; i++){
+        if(imagesFiles.value[i] !== null){
+            hasImage = true
+            break
+        }
+    }
+
+    if(!hasImage){
+        alert('請至少上傳一張商品照片')
+        return
+    }
+
     // 用 FormData 儲存
     const formData = new FormData()
 
