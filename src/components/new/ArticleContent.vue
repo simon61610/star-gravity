@@ -22,35 +22,74 @@ const props = defineProps({
   article: { type: Object, required: true }
 })
 
+// --------------------------- 建立 token（存在 localStorage，全域共用） --------------------------- //
+function getUserToken() {
+  let token = localStorage.getItem("userToken")
+  if (!token) {
+    token = crypto.randomUUID() // 產生唯一 ID
+    localStorage.setItem("userToken", token)
+  }
+  return token
+}
+const userToken = getUserToken()
+
+
+
 // =======================
 // 點讚功能相關狀態
 // =======================
 const likeCount = ref(0)     // 點讚數
 const liked = ref(false)     // 是否已點讚
 
+
+
 // =======================
 // 初始化：從 localStorage 讀取點讚狀態
 // =======================
 onMounted(() => {
-  // 讀取讚數
-  const count = localStorage.getItem(`likeCount_${props.article.ID}`)
-  likeCount.value = count ? parseInt(count) : 0
-
-  // 讀取是否已點讚
-  const likedStatus = localStorage.getItem(`liked_${props.article.ID}`)
-  liked.value = likedStatus === 'true'
+  axios.post(
+    "https://tibamef2e.com/tjd102/g1/pdo/news/like.php",
+    {
+      token: userToken,
+      article_id: props.article.ID,
+      action: "get" // 取得該文章讚數 & 是否已點過
+    },
+    { headers: { "Content-Type": "application/json" } }
+  )
+  .then(res => {
+    likeCount.value = res.data.likeCount ?? 0
+    liked.value = res.data.liked ?? false
+  })
+  .catch(err => {
+    console.error("讀取讚數失敗:", err)
+  })
 })
 
 // =======================
 // 切換點讚狀態
 // =======================
-function toglike() {
-  liked.value = !liked.value
-  likeCount.value += liked.value ? 1 : -1
+function togglike() {
+  const action = liked.value ? "unlike" : "like"
 
-  // 寫回 localStorage
-  localStorage.setItem(`likeCount_${props.article.ID}`, likeCount.value)
-  localStorage.setItem(`liked_${props.article.ID}`, liked.value)
+  axios.post("https://tibamef2e.com/tjd102/g1/pdo/news/like.php",
+    {
+      token: userToken,
+      article_id: props.article.ID,
+      action
+    },
+    { headers: { "Content-Type": "application/json" } }
+  )
+  .then(res => {
+    if (res.data.success) {
+      liked.value = res.data.liked
+      likeCount.value = res.data.likeCount
+    } else {
+      alert(res.data.message)
+    }
+  })
+  .catch(err => {
+    console.error("更新讚數失敗:", err)
+  })
 }
 
 // =======================
@@ -104,7 +143,7 @@ watch(
                     <h4>發佈時間:{{props.article.publish_date}}</h4>
                 </div>
                 <div class="article-subtitle-icon">
-                    <i class="fa-regular fa-star" @click="toglike" ><span>{{likeCount}}</span></i>
+                    <i class="fa-regular fa-star" @click="togglike" ><span>{{likeCount}}</span></i>
                     <i class="fa-solid fa-share-nodes" @click = 'copyurl'></i>
                 </div>
             </div>
