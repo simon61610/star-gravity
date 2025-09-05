@@ -3,7 +3,7 @@
 -->
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import axios from 'axios';
 
 // 組件
@@ -18,13 +18,13 @@ const props = defineProps({
 //欄位定義
 const columns = [
 
-    {label:'編號',prop:'id'},
-    {label:'商品類別',prop:'category'},
+    {label:'編號',prop:'ID'},
+    {label:'商品類別',prop:'category_name'},
     {label:'名稱',prop:'name'},
-    {label:'原價',prop:'price'},
-    {label:'售價',prop:'salePrice' },
+    {label:'原價',prop:'original_price'},
+    {label:'售價',prop:'sale_price' },
     {label:'庫存量',prop:'stock'},
-    {label:'上下架',prop:'status'},
+    {label:'上下架',prop:'is_active', formatter: (row) => row.is_active == 1 ? '上架' : '下架'},
     {label:'編輯查看',prop:'actions', slot:'編輯', align:'right'},
 ]
 
@@ -41,6 +41,20 @@ const Shoptable = ref([]) // 暫時給的，待刪除
         status:'上架',
     } ,
 ]) */
+
+// 從資料庫抓資料
+const fetchProducts = async () => {
+    const res = await axios.get("http://localhost/pdo/starshop/admin/product_get.php")
+    // const res = await axios.get("pdo/starshop/admin/product_get.php") // 部屬前待修改路徑
+
+    Shoptable.value = res.data
+
+    // console.log(Shoptable.value)
+}
+
+onMounted (() => {
+    fetchProducts()
+})
 
 // ==========================================================
 
@@ -103,7 +117,7 @@ const promotion = ref('') // 全店優惠活動
 const original_price = ref('0') // 原價
 const discount = ref('100') // 折扣
 const sale_price = computed(() => { //售價
-    return original_price.value * (discount.value / 100)
+    return parseInt(original_price.value * (discount.value / 100))
 })
 const stock = ref('0') // 庫存
 const is_active = ref('0') // 上下架
@@ -142,7 +156,46 @@ const save = async () => {
 } 
 */
 
+// 清空表單
+const resetForm = () => {
+    name.value = ''
+    category_name.value = 'null'
+    description.value = ''
+    promotion.value = ''
+    original_price.value = '0'
+    discount.value = '100'
+    stock.value = '0'
+    is_active.value = '0'
+    introduction.value = ''
+    
+    // 圖片預覽與檔案清空
+    imagesPreview.value = [null, null, null]
+    imagesFiles.value = [null, null, null]
+}
+
+
+
 const save = async () => {
+
+    // 檢查是否都有輸入
+    if( !name.value || category_name.value === 'null' || !description.value || !promotion.value || !original_price.value || !discount.value || !introduction.value){
+        alert("請輸入完整商品資料")
+        return
+    }
+
+    // 檢查至少一張圖片
+    let hasImage = false
+    for(let i = 0; i < imagesFiles.value.length; i++){
+        if(imagesFiles.value[i] !== null){
+            hasImage = true
+            break
+        }
+    }
+
+    if(!hasImage){
+        alert('請至少上傳一張商品照片')
+        return
+    }
 
     // 用 FormData 儲存
     const formData = new FormData()
@@ -165,16 +218,23 @@ const save = async () => {
     })
 
     // console.log(product.value)
-    // const res = await axios.post('http://localhost/starshop/admin/product_add.php' , formData)
-    const res = await axios.post('pdo/starshop/admin/product_add.php' , formData)
+    const res = await axios.post('http://localhost/pdo/starshop/admin/product_add.php' , formData)
+    // const res = await axios.post('pdo/starshop/admin/product_add.php' , formData) // 部屬前待修改路徑
     
-    // const res = await axios.post('http://localhost/starshop/admin/product_add.php' , product.value)
+    // const res = await axios.post('http://localhost/pdo/starshop/admin/product_add.php' , product.value)
     // const res = await axios.post('pdo/starshop/admin/product_add.php' , product.value)
 
-    console.log(res.data)
-    alert(res.data.message)
+    
+    if(res.data.success){
+        console.log(res.data)
+        alert(res.data.message)
+        resetForm()
+        await fetchProducts()
+        close()
+    }else {
+        alert('新增失敗')
+    }
 
-    close()
 } 
 
 
@@ -190,7 +250,7 @@ const save = async () => {
         </template>
     </AdminTable>
 
-    <div v-if="show" class="Admin-product-modal"  @click.self="close">
+    <div v-if="show" class="Admin-product-modal">
     <!-- <div class="Admin-product-modal"  @click.self="close"> -->
 
         <section class="prod-form">

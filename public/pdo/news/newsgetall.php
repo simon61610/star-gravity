@@ -1,6 +1,6 @@
 <?php
 
-include('pdo.php');
+include('../pdo.php');
 // include('cors.php');
 // include('db.php');
 
@@ -10,11 +10,11 @@ $ID = $_GET['id'] ?? null ;
 
 
 if($ID){
-        $sql = "select * from  article where ID = ?" ;
+        $sql = "select * from  Article where ID = ?" ;
 
         //執行並查詢，會回傳查詢結果的物件
         $statement = $pdo->prepare($sql);
-        $statement -> bindValue(1,"$ID");
+        $statement -> bindValue(1,$ID);
         $statement -> execute();
 
         //處理回傳的結果
@@ -23,10 +23,10 @@ if($ID){
         echo json_encode([
             "success"=>'成功',
             "article"=> $article
-        ]); 
+        ],JSON_UNESCAPED_UNICODE); 
 }else{
         echo json_encode([
-            "message"=>'失敗']); 
+            "message"=>'失敗'],JSON_UNESCAPED_UNICODE); 
 }
 
 

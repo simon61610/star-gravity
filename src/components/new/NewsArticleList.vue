@@ -28,7 +28,7 @@ onMounted(()=>{
     setTimeout(()=>{          //利用時間延遲讓父層能抓到資料
         props.articles.forEach(article => {
         axios.post(
-            "http://localhost/start/like.php", 
+            "pdo/news/like.php", 
                 
                 {   
                     token: userToken,
@@ -107,44 +107,6 @@ onMounted(()=>{
 
 
 <template>
-
-   <!----<div class="news-article-wrapper">
-
-        <div class="news-article-list">
-
-            <div class="news-article-img">
-                    <img :src="testimg" alt=""  />
-            </div>
-
-            <div class="news-article-header">
-
-                <div class="news-article-tt">
-
-                    <div class="news-article-title">
-                        <h3>天象事件</h3>
-                        <h2>5/24 下午1600 日全蝕發生!</h2>
-                    </div>
-
-                    <div class="news-article-time">
-                        <p>2025/5/23</P>
-                        <button @click="toglike">
-                            <p><i :class='["fa-regular fa-star", liked ? "fa-duotone fa-solid fa-star":"fa-regular fa-star"]'></i></p> 
-                            <span>{{ likeCount }}</span>
-
-                        </button>                     
-                    </div>
-
-                </div>
-
-                <div class="news-article-content">
-                    <p>6月21日,台灣將迎來難得一見的天文奇景——日環蝕，也被譽為「上帝的金戒指」。在日月精準交會的剎那，太陽被月亮遮掩，只留下一道璨的金環，彷彿宇宙為地球戴上的神聖指環。錯過，將是一生遺憾。</p>
-                    <p class="Readmore">Read more</p>
-                </div>
-
-            </div>
-            
-        </div>       
-    </div>------->
         <div class="news-article-wrapper">
 
             <div class="news-article-list" v-for="article in props.articles" :key="article.ID">
@@ -254,6 +216,7 @@ onMounted(()=>{
         .news-article-img{
            // flex: 0 1 350px;  
             max-width:350px;
+            aspect-ratio: 3 / 2;
             width: 100%;
             padding: 5px;
             box-sizing: border-box;
@@ -261,7 +224,7 @@ onMounted(()=>{
 
             img{
                 width: 100%;  
-                height: auto;
+                height: 100%;
                 display: block; 
                 object-fit: cover;       
             }            
