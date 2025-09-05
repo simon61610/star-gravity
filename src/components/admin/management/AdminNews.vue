@@ -74,6 +74,7 @@ const articleEdit = (row, index) => {
     image: row.image,
     content: row.content
   }
+  
   fileList.value = row.image
   ? [{
       name: row.image,
