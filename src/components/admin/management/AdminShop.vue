@@ -3,7 +3,7 @@
 -->
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import axios from 'axios';
 
 // 組件
@@ -18,13 +18,13 @@ const props = defineProps({
 //欄位定義
 const columns = [
 
-    {label:'編號',prop:'id'},
-    {label:'商品類別',prop:'category'},
+    {label:'編號',prop:'ID'},
+    {label:'商品類別',prop:'category_name'},
     {label:'名稱',prop:'name'},
-    {label:'原價',prop:'price'},
-    {label:'售價',prop:'salePrice' },
+    {label:'原價',prop:'original_price'},
+    {label:'售價',prop:'sale_price' },
     {label:'庫存量',prop:'stock'},
-    {label:'上下架',prop:'status'},
+    {label:'上下架',prop:'is_active', formatter: (row) => row.is_active == 1 ? '上架' : '下架'},
     {label:'編輯查看',prop:'actions', slot:'編輯', align:'right'},
 ]
 
@@ -41,6 +41,20 @@ const Shoptable = ref([]) // 暫時給的，待刪除
         status:'上架',
     } ,
 ]) */
+
+// 從資料庫抓資料
+const fetchProducts = async () => {
+    const res = await axios.get("http://localhost/pdo/starshop/admin/product_get.php")
+    // const res = await axios.get("pdo/starshop/admin/product_get.php") // 部屬前待修改路徑
+
+    Shoptable.value = res.data
+
+    // console.log(Shoptable.value)
+}
+
+onMounted (() => {
+    fetchProducts()
+})
 
 // ==========================================================
 
@@ -215,6 +229,7 @@ const save = async () => {
         console.log(res.data)
         alert(res.data.message)
         resetForm()
+        await fetchProducts()
         close()
     }else {
         alert('新增失敗')

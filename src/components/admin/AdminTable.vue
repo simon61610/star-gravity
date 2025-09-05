@@ -86,7 +86,8 @@ const handleEdit = (index, row) => { //偵測編輯按鈕編輯哪個資料
                                     v-model="scope.row[col.prop]"
                                   />
                                   <!-- 如果都不是那就抓一般文字欄位 -->
-                                 <span v-else>{{ scope.row[col.prop] }}</span>
+                                 <!-- <span v-else>{{ scope.row[col.prop] }}</span> -->
+                                 <span v-else>{{ col.formatter ? col.formatter(scope.row) : scope.row[col.prop] }}</span>
                             </template>
                     </el-table-column> 
               
