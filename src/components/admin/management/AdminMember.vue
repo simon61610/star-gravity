@@ -8,59 +8,75 @@ const props = defineProps({
 
 
 const columns = [
-    {label:'編號',prop:'id'},
-    {label:'會員帳號',prop:'member_account'},
-    {label:'會員姓名',prop:'member_name'},
+    {label:'編號',prop:'ID'},
+    {label:'會員帳號',prop:'email'},
+    {label:'會員姓名',prop:'name'},
     {label:'帳號狀態',prop:'account_status'},
     {label:'創建日期',prop:'created_at'},
     {label:'編輯',prop:'action' , slot:'編輯', align:'right' }]
 
 const membertable = ref([ 
-    {
-    id: '01',
-    member_account: 'cks558x',
-    member_name: '很大偉',
-    account_status: '正常',
-    member_phone:'0987598598',
-    created_at:'2025-08-15',
-    member_address:'新北市淡水區大同2段18號',
-    member_gender:'男'
-},
-    {
-    id: '02',
-    member_account: '88555',
-    },
-     {
-    id: '02',
-    },
-     {
-    id: '02',
-    },
-     {
-    id: '02',
-    },
-     {
-    id: '02',
-    },
-     {
-    id: '02',
-    },
-     {
-    id: '02',
-    },
-     {
-    id: '02',
-   },
-     {
-    id: '02',
-   },
-     {
-    id: '02',
-   },  {
-    id: '02',
-   },
+//     {
+//     id: '01',
+//     member_account: 'cks558x',
+//     member_name: '很大偉',
+//     account_status: '正常',
+//     member_phone:'0987598598',
+//     created_at:'2025-08-15',
+//     member_address:'新北市淡水區大同2段18號',
+//     member_gender:'男'
+// },
+//     {
+//     id: '02',
+//     member_account: '88555',
+//     member_name: '偉',
+//     account_status: '正常',
+//     member_phone:'0987598',
+//     created_at:'2025-08-15',
+//     member_address:'新北市2段18號',
+//     member_gender:'男'
+//     },
+//      {
+//     id: '02',
+//     },
+//      {
+//     id: '02',
+//     },
+//      {
+//     id: '02',
+//     },
+//      {
+//     id: '02',
+//     },
+//      {
+//     id: '02',
+//     },
+//      {
+//     id: '02',
+//     },
+//      {
+//     id: '02',
+//    },
+//      {
+//     id: '02',
+//    },
+//      {
+//     id: '02',
+//    },  {
+//     id: '02',
+//    },
     
 ])
+
+fetch('http://localhost/PDO/Admin/getTotalmembers.php')
+.then( resp => resp.json())
+.then( members => {
+    membertable.value = members
+    // console.log(membertable.value[0].ID);
+    
+})
+
+
 
 /*---------------設定響應式資料-----------------*/
 /* 存放當前選中的那筆資料 */
@@ -68,35 +84,56 @@ const selectedMember = ref(null)
 const show = ref(false);
 /*----------------編輯按鈕+資料渲染------------------*/
 const handleEdit = (row, index) => { //偵測編輯按鈕編輯哪個資料
-    console.log(index, row)
+    // console.log(index, row)
+    // console.log(row.ID)
     
     selectedMember.value = {
-    id: row.id,
-    member_account: row.member_account,
-    member_name: row.member_name,
+    id: row.ID,
+    member_account: row.email,
+    member_name: row.name,
     account_status: row.account_status,
     created_at: row.created_at,
-    member_phone: row.member_phone,
-    member_address: row.member_address,
-    member_gender: row.member_gender
+    member_phone: row.phone,
+    member_address: row.address,
+    member_gender: row.gender
   }
 /*打開燈箱*/
   show.value = true;
 }
 
 /*儲存功能-*/
-function save() {                                                                //findIndex()是JS函數 找不到就回傳 -1
-  const idx = membertable.value.findIndex(m => m.id === selectedMember.value.id) //找更改資料的那筆資料對於 membertable[idx] 是在第idx位置
-  if (idx !== -1) {                                       //如果idx不是-1 表示有這筆資料
-    membertable.value[idx] = {...selectedMember.value }  //membertable.value[idx] 這是整個資料陣列  = {}　→資料的值
-  }
-  show.value = false
+function save() {
+  const newStatus  = selectedMember.value.account_status;   // '正常' / '停權  
+  const id  = selectedMember.value.id;   // 當前會員ID 
+
+  fetch('http://localhost/PDO/Admin/update.php', {
+    method: 'POST',
+    // 若後端用 session 才需要下一行
+    // credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ 
+        account_status: newStatus,
+        id: id
+    })
+  })
+  .then(res => res.json()) 
+  .then(( newMembers ) => {
+    membertable.value = newMembers
+    /*關閉燈箱*/
+    show.value = false;
+    alert("更新完畢")
+    
+  })
+  .catch(err => {
+        alert('更新失敗');
+  });
 }
 
+
 /*---------------彈窗關閉----------------*/
-function close(){
-    show.value = false;
-}
+// function close(){
+//     show.value = false;
+// }
 
 
 
