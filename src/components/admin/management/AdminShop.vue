@@ -142,6 +142,25 @@ const save = async () => {
 } 
 */
 
+// 清空表單
+const resetForm = () => {
+    name.value = ''
+    category_name.value = 'null'
+    description.value = ''
+    promotion.value = ''
+    original_price.value = '0'
+    discount.value = '100'
+    stock.value = '0'
+    is_active.value = '0'
+    introduction.value = ''
+    
+    // 圖片預覽與檔案清空
+    imagesPreview.value = [null, null, null]
+    imagesFiles.value = [null, null, null]
+}
+
+
+
 const save = async () => {
 
     // 用 FormData 儲存
@@ -171,10 +190,16 @@ const save = async () => {
     // const res = await axios.post('http://localhost/pdo/starshop/admin/product_add.php' , product.value)
     // const res = await axios.post('pdo/starshop/admin/product_add.php' , product.value)
 
-    console.log(res.data)
-    alert(res.data.message)
+    
+    if(res.data.success){
+        console.log(res.data)
+        alert(res.data.message)
+        resetForm()
+        close()
+    }else {
+        alert('新增失敗')
+    }
 
-    close()
 } 
 
 
@@ -190,7 +215,7 @@ const save = async () => {
         </template>
     </AdminTable>
 
-    <div v-if="show" class="Admin-product-modal"  @click.self="close">
+    <div v-if="show" class="Admin-product-modal">
     <!-- <div class="Admin-product-modal"  @click.self="close"> -->
 
         <section class="prod-form">
