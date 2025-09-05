@@ -8,8 +8,9 @@ include('../pdo.php');
 //建立SQL語法
 
 $sql = "select a.ID, t.tag_name from  Article a 
-left join Articletag ad on a.id =  ad.article_id
+left join ArticleTag ad on a.id =  ad.article_id
 left join Tag t on t.id  = ad.tag_id" ;
+
 
 //執行並查詢，會回傳查詢結果的物件
 $statement = $pdo->prepare($sql);

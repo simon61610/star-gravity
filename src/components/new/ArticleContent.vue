@@ -6,6 +6,7 @@ import back from '@/assets/images/news/article-content-back.svg'
 import { tagAPI } from '@/api/tagAPI.js'
 import { useRoute } from 'vue-router'  // 取得目前路由資訊
 import { ref, onMounted, watch } from 'vue'
+import axios from 'axios'
 
 // =======================
 // 路由資訊
@@ -73,7 +74,7 @@ watch(
   () => props.article?.ID, //監聽父層傳進來得文章ID
   (newID) => { //ID有變化執行下面這段
     if (newID) {
-      tagAPI('get', { article_id: newID })
+      axios.post("https://tibamef2e.com/tjd102/g1/pdo/news/tagssearch.php", { article_id: newID })
         .then(res => {
           console.log('後端回傳:', res.data)
           console.log('當前文章 ID:', newID)
