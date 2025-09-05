@@ -1,19 +1,18 @@
 <script setup>
     import { ref, onMounted, reactive, computed, watch } from 'vue'
     import { UserFilled } from '@element-plus/icons-vue'
-    import { isLoggedIn } from '@/composables/useAuth'
+    // import { isLoggedIn } from '@/composables/useAuth'
 
-    // 後端 API（和你登入/註冊同一台）
-    const API_BASE = 'http://localhost'
-    const UPDATE_API = `${API_BASE}/PDO/Member/update_profile.php`
-    const PROFILE_API= `${API_BASE}/PDO/Member/profile.php`
-
-    // localStorage keys
-    // const LS_AUTH = 'auth'
-    // const LS_USER = 'user'
+    // 後端 API
+    // const API_BASE = 'http://localhost'
+    // const UPDATE_API = `${API_BASE}/PDO/Member/update_profile.php`
+    // const PROFILE_API= `${API_BASE}/PDO/Member/profile.php`
+    const PROFILE_API = 'http://localhost/PDO/Member/profile.php'
+    const UPDATE_API  = 'http://localhost/PDO/Member/update_profile.php'
 
     // localStorage：現在只使用 token 來判斷是否登入
     const LS_TOKEN = 'token'
+    const loggedIn = computed(() => !!localStorage.getItem(LS_TOKEN))
 
     /* ---- 狀態 ---- */
     const member = reactive({
@@ -49,87 +48,49 @@
     })
         
     /* ---- 載入會員資料 ---- */
-    onMounted(async () => {
+    onMounted(() => {
         // 只檢查是否登入；沒登入才回登入頁
-        if (!isLoggedIn.value) {
-            window.location.replace('/loginfirst')
-            return
-        }
-        // 用 Session 向後端拿會員基本資料
-        try {
-            const res  = await fetch(PROFILE_API, {
-                method: 'GET',
-                credentials: 'include',
-                mode: 'cors'
-            })
-            const raw = await res.text()
-            let data = {} 
-            try { 
-                data = JSON.parse(raw) 
-            } catch { 
-                data = { ok:false, message: text } 
-            }
-            if (!data.ok || !data.user) throw new Error(data.message || '讀取失敗')
+        if( !localStorage.getItem('user') ){
+            alert('請先登入')
+            window.location.href = "/loginfirst"   // 登出後跳轉到登入頁
+        } 
+        
+        // 有登入抓取localstorage資料
 
-            const u = data.user
-            member.ID       = u.ID || ''
-            member.email    = u.email || ''
-            member.name     = u.name || ''
-            member.phone    = u.phone || ''
-            member.city     = u.city || ''
-            member.area     = u.area || ''
-            member.address  = u.address || ''
-        }   catch (e) {
-                alert((e && e.message) ? e.message : '讀取會員資料失敗，請重新登入')
-                window.location.replace('/loginfirst')
-            }
     })
 
     /* ---- 儲存（更新到資料庫；不再動 localStorage） ---- */
-    async function save() {
-        if (!canSave.value) { alert('請把欄位填完整'); return }
-        try{
-            saving.value = true
-            const res = await fetch(UPDATE_API, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                mode: 'cors',
-                body: JSON.stringify({
-                    ID: member.ID,
-                    email: member.email,
-                    name: member.name.trim(),
-                    phone: member.phone.trim(),
-                    city: member.city,
-                    area: member.area,
-                    address: member.address.trim()
-                })
-            })
-            
-
-            // 更新 localStorage
-            // const uraw = localStorage.getItem(LS_USER)
-            // if (uraw) {
-            //     const u = JSON.parse(uraw)
-            //     u.name    = member.name
-            //     u.phone   = member.phone
-            //     u.city    = member.city
-            //     u.area    = member.area    
-            //     u.address = member.address
-            //     localStorage.setItem(LS_USER, JSON.stringify(u))
-            // }
-
-            // 不再更新 localStorage（我們只存 token）
-            alert('已儲存！')
-            const now = new Date()
-            savedAt.value = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0')
-         }  catch (e) {
-                alert(e.message || '更新失敗')
-            }   finally {
-                    saving.value = false
-                }
-
-        }
+    // function save() {
+    //     if (!canSave.value) { alert('請把欄位填完整'); return }
+    //     saving.value = true
+    //     // fetch('http://localhost/PDO/Member/update_profile.php', 
+    //     fetch(UPDATE_API, {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({
+    //             email: member.email,
+    //             name: member.name.trim(),
+    //             phone: member.phone.trim(),
+    //             city: member.city,
+    //             area: member.area,
+    //             address: member.address.trim()
+    //         })
+    //     })
+    //     .then(res => res.json())
+    //     .then(data => {
+    //         if (!data?.ok) throw new Error(data?.message || '更新失敗')
+    //         alert('已儲存！')
+    //         const now = new Date()
+    //         savedAt.value =
+    //             String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0')
+    //     })
+    //     .catch(e => {
+    //         alert(e?.message || '更新失敗')
+    //     })
+    //     .finally(() => {
+    //         saving.value = false
+    //     })
+    // }
 
 
 </script>

@@ -1,6 +1,6 @@
 <script setup>
     import { useRoute, useRouter } from 'vue-router'
-    import { computed } from 'vue'
+    import { computed , onMounted} from 'vue'
     import { UserFilled, SwitchButton } from '@element-plus/icons-vue'
 
     const props = defineProps({
@@ -43,11 +43,20 @@
     //     // preview.value = ''
     // }
 
+    //判斷是否已經登入
+    onMounted(()=>{
+        if( !localStorage.getItem('user') ){
+            alert('請先登入')
+            router.push('/loginfirst')   // 登出後跳轉到登入頁
+        }
+    })
+
     // 登出
     const router = useRouter()
     function logout() {
         alert('已登出')
         router.push('/loginfirst')   // 登出後跳轉到登入頁
+        localStorage.removeItem('user');
     }
 </script>
 
