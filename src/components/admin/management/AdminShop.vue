@@ -103,7 +103,7 @@ const promotion = ref('') // 全店優惠活動
 const original_price = ref('0') // 原價
 const discount = ref('100') // 折扣
 const sale_price = computed(() => { //售價
-    return original_price.value * (discount.value / 100)
+    return parseInt(original_price.value * (discount.value / 100))
 })
 const stock = ref('0') // 庫存
 const is_active = ref('0') // 上下架
@@ -165,10 +165,10 @@ const save = async () => {
     })
 
     // console.log(product.value)
-    // const res = await axios.post('http://localhost/starshop/admin/product_add.php' , formData)
-    const res = await axios.post('pdo/starshop/admin/product_add.php' , formData)
+    const res = await axios.post('http://localhost/pdo/starshop/admin/product_add.php' , formData)
+    // const res = await axios.post('pdo/starshop/admin/product_add.php' , formData) // 部屬前待修改路徑
     
-    // const res = await axios.post('http://localhost/starshop/admin/product_add.php' , product.value)
+    // const res = await axios.post('http://localhost/pdo/starshop/admin/product_add.php' , product.value)
     // const res = await axios.post('pdo/starshop/admin/product_add.php' , product.value)
 
     console.log(res.data)
