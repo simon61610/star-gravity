@@ -29,6 +29,7 @@ const columns = [
 ]
 
 const Shoptable = ref([]) // 準備用來放資料
+const editingProduct = ref(null) // 放編輯中的商品資訊
 
 /* const Shoptable = ref([ 
     {
@@ -67,6 +68,8 @@ const openModal = () => {
 
 const close = () => {
     show.value = false
+    resetForm()
+    editingProduct.value = null // 關閉時，清空編輯中的商品資料
 }
 
 defineExpose({ openModal })
@@ -77,8 +80,6 @@ defineExpose({ openModal })
 const imagesPreview = ref([null, null, null])
 // 照片上傳
 const imagesFiles = ref([null, null, null])
-
-
 
 const fileChange = (e, index) => {
     const file = e.target.files[0]
@@ -122,6 +123,39 @@ const sale_price = computed(() => { //售價
 const stock = ref('0') // 庫存
 const is_active = ref('0') // 上下架
 const introduction = ref('') // 商品說明
+
+
+// 把要編輯的商品資料放進表單
+const handleEdit = (row, index) => {
+    // console.log(row)
+
+    editingProduct.value = row
+    name.value = row.name // 商品名稱
+    category_name.value = row.category_name //商品類別
+    description.value = row.description // 商品描述
+    promotion.value = row.promotion // 全店優惠活動
+    original_price.value = row.original_price // 原價
+    discount.value = row.discount // 折扣
+    stock.value = row.stock // 庫存
+    is_active.value = row.is_active // 上下架
+    introduction.value = row.introduction // 商品說明
+
+    // 處理圖片預覽
+    // console.log(row.images) // "/starshop/images/基礎入門型1-1.png,/starshop/images/基礎入門型1-2.png,/starshop/images/基礎入門型1-3.png" 用逗號隔開，要切割成陣列
+    imagesPreview.value = row.images.split(',').map( imgURL => `pdo${imgURL}`)
+    // console.log(imagesPreview.value)
+
+    // 若圖片小於 3 張，補 null
+    while(imagesPreview.value.length < 3){
+        imagesPreview.value.push(null)
+    }
+
+    // 處理圖片上傳
+    // imagesFiles.value = [null, null, null]
+
+    openModal()
+}
+
 
 
 // ==========================================================
@@ -184,16 +218,25 @@ const save = async () => {
     }
 
     // 檢查至少一張圖片
-    let hasImage = false
-    for(let i = 0; i < imagesFiles.value.length; i++){
-        if(imagesFiles.value[i] !== null){
+    /* let hasImage = false
+    for(let i = 0; i < imagesPreview.value.length; i++){
+        if(imagesPreview.value[i] !== null){
             hasImage = true
+            break
+        }
+    } */
+
+    // 檢查圖片都要有
+    let hasImage = true
+    for(let i = 0; i < imagesPreview.value.length; i++){
+        if(imagesPreview.value[i] === null){
+            hasImage = false
             break
         }
     }
 
     if(!hasImage){
-        alert('請至少上傳一張商品照片')
+        alert('請上傳完整的三張商品照片')
         return
     }
 
@@ -211,23 +254,35 @@ const save = async () => {
     formData.append("stock", stock.value)
     formData.append("is_active", is_active.value)
 
+    // 編輯商品時: 如果沒選新圖片，就不要 append images[]
     imagesFiles.value.forEach((file, i) => {
         if (file) {
             formData.append("images[]", file)
         }
     })
 
-    // console.log(product.value)
-    const res = await axios.post('http://localhost/pdo/starshop/admin/product_add.php' , formData)
-    // const res = await axios.post('pdo/starshop/admin/product_add.php' , formData) // 部屬前待修改路徑
-    
-    // const res = await axios.post('http://localhost/pdo/starshop/admin/product_add.php' , product.value)
-    // const res = await axios.post('pdo/starshop/admin/product_add.php' , product.value)
+    let response
+    if (!editingProduct.value) {
+        // 新增: 發送請求 product_add.php
+        response = await axios.post('http://localhost/pdo/starshop/admin/product_add.php' , formData)
+        // const response = await axios.post('pdo/starshop/admin/product_add.php' , formData) // 部屬前待修改路徑
+        
+        // const response = await axios.post('http://localhost/pdo/starshop/admin/product_add.php' , product.value)
+        // const response = await axios.post('pdo/starshop/admin/product_add.php' , product.value)
+    } 
+    else {
+        alert("編輯功能尚未完成")
+        return
+        // 編輯: 發送請求 product_update.php
+        // formData.append("ID", editingProduct.value.ID)
+        // response = await axios.post('http://localhost/pdo/starshop/admin/product_update.php', formData)
+        // const response = await axios.post('pdo/starshop/admin/product_update.php' , formData) // 部屬前待修改路徑
 
+    }
     
-    if(res.data.success){
-        console.log(res.data)
-        alert(res.data.message)
+    if(response.data.success){
+        console.log(response.data)
+        alert(response.data.message)
         resetForm()
         await fetchProducts() // 新增後，更新資料表
         close()
@@ -255,7 +310,7 @@ const save = async () => {
 
         <section class="prod-form">
             <header>
-                新增商品
+                {{ editingProduct ? "編輯商品" : "新增商品"}}
             </header>
 
             <!-- =================================================== -->
