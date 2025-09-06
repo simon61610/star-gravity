@@ -28,7 +28,7 @@ const columns = [
     {label:'編輯查看',prop:'actions', slot:'編輯', align:'right'},
 ]
 
-const Shoptable = ref([]) // 暫時給的，待刪除
+const Shoptable = ref([]) // 準備用來放資料
 
 /* const Shoptable = ref([ 
     {
@@ -229,7 +229,7 @@ const save = async () => {
         console.log(res.data)
         alert(res.data.message)
         resetForm()
-        await fetchProducts()
+        await fetchProducts() // 新增後，更新資料表
         close()
     }else {
         alert('新增失敗')
