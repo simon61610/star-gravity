@@ -1,5 +1,16 @@
 <script setup>
 import  logo from '@/assets/logos/logo-admin.svg'
+import { useAuthStore } from '@/stores/admin.js'
+import { useRouter } from 'vue-router'
+
+
+const router = useRouter()
+const admin = useAuthStore()
+
+async function Logout() {
+  await admin.logout()
+  router.push('/AdminLoginPage') // 登出後導回登入頁
+}
 </script>
 
 <template>
@@ -9,8 +20,9 @@ import  logo from '@/assets/logos/logo-admin.svg'
                 <router-link to="/"><img :src="logo" alt="星引力logo" width="120" height="50"/></router-link>
             </div>
            
-            <div class="admin-header-logout">
-                <router-link to="/AdminLoginPage"><i class="fa-solid fa-arrow-right-from-bracket"></i></router-link>
+            <div class="admin-header-logout" @click="Logout">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <!-- <router-link to="/AdminLoginPage"><i class="fa-solid fa-arrow-right-from-bracket"></i></router-link> -->
             </div>
         </div>
     </nav>

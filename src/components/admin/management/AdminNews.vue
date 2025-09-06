@@ -1,11 +1,12 @@
   <script setup>
 /* ======================= 匯入模組 ======================= */
 import { ElMessage } from "element-plus"
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed, nextTick,onMounted } from 'vue'
 import AdminTable from '@/components/admin/AdminTable.vue'
 import { articleAPI } from '@/api/articleAPI.js'
 import { tagAPI } from '@/api/tagAPI.js'
 import { Plus } from '@element-plus/icons-vue'
+import { useAuthStore } from '@/stores/admin.js'
 
 /* ======================= 基本設定 ======================= */
 // props & emit
@@ -20,6 +21,7 @@ const Newstable = ref([])        // 文章列表資料
 const fileList = ref([])         // 上傳圖片 fileList
 const selected_tag = ref(null)   // 選中的 tag
 const selected_article = ref({}) // 選中的文章
+const admin = useAuthStore()
 
 // 彈窗顯示狀態
 const showtag = ref(false)
@@ -55,6 +57,14 @@ const filteredArticles = computed(() => {
   } else {
     // 沒搜尋字串 → 全部顯示
     return Newstable.value
+  }
+})
+
+//測試登入狀態
+onMounted(async () => {
+  await admin.checkSession()
+  if (!auth.isLoggedIn) {
+    router.push('/AdminLoginPage') // 沒登入就跳回登入頁
   }
 })
 
@@ -150,7 +160,7 @@ function beforeUpload(file) {
         ElMessage.warning("建議使用 3:2 的圖片，否則前台會被裁切")
         resolve(true)
       } else {
-        resolve(true) // 完美 3:2 ✅
+        resolve(true) // 完美 3:2 
       }
     }
     img.src = URL.createObjectURL(file)

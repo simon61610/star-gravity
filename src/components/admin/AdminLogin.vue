@@ -1,21 +1,50 @@
 <script setup>
 import  logoadmin from '@/assets/logos/logo-admin.svg'
+import { useAuthStore } from '@/stores/admin.js'   // 匯入你剛剛的 store
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-const account = ref('')
-const password = ref('')
+// const account = ref('')
+// const password = ref('')
 const router = useRouter()
+const admin = useAuthStore()
+
+//表單狀態
+const username = ref('')
+const password = ref('')
+const errorMsg = ref('')  // 錯誤提示訊息
 
 
-function login(){
-    if(account.value === 'tjd102' && password.value === '20250827'){
-        localStorage.setItem('admin_token', 'fake_admin_token=123456789') //設置一個假的token 名字admin_token ,值fake_admin_token=123456789
-        router.push('/AdminMemberPage') //正確就跳轉管理頁面 等於({ path: '/AdminMemberPage' })
-    }
-    else{
-        alert('登入失敗請離開')
-    }
+// 登入事件
+async function Login() {
+  const result = await admin.login(username.value, password.value)  
+  // login() return res.data，所以這裡可以拿到 success / message
+
+  if (result.success) {
+    // 登入成功
+    console.log('登入成功', result)
+    router.push('/AdminMemberPage') // 測試成功後導到後台首頁
+  } else {
+    // 登入失敗
+    errorMsg.value = result.message || '帳號或密碼錯誤'
+  }
 }
+
+
+
+
+
+
+
+
+// function login(){
+//     if(account.value === 'tjd102' && password.value === '20250827'){
+//         localStorage.setItem('admin_token', 'fake_admin_token=123456789') //設置一個假的token 名字admin_token ,值fake_admin_token=123456789
+//         router.push('/AdminMemberPage') //正確就跳轉管理頁面 等於({ path: '/AdminMemberPage' })
+//     }
+//     else{
+//         alert('登入失敗請離開')
+//     }
+// }
 
 </script>
 
@@ -32,7 +61,7 @@ function login(){
             </div>
 
             <div class="admin-login-account">
-                <el-input v-model= "account" style="width: 460px" placeholder="請輸入帳號" />
+                <el-input v-model= "username" style="width: 460px" placeholder="請輸入帳號" />
             </div>
 
             <div>
@@ -44,7 +73,7 @@ function login(){
                     show-password/>
             </div>
             <div class="admin-login-button">
-                <button @click="login">登入</button>
+                <button @click="Login">登入</button>
                 <!-- <router-link to="/AdminMemberPage"></router-link> -->
             </div>
         </div>
