@@ -5,7 +5,7 @@
 -->
 
 <script setup>
-    import { ref, computed, onMounted } from 'vue'
+    import { ref, computed, onMounted, watch } from 'vue'
     import $ from 'jquery'
     import axios from 'axios'
     
@@ -57,6 +57,10 @@
         return city ? city.AreaList : []
     })
 
+    watch(selectedCity, () => {
+        selectedDistrict.value = ""
+    })
+
 
     // 引用 jQuery 做 toggle
     onMounted(async() => {
@@ -86,7 +90,7 @@
         // 縣市資料 json
         const res = await axios.get('/JSON_CSV_XML/CityCountyData.json')
         cities.value = res.data
-        console.log(cities.value)
+        // console.log(cities.value)
     })
     
 </script>
