@@ -2,6 +2,7 @@
     import { ref, onMounted, reactive, computed, watch } from 'vue'
     import { ElMessage } from 'element-plus'
     import { useRouter } from 'vue-router'
+    import axios from 'axios'
 
      // 統一管理後端 API 位址（注意大小寫與實際路徑一致）
     const API_BASE = 'http://localhost'
@@ -30,12 +31,26 @@
         )
     })
 
+    // 縣市區域選單
+    const cities = ref([])
+    const areaOptions = ref([])
+    
+
+
     // 驗證碼
     const captchaCode = ref('')
     const genCode = () => Math.random().toString(36).slice(2, 8).toUpperCase()
     // 頁面載入時會重新跑一次
-    onMounted(() => {
+    onMounted(async () => {
         captchaCode.value = genCode()   
+
+        // =============================
+        let res = await axios.get('/JSON_CSV_XML/CityCountyData.json')
+        // console.log(res.data);
+        cities.value = res.data
+        // console.log(cities.value);
+
+        
     })
     
     // 欄位
@@ -137,7 +152,7 @@
     })
 
     /* ---- 縣市 / 鄉鎮選單 ---- */
-    const AREAS = {
+/*     const AREAS = {
         台北市: ['中山區', '大安區', '信義區', '士林區'],
         新北市: ['板橋區', '新店區', '三重區', '永和區'],
         桃園市: ['桃園區', '中壢區', '龜山區', '八德區']
@@ -146,6 +161,13 @@
     const areaOptions = computed(() => AREAS[member.city] || [])
         watch(() => member.city, () => {
         if (!areaOptions.value.includes(member.area)) member.area = ''
+    }) */
+
+    watch(() => member.city ,(newCity) => {
+        const city = cities.value.find(c => c.CityName === newCity)
+        // console.log(city)
+        areaOptions.value = city ? city.AreaList : []
+        member.area = ''
     })
 
 </script>
@@ -178,13 +200,13 @@
                     <div class="select">
                         <select v-model="member.city" class="select-city" required>
                         <option value="">縣市</option>
-                        <option v-for="c in cities" :key="c" :value="c">{{ c }}</option>
+                        <option v-for="c in cities" :key="c.CityName" :value="c.CityName">{{ c.CityName }}</option>
                         </select>
                     </div>
                     <div class="select">
                         <select v-model="member.area" class="select-city" required>
                         <option value="">鄉鎮</option>
-                        <option v-for="d in areaOptions" :key="d" :value="d">{{ d }}</option>
+                        <option v-for="d in areaOptions" :key="d.AreaName" :value="d.AreaName">{{ d.AreaName }}</option>
                         </select>
                     </div>
                 </div>
