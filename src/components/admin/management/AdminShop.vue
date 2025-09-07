@@ -127,7 +127,7 @@ const introduction = ref('') // 商品說明
 
 // 把要編輯的商品資料放進表單
 const handleEdit = (row, index) => {
-    // console.log(row)
+    console.log(row)
 
     editingProduct.value = row
     name.value = row.name // 商品名稱
@@ -240,9 +240,15 @@ const save = async () => {
         return
     }
 
+    
     // 用 FormData 儲存
     const formData = new FormData()
 
+    // 如果是編輯模式，先加上 ID
+    if(editingProduct.value){
+        formData.append("ID", editingProduct.value.ID)
+    }
+    
     formData.append("name", name.value)
     formData.append("category_name", category_name.value)
     formData.append("original_price", original_price.value)
@@ -260,6 +266,7 @@ const save = async () => {
             formData.append("images[]", file)
         }
     })
+    
 
     let response
     if (!editingProduct.value) {
@@ -271,13 +278,12 @@ const save = async () => {
         // const response = await axios.post('pdo/starshop/admin/product_add.php' , product.value)
     } 
     else {
-        alert("編輯功能尚未完成")
-        return
+        /* alert("編輯功能尚未完成")
+        return */
         // 編輯: 發送請求 product_update.php
         // formData.append("ID", editingProduct.value.ID)
-        // response = await axios.post('http://localhost/pdo/starshop/admin/product_update.php', formData)
+        response = await axios.post('http://localhost/pdo/starshop/admin/product_update.php', formData)
         // const response = await axios.post('pdo/starshop/admin/product_update.php' , formData) // 部屬前待修改路徑
-
     }
     
     if(response.data.success){
