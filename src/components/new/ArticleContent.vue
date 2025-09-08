@@ -48,7 +48,7 @@ const liked = ref(false)     // 是否已點讚
 // =======================
 onMounted(() => {
   axios.post(
-    "https://tibamef2e.com/tjd102/g1/pdo/news/like.php",
+    import.meta.env.VITE_AJAX_URL + "news/like.php",
     {
       token: userToken,
       article_id: props.article.ID,
@@ -71,7 +71,7 @@ onMounted(() => {
 function togglike() {
   const action = liked.value ? "unlike" : "like"
 
-  axios.post("https://tibamef2e.com/tjd102/g1/pdo/news/like.php",
+  axios.post(import.meta.env.VITE_AJAX_URL + "news/like.php",
     {
       token: userToken,
       article_id: props.article.ID,
@@ -113,7 +113,7 @@ watch(
   () => props.article?.ID, //監聽父層傳進來得文章ID
   (newID) => { //ID有變化執行下面這段
     if (newID) {
-      axios.post("https://tibamef2e.com/tjd102/g1/pdo/news/tagssearch.php", { article_id: newID })
+      axios.post(import.meta.env.VITE_AJAX_URL+ "news/tagssearch.php", { article_id: newID })
         .then(res => {
           console.log('後端回傳:', res.data)
           console.log('當前文章 ID:', newID)
@@ -187,6 +187,7 @@ watch(
     color: $primaryColor-100;
     max-width: 710px;
     width: 100%;
+    box-sizing: border-box;
     .article-title-box{
             
         .article-title-h2{
@@ -270,7 +271,7 @@ watch(
     }
 
 }
-@media screen and (max-width: 431px){
+@media screen and (max-width: 650px){
 
     .article-content-img{
         aspect-ratio: 16/9;
@@ -279,8 +280,9 @@ watch(
         
         
         img{
-            max-width: 350px !important;
-            width: 100% !important;
+          box-sizing: border-box;
+          max-width: 350px !important;
+          width: 100% !important;
             
         }
     }

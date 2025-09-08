@@ -28,7 +28,7 @@ onMounted(()=>{
         if (Array.isArray(props.articles) && props.articles.length > 0){
             props.articles.forEach(article => {
 
-        axios.post("pdo/news/like.php", 
+        axios.post(import.meta.env.VITE_AJAX_URL + "news/like.php", 
             {   
                 token: userToken,
                 article_id: article.ID,
@@ -57,7 +57,7 @@ onMounted(()=>{
     function togglike(article){
         const action = article.liked ? "unlike" : "like";
         axios.post(
-            "pdo/news/like.php", 
+            import.meta.env.VITE_AJAX_URL + "news/like.php", 
             {
             token: userToken,
             article_id: article.ID,

@@ -64,6 +64,7 @@ main{
     
     
     .article-page-body{
+        padding: 16px;
         margin-top: 100px;
         margin-bottom: 100px;
         max-width: 1200px;
@@ -76,11 +77,10 @@ main{
     }
    
 }
-@media screen and (max-width: 431px){
+@media screen and (max-width: 650px){
     main{
         padding:  0 16px;
         .article-page-body{
-       
         margin-top: 36px !important;
         display: flex;
         flex-direction: column;
