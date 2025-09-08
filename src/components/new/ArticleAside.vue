@@ -95,6 +95,7 @@ aside{
         max-width: 320px;
         width: 100%;
         margin: 0 auto;
+        box-sizing: border-box;
        
         .article-aside-ul{
             
@@ -153,7 +154,7 @@ aside{
 
     }
 }
-@media screen and (max-width: 431px){
+@media screen and (max-width: 650px){
     .article-aside{
         box-sizing: border-box;
         .article-aside-wapper{

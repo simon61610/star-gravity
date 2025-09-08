@@ -45,6 +45,7 @@ const activeTab = ref('intro')
 <template>
   <main class="scene" aria-label="星空互動場景">
     <aside class="card" aria-live="polite">
+      <div></div>
       <header class="card__hd">
         <div class="card__thumb">
           <img :src="constellation.image"  alt="星座圖示" />
@@ -119,15 +120,23 @@ const activeTab = ref('intro')
 
 /* 版面 */
 .scene {
-  
   position: relative;
   width: 100%;
   min-height: 588px ;
   overflow: hidden ;
+  @media (max-width: 1097px) {
+    min-height: 490px ;
+  }
+  @media (max-width: 948px) {
+    min-height: 400px ;
+  }
+   @media (max-width: 731px) {
+    min-height: 0px ;
+  }
+  
   
 }
 .bg {
-  
   position: absolute; 
   inset: 0;
   width: 100%; 
@@ -148,6 +157,7 @@ const activeTab = ref('intro')
 
 /* 左側卡片 */
 .card {
+  
   position: absolute; 
   left: 168px; 
   top: 55px;
@@ -160,11 +170,27 @@ const activeTab = ref('intro')
   color: #fff;
   z-index: 3;
   padding: 24px;
-
+  @media (max-width: 1097px) {  
+      left: 12px; 
+      right: 12px;
+      max-width: 250px;
+      width:100%; 
+      top: 0px;
+    }
+    @media (max-width: 948px) {  
+      left: 12px; 
+      right: 12px;
+      max-width: 250px;
+      
+      width:100%; 
+      top: 0px;
+    }
   @media (max-width: 750px) {
+    display: none;
     left: 12px; 
-    right: 12px; 
-    width:auto; 
+    right: 12px;
+    max-width: 350px;
+    width:100%; 
     top: 12px;
   }
     
@@ -177,11 +203,17 @@ const activeTab = ref('intro')
   display: flex;
   align-items:center;
   justify-content: center;
+ 
+ 
 }
 
 .card__thumb{ 
-  width:200px;
-  height:220px;
+  max-width: 250px;
+  width: 100%;
+  img{
+    width: 100%;
+    height: 150px;
+  }
 
 }
 
@@ -314,9 +346,11 @@ justify-content: center;
 
     
     .card {
+      display: block !important;
       position: static !important;
-      margin-bottom: 100px;  
+      margin: 0 auto 100px; 
       padding: 16px !important;
+      
       
       
 

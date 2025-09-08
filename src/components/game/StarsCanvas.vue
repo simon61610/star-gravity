@@ -169,20 +169,25 @@ watch(
     }
     
   .Stars-Canvs-wapper{
-    
+   
     max-width: 500px;
     margin-left: 300px;
     width: 100% !important;
     opacity: 1;
     transition: opacity 1s ease-in-out;
+  
     &.show{
       opacity: 1;
     }
-   
-    } 
+    @media (max-width: 716px){
+      margin-bottom: 20px;
+      margin-left: 0px;
+      
+    }
+
   }
 
-// .Stars-Canvs-line{
+// .Stars-Canvs-line{ 
 //     transition: stroke-dashoffset 0.5s ease
 
 // }
@@ -200,5 +205,5 @@ watch(
   }
   
 }
-
+}
 </style>

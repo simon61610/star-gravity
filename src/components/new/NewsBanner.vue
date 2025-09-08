@@ -68,7 +68,7 @@ import newsbanner from '@/assets/images/news/news-article-Loudspeaker.svg'; // A
 }
 
 /*-------------斷點430--------------*/
-@media screen and (max-width: 431px){
+@media screen and (max-width: 571px){
     .news-banner-wrapper{
         .wrapper{
             flex-direction: column;
