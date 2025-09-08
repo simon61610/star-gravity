@@ -169,10 +169,10 @@ defineExpose({ handleEdit, handleadd }) // 父層可呼叫新增/編輯
 /* ---------------- 儲存活動（寫回表格） ---------------- */
 function saveActivity () {
   // 將日期區間與截止日，組合成要存回去的欄位
-  const activity_date =
-    Array.isArray(daterange.value) && daterange.value.length === 2
-      ? `${daterange.value[0]} ~ ${daterange.value[1]}`
-      : (activityForm.value.activity_date || '')
+   const activity_date =
+     Array.isArray(daterange.value) && daterange.value.length === 2
+       ? `${daterange.value[0]} ~ ${daterange.value[1]}`
+        : (activityForm.value.activity_date || '')
 
   const newRow = {
     ...activityForm.value,
@@ -265,6 +265,7 @@ function saveActivity () {
               value-format="YYYY-MM-DD HH:mm:ss"
               :default-time="defaultTime"
               :show-seconds="true"
+              range-separator="~"
             />
           </div>
         </div>

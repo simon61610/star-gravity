@@ -24,7 +24,7 @@ function uploadPhoto(e){
   if(file){
     const reader = new FileReader()
     reader.onload = () => {
-      photoPreview.value = reader.result
+      photoPreview.value = reader.result      
     }
     reader.readAsDataURL(file)
   }

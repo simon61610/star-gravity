@@ -59,8 +59,8 @@ const locationList = ref([])
 
 
 // 向後端發出請求
-// fetch('http://localhost:80/star/map/getLocationList.php')
-fetch('pdo/map/getLocationList.php')
+fetch('http://localhost:80/star/map/getLocationList.php')
+// fetch('pdo/map/getLocationList.php')
     .then( resp => resp.json())
     .then( list => {
         // console.log(list)
@@ -84,8 +84,8 @@ function handleShowDetail(location) {
     detailShow.value = true              
     showLayout.value = true
     
-    // fetch('http://localhost:80/star/map/getLocationReview.php',{
-    fetch('pdo/map/getLocationReview.php',{
+    fetch('http://localhost:80/star/map/getLocationReview.php',{
+    // fetch('pdo/map/getLocationReview.php',{
         method: 'POST' ,
         headers:{'Content-Type' : 'application/json'} ,
         body: JSON.stringify({
@@ -120,11 +120,6 @@ function cencelReview(){
     showLayout.value = true
 }
 
-//之後要在這邊補上分數的算法 抓完整數據後設一個地區陣列 數據跑回圈 每次都用array.reduce((acc, cur) => acc + cur, 0)
-
-// function getReviewsByLocationId(selectId){
-//     return mockReviews.value.filter(review => review.locationId === selectId)
-// }
 
 
 

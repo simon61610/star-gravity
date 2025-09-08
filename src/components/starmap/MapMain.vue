@@ -16,6 +16,7 @@ const region = ref('全台')
 const selectedScenes = ref([])
 const searchText = ref('')
 const placeholder = ref('')
+//避免打包後路徑錯誤
 const baseURL = import.meta.env.BASE_URL
 
 // ========== template狀態數據 ==========
@@ -330,6 +331,7 @@ function handleSceneChange(scene, event) {
                              <!--以下點擊後才顯示-->
                             <transition name="accordion">
                                 <div v-show="activeIndex === locationList.findIndex(item => item === location)" class="location-singlePlace-more" >
+                                                                                 <!-- ↓ 路徑打包後有亂掉 所以加這個環境變數去抓路徑 -->
                                     <img class="location-singlePlace-photo" :src="`${baseURL}images/map/${location.image}`" alt="" @click="showMore(index)">
 
                                     <a class="seeMore" href="#" @click.prevent="showLocationDetail(location)">

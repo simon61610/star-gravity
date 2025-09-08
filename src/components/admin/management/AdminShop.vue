@@ -50,7 +50,7 @@ const fetchProducts = async () => {
 
     Shoptable.value = res.data
 
-    // console.log(Shoptable.value)
+    console.log(Shoptable.value)
 }
 
 onMounted (() => {
@@ -80,6 +80,8 @@ defineExpose({ openModal })
 const imagesPreview = ref([null, null, null])
 // 照片上傳
 const imagesFiles = ref([null, null, null])
+// 照片id
+const image_ids = ref([])
 
 const fileChange = (e, index) => {
     const file = e.target.files[0]
@@ -127,7 +129,7 @@ const introduction = ref('') // 商品說明
 
 // 把要編輯的商品資料放進表單
 const handleEdit = (row, index) => {
-    // console.log(row)
+    console.log(row)
 
     editingProduct.value = row
     name.value = row.name // 商品名稱
@@ -152,6 +154,9 @@ const handleEdit = (row, index) => {
 
     // 處理圖片上傳
     // imagesFiles.value = [null, null, null]
+
+    image_ids.value = row.image_ids.split(',')
+    // console.log(image_ids.value) // ['1', '2', '3']
 
     openModal()
 }
@@ -240,9 +245,15 @@ const save = async () => {
         return
     }
 
+    
     // 用 FormData 儲存
     const formData = new FormData()
 
+    // 如果是編輯模式，先加上 ID
+    if(editingProduct.value){
+        formData.append("ID", editingProduct.value.ID)
+    }
+    
     formData.append("name", name.value)
     formData.append("category_name", category_name.value)
     formData.append("original_price", original_price.value)
@@ -254,12 +265,39 @@ const save = async () => {
     formData.append("stock", stock.value)
     formData.append("is_active", is_active.value)
 
+    // 第一版
     // 編輯商品時: 如果沒選新圖片，就不要 append images[]
-    imagesFiles.value.forEach((file, i) => {
+    /* imagesFiles.value.forEach((file, i) => {
         if (file) {
             formData.append("images[]", file)
         }
-    })
+    }) */
+
+    // 有bug
+    /* for(let i = 0; i < imagesFiles.value.length; i++){
+        const file = imagesFiles.value[i]
+        if (file) {
+            formData.append("images[]", file)
+        }
+    }
+
+    if(editingProduct.value){
+        for(let i = 0; i < image_ids.value.length; i++){
+            formData.append("image_ids[]", image_ids.value[i])
+        }
+    } */
+
+    // 對應圖片ID與圖片路徑
+        for(let i = 0; i < imagesFiles.value.length; i++ ){
+            const file = imagesFiles.value[i]
+            if (file) {
+                formData.append(`images[${i}]`, file)
+                formData.append(`image_ids[${i}]`, image_ids.value[i])
+            }else{
+                formData.append(`image_ids[${i}]`, image_ids.value[i])
+            }
+        }
+    
 
     let response
     if (!editingProduct.value) {
@@ -271,13 +309,12 @@ const save = async () => {
         // const response = await axios.post('pdo/starshop/admin/product_add.php' , product.value)
     } 
     else {
-        alert("編輯功能尚未完成")
-        return
+        /* alert("編輯功能尚未完成")
+        return */
         // 編輯: 發送請求 product_update.php
         // formData.append("ID", editingProduct.value.ID)
-        // response = await axios.post('http://localhost/pdo/starshop/admin/product_update.php', formData)
+        response = await axios.post('http://localhost/pdo/starshop/admin/product_update.php', formData)
         // const response = await axios.post('pdo/starshop/admin/product_update.php' , formData) // 部屬前待修改路徑
-
     }
     
     if(response.data.success){
