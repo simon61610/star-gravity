@@ -63,85 +63,180 @@ const filteredArticles = computed(() => {
 //測試登入狀態
 onMounted(async () => {
   await admin.checkSession()
-  if (!auth.isLoggedIn) {
+  if (!admin.isLoggedIn) {
     router.push('/AdminLoginPage') // 沒登入就跳回登入頁
   }
 })
 
-/* ======================= 文章編輯 / 新增 ======================= */
-// 編輯文章
-const articleEdit = (row, index) => {
-  console.log(' 子層 addArticle 被呼叫了！')
-  console.log(row, index)
-  console.log('傳進來的 row:', row)
+  /* =========================================================
+   A. 文章編輯 / 新增（打開燈箱、帶入資料）
+   ---------------------------------------------------------
+   - articleEdit：從列表帶入既有文章 → 預先填入表單與 fileList
+   - articleadd：清空表單 → 進入新增模式
+   =======================================================*/
 
-  selected_article.value = {
-    ID: row.ID,
-    publishDate: row.publishDate,
-    updatedAt: row.updatedAt,
-    category: row.category,
-    is_active: row.is_active,
-    title: row.title,
-    image: row.image,
-    content: row.content
+  /** 編輯文章（載入既有資料，預設顯示舊圖） */
+  const articleEdit = (row, index) => {
+    console.log(' 子層 addArticle 被呼叫了！')
+    console.log(row, index)
+    console.log('傳進來的 row:', row)
+
+    selected_article.value = {
+      ID: row.ID,
+      publishDate: row.publishDate,
+      updatedAt: row.updatedAt,
+      category: row.category,
+      is_active: row.is_active,
+      title: row.title,
+      image: row.image,
+      content: row.content
+    }
+    
+    // 若已有圖片，將「正式 URL」放進 fileList，標記為 success（顯示縮圖但不重傳）
+    fileList.value = row.image
+      ? [{                       //? 條件1  : 條件2
+          name: row.image,
+          url: row.image,
+          status: 'success', // 舊圖，標記成功，讓 el-upload 顯示但不會重傳
+          uid: Date.now()    // 一定要有 uid，el-upload 才能追蹤
+        }]
+      : []
+
+    showarticle.value = true // 打開燈箱
   }
-  
-  fileList.value = row.image
-  ? [{
-      name: row.image,
-      url: row.image,
-      status: 'success', // 舊圖，標記成功，讓 el-upload 顯示但不會重傳
-      uid: Date.now()    // ★ 一定要有 uid，el-upload 才能追蹤
-    }]
-  : []
 
-  showarticle.value = true // 打開燈箱
-}
-
-// 新增文章
-const articleadd = () => {
-  selected_article.value = {
-    category: '',
-    is_active: '',
-    title: '',
-    image: '',
-    content: ''
+  /** 新增文章（清空欄位，顯示「＋」可挑檔） */
+  const articleadd = () => {
+    selected_article.value = {
+      category: '',
+      is_active: '',
+      title: '',
+      image: '',
+      content: ''
+    }
+    fileList.value = [] // 清空，讓＋出現
+    showarticle.value = true
   }
-  fileList.value = [] // 清空，讓＋出現
-  showarticle.value = true
-}
 
-// 上傳圖片 - 成功
-const handleSuccess = (res, file) => {
-  console.log("上傳成功:", res)
 
-  if (res.success && res.url) {
-    selected_article.value.image = res.url
+  /* =========================================================
+    B. 上傳流程（依實際觸發順序排列）
+    ---------------------------------------------------------
+    1) handleChange：使用者挑檔 → 產生 blob 預覽 → 同步 fileList
+    2) handleSuccess：後端上傳成功 → 以正式 URL 覆蓋 blob → 存文章
+    3) handleError：上傳失敗 → 記錄錯誤
+    =======================================================*/
 
-    // 替換掉之前的 blob
-    fileList.value = [{
-      name: file.name,
-      url: res.url,
-      status: 'success'
-    }]
-     // ★上傳成功 → 繼續存文章
-    save(selected_article.value)
-  } else {
-    console.error("後端回傳錯誤:", res)
+  /** 1 使用者挑檔（此時多為 blob 預覽；同步最新 fileList 到本地狀態） */
+  const handleChange = (file, fileListNow) => {
+    console.log("挑檔案:", file)
+    console.log("最新 fileList:", fileListNow)
+    // 把 Element Plus 內部維護的最新檔列，寫回到你自己可控的響應式狀態
+    // 這樣新檔案 (ready) 才能進來並顯示預覽（通常是 blob: URL）
+    fileList.value = fileListNow
   }
-}
 
-// 上傳圖片 - 失敗
-const handleError = (err) => {
-  console.error("上傳失敗:", err)
-}
+  /** 2) 上傳圖片 - 成功（取得正式 URL → 覆蓋 blob → 立刻存文章） */
+  const handleSuccess = (res, file) => {
+    console.log("上傳成功:", res)
 
-//同步圖片上傳後的檔案
-const handleChange = (file, fileListNow) => {
-  console.log("挑檔案:", file)
-  console.log("最新 fileList:", fileListNow)
-  fileList.value = fileListNow // 這樣新檔案 (ready) 才能進來
-}
+    if (res.success && res.url) {
+      // 將文章 image 設為後端回傳的「正式 URL」
+      selected_article.value.image = res.url
+
+      // 用正式 URL 覆蓋 fileList（清掉先前的 blob 預覽，確保重整仍可顯示）
+      fileList.value = [{
+        name: file.name,
+        url: res.url,
+        status: 'success'
+      }]
+
+      // ★ 上傳成功 → 繼續存文章
+      save(selected_article.value)
+    } else {
+      console.error("後端回傳錯誤:", res)
+    }
+  }
+
+  /** 3) 上傳圖片 - 失敗（不存文章，提示錯誤） */
+  const handleError = (err) => {
+    console.error("上傳失敗:", err)
+  }
+
+  // /* ======================= 文章編輯 / 新增 ======================= */
+  // // 編輯文章
+  // const articleEdit = (row, index) => {
+  //   console.log(' 子層 addArticle 被呼叫了！')
+  //   console.log(row, index)
+  //   console.log('傳進來的 row:', row)
+
+  //   selected_article.value = {
+  //     ID: row.ID,
+  //     publishDate: row.publishDate,
+  //     updatedAt: row.updatedAt,
+  //     category: row.category,
+  //     is_active: row.is_active,
+  //     title: row.title,
+  //     image: row.image,
+  //     content: row.content
+  //   }
+    
+  //   fileList.value = row.image
+  //   ? [{
+  //       name: row.image,
+  //       url: row.image,
+  //       status: 'success', // 舊圖，標記成功，讓 el-upload 顯示但不會重傳
+  //       uid: Date.now()    // ★ 一定要有 uid，el-upload 才能追蹤
+  //     }]
+  //   : []
+
+  //   showarticle.value = true // 打開燈箱
+  // }
+
+  // // 新增文章
+  // const articleadd = () => {
+  //   selected_article.value = {
+  //     category: '',
+  //     is_active: '',
+  //     title: '',
+  //     image: '',
+  //     content: ''
+  //   }
+  //   fileList.value = [] // 清空，讓＋出現
+  //   showarticle.value = true
+  // }
+
+  // // 上傳圖片 - 成功
+  // const handleSuccess = (res, file) => {
+  //   console.log("上傳成功:", res)
+
+  //   if (res.success && res.url) {
+  //     selected_article.value.image = res.url
+
+  //     // 替換掉之前的 blob
+  //     fileList.value = [{
+  //       name: file.name,
+  //       url: res.url,
+  //       status: 'success'
+  //     }]
+  //     // ★上傳成功 → 繼續存文章
+  //     save(selected_article.value)
+  //   } else {
+  //     console.error("後端回傳錯誤:", res)
+  //   }
+  // }
+
+  // // 上傳圖片 - 失敗
+  // const handleError = (err) => {
+  //   console.error("上傳失敗:", err)
+  // }
+
+  // //同步圖片上傳後的檔案
+  // const handleChange = (file, fileListNow) => {
+  //   console.log("挑檔案:", file)
+  //   console.log("最新 fileList:", fileListNow)
+  //   fileList.value = fileListNow //  把 Element Plus 內部維護的最新檔列，寫回到你自己可控的響應式狀態 這樣新檔案 (ready) 才能進來
+  // }
 
 //限制圖片解析度
 function beforeUpload(file) {

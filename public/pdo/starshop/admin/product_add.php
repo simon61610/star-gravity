@@ -1,5 +1,7 @@
 <?php
 
+    // header("Access-Control-Allow-Origin: *");
+
     //建立PDO物件，並放入指定的相關資料
     include('../../pdo.php');
 
@@ -80,7 +82,8 @@
             $ServerRoot = $_SERVER["DOCUMENT_ROOT"];
 
             //檔案最終存放位置
-            $filePath = $ServerRoot . "/pdo/starshop/images/" . $fileName;
+            $filePath = dirname(__DIR__) . "/images/" . $fileName;
+            // $filePath = $ServerRoot . "/pdo/starshop/images/" . $fileName;
             // $filePath = $ServerRoot . "/tjd102/g1/pdo/starshop/images/" . $fileName; //部屬前待修改路徑
 
             //將暫存檔搬移到正確位置

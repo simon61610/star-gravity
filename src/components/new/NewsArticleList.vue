@@ -1,14 +1,15 @@
 <script setup>
-import { onMounted, ref} from 'vue'
+import { onMounted, ref } from 'vue'
 import axios from "axios";
 
 //--------------------------接收父層文章渲染回傳值-------------------------//
 const props = defineProps({
   articles: {
-    type: Array,
+    type: Array,  
     required: true  //如果沒傳值會警告
   }
 }) 
+
 //---------------------------建立一個token--------------------------------//
 function getUserToken() {
   let token = localStorage.getItem("userToken"); //將 token 存到localStorage
@@ -26,7 +27,8 @@ onMounted(()=>{
     setTimeout(()=>{          //利用時間延遲讓父層能抓到資料
         if (Array.isArray(props.articles) && props.articles.length > 0){
             props.articles.forEach(article => {
-        axios.post("pdo/news/like.php", 
+
+        axios.post(import.meta.env.VITE_AJAX_URL + "news/like.php", 
             {   
                 token: userToken,
                 article_id: article.ID,
@@ -54,9 +56,8 @@ onMounted(()=>{
 })
     function togglike(article){
         const action = article.liked ? "unlike" : "like";
-        
         axios.post(
-            "pdo/news/like.php", 
+            import.meta.env.VITE_AJAX_URL + "news/like.php", 
             {
             token: userToken,
             article_id: article.ID,
@@ -104,16 +105,19 @@ onMounted(()=>{
     //         localStorage.setItem(`likeCount_${article.ID}`, article.likeCount ) //儲存讚到localstorage
     //         localStorage.setItem(`liked_${article.ID}`,article.liked) //儲存點讚狀態到localStorage
     //     }
+
+
+    
 </script>
 
 
 <template>
         <div class="news-article-wrapper">
 
-            <div class="news-article-list" v-for="article in props.articles" :key="article.ID" v-if="article && article.ID">
+            <div class="news-article-list" v-for="article in props.articles" :key="article.ID">
 
 
-                    <router-link :to= "{ name: 'ArticleDetailpage', params: { id: article.ID } }" class="news-article-img" v-if="article && article.ID">    <!--抓陣列資料前者article陣列裡的物品,後者是整個陣列-->
+                    <router-link :to= "{ name: 'ArticleDetailpage', params: { id: article.ID } }" class="news-article-img">    <!--抓陣列資料前者article陣列裡的物品,後者是整個陣列-->
                         <img :src=article.image alt=""/>  
                     </router-link>
 

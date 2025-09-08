@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import axios from 'axios'
 
 //  這裡只要改 true/false，就能切換 (主要為測試開發使用 正式要false)
-const USE_FAKE = true  
+const USE_FAKE = true 
 
 export const useAuthStore = defineStore("admin",()=>{
     const isLoggedIn = ref(false)  //確認登入狀態 預設登出
@@ -22,7 +22,7 @@ export const useAuthStore = defineStore("admin",()=>{
         }
 
         //正式部屬呼叫PHP
-        const res =  await axios.get('http://localhost/start/admincheck.php',{withCredentials: true})  //withCredentials: true 請求這個網址時要帶上cookie
+        const res =  await axios.get(import.meta.env.VITE_AJAX_URL+'admin/admincheck.php',{withCredentials: true})  //withCredentials: true 請求這個網址時要帶上cookie
 
         isLoggedIn.value = res.data.login
         currentUser.value = res.data.user || null
@@ -42,7 +42,7 @@ export const useAuthStore = defineStore("admin",()=>{
         }
 
 
-        const res = await axios.post('http://localhost/start/adminlogin.php',{ username, password },{ withCredentials: true })
+        const res = await axios.post(import.meta.env.VITE_AJAX_URL+'admin/adminlogin.php',{ username, password },{ withCredentials: true })
 
         if(res.data.success){
             isLoggedIn.value = true
@@ -64,7 +64,7 @@ export const useAuthStore = defineStore("admin",()=>{
 
 
 
-        const res = await axios.post('http://localhost/start/adminlogout.php',{},{ withCredentials: true })
+        const res = await axios.post(import.meta.env.VITE_AJAX_URL+'admin/adminlogout.php',{},{ withCredentials: true })
 
         //如果登出成功
         if(res.data.success){

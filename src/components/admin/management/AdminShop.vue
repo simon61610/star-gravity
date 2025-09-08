@@ -2,6 +2,8 @@
 待新增字數限制功能
 -->
 
+<!-- console.log(import.meta.env.VITE_AJAX_URL); -->
+
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import axios from 'axios';
@@ -43,14 +45,17 @@ const editingProduct = ref(null) // 放編輯中的商品資訊
     } ,
 ]) */
 
+
+
+
 // 從資料庫抓資料
 const fetchProducts = async () => {
-    const res = await axios.get("http://localhost/pdo/starshop/admin/product_get.php")
+    const res = await axios.get(import.meta.env.VITE_AJAX_URL + "starshop/admin/product_get.php")
     // const res = await axios.get("pdo/starshop/admin/product_get.php") // 部屬前待修改路徑
 
     Shoptable.value = res.data
 
-    // console.log(Shoptable.value)
+    console.log(Shoptable.value)
 }
 
 onMounted (() => {
@@ -80,6 +85,8 @@ defineExpose({ openModal })
 const imagesPreview = ref([null, null, null])
 // 照片上傳
 const imagesFiles = ref([null, null, null])
+// 照片id
+const image_ids = ref([])
 
 const fileChange = (e, index) => {
     const file = e.target.files[0]
@@ -117,6 +124,18 @@ const description = ref('') // 商品描述
 const promotion = ref('') // 全店優惠活動
 const original_price = ref('0') // 原價
 const discount = ref('100') // 折扣
+
+
+// const name = ref('test') // 商品名稱
+// const category_name = ref('test') //商品類別
+// const description = ref('test') // 商品描述
+// const promotion = ref('ss') // 全店優惠活動
+// const original_price = ref('0') // 原價
+// const discount = ref('100') // 折扣
+
+
+
+
 const sale_price = computed(() => { //售價
     return parseInt(original_price.value * (discount.value / 100))
 })
@@ -152,6 +171,9 @@ const handleEdit = (row, index) => {
 
     // 處理圖片上傳
     // imagesFiles.value = [null, null, null]
+
+    image_ids.value = row.image_ids.split(',')
+    // console.log(image_ids.value) // ['1', '2', '3']
 
     openModal()
 }
@@ -260,18 +282,44 @@ const save = async () => {
     formData.append("stock", stock.value)
     formData.append("is_active", is_active.value)
 
+    // 第一版
     // 編輯商品時: 如果沒選新圖片，就不要 append images[]
-    imagesFiles.value.forEach((file, i) => {
+    /* imagesFiles.value.forEach((file, i) => {
         if (file) {
             formData.append("images[]", file)
         }
-    })
+    }) */
+
+    // 有bug
+    /* for(let i = 0; i < imagesFiles.value.length; i++){
+        const file = imagesFiles.value[i]
+        if (file) {
+            formData.append("images[]", file)
+        }
+    }
+
+    if(editingProduct.value){
+        for(let i = 0; i < image_ids.value.length; i++){
+            formData.append("image_ids[]", image_ids.value[i])
+        }
+    } */
+
+    // 對應圖片ID與圖片路徑
+        for(let i = 0; i < imagesFiles.value.length; i++ ){
+            const file = imagesFiles.value[i]
+            if (file) {
+                formData.append(`images[${i}]`, file)
+                formData.append(`image_ids[${i}]`, image_ids.value[i])
+            }else{
+                formData.append(`image_ids[${i}]`, image_ids.value[i])
+            }
+        }
     
 
     let response
     if (!editingProduct.value) {
         // 新增: 發送請求 product_add.php
-        response = await axios.post('http://localhost/pdo/starshop/admin/product_add.php' , formData)
+        response = await axios.post(import.meta.env.VITE_AJAX_URL + 'starshop/admin/product_add.php' , formData)
         // const response = await axios.post('pdo/starshop/admin/product_add.php' , formData) // 部屬前待修改路徑
         
         // const response = await axios.post('http://localhost/pdo/starshop/admin/product_add.php' , product.value)
@@ -282,7 +330,8 @@ const save = async () => {
         return */
         // 編輯: 發送請求 product_update.php
         // formData.append("ID", editingProduct.value.ID)
-        response = await axios.post('http://localhost/pdo/starshop/admin/product_update.php', formData)
+        response = await axios.post(import.meta.env.VITE_AJAX_URL + 'starshop/admin/product_update.php', formData)
+        // response = await axios.post('http://localhost/pdo/starshop/admin/product_update.php', formData)
         // const response = await axios.post('pdo/starshop/admin/product_update.php' , formData) // 部屬前待修改路徑
     }
     

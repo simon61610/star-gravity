@@ -34,8 +34,6 @@
     // 縣市區域選單
     const cities = ref([])
     const areaOptions = ref([])
-    
-
 
     // 驗證碼
     const captchaCode = ref('')
@@ -127,24 +125,6 @@
         }
     }
 
-    /* ---- 假後端：取會員註冊資料 ---- */
-    // function fetchMember() {
-    //     return new Promise(resolve => {
-    //         setTimeout(() => {
-    //         resolve({
-    //             name: '王小明',                
-    //             phone: '0912-345-678',
-    //             city: '台北市',
-    //             area: '大安區',
-    //             address: '仁愛路三段 123 號'
-    //         })
-    //         }, 300)
-    //     })
-    //     }
-    //     function updateMember(payload) {
-    //     return new Promise(resolve => setTimeout(() => resolve({ ok: true }), 500))
-    // }
-
     /* ---- 狀態 ---- */
     const member = reactive({
         city: '',
@@ -152,17 +132,6 @@
     })
 
     /* ---- 縣市 / 鄉鎮選單 ---- */
-/*     const AREAS = {
-        台北市: ['中山區', '大安區', '信義區', '士林區'],
-        新北市: ['板橋區', '新店區', '三重區', '永和區'],
-        桃園市: ['桃園區', '中壢區', '龜山區', '八德區']
-    }
-    const cities = Object.keys(AREAS)
-    const areaOptions = computed(() => AREAS[member.city] || [])
-        watch(() => member.city, () => {
-        if (!areaOptions.value.includes(member.area)) member.area = ''
-    }) */
-
     watch(() => member.city ,(newCity) => {
         const city = cities.value.find(c => c.CityName === newCity)
         // console.log(city)
@@ -186,27 +155,27 @@
                 <!------勾選性別--------->
                 <div class="gender-group">
                    <label>
-                   <input type="radio" value="男性" v-model="gender" />男性
+                        <input type="radio" value="男性" v-model="gender" />男性
                    </label>
                    <label>
-                   <input type="radio" value="女性" v-model="gender" />女性
+                        <input type="radio" value="女性" v-model="gender" />女性
                    </label>
                    <label>
-                   <input type="radio" value="第三性" v-model="gender" />第三性
+                        <input type="radio" value="第三性" v-model="gender" />第三性
                    </label>
                </div>
                <!------選擇縣市--------->
                 <div class="join-city">
                     <div class="select">
                         <select v-model="member.city" class="select-city" required>
-                        <option value="">縣市</option>
-                        <option v-for="c in cities" :key="c.CityName" :value="c.CityName">{{ c.CityName }}</option>
+                            <option value="">縣市</option>
+                            <option v-for="c in cities" :key="c.CityName" :value="c.CityName">{{ c.CityName }}</option>
                         </select>
                     </div>
                     <div class="select">
                         <select v-model="member.area" class="select-city" required>
-                        <option value="">鄉鎮</option>
-                        <option v-for="d in areaOptions" :key="d.AreaName" :value="d.AreaName">{{ d.AreaName }}</option>
+                            <option value="">鄉鎮</option>
+                            <option v-for="d in areaOptions" :key="d.AreaName" :value="d.AreaName">{{ d.AreaName }}</option>
                         </select>
                     </div>
                 </div>
