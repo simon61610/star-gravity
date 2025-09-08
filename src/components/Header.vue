@@ -17,6 +17,8 @@ const toggleactive = (index)=>{
         currentActive.value = index
     }
 }
+
+
 function toggleMenu() {
   active.value = !active.value;
 }
@@ -91,7 +93,7 @@ watch(
             <div class="logo">
                 <router-link to="/homepage"><img :src="logo" alt="星引力logo" width="120" height="50"/></router-link>
             </div>
-            <ul :class ="{ 'is-open': active}" @click="toggleMenu">
+            <ul :class ="{ 'is-open': active}">
                 <li :class ="{ 'menu-active': currentActive === 1}" @click="toggleactive(1)"><router-link to="/about">觀星初學指南</router-link></li>
                 <li :class ="{ 'menu-active': currentActive === 2}" @click="toggleactive(2)"><router-link to="/Newpage">天文快訊</router-link></li>       <!--<li><router-link :to="{ name: 'NewpageView' }">天文快訊</router-link></li>--->
                 <li :class ="{ 'menu-active': currentActive === 3}" @click="toggleactive(3)"><router-link to="/gamesky">星視野</router-link></li>

@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref} from 'vue'
+import { onMounted, ref } from 'vue'
 import axios from "axios";
 
 //--------------------------接收父層文章渲染回傳值-------------------------//
@@ -9,6 +9,7 @@ const props = defineProps({
     required: true  //如果沒傳值會警告
   }
 }) 
+
 //---------------------------建立一個token--------------------------------//
 function getUserToken() {
   let token = localStorage.getItem("userToken"); //將 token 存到localStorage
@@ -26,6 +27,7 @@ onMounted(()=>{
     setTimeout(()=>{          //利用時間延遲讓父層能抓到資料
         if (Array.isArray(props.articles) && props.articles.length > 0){
             props.articles.forEach(article => {
+
         axios.post("pdo/news/like.php", 
             {   
                 token: userToken,
@@ -54,7 +56,6 @@ onMounted(()=>{
 })
     function togglike(article){
         const action = article.liked ? "unlike" : "like";
-        
         axios.post(
             "pdo/news/like.php", 
             {
@@ -104,6 +105,9 @@ onMounted(()=>{
     //         localStorage.setItem(`likeCount_${article.ID}`, article.likeCount ) //儲存讚到localstorage
     //         localStorage.setItem(`liked_${article.ID}`,article.liked) //儲存點讚狀態到localStorage
     //     }
+
+
+    
 </script>
 
 

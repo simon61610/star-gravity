@@ -1,5 +1,5 @@
 <script setup>
-import { ref,computed,onMounted } from 'vue'
+import { ref,computed,onMounted, } from 'vue'
 import testimg from '@/assets/images/news/news-article-a1.jpg'; // Assuming the image is in the assets folder
 import NewsBanner from '@/components/new/NewsBanner.vue';
 import NewsBar from '@/components/new/NewsBar.vue'; 
