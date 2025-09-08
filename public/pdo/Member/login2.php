@@ -2,6 +2,8 @@
 include '../pdo.php';
 
 header('Content-Type: application/json; charset=utf-8');
+ini_set('display_errors', '0');
+error_reporting(E_ALL);
 
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Origin: http://localhost:5173');
@@ -9,21 +11,28 @@ header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, X-Requested-With, Authorization');
 
 session_start();
-// $data = json_decode(file_get_contents("php://input"), true) ;
+$data = json_decode(file_get_contents("php://input"), true) ;
 
 // 預檢與方法限制（避免 CORS 預檢卡住、或誤用 GET）
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { 
-    exit; 
-};
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo json_encode(['success'=>false,'message'=>'請用 POST']); exit;
-};
+// if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { 
+//     exit; 
+// };
+// if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+//     echo json_encode(['success'=>false,'message'=>'請用 POST']); 
+//     exit;
+// };
+
+// CORS 預檢
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'OPTIONS') { 
+    exit;
+}
 
 // 讀取與檢查輸入（避免 $data 為 null 造成 undefined index）
-$raw  = file_get_contents('php://input');
-$data = json_decode($raw, true) ?: [];
+$raw  = file_get_contents('php://input');   // 拿前端送來的字串
+$data = json_decode($raw, true) ?: [];      // 轉成陣列；解析不到給空陣列
 $email    = isset($data['email']) ? trim($data['email']) : '';
 $password = isset($data['password']) ? trim($data['password']) : '';
+
 if ($email === '' || $password === '') {
     echo json_encode(['success'=>false,'message'=>'缺少 email 或 password']); exit;
 };
@@ -31,6 +40,8 @@ if ($email === '' || $password === '') {
 // $sql = 'SELECT * from Member
 //         where email = :email and password = :password
 //     ';
+
+// 查會員
 $sql = 'SELECT * FROM Member 
         WHERE email = :email AND password = :password LIMIT 1
         ';
@@ -86,6 +97,7 @@ $expiresAt = date('Y-m-d H:i:s', time() + 7*24*60*60); // 7 天有效
 // $ins = 'INSERT INTO `Tokens` (member_id, token, expires_at) 
 //         VALUES (:mid, :tok, :exp)
 //         ';
+
 $ins = $pdo->prepare('INSERT INTO `Tokens` (member_id, token, expires_at) 
                     VALUES (:mid, :tok, :exp)
                     '); // 用 prepare 回傳 PDOStatement
@@ -96,10 +108,18 @@ $ok = $ins->execute([
 ]);   
 
 // 防呆：若寫入 token 失敗就回錯誤訊息
-// if (!$ok) {
-//      cho json_encode(['success'=>false,'message'=>'建立 token 失敗']); 
-//     exit;
-// };
+if (!$ok) {
+    echo json_encode([
+        'success'=>false,
+        'message'=>'建立 token 失敗'
+    ]); 
+    exit;
+};
+
+// 回傳前「保險」清空緩衝，避免 BOM/多餘輸出破壞 JSON（若沒開輸出緩衝會無事）
+while (ob_get_level()) { 
+    ob_end_clean(); 
+} 
 
 // 同時回 user 與 token；前端可以同時用 Session + Token
 echo json_encode([
@@ -116,20 +136,7 @@ echo json_encode([
         'address' => $member['address'] ?? '',
     ]
 ]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+exit;
 
 
 
