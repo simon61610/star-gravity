@@ -63,7 +63,7 @@ const filteredArticles = computed(() => {
 //測試登入狀態
 onMounted(async () => {
   await admin.checkSession()
-  if (!auth.isLoggedIn) {
+  if (!admin.isLoggedIn) {
     router.push('/AdminLoginPage') // 沒登入就跳回登入頁
   }
 })
