@@ -3,11 +3,13 @@ import { ref, defineEmits, computed} from 'vue'
 import filledStar from '@/assets/icons/icon-filledStar.svg'
 import borderStar from '@/assets/icons/icon-borderStar.svg'
 //建立響應式變數
+const { selectedLocationId } = defineProps(["selectedLocationId"])
 const score = ref(0)
 const reviewText =ref('')
-const photoPreview = ref('')
+let file = ''
+const photoPreview = ref('')  //二進位
 
-const limitWord = computed(()=>{
+const limitWord = computed(()=>{       
     return reviewText.value.length
 })
 
@@ -20,7 +22,9 @@ function isStarFilled(index){
    return index < score.value
 }
 function uploadPhoto(e){
-  const file = e.target.files[0]
+  file = e.target.files[0]
+  console.log(file);
+  
   if(file){
     const reader = new FileReader()
     reader.onload = () => {
@@ -30,21 +34,56 @@ function uploadPhoto(e){
   }
 }
 function removePhoto(){
+    file = ''
     photoPreview.value = ''
 }
 
 
-
-
+//取消評論
 const emit = defineEmits()
 function cencelReview(){   //這邊要判斷是不是會員
     fillStar(-1)
+    file = ''
     reviewText.value = ''
     photoPreview.value = ''
     emit("cencelReview")
-    
-    
 }
+
+//送出評論
+function submit(){
+    if( score === 0 || reviewText.value.length ===0){
+        alert('評論與評分不能為空白')
+    }else{
+        // console.log(file);
+        fetch('http://localhost/star/map/postReview.php',{
+        // fetch('postReview.php',{
+            method: 'POST' ,
+            headers:{'Content-Type' : 'application/json'} ,
+            body: JSON.stringify({
+                    location_id: selectedLocationId.value ,
+                    content: reviewText.value ,
+                    image: file,
+                })
+        })
+        .then(resp => resp.text())
+        .then(text => {
+            console.log(text);
+        })
+    }
+
+    
+
+
+    
+
+    //也要走清空和關閉
+    // fillStar(-1)
+    // reviewText.value = ''
+    // photoPreview.value = ''
+    // emit("cencelReview")
+}
+
+
 
 </script>
 
@@ -74,7 +113,7 @@ function cencelReview(){   //這邊要判斷是不是會員
                     <img src="../../assets/icons/icon-map-photoadd.svg" alt="">
                     <p>點擊新增照片</p>
                 </div>
-                <input type="file" accept="image/*" @change="uploadPhoto">
+                <input type="file" name="photo" accept="image/*" @change="uploadPhoto">
             </div>
             <!-- 照片預覽 -->
             <img class="userPhotoShow" :src="photoPreview"></img>
@@ -83,7 +122,7 @@ function cencelReview(){   //這邊要判斷是不是會員
         </div>
         <div class="review-writePlace-button">
             <button class="cancel" @click="cencelReview">取消</button>
-            <button class="submit">張貼</button>
+            <button class="submit" @click="submit">張貼</button>
         </div>
     </div>
 
@@ -239,7 +278,6 @@ function cencelReview(){   //這邊要判斷是不是會員
     border: 1px solid $primaryColor-500;
     background-color: $primaryColor-500;
     color: #ffffff;
-
 }
 
 .review-writePlace-button button:hover{

@@ -117,6 +117,7 @@ onMounted(()=>{
 })
 onUnmounted(()=>{
     window.removeEventListener('resize', checkScreenSize)
+    window.removeEventListener('scroll', controlStar)
 })
 
 </script>

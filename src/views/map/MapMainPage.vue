@@ -33,6 +33,7 @@
         <!-- 評論填寫框 -->
         <ReviewPlace 
             v-show="reviewPlaceShow"
+            :selectedLocationId="selectedLocationId"
             @cencelReview="cencelReview"
         />
         
