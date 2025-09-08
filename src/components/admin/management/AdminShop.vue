@@ -50,7 +50,7 @@ const fetchProducts = async () => {
 
     Shoptable.value = res.data
 
-    // console.log(Shoptable.value)
+    console.log(Shoptable.value)
 }
 
 onMounted (() => {
@@ -80,6 +80,8 @@ defineExpose({ openModal })
 const imagesPreview = ref([null, null, null])
 // 照片上傳
 const imagesFiles = ref([null, null, null])
+// 照片id
+const image_ids = ref([])
 
 const fileChange = (e, index) => {
     const file = e.target.files[0]
@@ -152,6 +154,9 @@ const handleEdit = (row, index) => {
 
     // 處理圖片上傳
     // imagesFiles.value = [null, null, null]
+
+    image_ids.value = row.image_ids.split(',')
+    // console.log(image_ids.value) // ['1', '2', '3']
 
     openModal()
 }
@@ -260,12 +265,38 @@ const save = async () => {
     formData.append("stock", stock.value)
     formData.append("is_active", is_active.value)
 
+    // 第一版
     // 編輯商品時: 如果沒選新圖片，就不要 append images[]
-    imagesFiles.value.forEach((file, i) => {
+    /* imagesFiles.value.forEach((file, i) => {
         if (file) {
             formData.append("images[]", file)
         }
-    })
+    }) */
+
+    // 有bug
+    /* for(let i = 0; i < imagesFiles.value.length; i++){
+        const file = imagesFiles.value[i]
+        if (file) {
+            formData.append("images[]", file)
+        }
+    }
+
+    if(editingProduct.value){
+        for(let i = 0; i < image_ids.value.length; i++){
+            formData.append("image_ids[]", image_ids.value[i])
+        }
+    } */
+
+    // 對應圖片ID與圖片路徑
+        for(let i = 0; i < imagesFiles.value.length; i++ ){
+            const file = imagesFiles.value[i]
+            if (file) {
+                formData.append(`images[${i}]`, file)
+                formData.append(`image_ids[${i}]`, image_ids.value[i])
+            }else{
+                formData.append(`image_ids[${i}]`, image_ids.value[i])
+            }
+        }
     
 
     let response
