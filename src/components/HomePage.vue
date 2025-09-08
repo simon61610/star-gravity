@@ -744,6 +744,10 @@ onUnmounted(()=>{
 
 //..............RWD..................
 @media screen and (max-width:435px) {
+    .special-effects{
+        min-height: 250vh;
+        background-color: $bgColor-shop; 
+    }
     .home-firstBlock{
         height: 100vh !important;
 

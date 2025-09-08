@@ -14,8 +14,8 @@ include('pdo.php');
 //建立SQL
 // $sql = "SELECT * from Location" ;
 $sql = " SELECT r.* , m.name 
-         from review r
-         join member m 
+         from Review r
+         join Member m 
          on r.member_id = m.id
          where location_id = :locationIndex
          and review_status = '顯示中'
@@ -27,8 +27,6 @@ $statement->bindValue( ":locationIndex" , $data["locationIndex"]);
 $statement->execute();
 
 $reviews = $statement->fetchAll();
-
-// echo "aaaaa" ;
 
 echo json_encode($reviews); 
 
