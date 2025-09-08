@@ -1,12 +1,10 @@
 <script setup>
     import { ref, onMounted, reactive, computed, watch } from 'vue'
     import { UserFilled } from '@element-plus/icons-vue'
+    import axios from 'axios'
     // import { isLoggedIn } from '@/composables/useAuth'
 
     // 後端 API
-    // const API_BASE = 'http://localhost'
-    // const UPDATE_API = `${API_BASE}/PDO/Member/update_profile.php`
-    // const PROFILE_API= `${API_BASE}/PDO/Member/profile.php`
     const PROFILE_API = 'http://localhost/PDO/Member/profile.php'
     const UPDATE_API  = 'http://localhost/PDO/Member/update_profile.php'
 
@@ -33,64 +31,103 @@
         member.name.trim() && member.phone.trim() &&
         member.city && member.area && member.address.trim()
     )
-
-    /* ---- 縣市 / 鄉鎮選單 ---- */
-    const DISTRICTS = {
-        台北市: ['中山區', '大安區', '信義區', '士林區'],
-        新北市: ['板橋區', '新店區', '三重區', '永和區'],
-        桃園市: ['桃園區', '中壢區', '龜山區', '八德區']
-    }
-    const cities = Object.keys(DISTRICTS)
-
-    const areaOptions = computed(() => DISTRICTS[member.city] || [])
-    watch(() => member.city, () => {
-        if (!areaOptions.value.includes(member.area)) member.area = ''
-    })
         
     /* ---- 載入會員資料 ---- */
-    onMounted(() => {
-        // 只檢查是否登入；沒登入才回登入頁
-        if( !localStorage.getItem('user') ){
+    // 縣市區域選單
+    const cities = ref([])
+    const areaOptions = ref([])
+
+    onMounted(async() => {
+        // 用 token 判斷是否登入
+        const token = localStorage.getItem(LS_TOKEN)
+        if(!token) {
             alert('請先登入')
             window.location.href = "/loginfirst"   // 登出後跳轉到登入頁
-        } 
-        
-        // 有登入抓取localstorage資料
+            return
+        }
+        // 載入城市/區域 JSON
+        try {
+            const res = await axios.get('/JSON_CSV_XML/CityCountyData.json')
+            cities.value = res.data || []
+        } catch (e) {
+            console.warn('載入縣市清單失敗', e)
+            cities.value = []
+        }
+        // 用 token 向後端拿會員資料
+        try {
+            const { data } = await axios.get(PROFILE_API, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
 
+            if (data?.success && data?.user) {
+                const u = data.user
+                member.ID = u.ID || ''
+                member.name = u.name || ''
+                member.phone = u.phone || ''
+                member.city = u.city || ''
+                member.area = u.area || ''
+                member.address = u.address || ''
+                // 如果預設就有 city，幫它把區域列表也帶好
+                if(member.city) {
+                    const city = cities.value.find(c => c.CityName === member.city)
+                    areaOptions.value = city ? city.AreaList : []
+                } else {
+                    throw new Error('未授權或資料格式不正確')
+                } 
+            }
+        } catch (e) {
+            alert('登入已過期，請重新登入')
+            localStorage.removeItem(LS_TOKEN)
+            window.location.href = '/loginfirst'
+        }
+
+    })
+
+
+    // 切換城市 → 重新整理區域選項，並清空已選區域
+    watch(() => member.city ,(newCity) => {
+        const city = cities.value.find(c => c.CityName === newCity)
+        areaOptions.value = city ? city.AreaList : []
+        member.area = ''
     })
 
     /* ---- 儲存（更新到資料庫；不再動 localStorage） ---- */
-    // function save() {
-    //     if (!canSave.value) { alert('請把欄位填完整'); return }
-    //     saving.value = true
-    //     // fetch('http://localhost/PDO/Member/update_profile.php', 
-    //     fetch(UPDATE_API, {
-    //         method: 'POST',
-    //         headers: { 'Content-Type': 'application/json' },
-    //         body: JSON.stringify({
-    //             email: member.email,
-    //             name: member.name.trim(),
-    //             phone: member.phone.trim(),
-    //             city: member.city,
-    //             area: member.area,
-    //             address: member.address.trim()
-    //         })
-    //     })
-    //     .then(res => res.json())
-    //     .then(data => {
-    //         if (!data?.ok) throw new Error(data?.message || '更新失敗')
-    //         alert('已儲存！')
-    //         const now = new Date()
-    //         savedAt.value =
-    //             String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0')
-    //     })
-    //     .catch(e => {
-    //         alert(e?.message || '更新失敗')
-    //     })
-    //     .finally(() => {
-    //         saving.value = false
-    //     })
-    // }
+    async function save () {
+        if (!canSave.value) { 
+            alert('請把欄位填完整'); return 
+        }
+        const token = localStorage.getItem(LS_TOKEN)
+        if (!token) { 
+            alert('登入已過期，請重新登入'); window.location.href='/loginfirst'; 
+            return 
+        }
+        saving.value = true
+        try {
+            const { data } = await axios.post(UPDATE_API, {
+                email: member.email,
+                name: member.name.trim(),
+                phone: member.phone.trim(),
+                city: member.city,
+                area: member.area,
+                address: member.address.trim()
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+
+            // 後端任一種皆可：{ ok: true } 或 { success: true }
+            alert('已儲存！')
+            const now = new Date()
+            savedAt.value = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0')
+        } catch (e) {
+            alert(e?.message || '更新失敗')
+        } finally {
+            saving.value = false
+        }
+    }
+
 
 
 </script>
@@ -105,17 +142,17 @@
             <input v-model="member.phone" type="tel" class="rowline" style="font-size: 18px" placeholder="我的電話" />
         </div>
         <!----縣市鄉鎮-------->
-        <div class="personal-city">
+        <div class="join-city">
             <div class="select">
-                <select v-model="member.city" class="select-city">
-                <option value="">縣市</option>
-                <option v-for="c in cities" :key="c" :value="c">{{ c }}</option>
+                <select v-model="member.city" class="select-city" required>
+                    <option value="">縣市</option>
+                    <option v-for="c in cities" :key="c.CityName" :value="c.CityName">{{ c.CityName }}</option>
                 </select>
             </div>
             <div class="select">
-                <select v-model="member.area" class="select-city">
-                <option value="">鄉鎮</option>
-                <option v-for="d in areaOptions" :key="d" :value="d">{{ d }}</option>
+                <select v-model="member.area" class="select-city" required :disabled="!member.city">
+                    <option value="">鄉鎮</option>
+                    <option v-for="d in areaOptions" :key="d.AreaName" :value="d.AreaName">{{ d.AreaName }}</option>
                 </select>
             </div>
         </div>

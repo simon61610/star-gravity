@@ -3,9 +3,9 @@
     import { computed , onMounted} from 'vue'
     import { UserFilled, SwitchButton } from '@element-plus/icons-vue'
 
-    const props = defineProps({
-        username: { type: String, default: '小姐/先生' },
-    })
+    // const props = defineProps({
+    //     username: { type: String, default: '小姐/先生' },
+    // })
 
     // 頭像
     import { ref } from 'vue'

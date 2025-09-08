@@ -9,7 +9,6 @@
     const route = useRoute()
 
     // 統一 API 位址
-    // const LOGIN_API  = '/PDO/Member/login.php'
     const API_BASE   = 'http://localhost'
     const LOGIN_API  = `${API_BASE}/PDO/Member/login.php`
 
@@ -36,15 +35,11 @@
 
     /* 信箱基本檢查樣式 */
     const MIN_PWD_LEN = 6
-    // const emailRe = /\S+@\S+\.\S+/
-    const emailRe = 3
+    const emailRe = /\S+@\S+\.\S+/
 
-
-    // function refreshCode() {
-    //     captchaCode.value = genCode()
-    // }
-
-    // const showLogin = computed(() => route.path === '/loginfirst')
+    function refreshCode() {
+        captchaCode.value = genCode()
+    }
 
     // 判斷在哪頁
     const isLogin    = computed(() => route.path === '/loginfirst')
@@ -70,17 +65,7 @@
               
         
     }
-    // .then(data => {
-    //     console.log(data) // {"ok":true,"token":"32ccc8abaa660569c3d3c52c723b2ec8"}
-
-    //     let storage = localStorage
-
-    //     storage.setItem('memberToken', data.token)
-        
-    // })
-
-    //-------------------------------------------------
-
+    
     const login = () => {
         
         fetch('http://localhost/PDO/Member/login2.php' , {
@@ -98,7 +83,7 @@
                 handleLoginSuccess(result)
             }else{
                 console.log(result.message);
-                console.log(123455);
+                // console.log(123455);
                 console.log(result.success);
                 
             }

@@ -1,6 +1,8 @@
 // import './assets/main.css'
 import './assets/styles/main.scss'
 
+import '@/composables/useAuth'  // 存token(會員中心)
+
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
