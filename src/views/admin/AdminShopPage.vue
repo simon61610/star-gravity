@@ -16,16 +16,18 @@
 
 
     // =============================================
-    const testProduct = ref([])
+
+    // 測試範例
+    /* const testProduct = ref([])
 
     const fetchData = async () => {
-        // const res = await axios.get('http://localhost/starshop/admin/test.php')
-        const res = await axios.get('pdo/starshop/admin/test.php')
+        const res = await axios.get('http://localhost/pdo/starshop/admin/test.php')
+        // const res = await axios.get('pdo/starshop/admin/test.php')
 
         const data = res.data
         testProduct.value = data[0]
         console.log(testProduct.value)
-    }
+    } */
     
 </script>
 
@@ -59,12 +61,15 @@
             </div>
 
 
+            <!-- 測試範例 -->
+            <!-- 
             <div>
                 <h1 @click="fetchData" style="cursor: pointer;">測試抓資料</h1>
                 <div>商品名稱: {{ testProduct.name }}</div>
                 <div>商品金額: {{ testProduct.sale_price }}</div>
-                <img :src="'/pdo' + testProduct.image">
-            </div>
+                <img :src="'pdo' + testProduct.image">
+            </div> 
+            -->
 
             <AdminSidebar/>
         </main>

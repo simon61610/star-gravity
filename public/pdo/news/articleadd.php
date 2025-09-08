@@ -1,5 +1,5 @@
 <?php
-include('pdo.php');
+include('../pdo.php');
 // include('cors.php');
 // include('db.php');
 
@@ -13,13 +13,13 @@ $tags = $data['tags'] ?? '';
 
 //建立SQL語法
 
-$sql = "INSERT INTO article(category, is_active, title , image , content ,tags) VALUES 
-(?, ?, ?, ?, ?,?)" ;
+$sql = "INSERT INTO Article(category, is_active, title , image , content ) VALUES 
+(?, ?, ?, ?, ?)" ;
 
 
 //執行並查詢，會回傳查詢結果的物件
 $statement = $pdo->prepare($sql);
-$statement -> execute([$category, $is_active, $title, $image, $content, $tags]);
+$statement -> execute([$category, $is_active, $title, $image, $content,]);
 
 //取得流水號
 $newId = $pdo->lastInsertId();
@@ -27,7 +27,7 @@ $newId = $pdo->lastInsertId();
 
 $respbody = [
     "success" => true,
-    "message" => 新增資料成功,
+    "message" => "新增資料成功",
     "ID"=>$newId,
     "title" => $title,
     "category"=>$category,
@@ -35,6 +35,6 @@ $respbody = [
     "image"=>$image,
     "content"=>$content, ];
 //處理回傳的結果
-echo json_encode($respbody); 
+echo json_encode($respbody,JSON_UNESCAPED_UNICODE); 
 
 ?>

@@ -1,10 +1,12 @@
   <script setup>
 /* ======================= 匯入模組 ======================= */
-import { ref, computed, nextTick } from 'vue'
+import { ElMessage } from "element-plus"
+import { ref, computed, nextTick,onMounted } from 'vue'
 import AdminTable from '@/components/admin/AdminTable.vue'
 import { articleAPI } from '@/api/articleAPI.js'
 import { tagAPI } from '@/api/tagAPI.js'
 import { Plus } from '@element-plus/icons-vue'
+import { useAuthStore } from '@/stores/admin.js'
 
 /* ======================= 基本設定 ======================= */
 // props & emit
@@ -14,10 +16,12 @@ const props = defineProps({
 })
 
 // 狀態變數
+const uploadRef = ref(null)
 const Newstable = ref([])        // 文章列表資料
 const fileList = ref([])         // 上傳圖片 fileList
 const selected_tag = ref(null)   // 選中的 tag
 const selected_article = ref({}) // 選中的文章
+const admin = useAuthStore()
 
 // 彈窗顯示狀態
 const showtag = ref(false)
@@ -56,6 +60,14 @@ const filteredArticles = computed(() => {
   }
 })
 
+//測試登入狀態
+onMounted(async () => {
+  await admin.checkSession()
+  if (!auth.isLoggedIn) {
+    router.push('/AdminLoginPage') // 沒登入就跳回登入頁
+  }
+})
+
 /* ======================= 文章編輯 / 新增 ======================= */
 // 編輯文章
 const articleEdit = (row, index) => {
@@ -73,6 +85,15 @@ const articleEdit = (row, index) => {
     image: row.image,
     content: row.content
   }
+  
+  fileList.value = row.image
+  ? [{
+      name: row.image,
+      url: row.image,
+      status: 'success', // 舊圖，標記成功，讓 el-upload 顯示但不會重傳
+      uid: Date.now()    // ★ 一定要有 uid，el-upload 才能追蹤
+    }]
+  : []
 
   showarticle.value = true // 打開燈箱
 }
@@ -93,13 +114,21 @@ const articleadd = () => {
 // 上傳圖片 - 成功
 const handleSuccess = (res, file) => {
   console.log("上傳成功:", res)
-  selected_article.value.image = res?.url || URL.createObjectURL(file.raw)
 
-  // 讓 el-upload 的 fileList 也有資料，圖片才會顯示
-  fileList.value = [{
-    name: file.name,
-    url: res?.url || URL.createObjectURL(file.raw)
-  }]
+  if (res.success && res.url) {
+    selected_article.value.image = res.url
+
+    // 替換掉之前的 blob
+    fileList.value = [{
+      name: file.name,
+      url: res.url,
+      status: 'success'
+    }]
+     // ★上傳成功 → 繼續存文章
+    save(selected_article.value)
+  } else {
+    console.error("後端回傳錯誤:", res)
+  }
 }
 
 // 上傳圖片 - 失敗
@@ -107,6 +136,36 @@ const handleError = (err) => {
   console.error("上傳失敗:", err)
 }
 
+//同步圖片上傳後的檔案
+const handleChange = (file, fileListNow) => {
+  console.log("挑檔案:", file)
+  console.log("最新 fileList:", fileListNow)
+  fileList.value = fileListNow // 這樣新檔案 (ready) 才能進來
+}
+
+//限制圖片解析度
+function beforeUpload(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.onload = () => {
+      const ratio = img.width / img.height
+      URL.revokeObjectURL(img.src)
+
+      // 容忍範圍 1.3 ~ 1.7，3:2=1.5
+      if (ratio < 1.3 || ratio > 1.7) {
+        ElMessage.error("圖片比例太奇怪，請上傳接近 3:2 的圖片")
+        reject(false)
+      } else if (Math.abs(ratio - 1.5) > 0.01) {
+        // 不是精準 3:2 → 只提示，仍允許上傳
+        ElMessage.warning("建議使用 3:2 的圖片，否則前台會被裁切")
+        resolve(true)
+      } else {
+        resolve(true) // 完美 3:2 
+      }
+    }
+    img.src = URL.createObjectURL(file)
+  })
+}
 // 暴露方法給父層
 defineExpose({ articleEdit, articleadd })
 
@@ -127,6 +186,22 @@ const tagEdit = (row, index) => {
 
 /* ======================= 儲存文章 ======================= */
 function save(selected) {
+  console.log('=== SAVE DEBUG ===')
+  // 內文字數檢查
+  if (!selected.content || selected.content.trim().length < 50) {
+    ElMessage.error("內文至少需要 50 個字")
+    return
+  }
+  console.log('uploadRef:', uploadRef.value)
+  console.log('uploadFiles:', uploadRef.value?.uploadFiles)
+  console.log('fileList:', fileList.value)
+
+  const hasNewFile = fileList.value.some(f => f.status === 'ready') // 判斷是否有新檔
+  if (uploadRef.value && hasNewFile) {
+    // 有新圖 → 先上傳，上傳成功後 handleSuccess 再呼叫 save()
+    return uploadRef.value.submit()
+  }
+
   if (!selected || !selected.ID) { // 沒有 ID → 新增
     return articleAPI('add', selected)
       .then(res => {
@@ -173,7 +248,11 @@ const showInput = () => {
 // 確認輸入
 const handleInputConfirm = () => {
   if (inputValue.value) {
-    dynamicTags.value.push(inputValue.value)
+    if(inputValue.value.length > 5){
+        ElMessage.error("標籤最多 5 個字");
+    }else{
+      dynamicTags.value.push(inputValue.value)
+    }
   }
   inputVisible.value = false
   inputValue.value = ""
@@ -214,7 +293,7 @@ const saveTag = () => {
 
       <!--------------------標籤頁面------------------------>
       <div v-if="showtag" class="Admin-News-modal"  @click.self="close('tag')">
-          <form class="Admin-News-form">
+          <form class="Admin-News-form" @submit.prevent>
               <div class="Admin-News-h1">
                 <h1>標籤新增刪除</h1>
               </div>
@@ -234,7 +313,7 @@ const saveTag = () => {
                   v-model="inputValue"
                   class="w-20"
                   size="small"
-                  @keyup.enter="handleInputConfirm"
+                  @keydown.enter.prevent="handleInputConfirm"
                   @blur="handleInputConfirm"
                 />
                 <el-button v-else class="button-new-tag" size="small" @click="showInput" style="margin-left: 10px;">
@@ -286,12 +365,17 @@ const saveTag = () => {
 
             <div class="Admin-article-image">
               <h2>圖片:</h2>
-              <el-upload class="upload-demo" action="http://localhost/start/upload.php"  
+              <el-upload class="upload-demo"  action="https://tibamef2e.com/tjd102/g1/pdo/news/upload.php"  
                 list-type="picture-card"
+                ref="uploadRef"
+                :auto-upload="false"
+                :before-upload="beforeUpload"
                 :on-success="handleSuccess"
                 :on-error="handleError"
                 :file-list="fileList"
                 :limit="1"
+                :on-change="handleChange"
+                name="file"
                 > 
                 <el-icon v-if="fileList.length === 0"><Plus /></el-icon>
               </el-upload>
@@ -299,8 +383,12 @@ const saveTag = () => {
 
             <div class="Admin-article-content">
               <h2>內文:</h2>
+              <div class="textarea-box">
               <textarea name="" id="" v-model="selected_article.content"></textarea>
+              <span>目前字數：{{ selected_article.content?.length || 0 }}</span>
+              </div>
             </div>
+            
 
             <div class='Admin-News-button Admin-article-actions'>
               <button type="button" @click="close('article')" >關閉</button>
@@ -367,16 +455,33 @@ const saveTag = () => {
       .Admin-article-content{
         
         display: flex;
+        gap: 10px;
+
+        .textarea-box {
+          position: relative;
+          flex: 1;
+
+            textarea{
+              padding: 0;
+              padding-bottom: 24px;
+              width: 480px;
+              border: 1px solid black;
+              border-radius: 5px;
+              height: 250px;
+              resize: vertical;
+              box-sizing: border-box;
+            }
+            span{
+              position: absolute;
+              right: 8px;
+              bottom: 6px;
+              font-size: 12px;
+              color: #999;
+              pointer-events: none; // 不要影響使用者輸入
+            }
         
-        textarea{
-          padding: 0;
-          margin-left: 10px;
-          width: 480px;
-          border: 1px solid black;
-          border-radius: 5px;
-          height: 250px;
-          resize: vertical;
         }
+        
       }
 
       .Admin-article-settings{
@@ -424,6 +529,13 @@ form{
         height: 250px;
         overflow-y: auto;
         overflow-x: hidden; 
+        
+        
+        :deep(.el-tag){
+          margin-right: 8px;
+          margin-bottom: 8px;
+          font-size: 14px;
+        }
         
 
         .Admin-News-h1{

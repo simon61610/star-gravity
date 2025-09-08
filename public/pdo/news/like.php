@@ -1,6 +1,6 @@
 <?php
 
-include('pdo.php');
+include('../pdo.php');
 // include('cors.php');
 // include('db.php');
 
@@ -14,7 +14,7 @@ $action = $data['action'] ?? 'like'; //預設是點讚行為
 
 //查詢總讚數的funtion
 function getlikeCount($pdo, $article_id, $token){
-    $sql = "SELECT COUNT(*) as likeCount FROM likes WHERE article_id = ?";
+    $sql = "SELECT COUNT(*) as likeCount FROM Likes WHERE article_id = ?";
     $statement = $pdo->prepare($sql);
     $statement->bindValue(1,$article_id);
     $statement->execute();
@@ -22,7 +22,7 @@ function getlikeCount($pdo, $article_id, $token){
     $likeCount = $result['likeCount'] ?? 0;
 
     //2.再從like表查token有沒有重複
-    $sql = "SELECT * FROM likes WHERE article_id = ? AND token = ? LIMIT 1";
+    $sql = "SELECT * FROM Likes WHERE article_id = ? AND token = ? LIMIT 1";
     $statement = $pdo->prepare($sql);
     $statement->bindValue(1,$article_id);
     $statement->bindValue(2,$token);
@@ -35,7 +35,7 @@ function getlikeCount($pdo, $article_id, $token){
 
 if($action === 'like'){
 
-    $sql = "INSERT IGNORE INTO likes( token , article_id) VALUES (?,?)  ";
+    $sql = "INSERT IGNORE INTO Likes( token , article_id) VALUES (?,?)  ";
     $statement = $pdo->prepare($sql);
     $statement -> bindValue(1,$token);
     $statement -> bindValue(2,$article_id);
@@ -58,7 +58,7 @@ if($action === 'like'){
 ];
 
 }else if ($action === 'unlike'){
-    $sql = "DELETE FROM likes WHERE token = ? AND article_id = ? ";
+    $sql = "DELETE FROM Likes WHERE token = ? AND article_id = ? ";
     $statement = $pdo->prepare($sql);
     $statement -> bindValue(1,$token);
     $statement -> bindValue(2,$article_id);
@@ -66,7 +66,7 @@ if($action === 'like'){
     $rows = $statement->rowCount(); // 取得受影響的筆數（成功新增應該是 1）
     $message = "取消按讚";
 
-    $sql = "SELECT COUNT(*) as likeCount FROM likes WHERE article_id = ?";
+    $sql = "SELECT COUNT(*) as likeCount FROM Likes WHERE article_id = ?";
     $statement = $pdo->prepare($sql);
     $statement->bindValue(1,$article_id);
     $statement->execute();
@@ -99,6 +99,6 @@ if($action === 'like'){
 
 
 //處理回傳的結果
-echo json_encode($respbody); 
+echo json_encode($respbody,JSON_UNESCAPED_UNICODE); 
 
 ?>

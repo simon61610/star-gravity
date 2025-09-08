@@ -5,8 +5,9 @@
 -->
 
 <script setup>
-    import { ref, computed, onMounted } from 'vue'
+    import { ref, computed, onMounted, watch } from 'vue'
     import $ from 'jquery'
+    import axios from 'axios'
     
     // 商品假資料 => 要改用 storage 傳入
     const productDetail = ref(
@@ -36,23 +37,33 @@
 
 
     // 縣市假資料
-    const cities = ref([
+    /* const cities = ref([
         { name: '台北市', districts: ['中正區', '大同區', '中山區', '松山區', '大安區'] },
         { name: '新北市', districts: ['板橋區', '新莊區', '中和區', '永和區', '三重區'] },
         { name: '桃園市', districts: ['桃園區', '中壢區', '平鎮區', '八德區'] },
-    ])
+    ]) */
+    
+   /* const districts = computed(() => {
+       const city = cities.value.find(c => c.name === selectedCity.value)
+       return city ? city.districts : []
+   }) */
 
+    const cities = ref([])
     const selectedCity = ref('')
     const selectedDistrict = ref('')
 
     const districts = computed(() => {
-        const city = cities.value.find(c => c.name === selectedCity.value)
-        return city ? city.districts : []
+        const city = cities.value.find(c => c.CityName === selectedCity.value)
+        return city ? city.AreaList : []
+    })
+
+    watch(selectedCity, () => {
+        selectedDistrict.value = ""
     })
 
 
     // 引用 jQuery 做 toggle
-    onMounted(() => {
+    onMounted(async() => {
 
         // 預設關起來
         $('.toggle-content').hide()
@@ -75,6 +86,11 @@
                 $('#cartCount').removeClass('open')
             }
         })
+
+        // 縣市資料 json
+        const res = await axios.get('/JSON_CSV_XML/CityCountyData.json')
+        cities.value = res.data
+        // console.log(cities.value)
     })
     
 </script>
@@ -178,18 +194,18 @@
                         <h3><span>*</span>地址</h3>
                         <div class="address">
                             <!-- 縣市 -->
-                            <select id="" v-model="selectedCity">
+                            <select v-model="selectedCity">
                                 <option value="">請選擇縣市</option>
-                                <option v-for="city in cities" :value="city.name">
-                                    {{ city.name }}
+                                <option v-for="city in cities" :value="city.CityName">
+                                    {{ city.CityName }}
                                 </option>
                             </select>
 
                             <!-- 區 -->
-                            <select id="" v-model="selectedDistrict" :disabled="!selectedCity">
+                            <select v-model="selectedDistrict" :disabled="!selectedCity">
                                 <option value="">請選擇區域</option>
-                                <option v-for="district in districts" :value="district">
-                                    {{ district }}
+                                <option v-for="district in districts" :value="district.AreaName">
+                                    {{ district.AreaName }}
                                 </option>
                             </select>
                         </div>

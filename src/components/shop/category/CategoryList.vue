@@ -25,8 +25,8 @@
     const emit = defineEmits(['select'])
 
     // 點擊分類 => 事件傳送 select，資料傳送主和副的名稱
-    const selectSub = (main, sub) => {
-        emit('select', {main, sub})
+    const selectSub = (sub) => {
+        emit('select', sub)
     }
 
 
@@ -52,7 +52,7 @@
                     <ul class="product-items" v-if="isShow[index]">
                         <li
                             v-for="item in category.items"
-                            @click = 'selectSub(category.name, item)'
+                            @click = 'selectSub(item)'
                         >
                         {{ item }}
                         </li>

@@ -67,7 +67,7 @@ const filterArticles = computed(()=>{
         @changeCategory= "changeCategory" 
         />
 
-        <NewsArticleList :articles="showArticles"/>
+        <NewsArticleList :articles="showArticles" />
         <Pagination 
          v-model= "currentPage"
          v-model:pageSize= "pageSize"  

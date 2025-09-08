@@ -9,7 +9,7 @@ const article = ref(null)
 const route = useRoute()
 
 onMounted(() => {
-    axios.get(`http://localhost/start/newsgetall.php?id=${route.params.id}`)
+    axios.get(`https://tibamef2e.com/tjd102/g1/pdo/news/newsgetall.php?id=${route.params.id}`)
         .then(res => {
         article.value = res.data.article
         })
@@ -17,7 +17,7 @@ onMounted(() => {
         console.log(err,'資料單篇失敗')
         })
 
-    axios.get(`http://localhost/start/newssearch.php`)
+    axios.get(`https://tibamef2e.com/tjd102/g1/pdo/news/newssearch.php`)
         .then(res => {
             articles.value = res.data
         })
@@ -27,7 +27,7 @@ onMounted(() => {
 })
 
 watch(() => route.params.id, async (newId) => {  //監聽單篇文章id 
-  axios.get(`http://localhost/start/newsgetall.php?id=${newId}`)
+  axios.get(`https://tibamef2e.com/tjd102/g1/pdo/news/newsgetall.php?id=${newId}`)
     .then(res => {
       article.value = res.data.article
     })

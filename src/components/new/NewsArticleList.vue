@@ -1,6 +1,5 @@
 <script setup>
-//import testimg from '@/assets/images/110093480_m.jpg'; // Assuming the image is in the assets folder
-import { onMounted, ref, } from 'vue'
+import { onMounted, ref} from 'vue'
 import axios from "axios";
 
 //--------------------------接收父層文章渲染回傳值-------------------------//
@@ -10,7 +9,6 @@ const props = defineProps({
     required: true  //如果沒傳值會警告
   }
 }) 
-
 //---------------------------建立一個token--------------------------------//
 function getUserToken() {
   let token = localStorage.getItem("userToken"); //將 token 存到localStorage
@@ -26,18 +24,17 @@ const userToken = getUserToken();
 
 onMounted(()=>{  
     setTimeout(()=>{          //利用時間延遲讓父層能抓到資料
-        props.articles.forEach(article => {
-        axios.post(
-            "http://localhost/start/like.php", 
-                
-                {   
-                    token: userToken,
-                    article_id: article.ID,
-                    action: "get"
-                },
+        if (Array.isArray(props.articles) && props.articles.length > 0){
+            props.articles.forEach(article => {
+        axios.post("pdo/news/like.php", 
+            {   
+                token: userToken,
+                article_id: article.ID,
+                action: "get"
+            },
 
-                {headers: { "Content-Type": "application/json" }}
-                )
+            {headers: { "Content-Type": "application/json" }}
+            )
 
             .then(res => {
             article.likeCount = res.data.likeCount;
@@ -48,6 +45,10 @@ onMounted(()=>{
             })
         })
 
+        }else{
+            console.warn(" props.articles 尚未有資料，跳過查詢")
+        }
+        
     },500)
     
 })
@@ -107,50 +108,12 @@ onMounted(()=>{
 
 
 <template>
-
-   <!----<div class="news-article-wrapper">
-
-        <div class="news-article-list">
-
-            <div class="news-article-img">
-                    <img :src="testimg" alt=""  />
-            </div>
-
-            <div class="news-article-header">
-
-                <div class="news-article-tt">
-
-                    <div class="news-article-title">
-                        <h3>天象事件</h3>
-                        <h2>5/24 下午1600 日全蝕發生!</h2>
-                    </div>
-
-                    <div class="news-article-time">
-                        <p>2025/5/23</P>
-                        <button @click="toglike">
-                            <p><i :class='["fa-regular fa-star", liked ? "fa-duotone fa-solid fa-star":"fa-regular fa-star"]'></i></p> 
-                            <span>{{ likeCount }}</span>
-
-                        </button>                     
-                    </div>
-
-                </div>
-
-                <div class="news-article-content">
-                    <p>6月21日,台灣將迎來難得一見的天文奇景——日環蝕，也被譽為「上帝的金戒指」。在日月精準交會的剎那，太陽被月亮遮掩，只留下一道璨的金環，彷彿宇宙為地球戴上的神聖指環。錯過，將是一生遺憾。</p>
-                    <p class="Readmore">Read more</p>
-                </div>
-
-            </div>
-            
-        </div>       
-    </div>------->
         <div class="news-article-wrapper">
 
-            <div class="news-article-list" v-for="article in props.articles" :key="article.ID">
+            <div class="news-article-list" v-for="article in props.articles" :key="article.ID" v-if="article && article.ID">
 
 
-                    <router-link :to= "{ name: 'ArticleDetailpage', params: { id: article.ID } }" class="news-article-img">    <!--抓陣列資料前者article陣列裡的物品,後者是整個陣列-->
+                    <router-link :to= "{ name: 'ArticleDetailpage', params: { id: article.ID } }" class="news-article-img" v-if="article && article.ID">    <!--抓陣列資料前者article陣列裡的物品,後者是整個陣列-->
                         <img :src=article.image alt=""/>  
                     </router-link>
 
@@ -254,6 +217,7 @@ onMounted(()=>{
         .news-article-img{
            // flex: 0 1 350px;  
             max-width:350px;
+            aspect-ratio: 3 / 2;
             width: 100%;
             padding: 5px;
             box-sizing: border-box;
@@ -261,7 +225,7 @@ onMounted(()=>{
 
             img{
                 width: 100%;  
-                height: auto;
+                height: 100%;
                 display: block; 
                 object-fit: cover;       
             }            

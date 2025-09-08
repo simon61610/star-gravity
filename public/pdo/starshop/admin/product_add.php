@@ -41,7 +41,7 @@
     $sql = "INSERT INTO Product
             (name, category_name, original_price, discount, sale_price, promotion, description, introduction, stock, is_active)
             VALUES
-            (:name, :category_name,:original_price, :discount, :sale_price, :promotion, :description, :introduction, :stock, :is_active)";
+            (:name, :category_name,:original_price, :discount, :sale_price, :promotion, :description, :introduction, :stock, :is_active);";
 
     $statement = $pdo -> prepare($sql);
     $statement -> bindParam(":name", $name);
@@ -58,14 +58,8 @@
     //執行新增商品
     $statement -> execute();
 
-    echo json_encode([
-        "success" => true,
-        "message" => "商品新增成功"
-    ]);
-
     //==============================================================================
     // 取得新增商品的 ID
-
     $product_id = $pdo -> lastInsertId();
 
     if(isset($images)){
@@ -75,11 +69,20 @@
             $filePath_Temp = $images["tmp_name"][$key];   //Server上的暫存檔路徑含檔名        
             $fileType = $images["type"][$key];    //檔案種類        
             $fileSize = $images["size"][$key];    //檔案尺寸
+            $fileError = $images["error"][$key];
+
+            // 如果傳進來是 null，要跳過這次
+            if($fileName === "" || $fileError !== 0){
+                continue;
+            }
 
             //Web根目錄真實路徑
             $ServerRoot = $_SERVER["DOCUMENT_ROOT"];
+
             //檔案最終存放位置
-            $filePath = $ServerRoot . "/starshop/images/" . $fileName;
+            $filePath = $ServerRoot . "/pdo/starshop/images/" . $fileName;
+            // $filePath = $ServerRoot . "/tjd102/g1/pdo/starshop/images/" . $fileName; //部屬前待修改路徑
+
             //將暫存檔搬移到正確位置
             move_uploaded_file($filePath_Temp, $filePath);
 
@@ -98,5 +101,10 @@
             $statementImg -> execute();
         }
     }
+
+    echo json_encode([
+        "success" => true,
+        "message" => "商品與圖片新增成功"
+    ]);
 
 ?>

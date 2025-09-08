@@ -1,7 +1,7 @@
 <?php
 
 
-include('pdo.php');
+include('../pdo.php');
 // include('cors.php');
 // include('db.php');
 
@@ -13,7 +13,7 @@ $article_id = $data['article_id'] ?? null;
 
 
     //刪掉tag本身與文章之間得關聯 
-    $sql = "DELETE FROM articletag WHERE article_id = ?";
+    $sql = "DELETE FROM ArticleTag WHERE article_id = ?";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$article_id]);
 
@@ -25,7 +25,7 @@ $article_id = $data['article_id'] ?? null;
 
 foreach ($tags as $tag) {
     // 1. 檢查標籤是否存在
-    $sql = "SELECT id FROM tag WHERE tag_name = ?";
+    $sql = "SELECT id FROM Tag WHERE tag_name = ?";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$tag]);
     $tagRow = $stmt->fetch();
@@ -34,13 +34,13 @@ foreach ($tags as $tag) {
             $tagId = $tagRow['id']; // 標籤已存在 → 用舊的
         } else {
             // 標籤不存在 → 新增
-            $sql = "INSERT INTO tag (tag_name) VALUES (?)";
+            $sql = "INSERT INTO Tag (tag_name) VALUES (?)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$tag]);
             $tagId = $pdo->lastInsertId();
         }
      // 2. 綁定到文章
-    $sql = "INSERT IGNORE INTO articletag (article_id, tag_id) VALUES (?, ?)";
+    $sql = "INSERT IGNORE INTO ArticleTag (article_id, tag_id) VALUES (?, ?)";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$article_id, $tagId]);
 
@@ -60,7 +60,7 @@ $respbody = [
 
 
 //處理回傳的結果
-echo json_encode($respbody); 
+echo json_encode($respbody,JSON_UNESCAPED_UNICODE); 
 
 
 

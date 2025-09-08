@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/admin.js' 
 import loaderKit from '@/composables/loaderState.js'            // ★ 匯入 default 物件
 const { show, set, hide, loader } = loaderKit               // ★ 一次解構需要的東西
 
@@ -200,14 +201,14 @@ const routes = [
       name: '/AdminLayoutPage',     
       component: () => import('@/views/admin/AdminLayoutPage.vue'),
       meta: { 
-        requiresAuth: true,
-        layout:'backend'
+        // requiresAuth: true,
+        layout:'backend'  //使用後台的版型
        } , //提示路由這個頁面要認證才可以跳轉
       children:[
           {
             path: '/AdminMemberPage',    
             name: 'AdminMemberPage',     
-            component: () => import('@/views/admin/AdminMemberPage.vue')
+            component: () => import('@/views/admin/AdminMemberPage.vue'),
           },
 
           {
@@ -231,7 +232,11 @@ const routes = [
           {
             path: '/AdminNewsPage',    
             name: 'AdminNewsPage',     
-            component:  () => import('@/views/admin/AdminNewsPage.vue')
+            component:  () => import('@/views/admin/AdminNewsPage.vue'),
+            meta: {
+              requiresAuth: true,
+              
+            }
           },
 
           {
@@ -279,11 +284,20 @@ const router = createRouter({
 
 
 //建立路由守衛 這是一個回呼涵式 
- router.beforeEach((to,from,next) => {
-  const token = localStorage.getItem('admin_token') //定義一個token 到 localStorage 裡面去取出 admin_token 的值
-  if(!token && to.meta.requiresAuth){ 
-    next({name:'AdminLoginPage'}) 
-    }    
+ router.beforeEach(async(to,from,next) => {
+  const admin = useAuthStore()
+  if(to.meta.requiresAuth){
+      await admin.checkSession()
+
+    if (!admin.isLoggedIn) {
+      return next({name:'AdminLoginPage'})
+    }
+  }
+
+  // const token = localStorage.getItem('admin_token') //定義一個token 到 localStorage 裡面去取出 admin_token 的值
+  // if(!token && to.meta.requiresAuth){ 
+  //   next({name:'AdminLoginPage'}) 
+  //   }    
   //如果沒有token,且是需要驗證的頁面,就跳轉到登入頁面 也可以寫{/path: '/AdminloginPage'}
   // } else{
   //   next()  //不須驗證頁面依上面設定跳轉畫面

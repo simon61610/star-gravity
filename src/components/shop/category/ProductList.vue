@@ -12,7 +12,7 @@
     // 父傳子接收: Proxy(Object) {main: '天文望遠鏡', sub: '基礎入門型'}
     const props = defineProps({
         selectedCate: {
-            type: Object,
+            type: String,
             default: null,
         }
     })
@@ -56,7 +56,7 @@
         }else {
             return items.value.filter((product) => {
                 // 商品分類名稱相等
-                return product.category.main === props.selectedCate.main && product.category.sub === props.selectedCate.sub
+                return product.category.sub === props.selectedCate
             })
         }
     })

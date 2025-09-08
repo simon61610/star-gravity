@@ -1,11 +1,15 @@
 <script setup>   
     import { useRoute, useRouter } from 'vue-router'
     import { ref, computed, onMounted } from 'vue'
+    // import { setLogin } from '@/composables/useAuth'
+
+    // setLogin(data.token)
 
     const router = useRouter()
     const route = useRoute()
 
     // 統一 API 位址
+    // const LOGIN_API  = '/PDO/Member/login.php'
     const API_BASE   = 'http://localhost'
     const LOGIN_API  = `${API_BASE}/PDO/Member/login.php`
 
@@ -32,13 +36,15 @@
 
     /* 信箱基本檢查樣式 */
     const MIN_PWD_LEN = 6
-    const emailRe = /\S+@\S+\.\S+/
+    // const emailRe = /\S+@\S+\.\S+/
+    const emailRe = 3
 
-    function refreshCode() {
-        captchaCode.value = genCode()
-    }
 
-    const showLogin = computed(() => route.path === '/loginfirst')
+    // function refreshCode() {
+    //     captchaCode.value = genCode()
+    // }
+
+    // const showLogin = computed(() => route.path === '/loginfirst')
 
     // 判斷在哪頁
     const isLogin    = computed(() => route.path === '/loginfirst')
@@ -61,71 +67,51 @@
         }
 
         loading.value = true
-        try {
-            // 呼叫後端php
-            const res = await fetch(LOGIN_API, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',   
-                // mode: 'cors',
-                body: JSON.stringify({
-                    email: email.value.trim(),
-                    password: pwd1.value
-                })
-            })
-            let data = null
-            const text = await res.text()
-            try{
-                data = JSON.parse(text)
-            } catch {
-                data = { ok: false, message: text }
-            }
-            
-            if (!res.ok || !data.ok) {
-                alert(data.message || '登入失敗')
-                // 失敗：清空密碼、刷新驗證碼，比較友善
-                pwd1.value = ''
-                captcha.value = ''
-                refreshCode()
-                return
-            }
-            
-            
-            // 成功：存狀態與使用者資訊
-            // localStorage.setItem(LS_AUTH, '1')
-            // if (data.user) {
-            //     const u = {
-            //         ID: data.user.ID,
-            //         name: data.user.name,
-            //         email: data.user.email,
-            //         phone: data.user.phone,
-            //         city: data.user.city,
-            //         area: data.user.area,
-            //         address: data.user.address
-            //     }
-            //     localStorage.setItem(LS_USER, JSON.stringify(u))
-            // }
-
-            // 成功：只存 token（後端用 Session 記住 memberID）
-            // php 會回 { ok:true, token:'...' }
-            if (!data.token) {
-                alert('登入失敗（缺少 token）')
-                return
-            }
-            localStorage.setItem(LS_TOKEN, data.token)
-
-            // 成功才導到會員中心
-            router.replace('/membercenter/personal')
-            } catch (e) {
-                alert(e?.message || '登入失敗，請稍後再試')
-                pwd1.value = ''
-                captcha.value = ''
-                refreshCode()
-            } finally {
-                loading.value = false
-        }
-
+              
+        
     }
+    // .then(data => {
+    //     console.log(data) // {"ok":true,"token":"32ccc8abaa660569c3d3c52c723b2ec8"}
+
+    //     let storage = localStorage
+
+    //     storage.setItem('memberToken', data.token)
+        
+    // })
+
+    //-------------------------------------------------
+
+    const login = () => {
+        
+        fetch('http://localhost/PDO/Member/login2.php' , {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:JSON.stringify({
+                email: email.value,
+                password: pwd1.value
+            }),
+        })
+        .then(res => res.json()) 
+        .then( result => {
+            if (result.success) {
+                console.log(result.user);
+                handleLoginSuccess(result)
+            }else{
+                console.log(result.message);
+                console.log(123455);
+                console.log(result.success);
+                
+            }
+        })
+        
+    }
+    function handleLoginSuccess (result){
+        localStorage.setItem('user', JSON.stringify(result.user))
+        setTimeout(() => {
+            router.push('/membercenter/personal')
+        }, 500)
+    }
+    
 </script>
 
 <template>     
@@ -170,7 +156,7 @@
                 </div>
                 <div class="forget-area">
                     <!--登入按鈕 -->
-                    <button class="login-btn" type="submit" :disabled="loading">確認</button>
+                    <button class="login-btn" type="submit" :disabled="loading" @click='login'>確認</button>
     
                     <!--忘記密碼 --> 
                     <div class="forgot">
