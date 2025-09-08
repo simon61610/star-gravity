@@ -20,8 +20,7 @@
                 p.introduction,
                 p.stock,
                 p.is_active,
-                GROUP_CONCAT(pi.image) AS images,
-                GROUP_CONCAT(pi.ID) AS image_ids
+                GROUP_CONCAT(pi.image) AS images
             FROM Product p
                 LEFT JOIN ProductImage pi 
                 ON p.ID = pi.product_id
