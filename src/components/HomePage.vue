@@ -70,8 +70,8 @@ function showQABox(){
 }
 //生命週期
 onMounted(()=>{
-        console.log('sss00000');
-console.log(import.meta.env.VITE_AJAX_URL);
+        // console.log('sss00000');
+        // console.log(import.meta.env.VITE_AJAX_URL);
     window.addEventListener('scroll', controlScroll)
 
         
