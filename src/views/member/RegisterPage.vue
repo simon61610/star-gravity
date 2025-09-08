@@ -16,20 +16,57 @@
     const pwd2 = ref('')
 
     // 可送出：密碼一致 + 最基本欄位都有
-    const canSubmit = computed(() => {    
-        return (
-            pwd1.value.length >= 6 &&
-            pwd2.value.length >= 6 &&
-            pwd1.value === pwd2.value &&
-            name.value.trim() &&
-            phone.value.trim() &&
-            gender.value &&
-            member.city &&
-            member.area &&
-            address.value.trim() &&
-            email.value.trim()
-        )
+    const canSubmit = computed(() => (
+        pwd1.value.length >= 6 &&
+        pwd2.value.length >= 6 &&
+        pwd1.value === pwd2.value &&
+        !!name.value.trim() &&
+        !!phone.value.trim() &&
+        !!gender.value &&
+        !!member.city &&
+        !!member.area &&
+        !!address.value.trim() &&
+        !!email.value.trim()
+    ))
+
+    // 新增：如果不能按，這裡會說明第一個沒過的原因
+    const whyDisabled = computed(() => {
+        if (loading.value) return '正在送出中'
+        if (pwd1.value.length < 6) return '密碼至少 6 碼'
+        if (pwd2.value.length < 6) return '確認密碼至少 6 碼'
+        if (pwd1.value !== pwd2.value) return '兩次密碼不一致'
+        if (!name.value.trim()) return '缺姓名'
+        if (!phone.value.trim()) return '缺電話'
+        if (!gender.value) return '缺性別'
+        if (!member.city) return '缺縣市'
+        if (!member.area) return '缺鄉鎮'
+        if (!address.value.trim()) return '缺地址'
+        if (!email.value.trim()) return '缺信箱'
+        return ''
     })
+
+    // 新增：任何欄位變更時在 console 顯示目前是否可送出與原因
+    // watch(
+    //     [pwd1, pwd2, name, phone, gender, () => member.city, () => member.area, address, email, loading], 
+    //     () => {
+    //         console.log('[canSubmit]', canSubmit.value, 'reason:', whyDisabled.value)
+    //     }
+    // )
+
+    // const canSubmit = computed(() => {    
+    //     return (
+    //         pwd1.value.length >= 6 &&
+    //         pwd2.value.length >= 6 &&
+    //         pwd1.value === pwd2.value &&
+    //         name.value.trim() &&
+    //         phone.value.trim() &&
+    //         gender.value &&
+    //         member.city &&
+    //         member.area &&
+    //         address.value.trim() &&
+    //         email.value.trim()
+    //     )
+    // })
 
     // 縣市區域選單
     const cities = ref([])
@@ -38,6 +75,7 @@
     // 驗證碼
     const captchaCode = ref('')
     const genCode = () => Math.random().toString(36).slice(2, 8).toUpperCase()
+    
     // 頁面載入時會重新跑一次
     onMounted(async () => {
         captchaCode.value = genCode()   
@@ -59,7 +97,7 @@
     const email = ref('')
     const captcha = ref('')
 
-    // 檔案上傳
+    // 圖片檔案上傳
     // const file = ref(null)              
 
     // 狀態
@@ -68,6 +106,7 @@
 
     // 送出：改為呼叫後端 PHP
     const handleRegister = async () => {
+        console.log('[submit]', { canSubmit: canSubmit.value, why: whyDisabled && whyDisabled.value })
         if (!canSubmit.value) {
             ElMessage.error('欄位未完成或密碼不一致')
             return
@@ -97,19 +136,34 @@
             // 依實際路徑調整
             const res = await fetch(REGISTER_API, {
                 method: 'POST',
+                // 註冊是公開 API，不帶 Cookie，避免不必要的預檢
+                credentials: 'omit',
+                // 不手動設定 Content-Type（瀏覽器會自動帶 multipart 邊界）
+                headers: { 'Accept': 'application/json' },
                 body: form,
             })
 
             // 有些失敗時非 JSON（如 500 HTML），要保護性解析
-            let data = {}
-            const text = await res.text()
-            try { data = JSON.parse(text) } catch { data = { ok: false, message: text } }
+            let data = null, text = ''
+            try {
+                data = await res.clone().json()
+            } catch {
+                text = await res.text()
+            }
+            // 方便檢查回應內容
+            console.log('[register status]', res.status, 'json:', data, 'text:', text)
 
-            if (!res.ok || !data.ok) {
-                const msg = Array.isArray(data.errors) && data.errors.length
-                ? data.errors[0]
-                : (data.message || `註冊失敗（HTTP ${res.status}）`)
-                throw new Error(msg)
+            // 放寬成功條件：ok / success 任一 truthy，或純文字含「成功」也算成功
+            const passed =  res.ok && (
+                (data && (data.ok || data.success)) ||
+                (!data && /成功/.test(text))
+            )
+            if (!passed) {
+                const msg =
+                    (data && (Array.isArray(data.errors) && data.errors[0])) ||
+                    (data && data.message) ||
+                    text ||  `註冊失敗（HTTP ${res.status}）`
+                    throw new Error(msg)
             }
 
             // 成功：把 email 暫存，登入頁可自動帶入
@@ -223,8 +277,11 @@
                         <img src="@/assets/icons/refresh.svg" alt="">
                     </button>
                 </div>
+                <!-- 新增：不能送出的原因提示 -->
+                <!-- <div  v-if="!canSubmit && !loading" style="color:#f66;margin:6px 0;">
+                    不能送出：{{ whyDisabled }}
+                </div> -->
                 <!-- 送出按鈕 -->
-                <!-- <button class="register-btn" type="submit">送出</button> -->
                 <button class="register-btn" type="submit" :disabled="loading || !canSubmit">
                     {{ loading ? '送出中...' : '送出' }}
                 </button>
