@@ -43,7 +43,7 @@ watch(() => route.params.id, async (newId) => {  //監聽單篇文章id
 <template>
     <main>
         <section class="article-page-body">
-            <ArticleContent  v-if="article" :article="article"/>  <!---v-if作用 等真的有東西(非null)才顯示文章內容 ----->
+            <ArticleContent  v-if="article" :article="article" :key="article.ID"/>  <!---v-if作用 等真的有東西(非null)才顯示文章內容 ----->
             <!-- <ArticleContent :id="$route.params.id" :key="$route.params.id"/>  -->
             <ArticleAside    v-if="article && articles.length"   :articles="articles" :article="article"/>
         </section>

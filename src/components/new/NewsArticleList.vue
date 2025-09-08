@@ -5,7 +5,7 @@ import axios from "axios";
 //--------------------------接收父層文章渲染回傳值-------------------------//
 const props = defineProps({
   articles: {
-    type: Array,
+    type: Array,  
     required: true  //如果沒傳值會警告
   }
 }) 
@@ -110,10 +110,10 @@ onMounted(()=>{
 <template>
         <div class="news-article-wrapper">
 
-            <div class="news-article-list" v-for="article in props.articles" :key="article.ID" v-if="article && article.ID">
+            <div class="news-article-list" v-for="article in props.articles" :key="article.ID">
 
 
-                    <router-link :to= "{ name: 'ArticleDetailpage', params: { id: article.ID } }" class="news-article-img" v-if="article && article.ID">    <!--抓陣列資料前者article陣列裡的物品,後者是整個陣列-->
+                    <router-link :to= "{ name: 'ArticleDetailpage', params: { id: article.ID } }" class="news-article-img">    <!--抓陣列資料前者article陣列裡的物品,後者是整個陣列-->
                         <img :src=article.image alt=""/>  
                     </router-link>
 
