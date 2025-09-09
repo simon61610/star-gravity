@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_圖層_1" data-name="圖層 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1440 816.89">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4 {
+        stroke-width: 0px;
+      }
+
+      .cls-2 {
+        fill: url(#radial-gradient);
+      }
+
+      .cls-3 {
+        fill: url(#radial-gradient-2);
+      }
+
+      .cls-4 {
+        fill: url(#_未命名漸層_239);
+      }
+    </style>
+    <radialGradient id="radial-gradient" cx="-312.64" cy="702.67" fx="-312.64" fy="702.67" r="1257.61" gradientTransform="translate(1046.66 188.93) scale(1.03 .9)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#384b9e"/>
+      <stop offset="1" stop-color="#0c1431"/>
+    </radialGradient>
+    <radialGradient id="radial-gradient-2" cx="-311.31" cy="707.47" fx="-311.31" fy="707.47" gradientTransform="translate(1099.38 171.29) scale(1.09 .93)" xlink:href="#radial-gradient"/>
+    <radialGradient id="_未命名漸層_239" data-name="未命名漸層 239" cx="720" cy="424.76" fx="720" fy="424.76" r="590.48" gradientTransform="translate(0 -56.37) scale(1 1.09)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2d55a5"/>
+      <stop offset=".18" stop-color="#284c95"/>
+      <stop offset=".54" stop-color="#1d366d"/>
+      <stop offset="1" stop-color="#0c1431"/>
+    </radialGradient>
+  </defs>
+  <rect class="cls-2" x="-22.76" y="4.74" width="1412.97" height="821.26"/>
+  <rect class="cls-3" x="-21.31" y="-13.55" width="1482.63" height="844"/>
+  <path class="cls-4" d="m-17.97,829L-20.51-8.3l1481.02-5.7v843H-17.97ZM289.41,54.35"/>
+  <path class="cls-1" d="m1.29,827.58L-1.18,4.46,1438.82-1.14v828.71H1.29ZM300.16,66.06"/>
+</svg>
