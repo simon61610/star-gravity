@@ -10,79 +10,6 @@
         "本網站保留活動內容之 最終修改與解釋權利。",
         "若有任何疑問，歡迎於訂單留言或與客服聯繫，感謝您的支持！",
     ])
-    
-    // ===================================================================================
-    // ===================================== 抓假資料 =====================================
-    // ===================================================================================
-    
-    /* 
-    // 商品假資料 => 要改用 storage 傳入
-    
-    const productDetail = ref(
-        [
-            {
-                name: '輕巧觀測鏡｜50mm 入門型牛頓式望遠鏡',
-                price: 2500,
-                specialprice: 2000,
-                pic: 'https://placehold.co/80x80',
-            },
-            {
-                name: '輕巧觀測鏡｜50mm 兒童型牛頓式望遠鏡',
-                price: 2000,
-                specialprice: 1600,
-                pic: 'https://placehold.co/80x80',
-            },
-            {
-                name: '輕巧觀測鏡｜50mm 進階型牛頓式望遠鏡',
-                price: 3000,
-                specialprice: 2400,
-                pic: 'https://placehold.co/80x80',
-            },
-        ]
-    ) 
-   
-
-
-    const products = productDetail.value
-    // console.log(products[0].name)
-
-
-    
-    // 每種商品的數量: 陣列，初始值為一
-    const qtyList = ref(products.map(() => 1))
-    // console.log(qtyList.value) // {0: 1, 1: 1, 2: 1} or [1, 1, 1]?????????
-    let qtyNumArr = qtyList.value
-
-    // 驗證商品數量
-    const checkQty = (index) => {
-        if(qtyNumArr[index] < 1){
-            qtyNumArr[index]=1
-        }
-    }
-
-    
-    // 計算合計金額
-    const total = computed(() => {
-        let sum = 0
-        
-        for(let i = 0; i < products.length; i++){
-            let spePrice = products[i].specialprice // 特價金額
-            let qty = qtyNumArr[i] // 數量
-
-            sum += spePrice * qty
-        }
-
-        return sum
-    })
-
-    // -----------------------------------------------------------------------
-
-    // 刪除商品
-    const deleteItem = (index) => {
-        products.splice(index, 1) // 刪除商品本身
-        qtyNumArr.splice(index, 1) // 刪除數量
-    } 
-    */
    
 
     // ===================================================================================
@@ -93,19 +20,21 @@
 
     // ===================================== 抓資料 =====================================
 
+    
     const doFirst = () => {
         const itemString = storage['addItemList']
-        // alert(itemString) // P1, P3, P5, 
+        // alert(itemString) // 1, 3, 5, 
         if(!itemString){
             cartItems.value = []
             return
         }
 
         let items = itemString.substring(0, itemString.length - 2).split(', ')
-        // alert(items) // P1,P3,P5
         let cartData = []
         
         for(let i = 0; i < items.length; i++){
+
+            // 商品名稱|圖片路徑|每件價格|數量|原價
             let itemInfo = storage.getItem(items[i])
             if(itemInfo){
                 // 建立商品資料的陣列，裡面包商品資料的物件
@@ -119,58 +48,61 @@
 
     const createCartList = (itemId, itemValue) => {
         let existInfo = itemValue.split('|')
-        // console.log(existInfo) //['基礎入門型 商品 1', 'https://placehold.co/480x480?text=Product+1', '19436']
-        let itemTitle = existInfo[0] // 商品名稱
-        let itemImgURL = existInfo[1] // 圖片連結
-        let itemTotalPrice = parseInt(existInfo[2]) // 商品總價
-        
-        // 找單價: 從原始的 products 資料
-        let productId = Number(itemId.replace('P', ''))
-        let product = products.find(p => p.id == productId)
-        let originalPrice = product ? product.specialPrice : 1 // 優惠單價
-        
-        // 計算數量: 總價 / 單價
-        let quantity = Math.round( itemTotalPrice / originalPrice ) // 數量
 
-        // console.log(quantity) // 檢查用
+        // console.log(existInfo); // 商品名稱|圖片路徑|每件價格|數量|原價
+        // ['入門啟蒙款 NovaSight 雙筒望遠鏡', '/pdo/starshop/images/雙筒望遠鏡-入門啟蒙款 NovaSight 雙筒望遠鏡-1.png', '2700', '2']
+        
+        let name = existInfo[0] // 商品名稱
+        let fitstImage = existInfo[1] // 圖片路徑
+        let unitPrice = existInfo[2] // 特價單價
+        let qty = existInfo[3] // 單種商品數量
+        let originalPrice = existInfo[4] // 商品原價
+        
+        let itemSubTotal = unitPrice * qty // 商品總價
+        // console.log(itemSubTotal);
 
         return {
-            id: itemId,
-            name: itemTitle,
-            pic: itemImgURL,
-            speprice: originalPrice,
-            qty: quantity,
-            subtotal: itemTotalPrice,
+            ID: itemId,
+            name,
+            fitstImage,
+            originalPrice,
+            unitPrice,
+            qty,
+            itemSubTotal
         }
     }
 
     // ===================================== 計算新的數量 => 價格 =====================================
-    // item 是抓資料出來的物件
+    // item 是抓資料出來的商品 Object
     const changeItemCount = (item, index) => {
         if(item.qty < 1){
             item.qty = 1
         }
 
         // 重新計算小計
-        item.subtotal = item.qty * item.speprice
-
-        // 更新 localStorage 中的價錢
-        let itemInfo = storage.getItem(item.id)
+        item.itemSubTotal = item.qty * item.unitPrice
+        
+        // 更新 localStorage 中的數量
+        // 商品名稱|圖片路徑|每件價格|數量|原價
+        let itemInfo = storage.getItem(item.ID)
         if(itemInfo){
-            let parts = itemInfo.split('|')
-            parts[2] = item.subtotal
-            storage.setItem(item.id, parts.join('|'))
+            let parts = itemInfo.split('|') // ['入門孩童款 50mm 入門望遠鏡', '/pdo/starshop/images/基礎入門型1-3.png', '3840', '1', '4800']
+            parts[3] = item.qty
+            storage.setItem(item.ID, parts.join('|'))
+
+            // console.log(storage.getItem(item.ID))
         }
+
 
         bus.emit('notifyUpdateCart') // 通知 header
     }
 
     // ===================================== 計算合計金額 =====================================
-    const total = computed(() => {
+    const totalPrice = computed(() => {
         let sum = 0;
 
         for(let i = 0; i < cartItems.value.length; i++){
-            sum += cartItems.value[i].subtotal
+            sum += cartItems.value[i].itemSubTotal
         }
 
         return sum
@@ -182,11 +114,11 @@
         const item = cartItems.value[index] // 要被刪除的該物件
         
         // 1. 移除 storage 中的該項 & addItemList 的id
-        storage.removeItem(item.id)
+        storage.removeItem(item.ID)
         let itemString = storage.getItem('addItemList') 
         if (itemString) {
             // 移除 "P1, P3, P5, " 格式的字串
-            let updatedItemString = itemString.replace(`${item.id}, `, '')
+            let updatedItemString = itemString.replace(`${item.ID}, `, '')
             storage.setItem('addItemList', updatedItemString)
         }
 
@@ -225,15 +157,15 @@
                 <li class="item" v-for="(item, index) in cartItems">
 
                     <!-- 商品圖片 -->
-                    <img :src="item.pic" alt="" class="item__img">
+                    <img :src="item.fitstImage" alt="" class="item__img">
 
                     <!-- 商品資訊 -->
                     <div class="item__info">
                         <h2 class="item__info__name">{{ item.name }}</h2>
                         <div class="item__info__price">
                             <div class="price-per-item">
-                                <p class="spe-price">NT${{ item.speprice }}</p>
-                                <!-- <p class="price">NT${{ product.price }}</p> -->
+                                <p class="spe-price">NT${{ item.unitPrice }}</p>
+                                <p class="price">NT${{ item.originalPrice }}</p>
                             </div>
                             <div class="qty-ctrl">
                                 <input 
@@ -246,7 +178,7 @@
                                 <!-- @blur="checkQty(index)" 移除Blur事件驗證 -->
                             </div>
                             <p class="price-subtotal">
-                                小計：NT${{ item.subtotal }}
+                                小計：NT${{ item.itemSubTotal }}
                             </p>
                         </div>
                     </div>
@@ -286,9 +218,9 @@
                 <h2>訂單資訊</h2>
                 <div class="order-cal">
                     <div class="cal-box">
-                        <p><span>合計</span><span>NT${{ total }}</span></p>
+                        <p><span>合計</span><span>NT${{ totalPrice }}</span></p>
                         <p><span>運費</span><span>NT$60</span></p>
-                        <p><span>總計</span><span>NT${{ total + 60 }}</span></p>
+                        <p><span>總計</span><span>NT${{ totalPrice + 60 }}</span></p>
                     </div>
                     <router-link to="/cartpage/cartform" class="router-link">
                         <div class="goto-pay-btn">前往結帳</div>
@@ -338,6 +270,7 @@
                         width: 80px;
                         height: 80px;
                         object-fit: cover;
+                        border: 1px solid #ccc;
                     }
                     &__info { // 商品名稱與金額
                         display: flex;

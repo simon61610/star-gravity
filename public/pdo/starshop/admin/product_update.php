@@ -84,7 +84,7 @@
             move_uploaded_file($filePath_Temp, $filePath);
 
             // 建立要存到資料庫的圖檔路徑字串
-            $imagePath = "/starshop/images/" . $fileName;
+            $imagePath = "/pdo/starshop/images/" . $fileName;
 
             //建立SQL
             $sqlImg = "UPDATE ProductImage

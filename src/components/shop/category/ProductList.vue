@@ -3,12 +3,40 @@
     import Pagination from '@/components/common/Pagination.vue';
     import shopToast from '@/components/common/shopToast.vue';
     // 方法
-    import { ref, watch, computed } from 'vue'
+    import { ref, watch, computed, onMounted } from 'vue'
     import bus from '@/composables/useMitt';
     import { showToast } from '@/composables/useToast';
+    import axios from 'axios';
     // 假資料
-    import products from '@/data/products';
+    // import products from '@/data/products';
+    // const items = ref(products) // 生成假資料
+
+    const items = ref([])
+
+    onMounted(async() => {
+        const res = await axios.get(import.meta.env.VITE_AJAX_URL + 'starshop/client/products_get.php')
+        // console.log(res.data);
+        
+        items.value = res.data
+
+        /* 
+        ID : 1
+        category_name : "基礎入門型"
+        description : "適合兒童的觀星好物，入門款天文望遠鏡，支援手機拍攝記錄。"
+        discount : 80
+        images : "/pdo/starshop/images/基礎入門型1-3.png,/pdo/starshop/images/基礎入門型1-2.png,/pdo/starshop/images/基礎入門型1-3.png"
+        introduction : "別看它小巧輕便，這台望遠鏡可是為初學觀星者量身打造。結構簡單易上手，適合孩子與初學者進入天文世界第一步。鏡筒設計清楚直觀，能輔助理解反射式望遠鏡的基本運作，無論白天觀察遠景或夜間捕捉星光，都能輕鬆拍攝記錄。"
+        is_active : 1
+        name : "入門孩童款 50mm 入門望遠鏡"
+        original_price : 4800
+        promotion : "全館望遠鏡皆享保固內免費清潔服務。"
+        sale_price : 3840
+        stock : 50 
+        */
+    })
     
+// -------------------------------------------------------------------------------
+
     // 父傳子接收: Proxy(Object) {main: '天文望遠鏡', sub: '基礎入門型'}
     const props = defineProps({
         selectedCate: {
@@ -20,7 +48,6 @@
 
 // -------------------------------------------------------------------------------
 
-    const items = ref(products) // 生成假資料
     // console.log(items)
     const currentPage = ref(1) // 預設第一頁
     const pageSize= ref(16) // 每頁顯示幾筆
@@ -56,7 +83,7 @@
         }else {
             return items.value.filter((product) => {
                 // 商品分類名稱相等
-                return product.category.sub === props.selectedCate
+                return product.category_name === props.selectedCate
             })
         }
     })
@@ -82,29 +109,51 @@
     
     const storage = localStorage
 
+    // 商品名稱|圖片路徑|每件價格|數量|原價
     function addCart(product){
         if(!storage['addItemList']){
             storage['addItemList'] = ''
         }
 
-        /* Storage 的 Key 和 Value */
-        const itemId = `P${product.id}`
-        const itemValue = `${product.name}|${product.pic}|${product.specialPrice}`
+        const itemId = product.ID
+        const firstImage = product.images.split(',')[0]
+        const unitPrice = product.sale_price
+        const originalPrice = product.original_price
 
+        // 如果已經買過，增加數量
+        if(storage[itemId]){
+            let existInfo = storage[itemId].split('|')
+            // console.log(existInfo) // ['入門孩童款 50mm 入門望遠鏡', '/pdo/starshop/images/基礎入門型1-3.png', '3840', '1']
+            let newQty = +existInfo[3] + 1 // 用 + 隱性轉型
+            // console.log(typeof(newQty)) // number
+            let updatedInfo = `${existInfo[0]}|${existInfo[1]}|${existInfo[2]}|${newQty}|${originalPrice}`
+
+            storage[itemId] = updatedInfo
+            
+        }else{ // 第一次買
+            storage['addItemList'] += `${itemId}, `
+            storage[itemId] = `${product.name}|${firstImage}|${unitPrice}|1|${originalPrice}`
+        }
+
+        /* Storage 的 Key 和 Value */
+        /* const itemId = `P${product.ID}`
+        const firstImage = product.images.split(',')[0]
+        const itemValue = `${product.name}|${firstImage}|${product.sale_price}` // 輕型孩童款 50mm 輕型望遠鏡|/pdo/starshop/images/基礎入門型2-1.png|3840
+ */
         // alert(itemValue) 
         // itemId => P1 
         // itemValue => 基礎入門型 商品 1|https://placehold.co/480x480?text=Product+1|9718
         // ===============================================================================
 
         /* 直接從物件中抓的資料字串 */
-        const itemName = product.name // 基礎入門型 商品 1
-        const itemPic = product.pic // https://placehold.co/480x480?text=Product+1
-        const itemSpecialPrice = product.specialPrice // 9718
+        /* const itemName = product.name // 基礎入門型 商品 1
+        const itemPic = firstImage // https://placehold.co/480x480?text=Product+1
+        const itemSpecialPrice = product.sale_price // 9718 */
         // alert(itemSpecialPrice)
 
         // ===============================================================================
         
-        if(storage[itemId]){ // 如果已經買過，價格累加
+        /* if(storage[itemId]){ // 如果已經買過，價格累加
             let existInfo = storage[itemId].split('|') // 字串切割成陣列，用 split 方法
             // console.log(existInfo) ['基礎入門型 商品 1', 'https://placehold.co/480x480?text=Product+1', '9718']
             let existSpecialPrice = parseInt(existInfo[2]) // 原本的價格
@@ -117,7 +166,7 @@
         }else{ //第一次買
             storage['addItemList'] += `${itemId}, `
             storage[itemId] = itemValue
-        }
+        } */
 
         // ===============================================================================
         bus.emit('notifyUpdateCart') // 通知 Header 更新購物車數量
@@ -139,12 +188,12 @@
         <div class="product-items">
             <div class="item__card" v-for="( item, index ) in showItems"> <!-- 用顯示的商品陣列跑 v-for -->
 
-                <RouterLink :to="`/shop/category/product/${item.id}` "class="router-link" > 
-                    <img :src="item.pic" alt="商品假圖" class="item__card__img">
+                <RouterLink :to="`/shop/category/product/${item.ID}` "class="router-link" > 
+                    <img :src="item.images.split(',')[0]" alt="商品假圖" class="item__card__img">
                     <div class="item__card__text">
                         <h1 class="item__card__text--name">{{ item.name }}</h1>
-                        <h2 class="item__card__text--spe-price">NT$ {{ item.specialPrice }}</h2>
-                        <h3 class="item__card__text--price">NT$ {{ item.price }}</h3>
+                        <h2 class="item__card__text--spe-price">NT$ {{ item.sale_price }}</h2>
+                        <h3 class="item__card__text--price">NT$ {{ item.original_price }}</h3>
                     </div>
                 </RouterLink>
 

@@ -2,7 +2,7 @@
 import { ref, onMounted,watch } from 'vue'
 import { useRoute } from 'vue-router'
 import bus from '@/composables/useMitt'
-import products from '@/data/products'
+// import products from '@/data/products'
 import  logo from '@/assets/logos/logo.svg'
 const emit = defineEmits(['open'])
 const active = ref(false)
@@ -40,15 +40,29 @@ watch(
 
     // ------------------------------------------------------
     const updateCart = () => {
-        let itemString = storage['addItemList']
-        // console.log(itemString) // P2, P1, P3, 
+        let itemString = storage['addItemList'] // 1, 2, 3, 
+        // alert(itemString)
 
         if(!itemString || itemString == ''){
             cartCount.value = 0
             return
         }
 
-        let items = itemString.substring(0, itemString.length - 2).split(', ')
+        let itemsId = itemString.substring(0, itemString.length - 2).split(', ')
+        // alert(itemsId) // 3,4,1,2
+
+        let totalQuantity = 0
+
+        for(let i = 0; i < itemsId.length; i++){
+            let itemInfo = storage.getItem(itemsId[i])
+            if(itemInfo) {
+                let qty = itemInfo.split('|')[3]
+                // console.log(parts)
+                totalQuantity += Number(qty)
+            }
+        }
+
+        /* let items = itemString.substring(0, itemString.length - 2).split(', ')
         // console.log(items) // ['P2', 'P1', 'P3']
         let totalQuantity = 0
 
@@ -67,7 +81,7 @@ watch(
 
                 totalQuantity += quantity
             }
-        }
+        } */
 
         cartCount.value = totalQuantity
     }
