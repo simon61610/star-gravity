@@ -8,11 +8,11 @@ const emit = defineEmits(['open'])
 const active = ref(false)
 const route = useRoute()
 const currentActive = ref(null)
-console.log("route toRaw:", JSON.parse(JSON.stringify(route)))
+
 
 const toggleactive = (index)=>{
     if(currentActive.value === index){
-        currentActive.value = null
+        currentActive.value = index
     }else{
         currentActive.value = index
     }
