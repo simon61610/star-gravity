@@ -10,7 +10,7 @@
     import axios from 'axios'
     
     // 商品假資料 => 要改用 storage 傳入
-    const productDetail = ref(
+    /* const productDetail = ref(
         [
             {
                 name: '輕巧觀測鏡｜50mm 入門型牛頓式望遠鏡',
@@ -33,8 +33,13 @@
         ]
     )
 
-    const products = productDetail.value
+    const products = productDetail.value */
 
+    // ===================================================================================
+    // ===================================== Storage =====================================
+    // ===================================================================================
+    const storage = localStorage
+    const cartItems = ref([])
 
     // 縣市假資料
     /* const cities = ref([
@@ -57,13 +62,60 @@
         return city ? city.AreaList : []
     })
 
-    watch(selectedCity, () => {
-        selectedDistrict.value = ""
-    })
+
+    // ===================================== 抓資料 =====================================
+
+    const createCartList = (itemId, itemValue) => {
+        let existInfo = itemValue.split('|')
+
+        // console.log(existInfo); // 商品名稱|圖片路徑|每件價格|數量|原價
+        // ['入門啟蒙款 NovaSight 雙筒望遠鏡', '/pdo/starshop/images/雙筒望遠鏡-入門啟蒙款 NovaSight 雙筒望遠鏡-1.png', '2700', '2']
+        
+        let name = existInfo[0] // 商品名稱
+        let fitstImage = existInfo[1] // 圖片路徑
+        let unitPrice = existInfo[2] // 特價單價
+        let qty = existInfo[3] // 單種商品數量
+        let originalPrice = existInfo[4] // 商品原價
+        
+        let itemSubTotal = unitPrice * qty // 商品總價
+        // console.log(itemSubTotal);
+
+        return {
+            ID: itemId,
+            name,
+            fitstImage,
+            originalPrice,
+            unitPrice,
+            qty,
+            itemSubTotal
+        }
+    }
 
 
     // 引用 jQuery 做 toggle
     onMounted(async() => {
+        const itemString = storage['addItemList']
+        
+        if(!itemString){
+            cartItems.value = []
+            return
+        }
+
+        let items = itemString.substring(0, itemString.length - 2).split(', ')
+        let cartData = []
+
+        for(let i = 0; i < items.length; i++){
+
+            // 商品名稱|圖片路徑|每件價格|數量|原價
+            let itemInfo = storage.getItem(items[i])
+            if(itemInfo){
+                // 建立商品資料的陣列，裡面包商品資料的物件
+                cartData.push(createCartList(items[i], itemInfo))
+            }
+        }
+
+        cartItems.value = cartData
+        // console.log(cartItems.value)
 
         // 預設關起來
         $('.toggle-content').hide()
@@ -92,6 +144,22 @@
         cities.value = res.data
         // console.log(cities.value)
     })
+
+    watch(selectedCity, () => {
+        selectedDistrict.value = ""
+    })
+
+    // ===================================== 計算合計金額 =====================================
+    const totalPrice = computed(() => {
+        let sum = 0;
+
+        for(let i = 0; i < cartItems.value.length; i++){
+            sum += cartItems.value[i].itemSubTotal
+        }
+
+        return sum
+    })
+
     
 </script>
 
@@ -108,27 +176,27 @@
 
             <!-- 收合標題 -->
             <div class="toggle-total">
-                <p class="total">合計：NT$6,060</p>
+                <p class="total">合計：NT${{ totalPrice + 60 }}</p>
                 <p class="count" id="cartCount">購物車(3件)</p>
             </div>
 
             <div class="toggle-content">
                 <!-- 商品細項 -->
                 <ul class="items">
-                    <li class="item" v-for="(product, index) in products">
+                    <li class="item" v-for="(product, index) in cartItems">
                         <!-- 圖片 -->
-                        <img :src="product.pic" alt="" class="item__img">
+                        <img :src="product.fitstImage" alt="" class="item__img">
     
                         <!-- 商品資訊和計算 -->
                         <div class="item__info">
                             <h2 class="item__info__name">{{ product.name }}</h2>
                             <div class="item__info__price">
                                 <div class="price-per-item">
-                                    <p class="price">NT${{ product.price }}</p>
-                                    <p class="spe-price">NT${{ product.specialprice }}</p>
+                                    <p class="price">NT${{ product.unitPrice }}</p>
+                                    <p class="spe-price">NT${{ product.originalPrice }}</p>
                                 </div>
-                                <p class="sub-count">數量：1 件</p>
-                                <p class="sub-price">小計：NT$2000</p>
+                                <p class="sub-count">數量：{{ product.qty }} 件</p>
+                                <p class="sub-price">小計：NT${{ product.itemSubTotal }}</p>
                             </div>
                         </div>
                     </li>
@@ -136,9 +204,9 @@
     
                 <!-- 金額統計 -->
                 <div class="cal-box">
-                        <p><span>合計</span><span>NT$6000</span></p>
+                        <p><span>合計</span><span>NT${{ totalPrice }}</span></p>
                         <p><span>運費</span><span>NT$60</span></p>
-                        <p><span>總計</span><span>NT$6060</span></p>
+                        <p><span>總計</span><span>NT${{ totalPrice + 60 }}</span></p>
                 </div>
 
                 <div class="toggle-inside">
@@ -328,6 +396,10 @@
                         align-items: center;
                         &__img { // 圖片
                             display: block;
+                            width: 80px;
+                            height: 80px;
+                            object-fit: cover;
+                            border: 1px solid #ccc;
                         }
                         &__info { // 商品名稱與金額
                             display: flex;
