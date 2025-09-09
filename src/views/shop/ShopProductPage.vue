@@ -8,14 +8,15 @@
 -->
 
 <script setup>
-    import { ref, reactive, computed } from 'vue'
+    import { ref, computed, onMounted } from 'vue'
     import { useRoute } from 'vue-router';
     import bus from '@/composables/useMitt';
     import shopToast from '@/components/common/shopToast.vue';
     import { showToast } from '@/composables/useToast';
+    import axios from 'axios';
 
     // 假資料
-    import products from '@/data/products';
+    // import products from '@/data/products';
 
     // 組件
     import ShopBanner from '@/components/shop/ShopBanner.vue';
@@ -26,9 +27,47 @@
 
     // 路由
     const route = useRoute()
-    const product = computed(() => {
+    /* const product = computed(() => {
         return products.find(prod => prod.id == route.params.id || null)
+    }) */
+
+    // 商品資料
+    const product = ref(null)
+    const imgArr = ref([])
+    const currentPic = ref('')
+
+    onMounted(async () => {
+        const res = await axios.get(import.meta.env.VITE_AJAX_URL + 'starshop/client/products_get.php')
+    
+        // console.log(res.data);
+        
+
+        product.value = res.data.find(p => p.ID === Number(route.params.id))
+        // console.log(product.value)
+        /* 
+        ID : 1 
+        category_name : "基礎入門型" 
+        description : "適合兒童的觀星好物，入門款天文望遠鏡，支援手機拍攝記錄。" 
+        discount : 80 
+        images : "/pdo/starshop/images/基礎入門型1-3.png,/pdo/starshop/images/基礎入門型1-2.png,/pdo/starshop/images/基礎入門型1-3.png" 
+        introduction : "別看它小巧輕便，這台望遠鏡可是為初學觀星者量身打造。結構簡單易上手，適合孩子與初學者進入天文世界第一步。鏡筒設計清楚直觀，能輔助理解反射式望遠鏡的基本運作，無論白天觀察遠景或夜間捕捉星光，都能輕鬆拍攝記錄。" 
+        is_active : 1 
+        name : "入門孩童款 50mm 入門望遠鏡" 
+        original_price : 4800 
+        promotion : "全館望遠鏡皆享保固內免費清潔服務。" 
+        sale_price : 3840 
+        stock : 50 
+        */
+
+        imgArr.value = product.value.images.split(',')
+        // console.log(imgArr.value)
+        currentPic.value = imgArr.value[0]
+        
     })
+
+    const changePic = (img) => {
+        currentPic.value = img
+    }
     
 
     // 最開始切版的假資料
@@ -60,14 +99,33 @@
     // =====================================================
     const storage = localStorage
 
+    // 商品名稱|圖片路徑|每件價格|數量|原價
     function addCart(product){
         if(!storage['addItemList']){
             storage['addItemList'] = ''
         }
 
+        const itemId = product.ID
+        const firstImage = product.images.split(',')[0]
+        const unitPrice = product.sale_price
+        const originalPrice = product.original_price
+
+        if(storage[itemId]){
+            let existInfo = storage[itemId].split('|')
+            // alert(existInfo) // Stellar One 星耀一號,/pdo/starshop/images/進階專業型-Stellar One 星耀一號-1.png,7020,1
+            let newQty = +existInfo[3] + 1
+            let updatedInfo = `${existInfo[0]}|${existInfo[1]}|${existInfo[2]}|${newQty}|${originalPrice}`
+
+            storage[itemId] = updatedInfo
+        }else{
+            storage['addItemList'] += `${itemId}, `
+            storage[itemId] = `${product.name}|${firstImage}|${unitPrice}|1|${originalPrice}`
+        }
+        
+
         /* Storage 的 Key 和 Value */
-        const itemId = `P${product.id}`
-        const itemValue = `${product.name}|${product.pic}|${product.specialPrice}`
+        /* const itemId = `P${product.id}`
+        const itemValue = `${product.name}|${product.pic}|${product.specialPrice}` */
 
         // alert(itemValue) 
         // itemId => P1 
@@ -75,14 +133,14 @@
         // ===============================================================================
 
         /* 直接從物件中抓的資料字串 */
-        const itemName = product.name // 基礎入門型 商品 1
+        /* const itemName = product.name // 基礎入門型 商品 1
         const itemPic = product.pic // https://placehold.co/480x480?text=Product+1
-        const itemSpecialPrice = product.specialPrice // 9718
+        const itemSpecialPrice = product.specialPrice // 9718 */
         // alert(itemSpecialPrice)
 
         // ===============================================================================
         
-        if(storage[itemId]){ // 如果已經買過，價格累加
+        /* if(storage[itemId]){ // 如果已經買過，價格累加
             let existInfo = storage[itemId].split('|') // 字串切割成陣列，用 split 方法
             // console.log(existInfo) ['基礎入門型 商品 1', 'https://placehold.co/480x480?text=Product+1', '9718']
             let existSpecialPrice = parseInt(existInfo[2]) // 原本的價格
@@ -95,7 +153,7 @@
         }else{ //第一次買
             storage['addItemList'] += `${itemId}, `
             storage[itemId] = itemValue
-        }
+        } */
 
         // ===============================================================================
         bus.emit('notifyUpdateCart') // 通知 Header 更新購物車數量
@@ -123,18 +181,24 @@
             <div class="product-gallery">
                 <div class="product-gallery__pic">
                     <!-- <img src="https://placehold.co/480x480" alt=""> -->
-                    <img :src="product.pic" alt="">
+                    <img :src="currentPic" alt="">
                 </div>
                 <ul class="product-gallery__thumbs">
-                    <li>
-                        <img :src="product.pic" alt="">
+                    <li 
+                        v-for="img in imgArr" @click="changePic(img)" 
+                        :class="{active: currentPic !== img}"
+                    >
+                        <img :src="img" alt="">
+                    </li>
+                    <!-- <li>
+                        <img :src="product.images.split(',')[0]" alt="">
                     </li>
                     <li>
-                        <img :src="product.pic" alt="">
+                        <img :src="product.images.split(',')[1]" alt="">
                     </li>
                     <li>
-                        <img :src="product.pic" alt="">
-                    </li>
+                        <img :src="product.images.split(',')[2]" alt="">
+                    </li> -->
                 </ul>
             </div>
 
@@ -142,12 +206,12 @@
             <div class="product-detail">
                 <h1 class="product-detail__title">{{ product.name }}</h1>
                 <div class="detail-text">
-                    <p class="detail-text__desc">{{ product.desc }}</p>
+                    <p class="detail-text__desc">{{ product.description }}</p>
                     <p class="detail-text__promotion">{{ product.promotion }}</p>
-                    <p class="detail-text__marketing">{{ product.marketing }}</p>
+                    <p class="detail-text__marketing">現享 {{product.discount}} 折好康優惠</p>
                     <div class="product-price">
-                        <p class="product-price__nospecial">NT$ {{ product.price }}</p>
-                        <p class="product-price__special">NT$ {{ product.specialPrice }}</p>
+                        <p class="product-price__nospecial">NT$ {{ product.original_price }}</p>
+                        <p class="product-price__special">NT$ {{ product.sale_price }}</p>
                     </div>
                     <!-- 數量按鈕位置，暫時刪除 -->
                     <!-- <div class="qty-control">
@@ -184,7 +248,10 @@
 
         <!-- 下方商品介紹 -->
         <div class="product-info" v-if="product">
-            <ProdIntro />
+            <ProdIntro 
+            :product-name = "product.name"
+            :product-intro = "product.introduction"
+            />
         </div>
 
         <!-- 沒有這個商品編號時會出現如下 -->
@@ -241,6 +308,17 @@
 
                     li {
                         cursor: pointer;
+                        transition: all .5s ease;
+
+                        &.active {
+                            opacity: .3;
+                        }
+
+                        &:hover {
+                            opacity: .8;
+                        }
+
+
                         img{
                             display: block;
                             max-width: 110px;
