@@ -111,7 +111,7 @@
             // if (file?.value instanceof File) form.append('image', file.value)
 
             // 依實際路徑調整
-            // const REGISTER_API = import.meta.env.VITE_AJAX_URL + "Member/register.php";
+            const REGISTER_API = import.meta.env.VITE_AJAX_URL + "Member/register.php";
             
             const res = await fetch(REGISTER_API, {
                 method: 'POST',

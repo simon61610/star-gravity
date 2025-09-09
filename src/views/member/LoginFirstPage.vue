@@ -10,8 +10,8 @@
     const route = useRoute()
 
     // 統一 API 位址
-    const API_BASE   = 'http://localhost'
-    const LOGIN_API  = `${API_BASE}/PDO/Member/login2.php`
+    // const API_BASE   = 'http://localhost'
+    // const LOGIN_API  = `${API_BASE}/PDO/Member/login2.php`
 
     // localStorage keys
     // const LS_AUTH  = 'auth'
@@ -69,8 +69,8 @@
     
     const login = () => {
         
-        fetch('http://localhost/PDO/Member/login2.php', {
-        // fetch(import.meta.env.VITE_AJAX_URL + "Member/login2.php", {
+        // fetch('http://localhost/PDO/Member/login2.php', {
+        fetch(import.meta.env.VITE_AJAX_URL + "Member/login2.php", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body:JSON.stringify({

@@ -13,9 +13,9 @@ $statement->execute();
 
 $reviews = $statement->fetchAll();
 
-echo "aaaaa" ;
+// echo "aaaaa" ;
 
-// echo json_encode($reviews); 
+echo json_encode($reviews); 
 
 
 
