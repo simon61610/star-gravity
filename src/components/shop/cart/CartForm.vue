@@ -148,6 +148,22 @@
     watch(selectedCity, () => {
         selectedDistrict.value = ""
     })
+    // ===================================== 計算總數量 =====================================
+    const totalQuantity = computed(() => {
+        let sum = 0;
+
+        for(let i = 0; i < cartItems.value.length; i++){
+            let itemInfo = storage.getItem(cartItems.value[i].ID)
+            if(itemInfo) {
+                let qty = itemInfo.split('|')[3]
+                // console.log(parts)
+                sum += Number(qty)
+            }
+        }
+
+        return sum
+    })
+    
 
     // ===================================== 計算合計金額 =====================================
     const totalPrice = computed(() => {
@@ -177,7 +193,7 @@
             <!-- 收合標題 -->
             <div class="toggle-total">
                 <p class="total">合計：NT${{ totalPrice + 60 }}</p>
-                <p class="count" id="cartCount">購物車(3件)</p>
+                <p class="count" id="cartCount">購物車({{ totalQuantity }}件)</p>
             </div>
 
             <div class="toggle-content">
@@ -225,10 +241,10 @@
                 <h1 class="common-title">付款方式</h1>
                 <div class="payment-method__radio">
                     <label>
-                        <input type="radio" name="gender" value="貨到付款"> 貨到付款
+                        <input type="radio" name="payMethod" value="貨到付款"> 貨到付款
                     </label>
                     <label>
-                        <input type="radio" name="gender" value="線上刷卡"> 線上刷卡
+                        <input type="radio" name="payMethod" value="線上刷卡"> 線上刷卡
                     </label>
                 </div>
              </section>
