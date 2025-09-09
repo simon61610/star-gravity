@@ -20,32 +20,6 @@
 
     // ===================================== 抓資料 =====================================
 
-    
-    const doFirst = () => {
-        const itemString = storage['addItemList']
-        // alert(itemString) // 1, 3, 5, 
-        if(!itemString){
-            cartItems.value = []
-            return
-        }
-
-        let items = itemString.substring(0, itemString.length - 2).split(', ')
-        let cartData = []
-        
-        for(let i = 0; i < items.length; i++){
-
-            // 商品名稱|圖片路徑|每件價格|數量|原價
-            let itemInfo = storage.getItem(items[i])
-            if(itemInfo){
-                // 建立商品資料的陣列，裡面包商品資料的物件
-                cartData.push(createCartList(items[i], itemInfo))
-            }
-        }
-
-        cartItems.value = cartData
-        // console.log(cartItems.value) // 陣列包物件 [{...}, {...}, {...}]
-    }
-
     const createCartList = (itemId, itemValue) => {
         let existInfo = itemValue.split('|')
 
@@ -138,7 +112,28 @@
     // ===================================== onMounted =====================================
     
     onMounted(() => {
-        doFirst()
+        const itemString = storage['addItemList']
+        // alert(itemString) // 1, 3, 5, 
+        if(!itemString){
+            cartItems.value = []
+            return
+        }
+
+        let items = itemString.substring(0, itemString.length - 2).split(', ')
+        let cartData = []
+        
+        for(let i = 0; i < items.length; i++){
+
+            // 商品名稱|圖片路徑|每件價格|數量|原價
+            let itemInfo = storage.getItem(items[i])
+            if(itemInfo){
+                // 建立商品資料的陣列，裡面包商品資料的物件
+                cartData.push(createCartList(items[i], itemInfo))
+            }
+        }
+
+        cartItems.value = cartData
+        // console.log(cartItems.value) // 陣列包物件 [{...}, {...}, {...}]
     })
 
     
