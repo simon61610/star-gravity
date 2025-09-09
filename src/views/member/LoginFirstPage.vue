@@ -70,6 +70,7 @@
     const login = () => {
         
         fetch('http://localhost/PDO/Member/login2.php', {
+        // fetch(import.meta.env.VITE_AJAX_URL + "Member/login2.php", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body:JSON.stringify({

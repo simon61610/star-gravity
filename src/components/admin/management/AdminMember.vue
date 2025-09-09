@@ -1,6 +1,8 @@
 <script setup>
-import {ref} from 'vue'
+import {ref, onMounted} from 'vue'
 import AdminTable from '@/components/admin/AdminTable.vue';
+import { functions } from 'lodash-es';
+import axios from 'axios';
 
 const props = defineProps({
   search: { type: String, default: '' }
@@ -68,12 +70,28 @@ const membertable = ref([
     
 ])
 
-fetch('http://localhost/PDO/Admin/getTotalmembers.php')
-.then( resp => resp.json())
-.then( members => {
-    membertable.value = members
-    // console.log(membertable.value[0].ID);
+// fetch('http://localhost/PDO/Admin/getTotalmembers.php')
+// // fetch(import.meta.env.VITE_AJAX_URL + "Admin/getTotalmembers.php")
+// .then( resp => resp.json())
+// .then( members => {
+//     membertable.value = members
+//     // console.log(membertable.value[0].ID);
     
+// })
+
+const getTotalmembers = async ()=>{
+    try{
+        const resp = await axios.get(import.meta.env.VITE_AJAX_URL + "Admin/getTotalmembers.php")
+        console.log(123);
+
+    }catch(error){
+        console.log('上傳錯誤:' , error);
+    }
+}
+
+onMounted(()=>{
+    console.log(import.meta.env.VITE_AJAX_URL)
+    // getTotalmembers()
 })
 
 
@@ -106,7 +124,8 @@ function save() {
   const newStatus  = selectedMember.value.account_status;   // '正常' / '停權  
   const id  = selectedMember.value.id;   // 當前會員ID 
 
-  fetch('http://localhost/PDO/Admin/update.php', {
+//   fetch('http://localhost/PDO/Admin/update.php',
+   fetch(import.meta.env.VITE_AJAX_URL + "Admin/update.php", {
     method: 'POST',
     // 若後端用 session 才需要下一行
     // credentials: 'include',

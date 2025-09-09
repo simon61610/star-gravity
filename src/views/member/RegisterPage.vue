@@ -45,29 +45,6 @@
         return ''
     })
 
-    // 新增：任何欄位變更時在 console 顯示目前是否可送出與原因
-    // watch(
-    //     [pwd1, pwd2, name, phone, gender, () => member.city, () => member.area, address, email, loading], 
-    //     () => {
-    //         console.log('[canSubmit]', canSubmit.value, 'reason:', whyDisabled.value)
-    //     }
-    // )
-
-    // const canSubmit = computed(() => {    
-    //     return (
-    //         pwd1.value.length >= 6 &&
-    //         pwd2.value.length >= 6 &&
-    //         pwd1.value === pwd2.value &&
-    //         name.value.trim() &&
-    //         phone.value.trim() &&
-    //         gender.value &&
-    //         member.city &&
-    //         member.area &&
-    //         address.value.trim() &&
-    //         email.value.trim()
-    //     )
-    // })
-
     // 縣市區域選單
     const cities = ref([])
     const areaOptions = ref([])
@@ -134,6 +111,8 @@
             // if (file?.value instanceof File) form.append('image', file.value)
 
             // 依實際路徑調整
+            // const REGISTER_API = import.meta.env.VITE_AJAX_URL + "Member/register.php";
+            
             const res = await fetch(REGISTER_API, {
                 method: 'POST',
                 // 註冊是公開 API，不帶 Cookie，避免不必要的預檢
