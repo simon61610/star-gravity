@@ -1,13 +1,12 @@
 <script setup>   
     import { useRoute, useRouter } from 'vue-router'
     import { ref, computed, onMounted } from 'vue'
-    // import { result } from 'lodash-es'
-    // import { setLogin } from '@/composables/useAuth'
-
-    // setLogin(data.token)
+    import { useMemberStore } from '@/stores/member'
 
     const router = useRouter()
     const route = useRoute()
+    const memberStore = useMemberStore()
+    memberStore.hydrate()
 
     // 統一 API 位址
     // const API_BASE   = 'http://localhost'
@@ -23,7 +22,10 @@
     const email = ref('')
     const pwd1 = ref('')
     const captcha = ref('')
-    const loading = ref(false)
+    const loading = computed(() => {
+        memberStore.loading
+    })
+    // const loading = ref(false)
 
     // 驗證碼
     const captchaCode = ref('')
@@ -34,13 +36,13 @@
         captchaCode.value = genCode()  
     })
 
-    /* 信箱基本檢查樣式 */
-    const MIN_PWD_LEN = 6
-    const emailRe = /\S+@\S+\.\S+/
-
     function refreshCode() {
         captchaCode.value = genCode()
     }
+
+    /* 信箱基本檢查樣式 */
+    const MIN_PWD_LEN = 6
+    const emailRe = /\S+@\S+\.\S+/
 
     // 判斷在哪頁
     const isLogin    = computed(() => route.path === '/loginfirst')
@@ -63,9 +65,24 @@
         }
 
         loading.value = true
-              
-        
+
+        // 呼叫 Pinia 的登入
+        const res = await memberStore.loginByEmail({
+            email: email.value,
+            password: pwd1.value,
+        })
+    
+        if (!res.ok) {
+            alert(res.error || '登入失敗')
+            refreshCode() // 失敗就重產驗證碼
+            return
+        }
+
+        // 登入成功 → 導回原頁或預設頁
+        const back = route.query.required || '/membercenter/personal'
+        router.replace(back)
     }
+
     
     const login = () => {
         
@@ -85,9 +102,7 @@
                 handleLoginSuccess(result)
             }else{
                 console.log(result.message);
-                // console.log(123455);
                 console.log(result.success);
-                
             }
         })
         
@@ -143,7 +158,7 @@
                 </div>
                 <div class="forget-area">
                     <!--登入按鈕 -->
-                    <button class="login-btn" type="submit" :disabled="loading" @click='login'>確認</button>
+                    <button class="login-btn" type="submit" :disabled="loading">確認</button>
     
                     <!--忘記密碼 --> 
                     <div class="forgot">
