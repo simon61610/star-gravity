@@ -1,6 +1,7 @@
 <script setup>
-import { ref, onMounted,watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, onMounted,watch, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useMemberStore } from '@/stores/member'
 import bus from '@/composables/useMitt'
 // import products from '@/data/products'
 import  logo from '@/assets/logos/logo.svg'
@@ -8,6 +9,9 @@ const emit = defineEmits(['open'])
 const active = ref(false)
 const route = useRoute()
 const currentActive = ref(null)
+
+const router = useRouter()
+const memberStore = useMemberStore()
 
 
 const toggleactive = (index)=>{
@@ -95,6 +99,20 @@ watch(
     onMounted(() => {
         updateCart()
         bus.on('notifyUpdateCart', updateCart)
+
+        //---------會員-------------
+        memberStore.hydrate?.()
+    })
+
+    // -----------會員登入後(取名字/暱稱/信箱，顯示第一個字母)--------------------
+    const initial = computed(() => {
+        const u = memberStore.user || {}
+        const base = (u.name || u.nickname || u.email || '').trim()
+        if (!base) return ''
+        const raw = base.includes('@') ? base.split('@')[0] : base
+        const ch = raw[0] || ''
+        // 英文轉大寫；中文則原樣
+        return typeof ch === 'string' && ch.toUpperCase ? ch.toUpperCase() : ch
     })
 
 </script>
@@ -115,8 +133,29 @@ watch(
                 <li :class ="{ 'menu-active': currentActive === 5}" @click="toggleactive(5)"><router-link to="/gamehome">星遊戲</router-link></li>
                 <li :class ="{ 'menu-active': currentActive === 6}" @click="toggleactive(6)"><router-link to="/events">星星活動</router-link></li>
                 <li :class ="{ 'menu-active': currentActive === 7}" @click="toggleactive(7)"><router-link to="/shop">星空小舖</router-link></li>               
-                <li ><router-link to="/loginfirst"><i class="fa-solid fa-user fa-lg"></i></router-link></li>
-                <li ><router-link to="/"><i class="fa-solid fa-arrow-right-from-bracket"></i></router-link></li>
+                <!-- <li ><router-link to="/loginfirst"><i class="fa-solid fa-user fa-lg"></i></router-link></li> -->
+                <!-- <li ><router-link to="/"><i class="fa-solid fa-arrow-right-from-bracket"></i></router-link></li> -->
+                
+                <!-- 未登入：顯示人頭 → 登入頁 -->
+                <li v-if="!memberStore.isAuthed" class="icon-item">
+                    <router-link to="/loginfirst">
+                        <i class="fa-solid fa-user fa-lg"></i>
+                    </router-link>
+                </li>
+                <!-- 已登入：顯示會員中心 + 登出  -->
+                <template v-else>
+                    <li class="icon-item user-item">
+                        <router-link to="/membercenter/personal" class="user-link" aria-label="會員中心">
+                            <i class="fa-solid fa-user fa-lg"></i>
+                            <span v-if="initial" class="avatar-initial">{{ initial }}</span>
+                        </router-link>
+                    </li>
+                    <li class="icon-item">
+                        <button class="icon-btn" @click="memberStore.logout(); router.replace('/loginfirst')" aria-label="登出">
+                            <i class="fa-solid fa-arrow-right-from-bracket fa-lg"></i>
+                        </button>
+                    </li>
+                </template>
                 <li>
                     <router-link to="/cartpage/cart">
                         <i class="fa-solid fa-cart-shopping fa-lg"></i> ( {{cartCount}} )
@@ -206,8 +245,54 @@ watch(
     height: 50px;
 }
 
-.navbar ul li:nth-child(9){
-    opacity: 30%;
+// .navbar ul li:nth-child(9){
+//     opacity: 30%;
+// }
+
+// 登出圖示
+.icon-item {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.icon-btn {
+    background: transparent;
+    border: none;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.icon-btn i { 
+    color: $FontColor-white;    /* 讓登出 icon 變白色 */
+}   
+
+/* 人頭 icon 旁邊顯示名字首字的小圓點 */
+.user-link { 
+    position: relative; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    width: 100%; 
+    height: 100%; 
+}
+.avatar-initial{
+    position: absolute;
+    top: 2px;               /* 你可以微調位置 */
+    right: 2px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: $primaryColor-500;
+    color: $FontColor-white;
+    font-size: 12px;
+    line-height: 18px;
+    text-align: center;
+    font-weight: 700;
 }
 
 
