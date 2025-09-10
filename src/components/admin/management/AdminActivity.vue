@@ -1,10 +1,16 @@
 <!-- src/components/admin/management/AdminActivity.vue -->
 <script setup>
-import { ref } from 'vue'
+import { ref,computed } from 'vue'
 import AdminTable from '@/components/admin/AdminTable.vue'
 import AdminToolbar from '../AdminToolbar.vue'
+import {activityAPI} from '@/api/activityAPI.js'
+
 
 /* ---------------- 既有狀態 ---------------- */
+const selected_activity = ref({})
+const selectedLocation = ref('')
+const editIndex = ref(-1)
+const emit = defineEmits(['refresh','added','updated'])
 const deadline  = ref('')             // 報名截止日（單日，DatePicker 綁這個）
 const daterange = ref('')             // 活動起訖（datetimerange）
 const defaultTime = [
@@ -13,45 +19,62 @@ const defaultTime = [
 ]
 
 const props = defineProps({
-  search: { type: String, default: '' }
+  search: { type: String, default: '' },
+  eventTable: { type: Array, default: () => [] },
+  location: {type: Array,default: () => [] }
 })
+
+//儲存checkbox顯示狀態
+function updateHighlight(row) {
+  activityAPI('update', row) // 把整個 row 傳回去
+    .then(res => {
+      console.log("首頁推薦更新成功", res.data)
+    })
+    .catch(err => {
+      console.error("更新失敗", err)
+    })
+}
+// function updateHighlight(row) {
+//   const updatedRow = {
+//     ...row, // 保留 row 其他欄位
+//     homepage_highlight: row.homepage_highlight
+//   }
+//   activityAPI('update', { ID: row.ID, updatedRow })
+//     .then(res => {
+//       console.log("首頁推薦更新成功", res.data)
+//     })
+//     .catch(err => {
+//       console.error("更新失敗", err)
+//     })
+// }
+
+// 搜尋過濾活動
+const filteredEvent = computed(() => {
+  if (props.search) {
+    // 有搜尋字串 → 過濾
+    return props.eventTable.filter(a =>
+      String(a.ID).includes(props.search) //針對eventTable.value陣列裡面的id做比較  例如 String("123") .includes(45) 不符合所以不顯示
+    )
+  } else {
+    // 沒搜尋字串 → 全部顯示
+    return props.eventTable
+  }
+})
+
 
 /* ---------------- 活動表格欄位 ---------------- */
 const columns = [
-  { label:'活動ID',       prop:'id' },
-  { label:'活動名稱',     prop:'activity_name' },
-  { label:'活動日期',     prop:'activity_date' },
-  { label:'報名人數',     prop:'activity_people' },
-  { label:'活動資訊',     prop:'activity_info' ,  slot:'編輯',  align:'right' },
-  { label:'參加者列表',   prop:'activity_peoplelist' , slot:'管理', align:'right' },
-  { label:'顯示狀態',     prop:'display_Status' },
-  { label:'活動狀態',     prop:'activity_status' },
-  { label:'首頁活動資訊', prop:'activity_checkbox', type:'checkbox' }
+  { label:'活動ID',       prop:'ID' },
+  { label:'活動名稱',     prop:'event_name' },
+  { label:'活動日期',     prop:'event_date_display' },
+  { label:'報名人數',     prop:'registration_count' },
+  { label:'活動資訊',     slot:'編輯',  align:'right' },
+  { label:'參加者列表',   slot:'管理', align:'right' },
+  { label:'顯示狀態',     prop:'is_active_display' },
+  { label:'活動狀態',     prop:'event_status' },
+  { label:'首頁活動資訊', prop:'homepage_highlight', type:'checkbox' }
 ]
 
-/* ---------------- 活動列表資料 ---------------- */
-const Activitytable = ref([
-  {
-    id: '01',
-    activity_name: '綠島觀星旅',
-    activity_date: '2025-08-16 19:00:00 ~ 2025-08-16 23:00:00',
-    activity_people: '10',
-    display_Status: '上架',
-    activity_status: '報名中',
-    activity_checkbox: true,
-    activity_location: '陽明山國家公園',
-    activity_type: '高山觀測',
-    activity_tag: '流星雨',
-    activity_fee: '',
-    activity_deadline: '',
-    activity_content: ''
-  },
-  { id: '02' },
-  { id: '03' },
-  { id: '04' },
-  { id: '05' },
-  { id: '06' }
-])
 
 /* ---------------- 人員清單 ---------------- */
 const selectedPerson = ref(null)
@@ -96,70 +119,63 @@ function savepeople(table, selected) {
   showpeople.value = false
 }
 
-/* ---------------- 活動編輯用：表單與索引 ---------------- */
-const activityForm = ref({
-  id: '',
-  activity_name: '',
-  activity_status: '報名中',   // 報名中/報名截止/活動結束
-  display_Status: '上架',       // 上架/下架
-  activity_location: '',
-  activity_type: '',
-  activity_tag: '',
-  activity_fee: '',
-  activity_deadline: '',
-  activity_content: '',
-  activity_date: ''             // 顯示在列表上的字串（儲存時組合）
-})
-const editIndex = ref(-1) // >=0：編輯既有；-1：新增
 
 /* ---------------- 開啟活動編輯（從列） ---------------- */
 const handleEdit = (row, index) => {
   console.log(index, row)
   editIndex.value = index
   // 將列資料帶入表單
-  activityForm.value = {
-    id: row.id ?? '',
-    activity_name: row.activity_name ?? '',
-    activity_status: row.activity_status ?? '報名中',
-    display_Status: row.display_Status ?? '上架',
-    activity_location: row.activity_location ?? '',
-    activity_type: row.activity_type ?? '',
-    activity_tag: row.activity_tag ?? '',
-    activity_fee: row.activity_fee ?? '',
-    activity_deadline: row.activity_deadline ?? '',
-    activity_content: row.activity_content ?? '',
-    activity_date: row.activity_date ?? ''
+  selected_activity.value = {
+    ID: row.ID,
+    event_name: row.event_name ?? '',
+    event_date: row.event_date ?? '',
+    event_time: row.event_time ?? '',
+    event_deadline: row.event_deadline ?? '',
+    event_place: row.event_place ?? '',
+    event_price: row.event_price ?? '',
+    registration_count: row.registration_count ?? '',
+    event_description: row.event_description ?? '',
+    is_active: Number(row.is_active ?? 0),
+    event_status: row.event_status ?? '報名中',
+    homepage_highlight: Number(row.homepage_highlight ?? 0),
+    image: row.image ?? '',
+    tag: row.tag ?? '',
+    category: row.category ?? ''
   }
 
-  // 若 activity_date 是 "start ~ end" 字串，嘗試還原 daterange
-  if (activityForm.value.activity_date?.includes('~')) {
-    const [s, e] = activityForm.value.activity_date.split('~').map(s => s.trim())
-    daterange.value = [s, e]
+  // 還原日期區間
+  if (row.event_date && row.event_date.includes('~')) {
+    const [start, end] = row.event_date.split('~').map(s => s.trim())
+    daterange.value = [start, end] // 還原到 date-picker
   } else {
-    daterange.value = ''
+    daterange.value = []
   }
 
-  deadline.value = activityForm.value.activity_deadline || ''
+  deadline.value = row.event_deadline || ''
   showActivity.value = true
 }
 
 /* ---------------- 開啟活動新增（清表單） ---------------- */
 const handleadd = () => {
   editIndex.value = -1
-  activityForm.value = {
-    id: '',
-    activity_name: '',
-    activity_status: '報名中',
-    display_Status: '上架',
-    activity_location: '',
-    activity_type: '',
-    activity_tag: '',
-    activity_fee: '',
-    activity_deadline: '',
-    activity_content: '',
-    activity_date: ''
+  selected_activity.value = {
+    ID: '',
+    event_name: '',
+    event_date: '',
+    event_time: '',
+    event_deadline: '',
+    event_place: '',
+    event_price: '',
+    registration_count: '',
+    event_description: '',
+    is_active: 0,            // 預設不上架
+    event_status: '草稿',    // 預設狀態
+    homepage_highlight: 0,   // 預設不推薦
+    image: '',
+    tag: '',
+    category: ''
   }
-  daterange.value = ''
+  daterange.value = []
   deadline.value  = ''
   showActivity.value = true
 }
@@ -168,35 +184,40 @@ defineExpose({ handleEdit, handleadd }) // 父層可呼叫新增/編輯
 
 /* ---------------- 儲存活動（寫回表格） ---------------- */
 function saveActivity () {
+
+  console.log('送出前的資料:', selected_activity.value)
   // 將日期區間與截止日，組合成要存回去的欄位
-   const activity_date =
-     Array.isArray(daterange.value) && daterange.value.length === 2
-       ? `${daterange.value[0]} ~ ${daterange.value[1]}`
-        : (activityForm.value.activity_date || '')
 
+  const event_date = Array.isArray(daterange.value) && daterange.value.length === 2
+  ? `${daterange.value[0]} ~ ${daterange.value[1]}`
+  : ''
   const newRow = {
-    ...activityForm.value,
-    activity_date,
-    activity_deadline: deadline.value
+    ...selected_activity.value,
+    event_date,       // 2025-09-10
+    event_deadline: selected_activity.value.event_deadline // 2025-09-08 23:59:59
   }
 
-  if (editIndex.value >= 0) {
-    // 編輯：覆蓋指定列
-    Activitytable.value[editIndex.value] = { ...Activitytable.value[editIndex.value], ...newRow }
-  } else {
-    // 新增：補一個 id（取現有最大 + 1）
-    const maxId = Activitytable.value.reduce((m, r) => Math.max(m, parseInt(r.id || '0', 10)), 0)
-    newRow.id = String(maxId + 1).padStart(2, '0')
-    Activitytable.value.push(newRow)
+  if (!newRow.ID) { // 沒有 ID → 新增
+    return activityAPI('add', newRow)
+      .then(res => {
+        emit('added', res.data) 
+        showActivity.value = false
+      })
+  } else { // 有 ID → 更新
+    return activityAPI('update', newRow)
+      .then(res => {
+        emit('updated', res.data)  //子層通知父層
+        showActivity.value = false
+      })
   }
 
-  showActivity.value = false
+  
 }
 </script>
 
 <template>
   <!-- 活動列表 -->
-  <AdminTable :columns="columns" :data="Activitytable" :search="props.search">
+  <AdminTable :columns="columns" :data="filteredEvent" :search="props.search" @checkbox-change="updateHighlight">
     <template #編輯="{ row, $index }">
       <el-button size="small" @click="handleEdit(row, $index)">編輯</el-button>
     </template>
@@ -217,27 +238,28 @@ function saveActivity () {
         <div class="Admin-Activity-header">
           <h2>活動名稱</h2>
           <div class="Admin-Activity-status">
-            <select v-model="activityForm.activity_status">
+            <select v-model="selected_activity.event_status">
               <option value="報名中">報名中</option>
               <option value="報名截止">報名截止</option>
               <option value="活動結束">活動結束</option>
             </select>
-            <select v-model="activityForm.display_Status">
-              <option value="上架">活動上架</option>
-              <option value="下架">活動下架</option>
+            <select v-model="selected_activity.is_active" placeholder="選擇狀態">
+              <option label="上架" :value="1">活動上架</option>
+              <option label="下架" :value="0">活動下架</option>
             </select>
           </div>
         </div>
 
         <!-- 活動名稱 -->
         <div class="Admin-Activity-title">
-          <input type="text" v-model="activityForm.activity_name" placeholder="請輸入活動名稱" />
+          <input type="text" v-model="selected_activity.event_name" placeholder="請輸入活動名稱" />
         </div>
 
         <!-- 活動圖片上傳（示意 UI） -->
         <div v-for="img in 3" :key="img" class="Admin-Activity-image">
-          <label>活動圖片 {{ img }}：</label>
-          <el-upload class="upload-box" drag action="#" :auto-upload="false">
+           <label>活動圖片:</label>                                     <!-- <label>活動圖片 {{ img }}:</label> -->
+          <el-upload class="upload-box" drag action="#" :auto-upload="false"
+          list-type="picture-card">
             <div class="el-upload__text">圖片選擇</div>
           </el-upload>
         </div>
@@ -245,11 +267,14 @@ function saveActivity () {
         <!-- 地點 -->
         <div class="Admin-Activity-location">
           <h2>地點</h2>
-          <select v-model="activityForm.activity_location">
+          <select v-model="selectedLocation">
             <option value="">請選擇</option>
-            <option value="陽明山國家公園">陽明山國家公園</option>
+            <option v-for="(item, i) in props.location" :key="i" :value="item.location_name || item">
+              {{ item.location_name || item }}
+            </option>
+            <!-- <option value="陽明山國家公園">陽明山國家公園</option>
             <option value="太陽公園">太陽公園</option>
-            <option value="屏東天文台">屏東天文台</option>
+            <option value="屏東天文台">屏東天文台</option> -->
           </select>
         </div>
 
@@ -273,36 +298,36 @@ function saveActivity () {
         <!-- 類別 / tag -->
         <div class="Admin-Activity-type">
           <h1>活動類別</h1>
-          <label><input type="radio" name="activityType" value="高山觀測" v-model="activityForm.activity_type" />高山觀測</label>
-          <label><input type="radio" name="activityType" value="海邊平台" v-model="activityForm.activity_type" />海邊平台</label>
-          <label><input type="radio" name="activityType" value="平地公園" v-model="activityForm.activity_type" />平地公園</label>
-          <label><input type="radio" name="activityType" value="天文台"   v-model="activityForm.activity_type" />天文台</label>
+          <label><input type="radio" name="activityType" value="高山觀測" v-model="selected_activity.category" />高山觀測</label>
+          <label><input type="radio" name="activityType" value="海邊平台" v-model="selected_activity.category" />海邊平台</label>
+          <label><input type="radio" name="activityType" value="平地公園" v-model="selected_activity.category" />平地公園</label>
+          <label><input type="radio" name="activityType" value="天文台"   v-model="selected_activity.category" />天文台</label>
         </div>
 
         <div class="Admin-Activity-tag">
           <h1>活動tag</h1>
-          <label><input type="radio" name="activitytag" value="流星雨" v-model="activityForm.activity_tag" />流星雨</label>
-          <label><input type="radio" name="activitytag" value="月相"   v-model="activityForm.activity_tag" />月相</label>
-          <label><input type="radio" name="activitytag" value="星座"   v-model="activityForm.activity_tag" />星座</label>
-          <label><input type="radio" name="activitytag" value="銀河"   v-model="activityForm.activity_tag" />銀河</label>
+          <label><input type="radio" name="activitytag" value="流星雨" v-model="selected_activity.tag" />流星雨</label>
+          <label><input type="radio" name="activitytag" value="月相"   v-model="selected_activity.tag" />月相</label>
+          <label><input type="radio" name="activitytag" value="星座"   v-model="selected_activity.tag" />星座</label>
+          <label><input type="radio" name="activitytag" value="銀河"   v-model="selected_activity.tag" />銀河</label>
         </div>
 
         <!-- 費用 / 截止日 / 內容 -->
         <div class="Admin-Activity-fee">
           <h1>費用</h1>
-          <input type="text" v-model="activityForm.activity_fee" placeholder="例如：NT$ 1200" />
+          <input type="text" v-model="selected_activity.event_price" placeholder="例如：NT$ 1200" />
         </div>
 
         <div class="Admin-Activity-deadline">
           <h1>報名截止日</h1>
           <div>
-            <el-date-picker v-model="deadline" type="date" value-format="YYYY-MM-DD" />
+            <el-date-picker v-model="selected_activity.event_deadline" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" />
           </div>
         </div>
 
         <div class="Admin-Activity-content">
           <h1>活動內容</h1>
-          <textarea v-model="activityForm.activity_content" placeholder="請輸入詳細介紹"></textarea>
+          <textarea v-model="selected_activity.event_description" placeholder="請輸入詳細介紹"></textarea>
         </div>
 
         <!-- 底部按鈕 -->
@@ -321,7 +346,7 @@ function saveActivity () {
         <h1>編輯查看</h1>
       </div>
       <AdminToolbar />
-      <AdminTable
+      <!-- <AdminTable
         :columns="people_list_Columns"
         :data="people"
         :search="peopleSearch"
@@ -330,7 +355,7 @@ function saveActivity () {
         <template #刪除="{ row }">
           <el-button size="small" @click="delEdit(row.id)">刪除</el-button>
         </template>
-      </AdminTable>
+      </AdminTable> -->
       <div class="Admin-people-button">
         <button type="button" @click="close('people')">關閉</button>
         <button type="button" @click="savepeople(people, selectedPerson?.id ?? selectedPerson?.value?.id)">儲存</button>
@@ -398,10 +423,36 @@ function saveActivity () {
         align-items: center;
         justify-content: center;
 
+        .el-upload__text{
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        }
+
+        :deep(.el-upload-list--picture-card .el-upload-list__item){
+          width: 700px;
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: 1;
+        }
+
         ::v-deep(.el-upload-dragger) {
           width: 700px;
-          height: auto;
+          height: 100%;
+          position: absolute;
+          top: 0;
+          left: 0;
         }
+
+        ::v-deep(.el-upload.is-drag){
+          width: 700px;
+          position:relative
+         
+        }
+        
       }
 
       & + .Admin-Activity-image {

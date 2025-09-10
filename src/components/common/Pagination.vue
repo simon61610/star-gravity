@@ -64,7 +64,7 @@ function changePage(newpage){
         width: 36px;
         height: 36px;
         border-radius: 50%;
-        border: 1px white solid;
+        
         background-color: transparent !important;
         color:white;
     
@@ -75,12 +75,12 @@ function changePage(newpage){
         }
 
 
-        &.is-active {
-        background-color: $primaryColor-500 !important;
-        border-color: $primaryColor-500;
-        color: white !important;
-        font-weight: bold;
-        }
+         &.is-active {
+         background-color: $primaryColor-500 !important;
+         border-color: $primaryColor-500;
+         color: white !important;
+         font-weight: bold;
+         }
         
 
     }

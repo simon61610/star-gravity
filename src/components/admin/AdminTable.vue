@@ -28,13 +28,20 @@ const showTable = computed(()=>{   // 這裡是計算過後的頁數 所以要�
 
 
 /*----------------搜尋程式-------------------*/
-const filterTableData = computed(() => //這是用來過濾搜尋的table結果
-  props.data.filter(    //props.data = 原資料 filter()篩選
-    (data) => 
-      !props.search ||  //這邊決定顯示的資料 條件1. (沒回傳=沒搜尋)如果沒搜尋全顯示
-      String(data.ID ?? data.id ?? '').includes(String(props.search)) //假設有搜尋執行這段 舉例假設有字串ID叫123 後面搜尋框只要符合其中1或2或3 就顯示
+const filterTableData = computed(() => {
+  const source = Array.isArray(props.data) ? props.data : []
+  return source.filter(data =>
+    !props.search ||
+    String(data.ID ?? data.id ?? '').includes(String(props.search))
   )
-)
+})
+// const filterTableData = computed(() => //這是用來過濾搜尋的table結果
+//   props.data.filter(    //props.data = 原資料 filter()篩選
+//     (data) => 
+//       !props.search ||  //這邊決定顯示的資料 條件1. (沒回傳=沒搜尋)如果沒搜尋全顯示
+//       String(data.ID ?? data.id ?? '').includes(String(props.search)) //假設有搜尋執行這段 舉例假設有字串ID叫123 後面搜尋框只要符合其中1或2或3 就顯示
+//   )
+// )
 
 /*----------------編輯按鈕------------------*/
 const handleEdit = (index, row) => { //偵測編輯按鈕編輯哪個資料
@@ -84,6 +91,9 @@ const handleEdit = (index, row) => { //偵測編輯按鈕編輯哪個資料
                                   <el-checkbox
                                     v-else-if="col.type === 'checkbox'"
                                     v-model="scope.row[col.prop]"
+                                    :true-label="1"
+                                    :false-label="0"
+                                    @change="$emit('checkbox-change', scope.row)"
                                   />
                                   <!-- 如果都不是那就抓一般文字欄位 -->
                                  <!-- <span v-else>{{ scope.row[col.prop] }}</span> -->

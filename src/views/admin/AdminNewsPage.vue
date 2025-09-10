@@ -11,7 +11,7 @@
     const Newstable = ref([])
 
     // const search = ref('')
-     // 一開始載入舊資料
+     // 一開始載入舊資料    
     articleAPI("get").then(res => {
     Newstable.value = res.data
     })
@@ -22,8 +22,9 @@
     }
     
     // 子層新增成功時 → 父層更新資料
-    function handleAdded(newData) {
-    Newstable.value.push(newData)
+    function handleAdded() {
+        console.log("子層新增成功");  
+   // Newstable.value.push(newData) 0910改掉測試
     }
    
 
