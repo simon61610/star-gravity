@@ -235,7 +235,7 @@
         </section>
 
         <!-- ---------------- 表單 ---------------- -->
-        <form method="post" action="#">
+        <!-- <form method="post" action="#" class="order-form"> -->
             <!-- ---------------- 付款方式 ---------------- -->
              <section class="payment-method">
                 <h1 class="common-title">付款方式</h1>
@@ -266,10 +266,10 @@
                             <p>（請填入真實姓名，以確保順利收件）</p>
                         </div>
                     </div>
-                    <div class="input-box">
+                    <!-- <div class="input-box">
                         <h3>電話</h3>
                         <input type="text" placeholder="02 1234 5678">
-                    </div>
+                    </div> -->
                     <div class="input-box">
                         <h3><span>*</span>行動電話</h3>
                         <input type="text" placeholder="0912 345 678">
@@ -295,14 +295,14 @@
                         </div>
                         <input type="text" placeholder="請輸入真實地址">
                     </div>
-                    <div class="input-box">
+                    <!-- <div class="input-box">
                         <h3>發票抬頭</h3>
                         <input type="text">
                     </div>
                     <div class="input-box">
                         <h3>統一編號</h3>
                         <input type="text">
-                    </div>
+                    </div> -->
                     <div class="input-box">
                         <h3>訂單備註</h3>
                         <textarea rows="4" placeholder="有什麼想告訴賣家嗎？"></textarea>
@@ -320,7 +320,7 @@
                 </router-link>
             </section>
 
-        </form>
+        <!-- </form> -->
     </section>
 </template>
 
