@@ -101,17 +101,17 @@
         }
     }
 
-
+    
     // 引用 jQuery 做 toggle
     onMounted(async() => {
-        const itemString = storage['addItemList']
+        let itemString = storage['addItemList']
+        let items = itemString.substring(0, itemString.length - 2).split(', ')
         
         if(!itemString){
             cartItems.value = []
             return
         }
 
-        let items = itemString.substring(0, itemString.length - 2).split(', ')
         let cartData = []
 
         for(let i = 0; i < items.length; i++){
@@ -229,6 +229,17 @@
 
         if(res.data.success){
             alert(res.data.message)
+
+            // 逐一清除對應商品
+            let itemString = storage['addItemList']
+            let items = itemString.substring(0, itemString.length - 2).split(', ')
+            for(let i = 0; i < items.length; i++){
+                storage.removeItem(items[i])
+            }
+            
+            // 清空 Storage
+            storage.removeItem('addItemList')
+
         }else{
             showToast('訂單建立失敗')
         }
@@ -253,7 +264,7 @@
 
             <!-- 收合標題 -->
             <div class="toggle-total">
-                <p class="total">合計：NT${{ totalPrice + 60 }}</p>
+                <p class="total">總計：NT${{ totalPrice + shipping_fee }}</p>
                 <p class="count" id="cartCount">購物車({{ totalQuantity }}件)</p>
             </div>
 
