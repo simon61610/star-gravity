@@ -2,19 +2,22 @@
 import { ref, defineEmits, computed} from 'vue'
 import filledStar from '@/assets/icons/icon-filledStar.svg'
 import borderStar from '@/assets/icons/icon-borderStar.svg'
+import axios from 'axios'
+
 //建立響應式變數
+const emit = defineEmits(['cencelReview', 'getNewReviews'])
 const { selectedLocationId } = defineProps(["selectedLocationId"])
 const score = ref(0)
 const reviewText =ref('')
-let file = ''
-const photoPreview = ref('')  //二進位
+const file = ref('')
+const photoPreview = ref('')  //base64
 
 const limitWord = computed(()=>{       
     return reviewText.value.length
 })
 
 //事件監聽
-// 01. 打分數
+// 1. 打分數
 function fillStar(index){
     score.value = index + 1
 }
@@ -22,28 +25,64 @@ function isStarFilled(index){
    return index < score.value
 }
 function uploadPhoto(e){
-  file = e.target.files[0]
-  console.log(file);
+  file.value = e.target.files[0]  
+  console.log(file.value);
+  console.log(selectedLocationId);
+  
   
   if(file){
     const reader = new FileReader()
     reader.onload = () => {
-      photoPreview.value = reader.result      
+      photoPreview.value = reader.result  
+    //   console.log(photoPreview.value);
     }
-    reader.readAsDataURL(file)
+    reader.readAsDataURL(file.value)
   }
 }
 function removePhoto(){
-    file = ''
+    file.value = ''
     photoPreview.value = ''
+}
+
+const insertReview = async ()=>{
+    // console.log(file.value);
+    // 創一個new FormData, php才能正常接收file
+    const formData = new FormData()
+    formData.append("score", score.value)
+    formData.append("content", reviewText.value)
+    formData.append("created_ms",  Date.now())
+    formData.append("location_id", selectedLocationId)
+    formData.append("image", file.value)
+
+    try{
+        const res = await axios.post(
+            import.meta.env.VITE_AJAX_URL + "map/postReview.php",
+            formData
+        )
+        console.log(res.data);
+        
+        if( res.data.status === "success"){
+            cencelReview()
+            alert(res.data['message'])
+            //要補上接收新的評論 給mapDetail 和 review 去換locationReviews
+            // 通知父組件重新載入評論
+            emit("getNewReviews")
+        }else if( res.data.status === "error" ){
+            cencelReview()
+            alert(res.data['message'])
+        }
+    }catch( error ){
+        console.error('上傳錯誤:', error)
+        console.error('錯誤回應:', error.response)
+    }
 }
 
 
 //取消評論
-const emit = defineEmits()
+
 function cencelReview(){   //這邊要判斷是不是會員
     fillStar(-1)
-    file = ''
+    file.value = ''
     reviewText.value = ''
     photoPreview.value = ''
     emit("cencelReview")
@@ -54,21 +93,7 @@ function submit(){
     if( score === 0 || reviewText.value.length ===0){
         alert('評論與評分不能為空白')
     }else{
-        // console.log(file);
-        fetch('http://localhost/star/map/postReview.php',{
-        // fetch('postReview.php',{
-            method: 'POST' ,
-            headers:{'Content-Type' : 'application/json'} ,
-            body: JSON.stringify({
-                    location_id: selectedLocationId.value ,
-                    content: reviewText.value ,
-                    image: file,
-                })
-        })
-        .then(resp => resp.text())
-        .then(text => {
-            console.log(text);
-        })
+        insertReview()       
     }
 
     

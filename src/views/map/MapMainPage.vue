@@ -35,18 +35,20 @@
             v-show="reviewPlaceShow"
             :selectedLocationId="selectedLocationId"
             @cencelReview="cencelReview"
+            @getNewReviews="getNewReviews"
         />
         
     </div>
 </template>
 
 <script setup>
-import {computed, reactive, ref} from 'vue'
+import {onMounted, ref} from 'vue'
 import MapMain from '@/components/starmap/MapMain.vue';
 import MapDetail from '@/components/starmap/MapDetail.vue';
 import MapReview from '@/components/starmap/MapReview.vue';
 import ReviewPlace from '@/components/starmap/ReviewPlace.vue';
 import { componentSizes } from 'element-plus';
+import axios from 'axios'
 
 // 假數據
 const locationList = ref([])
@@ -60,14 +62,42 @@ const locationList = ref([])
 
 
 // 向後端發出請求
-fetch('http://localhost:80/star/map/getLocationList.php')
-// fetch('pdo/map/getLocationList.php')
-    .then( resp => resp.json())
-    .then( list => {
-        // console.log(list)
-        locationList.value = list
-    })
+// fetch(import.meta.env.VITE_AJAX_URL + "map/getLocationList.php")
+// fetch('/pdo/map/getLocationList.php')
+    // .then( resp => resp.json())
+    // .then( list => {
+    //     // console.log(list)
+    //     locationList.value = list
+    // })
 
+const getLocationList = async () => {
+    try {
+        const res = await axios.get(import.meta.env.VITE_AJAX_URL + "map/getLocationList.php")
+        locationList.value = res.data
+    } catch (error) {
+        console.error('取得地點資料錯誤:', error)
+        console.error('錯誤回應:', error.response)
+    }
+}
+
+//接收selectedLocationId.value 為參數 id
+const getLocationReview = async (id)=>{
+    try{
+        const res = await axios.post(
+            import.meta.env.VITE_AJAX_URL + "map/getLocationReview.php",
+            {
+                locationIndex: id 
+            }
+        )
+        
+        locationReviews.value = res.data
+
+    }catch(error){
+        console.error('取得地點資料錯誤:', error);
+        console.error('錯誤回應:', error.response);
+    }
+
+}
 
 
 const detailShow = ref(false)
@@ -85,20 +115,10 @@ function handleShowDetail(location) {
     detailShow.value = true              
     showLayout.value = true
     
-    fetch('http://localhost:80/star/map/getLocationReview.php',{
-    // fetch('pdo/map/getLocationReview.php',{
-        method: 'POST' ,
-        headers:{'Content-Type' : 'application/json'} ,
-        body: JSON.stringify({
-                locationIndex: selectedLocationId.value ,
-            })
-    })
-    .then( resp => resp.json() )
-    .then( reviews => { 
-        locationReviews.value = reviews
-     })
-    // console.log(selectedLocationId.value)    //確認選擇的location id
+    //呼叫函數,把selectedLocationId.value當參數
+    getLocationReview(selectedLocationId.value)
 }
+
 function closeModel(){
     detailShow.value = false
     showLayout.value = false
@@ -121,8 +141,14 @@ function cencelReview(){
     showLayout.value = true
 }
 
+ // 重新呼叫取得評論的 API
+const getNewReviews = () => {
+    getLocationReview(selectedLocationId.value)
+}
 
-
+onMounted(()=>{
+    getLocationList()
+})
 
 </script>
 

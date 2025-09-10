@@ -14,6 +14,8 @@ const weatherData = ref([])  //預報資料
 const temperature = ref('')
 const weather = ref('')
 const sixDaysArray = ref([])
+// 定義 API URL
+const API_URL = import.meta.env.VITE_AJAX_URL
 
 //取評論列表的前四個
 const fourReviewList = computed(()=>{
@@ -48,7 +50,7 @@ function closeModel(){
    //開啟更多評論
 function showReview(){
     emit('showReview')   
-    console.log(fourReviewList.value); 
+    // console.log(fourReviewList.value); 
 }
 
 const locationName = props.selectedLocation.city  //額外把縣市名稱拿出來, 不然氣象API中直接用props.selectedLocation.city會報錯
@@ -111,7 +113,7 @@ const locationId = ref('')  //用來賦值父組件過來的selectedLocationId
 function aaa(){
     locationId.value = props.selectedLocationId
     // console.log(locationId.value);
-    // console.log(fourReviewList.value);
+    console.log(fourReviewList.value);
     console.log(weatherData.value);
     // console.log(temperature.value);
     // console.log(weather.value);
@@ -237,7 +239,7 @@ function aaa(){
                         </div>
                         <!-- 右邊照片 -->
                         <div v-if="review.image" class="singleReview-rightPhoto">
-                            <img src="../../assets/images/map/map-reviewleft.jpg" alt="">
+                            <img :src="API_URL + review.image" alt="">
                         </div>
                     </div>
 
@@ -291,9 +293,9 @@ function aaa(){
     overflow-y: auto;
     background-color:$bgColor-white ;
 
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+    // display: flex;
+    // flex-direction: column;
+    // gap: 24px;
 
     &::-webkit-scrollbar {
             width: 8px;
@@ -356,6 +358,7 @@ function aaa(){
 }
 .trait1,.transportation, .trait3{
     display: flex;
+    flex-wrap: wrap;
     // flex-direction: column;
     gap: 12px;
 }
@@ -475,6 +478,7 @@ function aaa(){
     width: 100%;
     height: 2px;
     background-color: $primaryColor-100;
+    margin: 24px 0;
 }
 
 
@@ -516,14 +520,15 @@ function aaa(){
 }
     //單一評論小格
 .mapbox-singleReview{
-    
-    
+    // min-height: 140px;
     padding: 10px;
     border: 1px solid $primaryColor-100;
     box-sizing: border-box;
 
     display: flex;
-    gap: 12px;;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
 }
     //單一小格左邊文字
 .singleReview-leftContent{
@@ -546,14 +551,14 @@ function aaa(){
 
     //單一小格右邊照片
 .singleReview-rightPhoto{
-    width: 160px;
-    height: 120px;
+    height: 100%;
     background-color:transparent ;
 }
 .singleReview-rightPhoto img{
     display: block;
-    width: 160px;
-    height: 120px;
+    height: 100%;
+    max-height: 140px;
+    margin: 0 0 0 auto;
 }
 
 //查看更多
@@ -610,8 +615,14 @@ function aaa(){
     .mapbox-reviewList{
         grid-template-columns:1fr;
     }
-    .mapbox-singleReview{
-        flex-direction: column;
+    .mapbox-singleReview{   
+    
+    }
+    .singleReview-rightPhoto{
+        width: 100%;
+    }
+    .singleReview-rightPhoto img{
+        margin: 0 auto;
     }
 }
 

@@ -43,7 +43,7 @@
     $sql = "INSERT INTO Product
             (name, category_name, original_price, discount, sale_price, promotion, description, introduction, stock, is_active)
             VALUES
-            (:name, :category_name,:original_price, :discount, :sale_price, :promotion, :description, :introduction, :stock, :is_active);";
+            (:name, :category_name,:original_price, :discount, :sale_price, :promotion, :description, :introduction, :stock, :is_active)";
 
     $statement = $pdo -> prepare($sql);
     $statement -> bindParam(":name", $name);

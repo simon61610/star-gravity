@@ -18,6 +18,7 @@ const searchText = ref('')
 const placeholder = ref('')
 //避免打包後路徑錯誤
 const baseURL = import.meta.env.BASE_URL
+const API_IMAGESURL = import.meta.env.VITE_AJAX_IMAGESURL
 
 // ========== template狀態數據 ==========
 const isEntering = ref(true)
@@ -83,11 +84,11 @@ function setMap() {
 
     // 初始化標記
     updateMapMarkers(locationList)
-    
-    // 滑鼠座標顯示（開發用）
+    //滑鼠座標
     addMouseCoordinateDisplay()
 }
 
+// 滑鼠座標顯示（開發用）
 function addMouseCoordinateDisplay() {
     const coordsDiv = L.control({ position: 'bottomleft' })
     coordsDiv.onAdd = () => {
@@ -332,7 +333,7 @@ function handleSceneChange(scene, event) {
                             <transition name="accordion">
                                 <div v-show="activeIndex === locationList.findIndex(item => item === location)" class="location-singlePlace-more" >
                                                                                  <!-- ↓ 路徑打包後有亂掉 所以加這個環境變數去抓路徑 -->
-                                    <img class="location-singlePlace-photo" :src="`${baseURL}images/map/${location.image}`" alt="" @click="showMore(index)">
+                                    <img class="location-singlePlace-photo" :src="API_IMAGESURL + location.image" alt="" @click="showMore(index)">
 
                                     <a class="seeMore" href="#" @click.prevent="showLocationDetail(location)">
                                         更多資訊

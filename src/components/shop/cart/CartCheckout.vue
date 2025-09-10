@@ -27,7 +27,7 @@
         // ['入門啟蒙款 NovaSight 雙筒望遠鏡', '/pdo/starshop/images/雙筒望遠鏡-入門啟蒙款 NovaSight 雙筒望遠鏡-1.png', '2700', '2']
         
         let name = existInfo[0] // 商品名稱
-        let fitstImage = existInfo[1] // 圖片路徑
+        let firstImage = existInfo[1] // 圖片路徑
         let unitPrice = existInfo[2] // 特價單價
         let qty = existInfo[3] // 單種商品數量
         let originalPrice = existInfo[4] // 商品原價
@@ -38,7 +38,7 @@
         return {
             ID: itemId,
             name,
-            fitstImage,
+            firstImage,
             originalPrice,
             unitPrice,
             qty,
@@ -82,6 +82,10 @@
         return sum
     })
 
+    // ===================================== 運費 =====================================
+    const shipping_fee = computed(() => { // 未來可針對免運條件做運算
+        return 60
+    })
 
     // ===================================== 刪除商品 =====================================
     const deleteItem = (index) => {
@@ -152,7 +156,7 @@
                 <li class="item" v-for="(item, index) in cartItems">
 
                     <!-- 商品圖片 -->
-                    <img :src="item.fitstImage" alt="" class="item__img">
+                    <img :src="item.firstImage" alt="" class="item__img">
 
                     <!-- 商品資訊 -->
                     <div class="item__info">
@@ -214,8 +218,8 @@
                 <div class="order-cal">
                     <div class="cal-box">
                         <p><span>合計</span><span>NT${{ totalPrice }}</span></p>
-                        <p><span>運費</span><span>NT$60</span></p>
-                        <p><span>總計</span><span>NT${{ totalPrice + 60 }}</span></p>
+                        <p><span>運費</span><span>NT${{ shipping_fee }}</span></p>
+                        <p><span>總計</span><span>NT${{ totalPrice + shipping_fee }}</span></p>
                     </div>
                     <router-link to="/cartpage/cartform" class="router-link">
                         <div class="goto-pay-btn">前往結帳</div>

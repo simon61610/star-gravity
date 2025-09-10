@@ -20,6 +20,9 @@ const props = defineProps(["selectedLocation","selectedLocationId", 'locationRev
 const showSelect = ref(false)
 const sortType = ref('newest')
 
+// 定義 API URL
+const API_URL = import.meta.env.VITE_AJAX_URL
+
 //監聽標籤事件
 function showSelectUl(){
     showSelect.value = !showSelect.value
@@ -44,16 +47,15 @@ const sortedReviews = computed(()=>{
 
         switch(sortType.value){
             case "newest": 
-                console.log('📅 按最新排序完成')
+                // console.log('最新排序')
                 return reviews.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))                
             case "rating_low": 
-                console.log('⭐ 按評分低到高排序完成')
+                // console.log('低到高排序')
                 return reviews.sort((a, b) => a.score - b.score)  
             case "rating_high": 
-                console.log('⭐ 按評分高到低排序完成')
+                // console.log('高到低排序')
                 return reviews.sort((a, b) => b.score - a.score)
             default:
-                console.log('📝 使用預設排序')
                 return reviews   
         }
     }
@@ -65,7 +67,6 @@ function enlargePhoto(el){
 
 
 //生命週期
-//掛載時即執行
 onMounted( ()=>{
     document.addEventListener('click', clickOutside)
 })
@@ -130,7 +131,7 @@ onUnmounted( ()=>{
                     <p class="cnContent--18px">
                         {{review.content}}
                     </p>
-                    <img v-if="review.圖片" class="review-photo" src="../../assets/images/map/map-reviewleft.jpg" alt="" @click="enlargePhoto($event.target)">
+                    <img v-if="review.image" class="review-photo" :src="API_URL + review.image" alt="" @click="enlargePhoto($event.target)">
                     <h6>{{review.created_at}}</h6>
                 </li>  
             </ul>
@@ -363,7 +364,6 @@ onUnmounted( ()=>{
 }
 .review-photo{
     width: 180px;
-    height: 135px;
     cursor: pointer;
 }
 .mapreview-list h6{
