@@ -82,6 +82,10 @@
         return sum
     })
 
+    // ===================================== 運費 =====================================
+    const shipping_fee = computed(() => { // 未來可針對免運條件做運算
+        return 60
+    })
 
     // ===================================== 刪除商品 =====================================
     const deleteItem = (index) => {
@@ -214,8 +218,8 @@
                 <div class="order-cal">
                     <div class="cal-box">
                         <p><span>合計</span><span>NT${{ totalPrice }}</span></p>
-                        <p><span>運費</span><span>NT$60</span></p>
-                        <p><span>總計</span><span>NT${{ totalPrice + 60 }}</span></p>
+                        <p><span>運費</span><span>NT${{ shipping_fee }}</span></p>
+                        <p><span>總計</span><span>NT${{ totalPrice + shipping_fee }}</span></p>
                     </div>
                     <router-link to="/cartpage/cartform" class="router-link">
                         <div class="goto-pay-btn">前往結帳</div>
