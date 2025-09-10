@@ -1,5 +1,17 @@
 <script setup>
-    import { ref } from 'vue'
+    import { ref, onMounted, computed } from 'vue'
+    import { useRoute } from 'vue-router'
+
+    const route = useRoute()
+
+    const member_id = computed(() => route.query.member_id)
+    const order_id = computed(() => route.query.order_id)
+
+    onMounted(() => {
+        console.log(member_id.value)
+        console.log(order_id.value)
+    })
+
 
     // 商品假資料 => 要改用 storage 傳入
     const productDetail = ref(
@@ -40,7 +52,7 @@
                 <img src="@/assets/icons/checkout-success.svg" alt="">
                 <h2>已經收到您的訂單</h2>
             </div>
-            <h1 class="order-number">訂單編號：0123456789</h1>
+            <h1 class="order-number">訂單編號：{{ order_id }}</h1>
             <h3 class="member-center">查詢所有訂單，請至<span>會員中心</span></h3>
         </section>
 

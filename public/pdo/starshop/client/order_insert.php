@@ -110,7 +110,8 @@ $statementDetail = $pdo -> prepare($sqlDetail);
 
 echo json_encode([
     "success" => true,
-    "message" => "訂單新增成功"
+    "message" => "訂單新增成功",
+    "order_id" => $order_id
 ]);
 
 

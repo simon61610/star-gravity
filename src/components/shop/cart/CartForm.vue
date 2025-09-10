@@ -1,15 +1,17 @@
 <!-- 
 1. 表單待補上驗證
-2. 表單補上 name 和 value 
-3. 地址下拉選單
+2. memerID是假的，暫時用 1，送給後端跟下一頁的 member ID 都要改掉
 -->
 
 <script setup>
     import { ref, computed, onMounted, watch } from 'vue'
+    import { useRouter } from 'vue-router';
     import shopToast from '@/components/common/shopToast.vue';
     import { showToast } from '@/composables/useToast';
     import $ from 'jquery'
     import axios from 'axios'
+
+    const router = useRouter()
     
     // 商品假資料 => 要改用 storage 傳入
     /* const productDetail = ref(
@@ -228,7 +230,6 @@
         const res = await axios.post(import.meta.env.VITE_AJAX_URL + 'starshop/client/order_insert.php', orderData)
 
         if(res.data.success){
-            alert(res.data.message)
 
             // 逐一清除對應商品
             let itemString = storage['addItemList']
@@ -239,6 +240,13 @@
             
             // 清空 Storage
             storage.removeItem('addItemList')
+
+            const order_id = res.data.order_id
+            
+            router.push({
+                path: '/cartpage/cartsuccess',
+                query: { order_id, member_id: 1 }
+            })
 
         }else{
             showToast('訂單建立失敗')
