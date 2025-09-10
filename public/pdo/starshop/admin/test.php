@@ -10,7 +10,7 @@ include('../../pdo.php');
 
 $sql = "SELECT * FROM Product p 
         JOIN ProductImage pi
-		on p.ID = pi.product_id;";
+		on p.ID = pi.product_id";
 
 
 $statement = $pdo -> prepare($sql);
