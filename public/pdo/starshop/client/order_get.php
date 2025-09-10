@@ -11,6 +11,8 @@
     // ====================== 取得 Order ========================
     // 建立SQL
     $order_sql = "SELECT
+                        ID,
+                        order_number,
                         order_date, 
                         payment_status, 
                         payment_method, 

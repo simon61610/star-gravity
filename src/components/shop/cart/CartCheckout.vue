@@ -2,7 +2,8 @@
 
     import { ref, computed, onMounted } from 'vue'
     import bus from '@/composables/useMitt'
-    import products from '@/data/products'
+    // import products from '@/data/products'
+    
     
     const orderGuide = ref([
         "商品出貨時間約需 5–7 個工作天，若您無法等待，請斟酌再下單。",

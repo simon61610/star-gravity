@@ -25,8 +25,9 @@
         // console.log(typeof(res.data)); // object
         order.value = res.data.order
         orderDetail.value = res.data.orderDetail
-        console.log(order.value)
-        console.log(orderDetail.value)
+        // console.log(order.value)
+        // console.log(orderDetail.value)
+        // console.log(typeof(order.value.notes))
     })
     
     /* const products = ref([])
@@ -78,7 +79,7 @@
                 <img src="@/assets/icons/checkout-success.svg" alt="">
                 <h2>已經收到您的訂單</h2>
             </div>
-            <h1 class="order-number">訂單編號：{{ order_id }}</h1>
+            <h1 class="order-number">訂單編號：{{ order.order_number }}</h1>
             <h3 class="member-center">查詢所有訂單，請至<span>會員中心</span></h3>
         </section>
 

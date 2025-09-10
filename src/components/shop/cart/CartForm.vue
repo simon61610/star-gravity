@@ -1,7 +1,8 @@
 <!-- 
 1. 表單待補上驗證
 2. memerID是假的，暫時用 1，送給後端跟下一頁的 member ID 都要改掉
-3. 訂單編號可能要改成抓時間點毫秒的，要連同資料庫一起修改
+3. 購物車若沒東西會報錯
+4. 備註的空值，後端要改，傳 null 給資料庫
 -->
 
 <script setup>
@@ -11,6 +12,7 @@
     import { showToast } from '@/composables/useToast';
     import $ from 'jquery'
     import axios from 'axios'
+    import bus from '@/composables/useMitt'
 
     const router = useRouter()
     
@@ -107,6 +109,7 @@
     
     // 引用 jQuery 做 toggle
     onMounted(async() => {
+
         let itemString = storage['addItemList']
         let items = itemString.substring(0, itemString.length - 2).split(', ')
         
@@ -193,6 +196,35 @@
 
         return sum
     })
+    // ===================================== 產生訂單號 =====================================
+    const orderNumber = ref("")
+
+    const generateOrderNumber = () => {
+        // 目標 => SGABC-202509100945 => SG + - + 隨機三碼英文大寫 + 年月日時分
+
+        // 隨機三碼英文大寫
+        let letters = ''
+        const lettesLength = 3
+        for(let i = 0; i < lettesLength; i++){
+            const randomLetterNum = parseInt(Math.random()*26) + 65
+            letters += String.fromCharCode(randomLetterNum)
+        }
+
+        // 年月日時分
+        const now = new Date()
+        // str.padStart(targetLength [, padString])
+        let y = String(now.getFullYear())
+        let m = String(now.getMonth() + 1).padStart(2, "0")
+        let d = String(now.getDate()).padStart(2, "0")
+        let mills = String(now.getMilliseconds()).padStart(3, "0")
+        // let h = String(now.getHours()).padStart(2, "0")
+        // let min = String(now.getMinutes()).padStart(2, "0")
+        
+        let nowNum = y + m + d + mills
+        
+        orderNumber.value = `SG${letters}-${nowNum}`
+        // alert(orderNumber.value)
+    }
 
     // ===================================== 送出訂單，進入結帳 =====================================
     const submitOrder = async () => {
@@ -210,8 +242,11 @@
             return
         }
 
+        generateOrderNumber()
+
         const orderData = {
             member_id: 1, // 暫時寫死
+            order_number: orderNumber.value,
             shipping_method: shipping_method.value, // 運送方式
             payment_method: payment_method.value, // 付款方式
             recipient_name: recipient_name.value, // 收件人名稱
@@ -242,6 +277,8 @@
             // 清空 Storage
             storage.removeItem('addItemList')
 
+            bus.emit('notifyUpdateCart') // 通知 header
+
             const order_id = res.data.order_id
             
             router.push({
@@ -253,8 +290,6 @@
             showToast('訂單建立失敗')
         }
     }
-
-
 
 
 </script>
@@ -269,6 +304,7 @@
         <!-- ---------------- 訂單明細 ---------------- -->
         <section class="cart-list">
 
+            <!-- <h1 class="common-title" @click="generateOrderNumber">訂單明細</h1> --> <!-- 測試訂單編號用 -->
             <h1 class="common-title">訂單明細</h1>
 
             <!-- 收合標題 -->
