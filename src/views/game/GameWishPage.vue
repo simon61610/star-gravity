@@ -4,7 +4,8 @@
     <section class="panel" role="region" aria-labelledby="wish-title">
       <h1 id="wish-title" class="title">許 願 牆</h1>
 
-      <form class="wish-form" @submit.prevent="onSubmit">
+      <!-- 用一般容器，不用 <form>，避免 Enter 自動送出 -->
+      <div class="wish-form">
         <!-- 你的姓名 -->
         <label class="field">
           <span class="field__label">你的姓名</span>
@@ -35,20 +36,13 @@
         <!-- 圖案選取 -->
         <fieldset class="field">
           <legend class="field__label">選取你的圖案</legend>
-          <div
-            class="shape-grid"
-            role="radiogroup"
-            aria-label="圖案選擇"
-          >
+          <div class="shape-grid" role="radiogroup" aria-label="圖案選擇">
             <!-- Heart -->
             <label class="shape" :aria-checked="form.shape==='heart'" role="radio">
               <input type="radio" name="shape" value="heart" v-model="form.shape" />
               <span class="shape__box" aria-hidden="true" title="愛心">
                 <svg viewBox="0 0 24 24" class="shape__svg">
-                  <path
-                    d="M12 21s-7.3-4.35-9.5-8.23C-.34 8.9 2.53 4 6.9 4c2.06 0 3.67 1.02 4.6 2.5C12.43 5.02 14.04 4 16.1 4c4.37 0 7.24 4.9 3.6 8.77C19.3 16.65 12 21 12 21z"
-                    fill="currentColor"
-                  />
+                  <path d="M12 21s-7.3-4.35-9.5-8.23C-.34 8.9 2.53 4 6.9 4c2.06 0 3.67 1.02 4.6 2.5C12.43 5.02 14.04 4 16.1 4c4.37 0 7.24 4.9 3.6 8.77C19.3 16.65 12 21 12 21z" fill="currentColor" />
                 </svg>
               </span>
             </label>
@@ -86,18 +80,18 @@
           <p v-if="showError && !form.shape" class="err-msg">請選擇一個圖案</p>
         </fieldset>
 
-        <button class="btn" type="submit" :disabled="!isValid">
+        <!-- 只有按這顆按鈕才會導到動畫頁 -->
+        <button class="btn" type="button" :disabled="!isValid" @click="onSubmit">
           送出
         </button>
 
-        <!-- 成功提示 -->
+        <!-- 成功提示（暫時不啟用，保留） -->
         <p v-if="sent" class="toast" role="status">已送出，願宇宙收到你的心聲 ✨</p>
-      </form>
+      </div>
     </section>
   </main>
 </template>
 
-<!-- src/views/game/GameWishPage.vue（節錄：<script setup>） -->
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
@@ -107,21 +101,19 @@ const STORAGE_LIST = 'wishWallSubmissions'
 const STORAGE_LATEST = 'wishWallLatest'
 
 const form = ref({ name: '', wish: '', shape: '' })
-const leaving = ref(false)
+const showError = ref(false)  // 模板使用到
+const sent = ref(false)       // 模板使用到（目前保留）
 
-const isValid = computed(() => form.value.name.trim() && form.value.wish.trim() && form.value.shape)
+const isValid = computed(() =>
+  form.value.name.trim() && form.value.wish.trim() && form.value.shape
+)
 
 function onSubmit () {
-  if (!isValid.value) return
+  if (!isValid.value) { showError.value = true; return }
 
-  // 1) 準備 payload
-  const payload = {
-    ...form.value,
-    createdAt: new Date().toISOString(),
-  }
-
-  // 2) 寫入 localStorage（保留清單 + 最新一筆）
+  // 可選：先存到 localStorage（之後你要改成 API 也OK）
   try {
+    const payload = { ...form.value, createdAt: new Date().toISOString() }
     const arr = JSON.parse(localStorage.getItem(STORAGE_LIST) || '[]')
     arr.push(payload)
     localStorage.setItem(STORAGE_LIST, JSON.stringify(arr))
@@ -130,11 +122,8 @@ function onSubmit () {
     console.warn('localStorage 寫入失敗：', e)
   }
 
-  // 3) 播放離場動畫 → 換頁
-  leaving.value = true
-  setTimeout(() => {
-    router.push({ name: 'gamewishResult' }) // 去結果頁
-  }, 900) // 與 CSS 動畫時長一致
+  // 只在按鈕點擊時導頁
+  router.push({ name: 'gamewishTransit' })
 }
 </script>
 
@@ -157,21 +146,19 @@ $white-40: rgba(255,255,255,.4);
   padding: 24px;
   color: #fff;
 
-  /* 換成你的圖：建議放 /src/assets/bg/sky.svg  */
+  /* 你的 SVG 背景 */
   background-image: url(/src/assets/images/games/GameWishPage/game_wish-bg.svg);
-  background-repeat: no-repeat;    /* 不重複 */
-  background-size: cover;          /* 填滿容器 */
-  background-position:center;     /* 置中對齊 */
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
   position: relative;
   overflow: hidden;
 }
-
 
 .panel {
   width: min(560px, 92vw);
   padding: 36px 28px 28px;
   border-radius: 18px;
- 
 }
 
 .title {
@@ -180,16 +167,14 @@ $white-40: rgba(255,255,255,.4);
   font-weight: 800;
   margin: 4px 0 24px;
   text-shadow: 0 2px 0 rgba(0,0,0,.25);
+  font-size: 30px;
 }
 
 /* ===== 表單 ===== */
 .wish-form { display: grid; gap: 18px; }
-
 .field { display: grid; gap: 8px; }
 
-.field__label {
-  font-size: 14px; color: $white-40; letter-spacing: .04em;
-}
+.field__label { font-size: 14px; color: $white-40; letter-spacing: .04em; }
 
 .field__input, .field__textarea {
   border-radius: 14px; border: 1px solid $white-18;
@@ -212,7 +197,6 @@ $white-40: rgba(255,255,255,.4);
   display: grid; grid-template-columns: repeat(4, 1fr);
   gap: 14px; margin-top: 6px;
 }
-
 .shape { display: inline-block; }
 .shape input { position: absolute; opacity: 0; pointer-events: none; }
 
@@ -239,34 +223,16 @@ $white-40: rgba(255,255,255,.4);
 .btn {
   margin-top: 8px; height: 46px; border: 0; border-radius: 999px; cursor: pointer;
   font-weight: 700; letter-spacing: .2em; color: $white;
-  background:
-    linear-gradient(180deg, $purple-400, $purple-600) border-box;
+  background: linear-gradient(180deg, $purple-400, $purple-600);
   border: 2px solid transparent;
   transition: transform .1s ease, box-shadow .2s ease, filter .2s ease, opacity .2s ease;
 }
-.btn:hover { 
-  transform: translateY(-1px); 
-  filter: brightness(1.05); 
-}
-.btn:active { 
-  transform: translateY(0); 
-  filter: brightness(.98); 
-}
-.btn:disabled { 
-  opacity: .5; 
-  cursor: not-allowed; 
-  filter: none; 
-  box-shadow: none; }
+.btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
+.btn:active { transform: translateY(0); filter: brightness(.98); }
+.btn:disabled { opacity: .5; cursor: not-allowed; filter: none; box-shadow: none; }
 
-/* 成功提示 */
-.toast {
-  text-align: center; 
-  margin-top: 10px; 
-  font-size: 14px; 
-  opacity: 0; 
-  animation: fadeIn 0.3s forwards;
-}
-
+/* 成功提示（保留） */
+.toast { text-align: center; margin-top: 10px; font-size: 14px; opacity: 0; animation: fadeIn .3s forwards; }
 @keyframes fadeIn { to { opacity: 1; } }
 
 /* RWD */

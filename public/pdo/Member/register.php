@@ -6,14 +6,20 @@ header('Content-Type: application/json; charset=utf-8');
 
 // 簡化 CORS，允許所有本機請求
 header('Access-Control-Allow-Origin: http://localhost:5173');
+header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Headers: Content-Type, X-Requested-With, Authorization');
+
+// 預檢請求直接結束，避免被下面的「僅允許 POST」誤擋
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
+    exit;
+};
 
 // 僅允許 POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-  echo json_encode(['ok' => false, 'message' => '請用 POST 提交（FormData / multipart/form-data）'], JSON_UNESCAPED_UNICODE);
+  echo json_encode(['ok' => false, 'message' => '請用 POST 提交'], JSON_UNESCAPED_UNICODE);
   exit;
-}
+};
 
 // 初始化錯誤陣列
 $errors = [];
@@ -42,7 +48,7 @@ if ($gender === '') $errors[] = '請選擇性別';
 if ($errors) {
   echo json_encode(['ok' => false, 'errors' => $errors], JSON_UNESCAPED_UNICODE);
   exit;
-}
+};
 
 // 圖片上傳
 $imagePath = ''; // 預設空字串
@@ -128,10 +134,11 @@ try {
     if ($st->fetch()) {
         echo json_encode(['ok' => false, 'message' => '此 Email 已被註冊'], JSON_UNESCAPED_UNICODE);
         exit;
-    }
+    };
 
     // 密碼雜湊
     $hash = password_hash($password, PASSWORD_DEFAULT);
+
     // 導入member資料庫
     $sql = 'INSERT INTO `Member`
         (`name`, `email`, `password`, `phone`, `city`, `area`, `address`, `gender`, `image`, `created_at`, `account_status`,`hash`)
@@ -151,16 +158,24 @@ try {
         $hash     
     ]);
 
+    // 確保只輸出 JSON（清掉任何意外輸出），避免前端解析失敗
+    while (ob_get_level()) { 
+        ob_end_clean(); 
+    };
+
     echo json_encode([
         'ok' => true,
         'message' => '註冊成功',
-        'user_id' => $pdo->lastInsertId(),
-        'image'   => $imagePath
+        // 'user_id' => $pdo->lastInsertId(),
+        // 'image'   => $imagePath
     ], JSON_UNESCAPED_UNICODE);
+    exit;
 
     } catch (PDOException $e) {
-        echo json_encode(['ok' => false, 'message' => '伺服器錯誤：' . $e->getMessage()], JSON_UNESCAPED_UNICODE);
-}
+        // 失敗也一律回乾淨 JSON
+        echo json_encode(['ok' => false, 'message' => '伺服器錯誤：'.$e->getMessage()], JSON_UNESCAPED_UNICODE);
+        exit;
+};
 
 
 

@@ -32,7 +32,6 @@
         member.city && member.area && member.address.trim()
     )
         
-    /* ---- 載入會員資料 ---- */
     // 縣市區域選單
     const cities = ref([])
     const areaOptions = ref([])
@@ -82,7 +81,6 @@
         }
 
     })
-
 
     // 切換城市 → 重新整理區域選項，並清空已選區域
     watch(() => member.city ,(newCity) => {

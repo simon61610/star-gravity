@@ -187,6 +187,7 @@ watch(
     color: $primaryColor-100;
     max-width: 710px;
     width: 100%;
+    box-sizing: border-box;
     .article-title-box{
             
         .article-title-h2{
@@ -270,7 +271,7 @@ watch(
     }
 
 }
-@media screen and (max-width: 431px){
+@media screen and (max-width: 650px){
 
     .article-content-img{
         aspect-ratio: 16/9;
@@ -279,8 +280,9 @@ watch(
         
         
         img{
-            max-width: 350px !important;
-            width: 100% !important;
+          box-sizing: border-box;
+          max-width: 350px !important;
+          width: 100% !important;
             
         }
     }

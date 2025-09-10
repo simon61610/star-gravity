@@ -150,11 +150,12 @@ const zodiacInfo = ref([
 
 
 .zodiac {
+  width: 100%;
   display: grid;
   grid-template-columns: auto 1fr auto; /* 左 標題 / 中 清單 / 右 控制 */  
   align-items: center;
   gap: 24px 32px;
-  padding: 10px 46px;
+  padding: 10px 0px;
   color: #fff;
 }
 
@@ -253,18 +254,20 @@ const zodiacInfo = ref([
 }
 
 /* --- RWD --- */
-@media (max-width: 1024px) {
-  .zodiac__list { grid-template-columns: repeat(4, minmax(140px, 1fr)); }
+@media (max-width: 1151px) {
+  .zodiac__list { grid-template-columns: repeat(4, minmax(140px, 1fr));
+  gap:16px }
 }
 
 @media (max-width: 768px) {
   .zodiac { grid-template-columns: 1fr; align-items: start; }
-  .zodiac__title { font-size: 28px; }
-  .zodiac__list  { grid-template-columns: repeat(3, minmax(120px, 1fr)); }
-  .zodiac__actions { justify-content: flex-end; }
+  .zodiac__title { font-size: 24px; }
+  .zodiac__list  { grid-template-columns: repeat(3, minmax(100px, 1fr)); }
+  .zodiac__actions { justify-content: flex-end;
+  flex-direction: column; }
 }
 
-@media (max-width: 431px) {
+@media (max-width: 531px) {
 //   .zodiac__list  { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
 //   .zodiac__icon  { width: 40px; height: 40px; }
 // }
@@ -275,13 +278,16 @@ const zodiacInfo = ref([
   flex-direction: column;
   padding: 0;
   .zodiac__actions{
-    height: 0;
+    height:0;
+    @media (max-width: 501px){
+
+    }
     h2{
       display: none;
     }
     .zodiac__icons{
       position: relative;
-      top: 380px;
+      top: 450px;
       width: 100%;
       img{
         &:first-child{

@@ -62,6 +62,14 @@ const emit = defineEmits(['changeCategory'])
             display: flex;
             align-items:baseline;
             gap: 20px;
+            @media screen and (max-width: 1070px){
+                margin-left: 15px;
+            }
+
+            @media screen and (max-width: 600px){
+                flex-direction: column;
+                align-items: center;
+            }
             
             .article{
                 font-family:'Roboto';
@@ -112,7 +120,8 @@ const emit = defineEmits(['changeCategory'])
 /*-------------斷點1070---------------*/
 @media screen and (max-width: 1070px){
     .article-list{
-        padding: 0 10px;
+        
+        padding: 0 ;
         .article-category{
             padding-right: 20px;
         }
@@ -120,7 +129,7 @@ const emit = defineEmits(['changeCategory'])
 }
 
 /*-------------斷點430--------------*/
-@media screen and (max-width: 431px){
+@media screen and (max-width: 571px){
 .article-list-wrapper{
     .article-list{
         border-bottom: none;

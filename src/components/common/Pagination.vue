@@ -21,12 +21,14 @@ function changePage(newpage){
 <template>
     <div class="elementbox">
         <el-pagination              
-        background layout="prev, pager, next" 
+        background 
+        layout="prev, pager, next" 
         :total = "props.total" 
         :page-size = "props.pageSize"  
         :current-page="props.modelValue"
         :hide-on-single-page="false"
         :pager-count="5"
+        
         @current-change="changePage"/>
     </div>           
          
@@ -66,12 +68,23 @@ function changePage(newpage){
         background-color: transparent !important;
         color:white;
     
+        
         &:hover{
             background-color:$primaryColor-500  !important;
             font-weight: bolder;
         }
 
+
+        &.is-active {
+        background-color: $primaryColor-500 !important;
+        border-color: $primaryColor-500;
+        color: white !important;
+        font-weight: bold;
+        }
+        
+
     }
+    
     
 
     

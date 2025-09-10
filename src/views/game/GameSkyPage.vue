@@ -63,6 +63,7 @@ function showall(){
 }
 
 .zod{
+  
   width: 100%;
   background-color: black;
 }
