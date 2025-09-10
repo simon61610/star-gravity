@@ -27,7 +27,7 @@
         // ['入門啟蒙款 NovaSight 雙筒望遠鏡', '/pdo/starshop/images/雙筒望遠鏡-入門啟蒙款 NovaSight 雙筒望遠鏡-1.png', '2700', '2']
         
         let name = existInfo[0] // 商品名稱
-        let fitstImage = existInfo[1] // 圖片路徑
+        let firstImage = existInfo[1] // 圖片路徑
         let unitPrice = existInfo[2] // 特價單價
         let qty = existInfo[3] // 單種商品數量
         let originalPrice = existInfo[4] // 商品原價
@@ -38,7 +38,7 @@
         return {
             ID: itemId,
             name,
-            fitstImage,
+            firstImage,
             originalPrice,
             unitPrice,
             qty,
@@ -156,7 +156,7 @@
                 <li class="item" v-for="(item, index) in cartItems">
 
                     <!-- 商品圖片 -->
-                    <img :src="item.fitstImage" alt="" class="item__img">
+                    <img :src="item.firstImage" alt="" class="item__img">
 
                     <!-- 商品資訊 -->
                     <div class="item__info">

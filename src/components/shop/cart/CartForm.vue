@@ -6,6 +6,8 @@
 
 <script setup>
     import { ref, computed, onMounted, watch } from 'vue'
+    import shopToast from '@/components/common/shopToast.vue';
+    import { showToast } from '@/composables/useToast';
     import $ from 'jquery'
     import axios from 'axios'
     
@@ -53,9 +55,17 @@
        return city ? city.districts : []
    }) */
 
-    const cities = ref([])
-    const selectedCity = ref('')
-    const selectedDistrict = ref('')
+    const cities = ref([]) // 城市陣列
+
+    // 表單物件 v-modal 綁定
+    const shipping_method = ref('宅配') // 運送方式
+    const payment_method = ref('') // 付款方式
+    const recipient_name = ref('') // 收件人名稱
+    const recipient_phone = ref('') // 電話
+    const selectedCity = ref('') // 選擇的縣市，資料庫欄位名: city
+    const selectedDistrict = ref('') // 選擇的區，資料庫欄位名: area
+    const recipient_address = ref('') // 填寫地址
+    const notes = ref('') // 訂單備註
 
     const districts = computed(() => {
         const city = cities.value.find(c => c.CityName === selectedCity.value)
@@ -72,7 +82,7 @@
         // ['入門啟蒙款 NovaSight 雙筒望遠鏡', '/pdo/starshop/images/雙筒望遠鏡-入門啟蒙款 NovaSight 雙筒望遠鏡-1.png', '2700', '2']
         
         let name = existInfo[0] // 商品名稱
-        let fitstImage = existInfo[1] // 圖片路徑
+        let firstImage = existInfo[1] // 圖片路徑
         let unitPrice = existInfo[2] // 特價單價
         let qty = existInfo[3] // 單種商品數量
         let originalPrice = existInfo[4] // 商品原價
@@ -83,7 +93,7 @@
         return {
             ID: itemId,
             name,
-            fitstImage,
+            firstImage,
             originalPrice,
             unitPrice,
             qty,
@@ -163,6 +173,11 @@
 
         return sum
     })
+
+    // ===================================== 運費 =====================================
+    const shipping_fee = computed(() => { // 未來可針對免運條件做運算
+        return 60
+    })
     
 
     // ===================================== 計算合計金額 =====================================
@@ -176,13 +191,59 @@
         return sum
     })
 
-    
+    // ===================================== 送出訂單，進入結帳 =====================================
+    const submitOrder = async () => {
+        // 表單驗證，資料為空的話
+        if(
+            !shipping_method.value.trim() || // 運送方式
+            !payment_method.value.trim() || // 付款方式
+            !recipient_name.value.trim() || // 收件人名稱
+            !recipient_phone.value.trim() || // 電話
+            !selectedCity.value.trim() || // 選擇的縣市，資料庫欄位名: city
+            !selectedDistrict.value.trim() || // 選擇的區，資料庫欄位名: area
+            !recipient_address.value.trim() // 填寫地址
+        ){
+            showToast('請完整填寫必填欄位！')
+            return
+        }
+
+        const orderData = {
+            member_id: 1, // 暫時寫死
+            shipping_method: shipping_method.value, // 運送方式
+            payment_method: payment_method.value, // 付款方式
+            recipient_name: recipient_name.value, // 收件人名稱
+            recipient_phone: recipient_phone.value, // 電話
+            city: selectedCity.value, // 選擇的縣市，資料庫欄位名: city
+            area: selectedDistrict.value, // 選擇的區，資料庫欄位名: area
+            recipient_address: recipient_address.value, // 填寫地址
+            notes: notes.value, // 訂單備註
+            cart: cartItems.value, // 購物車商品
+            total_price: totalPrice.value, // 合計(不含運)，資料庫欄位: total_price
+            shipping_fee: shipping_fee.value // 運費
+            
+        }
+
+        // console.log(orderData)
+
+        const res = await axios.post(import.meta.env.VITE_AJAX_URL + 'starshop/client/order_insert.php', orderData)
+
+        if(res.data.success){
+            alert(res.data.message)
+        }else{
+            showToast('訂單建立失敗')
+        }
+    }
+
+
+
+
 </script>
 
 
 
 
 <template>
+    <shopToast />
     <section class="checkout-section">
 
         <!-- ---------------- 訂單明細 ---------------- -->
@@ -201,7 +262,7 @@
                 <ul class="items">
                     <li class="item" v-for="(product, index) in cartItems">
                         <!-- 圖片 -->
-                        <img :src="product.fitstImage" alt="" class="item__img">
+                        <img :src="product.firstImage" alt="" class="item__img">
     
                         <!-- 商品資訊和計算 -->
                         <div class="item__info">
@@ -221,8 +282,8 @@
                 <!-- 金額統計 -->
                 <div class="cal-box">
                         <p><span>合計</span><span>NT${{ totalPrice }}</span></p>
-                        <p><span>運費</span><span>NT$60</span></p>
-                        <p><span>總計</span><span>NT${{ totalPrice + 60 }}</span></p>
+                        <p><span>運費</span><span>NT${{ shipping_fee }}</span></p>
+                        <p><span>總計</span><span>NT${{ totalPrice + shipping_fee }}</span></p>
                 </div>
 
                 <div class="toggle-inside">
@@ -241,10 +302,10 @@
                 <h1 class="common-title">付款方式</h1>
                 <div class="payment-method__radio">
                     <label>
-                        <input type="radio" name="payMethod" value="貨到付款"> 貨到付款
+                        <input type="radio" v-model="payment_method" value="貨到付款"> 貨到付款
                     </label>
                     <label>
-                        <input type="radio" name="payMethod" value="線上刷卡"> 線上刷卡
+                        <input type="radio" v-model="payment_method" value="線上刷卡"> 線上刷卡
                     </label>
                 </div>
              </section>
@@ -254,7 +315,7 @@
                 <h1 class="common-title">收件資料</h1>
                 <div class="receipt-info__form">
                     <div class="input-box">
-                        <h3>送貨方式：宅配（台灣本島地區適用）</h3>
+                        <h3>送貨方式：{{ shipping_method }}（台灣本島地區適用）</h3>
                         <label class="same-info">
                             <input type="checkbox"> 收件人資料與會員資料相同
                         </label>
@@ -262,7 +323,7 @@
                     <div class="input-box">
                         <h3><span>*</span>收件人名稱</h3>
                         <div class="receiver">
-                            <input type="text">
+                            <input type="text" v-model="recipient_name">
                             <p>（請填入真實姓名，以確保順利收件）</p>
                         </div>
                     </div>
@@ -272,7 +333,7 @@
                     </div> -->
                     <div class="input-box">
                         <h3><span>*</span>行動電話</h3>
-                        <input type="text" placeholder="0912 345 678">
+                        <input type="text" v-model="recipient_phone" placeholder="0912 345 678">
                     </div>
                     <div class="input-box">
                         <h3><span>*</span>地址</h3>
@@ -293,7 +354,7 @@
                                 </option>
                             </select>
                         </div>
-                        <input type="text" placeholder="請輸入真實地址">
+                        <input type="text" v-model="recipient_address" placeholder="請輸入真實地址">
                     </div>
                     <!-- <div class="input-box">
                         <h3>發票抬頭</h3>
@@ -305,7 +366,7 @@
                     </div> -->
                     <div class="input-box">
                         <h3>訂單備註</h3>
-                        <textarea rows="4" placeholder="有什麼想告訴賣家嗎？"></textarea>
+                        <textarea rows="4" v-model="notes" placeholder="有什麼想告訴賣家嗎？"></textarea>
                     </div>
                 </div>
             </section>
@@ -315,9 +376,9 @@
                 <router-link to="/cartpage/cart" class="router-link">
                     <p class="previous-btn">< 返回上一步</p>
                 </router-link>
-                <router-link to="/cartpage/cartsuccess" class="router-link">
-                    <p class="next-btn">完成訂單</p>
-                </router-link>
+                <!-- <router-link to="/cartpage/cartsuccess" class="router-link"> -->
+                    <p class="next-btn" @click="submitOrder">完成訂單</p>
+                <!-- </router-link> -->
             </section>
 
         <!-- </form> -->
