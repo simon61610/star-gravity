@@ -7,6 +7,7 @@ $orderInfo = json_decode(file_get_contents("php://input"), true);
 
 // 存取資料
 $member_id = $orderInfo['member_id'];
+$order_number = $orderInfo['order_number'];
 $shipping_method = $orderInfo['shipping_method'];
 $payment_method = $orderInfo['payment_method'];
 $recipient_name = $orderInfo['recipient_name'];
@@ -22,13 +23,14 @@ $shipping_fee = $orderInfo['shipping_fee'];
 //======================================= 新增Order =======================================
 // 建立SQL
 $sql = "INSERT INTO `Order`
-        (order_date, payment_status, payment_method, order_status, recipient_name, recipient_phone, city, area, recipient_address, shipping_method, notes, shipping_fee, total_price, member_id)
+        (order_number, order_date, payment_status, payment_method, order_status, recipient_name, recipient_phone, city, area, recipient_address, shipping_method, notes, shipping_fee, total_price, member_id)
         VALUES
-        (NOW(), '未付款', :payment_method, '未出貨', :recipient_name, :recipient_phone, :city, :area, :recipient_address, :shipping_method, :notes, :shipping_fee, :total_price, :member_id)";
+        (:order_number, NOW(), '未付款', :payment_method, '未出貨', :recipient_name, :recipient_phone, :city, :area, :recipient_address, :shipping_method, :notes, :shipping_fee, :total_price, :member_id)";
 
 
 $statement = $pdo -> prepare($sql);
 
+$statement -> bindParam(":order_number", $order_number);
 $statement -> bindParam(":payment_method", $payment_method);
 $statement -> bindParam(":recipient_name", $recipient_name);
 $statement -> bindParam(":recipient_phone", $recipient_phone);
