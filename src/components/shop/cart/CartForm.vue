@@ -1,15 +1,18 @@
 <!-- 
 1. 表單待補上驗證
-2. 表單補上 name 和 value 
-3. 地址下拉選單
+2. memerID是假的，暫時用 1，送給後端跟下一頁的 member ID 都要改掉
+3. 訂單編號可能要改成抓時間點毫秒的，要連同資料庫一起修改
 -->
 
 <script setup>
     import { ref, computed, onMounted, watch } from 'vue'
+    import { useRouter } from 'vue-router';
     import shopToast from '@/components/common/shopToast.vue';
     import { showToast } from '@/composables/useToast';
     import $ from 'jquery'
     import axios from 'axios'
+
+    const router = useRouter()
     
     // 商品假資料 => 要改用 storage 傳入
     /* const productDetail = ref(
@@ -101,17 +104,17 @@
         }
     }
 
-
+    
     // 引用 jQuery 做 toggle
     onMounted(async() => {
-        const itemString = storage['addItemList']
+        let itemString = storage['addItemList']
+        let items = itemString.substring(0, itemString.length - 2).split(', ')
         
         if(!itemString){
             cartItems.value = []
             return
         }
 
-        let items = itemString.substring(0, itemString.length - 2).split(', ')
         let cartData = []
 
         for(let i = 0; i < items.length; i++){
@@ -228,7 +231,24 @@
         const res = await axios.post(import.meta.env.VITE_AJAX_URL + 'starshop/client/order_insert.php', orderData)
 
         if(res.data.success){
-            alert(res.data.message)
+
+            // 逐一清除對應商品
+            let itemString = storage['addItemList']
+            let items = itemString.substring(0, itemString.length - 2).split(', ')
+            for(let i = 0; i < items.length; i++){
+                storage.removeItem(items[i])
+            }
+            
+            // 清空 Storage
+            storage.removeItem('addItemList')
+
+            const order_id = res.data.order_id
+            
+            router.push({
+                path: '/cartpage/cartsuccess',
+                query: { order_id, member_id: 1 }
+            })
+
         }else{
             showToast('訂單建立失敗')
         }
@@ -253,7 +273,7 @@
 
             <!-- 收合標題 -->
             <div class="toggle-total">
-                <p class="total">合計：NT${{ totalPrice + 60 }}</p>
+                <p class="total">總計：NT${{ totalPrice + shipping_fee }}</p>
                 <p class="count" id="cartCount">購物車({{ totalQuantity }}件)</p>
             </div>
 
