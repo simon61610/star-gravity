@@ -8,23 +8,15 @@
     const memberStore = useMemberStore()
     memberStore.hydrate()
 
-    // 統一 API 位址
-    // const API_BASE   = 'http://localhost'
-    // const LOGIN_API  = `${API_BASE}/PDO/Member/login2.php`
-
-    // localStorage keys
-    // const LS_AUTH  = 'auth'
-    // const LS_USER  = 'user'
-
     // localStorage key：只存 token（是否登入就看有沒有 token）
-    const LS_TOKEN = 'token'
+    // const LS_TOKEN = 'token'
 
     const email = ref('')
     const pwd1 = ref('')
     const captcha = ref('')
-    const loading = computed(() => {
+    const loading = computed(() => 
         memberStore.loading
-    })
+    )
     // const loading = ref(false)
 
     // 驗證碼
@@ -61,10 +53,11 @@
         }
         if (captcha.value.trim().toUpperCase() !== captchaCode.value.trim().toUpperCase()) {
             alert('驗證碼錯誤')
+            refreshCode()  // 驗證碼錯誤就刷新
             return
         }
 
-        loading.value = true
+        // loading.value = true
 
         // 呼叫 Pinia 的登入
         const res = await memberStore.loginByEmail({
@@ -79,40 +72,41 @@
         }
 
         // 登入成功 → 導回原頁或預設頁
-        const back = route.query.required || '/membercenter/personal'
+        const back = route.query.redirect || '/membercenter/personal'
         router.replace(back)
     }
 
     
-    const login = () => {
+    // const login = () => {
         
-        // fetch('http://localhost/PDO/Member/login2.php', {
-        fetch(import.meta.env.VITE_AJAX_URL + "Member/login2.php", {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body:JSON.stringify({
-                email: email.value,
-                password: pwd1.value
-            }),
-        })
-        .then(res => res.json()) 
-        .then( result => {
-            if (result.success) {
-                console.log(result.user);
-                handleLoginSuccess(result)
-            }else{
-                console.log(result.message);
-                console.log(result.success);
-            }
-        })
+    //     // fetch('http://localhost/PDO/Member/login2.php', {
+    //     fetch(import.meta.env.VITE_AJAX_URL + "Member/login2.php", {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body:JSON.stringify({
+    //             email: email.value,
+    //             password: pwd1.value
+    //         }),
+    //     })
+    //     .then(res => res.json()) 
+    //     .then( result => {
+    //         if (result.success) {
+    //             console.log(result.user);
+    //             handleLoginSuccess(result)
+    //         }else{
+    //             console.log(result.message);
+    //             console.log(result.success);
+    //         }
+    //     })
         
-    }
+    // }
     function handleLoginSuccess (result){
         localStorage.setItem('user', JSON.stringify(result.user))
         setTimeout(() => {
             router.push('/membercenter/personal')
         }, 500)
     }
+
     
 </script>
 

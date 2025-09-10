@@ -3,17 +3,33 @@
     import { ElMessage } from 'element-plus'
     import { useRouter } from 'vue-router'
     import axios from 'axios'
+    import { useMemberStore } from '@/stores/member'
 
-     // 統一管理後端 API 位址（注意大小寫與實際路徑一致）
-    const API_BASE = 'http://localhost'
-    const REGISTER_API = `${API_BASE}/PDO/Member/register.php`
-
-    // 註冊後，把 email 暫存起來，登入頁會自動帶入
-    const LS_REGISTER_EMAIL = 'registerEmail'
+    // 狀態
+    const router  = useRouter()  
+    // const loading = ref(false)
+    const loading = computed(() => useMemberStore().loading)
+    // const loading = computed(() => memberStore.loading)
+    const memberStore = useMemberStore()
 
     // 密碼
     const pwd1 = ref('')  
     const pwd2 = ref('')
+    
+    // 欄位
+    const name = ref('')
+    const phone = ref('')
+    const gender = ref('')
+    const address = ref('')      
+    const email = ref('')
+    const captcha = ref('')
+
+    // 註冊後，把 email 暫存起來，登入頁會自動帶入
+    const LS_REGISTER_EMAIL = 'registerEmail'
+
+    // 縣市區域選單
+    const cities = ref([])
+    const areaOptions = ref([])
 
     // 可送出：密碼一致 + 最基本欄位都有
     const canSubmit = computed(() => (
@@ -45,10 +61,6 @@
         return ''
     })
 
-    // 縣市區域選單
-    const cities = ref([])
-    const areaOptions = ref([])
-
     // 驗證碼
     const captchaCode = ref('')
     const genCode = () => Math.random().toString(36).slice(2, 8).toUpperCase()
@@ -59,31 +71,16 @@
 
         // =============================
         let res = await axios.get('/JSON_CSV_XML/CityCountyData.json')
-        // console.log(res.data);
         cities.value = res.data
-        // console.log(cities.value);
-
-        
     })
-    
-    // 欄位
-    const name = ref('')
-    const phone = ref('')
-    const gender = ref('')
-    const address = ref('')      
-    const email = ref('')
-    const captcha = ref('')
 
     // 圖片檔案上傳
     // const file = ref(null)              
 
-    // 狀態
-    const loading = ref(false)
-    const router  = useRouter()  
-
     // 送出：改為呼叫後端 PHP
     const handleRegister = async () => {
-        console.log('[submit]', { canSubmit: canSubmit.value, why: whyDisabled && whyDisabled.value })
+        // console.log('[submit]', { canSubmit: canSubmit.value, why: whyDisabled })
+        console.log('[submit]', { canSubmit: canSubmit.value, why: whyDisabled.value }) 
         if (!canSubmit.value) {
             ElMessage.error('欄位未完成或密碼不一致')
             return
@@ -95,8 +92,10 @@
             captchaCode.value = genCode()
             return
         }
+
         try {
-            loading.value = true
+            // loading.value = true
+
             const form = new FormData()
             form.append('name', name.value.trim())
             form.append('email', email.value.trim())
@@ -110,53 +109,36 @@
             // 檔案欄位：只有真的選了檔案才附上
             // if (file?.value instanceof File) form.append('image', file.value)
 
-            // 依實際路徑調整
-            const REGISTER_API = import.meta.env.VITE_AJAX_URL + "Member/register.php";
-            
-            const res = await fetch(REGISTER_API, {
-                method: 'POST',
-                // 註冊是公開 API，不帶 Cookie，避免不必要的預檢
-                credentials: 'omit',
-                // 不手動設定 Content-Type（瀏覽器會自動帶 multipart 邊界）
-                headers: { 'Accept': 'application/json' },
-                body: form,
-            })
-
-            // 有些失敗時非 JSON（如 500 HTML），要保護性解析
-            let data = null, text = ''
-            try {
-                data = await res.clone().json()
-            } catch {
-                text = await res.text()
-            }
-            // 方便檢查回應內容
-            console.log('[register status]', res.status, 'json:', data, 'text:', text)
-
-            // 放寬成功條件：ok / success 任一 truthy，或純文字含「成功」也算成功
-            const passed =  res.ok && (
-                (data && (data.ok || data.success)) ||
-                (!data && /成功/.test(text))
-            )
-            if (!passed) {
-                const msg =
-                    (data && (Array.isArray(data.errors) && data.errors[0])) ||
-                    (data && data.message) ||
-                    text ||  `註冊失敗（HTTP ${res.status}）`
-                    throw new Error(msg)
+            // 呼叫 Pinia store 
+            const result = await memberStore.register(form)  
+            console.log('[register result from store]', result)
+            if (result?.ok !== true) {                                        // 嚴格檢查 ok === true
+                throw new Error(result?.error || '註冊失敗（前端判斷）')        // 若 store 沒回 ok:true，當失敗處理
             }
 
-            // 成功：把 email 暫存，登入頁可自動帶入
+            // 註冊成功 → 儲存 email 供登入頁自動帶入
             localStorage.setItem(LS_REGISTER_EMAIL, email.value.trim())
-
             ElMessage.success('註冊成功，請重新登入')
             router.replace('/loginfirst')
+            return
 
         } catch (err) {
-            ElMessage.error(err.message || '伺服器發生錯誤')
+            ElMessage.error(err?.message || '伺服器發生錯誤')
         } finally {
-            loading.value = false
+            // loading.value = false
         }
     }
+    // 依實際路徑調整
+    // const REGISTER_API = import.meta.env.VITE_AJAX_URL + "Member/register.php";
+    
+    // const res = await fetch(REGISTER_API, {
+    //     method: 'POST',
+    //     // 註冊是公開 API，不帶 Cookie，避免不必要的預檢
+    //     credentials: 'omit',
+    //     // 不手動設定 Content-Type（瀏覽器會自動帶 multipart 邊界）
+    //     headers: { 'Accept': 'application/json' },
+    //     body: form,
+    // })
 
     /* ---- 狀態 ---- */
     const member = reactive({
@@ -256,12 +238,9 @@
                         <img src="@/assets/icons/refresh.svg" alt="">
                     </button>
                 </div>
-                <!-- 新增：不能送出的原因提示 -->
-                <!-- <div  v-if="!canSubmit && !loading" style="color:#f66;margin:6px 0;">
-                    不能送出：{{ whyDisabled }}
-                </div> -->
                 <!-- 送出按鈕 -->
-                <button class="register-btn" type="submit" :disabled="loading || !canSubmit">
+                <!-- <button class="register-btn" type="submit" :disabled="loading || !canSubmit"> -->
+                <button class="register-btn" type="submit" :disabled="memberStore.loading || !canSubmit">
                     {{ loading ? '送出中...' : '送出' }}
                 </button>
                 
