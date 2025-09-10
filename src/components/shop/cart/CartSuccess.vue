@@ -1,16 +1,35 @@
 <script setup>
     import { ref, onMounted, computed } from 'vue'
     import { useRoute } from 'vue-router'
+    import axios from 'axios'
 
     const route = useRoute()
 
     const member_id = computed(() => route.query.member_id)
     const order_id = computed(() => route.query.order_id)
 
-    onMounted(() => {
-        console.log(member_id.value)
-        console.log(order_id.value)
+    const order = ref({}) // Object
+    const orderDetail = ref([]) // Array
+
+    onMounted(async () => {
+        // console.log(member_id.value)
+        // console.log(order_id.value)
+
+        const res = await axios.post(import.meta.env.VITE_AJAX_URL + 'starshop/client/order_get.php', 
+            {
+                member_id: member_id.value,
+                order_id: order_id.value,
+            }
+        )
+
+        // console.log(typeof(res.data)); // object
+        order.value = res.data.order
+        orderDetail.value = res.data.orderDetail
+        console.log(order.value)
+        console.log(orderDetail.value)
     })
+    
+    /* const products = ref([])
 
 
     // 商品假資料 => 要改用 storage 傳入
@@ -37,7 +56,14 @@
         ]
     )
 
-    const products = productDetail.value
+    products.value = productDetail.value */
+
+    // =====================================
+    const TotalIncludeShipFee = computed(() => {
+        let sum = 0
+        sum = Number(order.value.total_price) + Number(order.value.shipping_fee)
+        return sum
+    })
 
 
 
@@ -74,20 +100,20 @@
             <div class="toggle-content">
                     <!-- 商品細項 -->
                     <ul class="items">
-                        <li class="item" v-for="(product, index) in products">
+                        <li class="item" v-for="(product, index) in orderDetail">
                             <!-- 圖片 -->
-                            <img :src="product.pic" alt="" class="item__img">
+                            <img :src="product.product_image" alt="" class="item__img">
         
                             <!-- 商品資訊和計算 -->
                             <div class="item__info">
                                 <h2 class="item__info__name">{{ product.name }}</h2>
                                 <div class="item__info__price">
                                     <div class="price-per-item">
-                                        <p class="price">NT${{ product.price }}</p>
-                                        <p class="spe-price">NT${{ product.specialprice }}</p>
+                                        <p class="price">NT${{ product.unit_price }}</p>
+                                        <p class="spe-price">NT${{ product.original_price }}</p>
                                     </div>
-                                    <p class="sub-count">數量：1 件</p>
-                                    <p class="sub-price">小計：NT$2000</p>
+                                    <p class="sub-count">數量：{{ product.quantity }} 件</p>
+                                    <p class="sub-price">小計：NT${{ product.subtotal }}</p>
                                 </div>
                             </div>
                         </li>
@@ -95,9 +121,9 @@
         
                     <!-- 金額統計 -->
                     <div class="cal-box">
-                            <p><span>合計</span><span>NT$6000</span></p>
-                            <p><span>運費</span><span>NT$60</span></p>
-                            <p><span>總計</span><span>NT$6060</span></p>
+                            <p><span>合計</span><span>NT${{ order.total_price }}</span></p>
+                            <p><span>運費</span><span>NT${{ order.shipping_fee }}</span></p>
+                            <p><span>總計</span><span>NT${{ TotalIncludeShipFee }}</span></p>
                     </div>
                 </div>
         </section>
@@ -206,6 +232,10 @@
                         align-items: center;
                         &__img { // 圖片
                             display: block;
+                            width: 80px;
+                            height: 80px;
+                            object-fit: cover;
+                            border: 1px solid #ccc;
                         }
                         &__info { // 商品名稱與金額
                             display: flex;
