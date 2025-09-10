@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/admin.js' 
+import { useMemberStore } from '@/stores/member' 
 import loaderKit from '@/composables/loaderState.js'            // ★ 匯入 default 物件
 const { show, set, hide, loader } = loaderKit               // ★ 一次解構需要的東西
 
@@ -44,13 +45,9 @@ import ShopProductPage from '@/views/shop/ShopProductPage.vue'
 
 
 // ------------------ 會員 member  ------------------
-// import CollectionPage from '@/views/member/CollectionPage.vue'
-// import CommentPage from '@/views/member/CommentPage.vue'
-// import EventListPage from '@/views/member/EventListPage.vue'
 import ForgetPage from '@/views/member/ForgetPage.vue'
 import ForgotPage from '@/views/member/ForgotPage.vue'
 import LoginFirstPage from '@/views/member/LoginFirstPage.vue'
-// import OrderPage from '@/views/member/OrderPage.vue'
 import PersonalPage from '@/views/member/PersonalPage.vue'
 import RegisterPage from '@/views/member/RegisterPage.vue'
 import ResetPasswordPage from '@/views/member/ResetPasswordPage.vue'
@@ -163,6 +160,7 @@ const routes = [
 // {path: '/resetpassword', name: 'resetpassword', component: ResetPasswordPage},  // 重設密碼頁面
 // {path: '/memberorder', name: 'memberorder', component: OrderPage},
 {path: '/membercenter', name: 'membercenter', component: PersonalPage,  // 會員中心
+  meta: { requiresMember: true },                                       // 如有需要會員的頁面要加入這段
   children: [
     {path: 'personal', component: () => import('../components/member/profile/Personal.vue')},
     {path: 'order', component: () => import('../components/member/profile/Order.vue')},
@@ -296,6 +294,18 @@ const router = createRouter({
     if (!admin.isLoggedIn) {
       return next({name:'AdminLoginPage'})
     }
+  }
+
+  // ------------會員-------------------
+  // 每次切頁都補上 user 狀態（從 localStorage）
+  const member = useMemberStore()
+  member.hydrate()                    // 從 localStorage 補回 user
+
+  // 只保護「需要會員」的頁面
+  const needsMember = to.matched.some(r => r.meta?.requiresMember)
+  const isLoginPage = to.name === 'loginfirst' || String(to.path).startsWith('/loginfirst')
+  if (needsMember && !member.isAuthed && !isLoginPage) {
+    return next({ name: 'loginfirst', query: { redirect: to.fullPath } })
   }
 
   // const token = localStorage.getItem('admin_token') //定義一個token 到 localStorage 裡面去取出 admin_token 的值

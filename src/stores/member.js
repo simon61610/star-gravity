@@ -1,15 +1,15 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
-export const useMemberStore = defineStore('member', () => {
+export const useMemberStore = defineStore('Member', () => {
     const user = ref(null)
     const token = ref(localStorage.getItem('token') || null)
     const loading = ref(false)
 
+    // 一定要 return 布林值
     const isAuthed = computed(() => 
-        !!user.value && !!token.value
+        Boolean(user.value && token.value)
     )
-
     const userName = computed(() => 
         user.value?.name || '訪客'
     )

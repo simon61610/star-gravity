@@ -22,6 +22,23 @@
 			planet:'#6fa8ff'                                        
 		}
 
+		//-------會員-------------
+		import { useRouter } from 'vue-router'
+		import { onMounted } from 'vue'
+		import { useMemberStore } from './stores/member';
+		const member = useMemberStore()
+		const router = useRouter()
+
+		onMounted(() => {
+			// 每次進站就恢復狀態
+			member.hydrate()
+
+			// 如果需要：沒登入就跳去登入頁
+			// if (!member.isAuthed) {
+			// 	router.push('/loginfirst')   // ← 強制導去登入頁
+			// }
+		})
+		
 		
 	</script>
 
