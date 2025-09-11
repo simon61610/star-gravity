@@ -6,7 +6,7 @@
     import AdminActivity from '@/components/admin/management/AdminActivity.vue';
     import axios from "axios";
     import {activityAPI} from '@/api/activityAPI.js'
-    import { useSearchStore } from "@/stores/search"
+    import {useSearchStore } from "@/stores/search"
     const childRef = ref(null) //設置變數裝子層編輯按鈕的資訊
     const store = useSearchStore()  //呼叫搜尋函數
     const eventTable = ref([])

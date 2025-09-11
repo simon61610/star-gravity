@@ -7,16 +7,20 @@ import {activityAPI} from '@/api/activityAPI.js'
 
 
 /* ---------------- 既有狀態 ---------------- */
+const previewImages = ref([]) //給前台顯示圖片用陣列
 const selected_activity = ref({})
 const selectedLocation = ref('')
+const uploadRefs = ref([])
+const fileLists = ref([[], [], []]) // 三個獨立的 fileList，對應三個框
 const editIndex = ref(-1)
 const emit = defineEmits(['refresh','added','updated'])
-const deadline  = ref('')             // 報名截止日（單日，DatePicker 綁這個）
-const daterange = ref('')             // 活動起訖（datetimerange）
+const deadline  = ref('')    // 報名截止日（單日，DatePicker 綁這個）
+const daterange = ref('')    // 活動起訖（datetimerange）
+const uploadUrl = ref(import.meta.env.VITE_AJAX_URL + 'activity/activityupimg.php') //圖片action專用php路徑
 const defaultTime = [
   new Date(2000, 0, 1, 0, 0, 0),
   new Date(2000, 0, 1, 23, 59, 59),
-]
+]  //給日期區間選擇器一個預設的起訖時間
 
 const props = defineProps({
   search: { type: String, default: '' },
@@ -34,19 +38,6 @@ function updateHighlight(row) {
       console.error("更新失敗", err)
     })
 }
-// function updateHighlight(row) {
-//   const updatedRow = {
-//     ...row, // 保留 row 其他欄位
-//     homepage_highlight: row.homepage_highlight
-//   }
-//   activityAPI('update', { ID: row.ID, updatedRow })
-//     .then(res => {
-//       console.log("首頁推薦更新成功", res.data)
-//     })
-//     .catch(err => {
-//       console.error("更新失敗", err)
-//     })
-// }
 
 // 搜尋過濾活動
 const filteredEvent = computed(() => {
@@ -60,7 +51,18 @@ const filteredEvent = computed(() => {
     return props.eventTable
   }
 })
+/*------------------ 圖片上傳--------------------*/
+// 每次上傳成功，更新對應的框
+function handleSuccess(response, file, index) {
+  file.response = response //把資料寫回element資料庫
+  fileLists.value[index] = [file] // 每框只留一張
+}
 
+function InputRef(index) {
+  return (el) => {
+    uploadRefs.value[index] = el
+  }
+}
 
 /* ---------------- 活動表格欄位 ---------------- */
 const columns = [
@@ -128,8 +130,8 @@ const handleEdit = (row, index) => {
   selected_activity.value = {
     ID: row.ID,
     event_name: row.event_name ?? '',
-    event_date: row.event_date ?? '',
-    event_time: row.event_time ?? '',
+    event_start: row.event_start ?? '',
+    event_end: row.event_end ?? '',
     event_deadline: row.event_deadline ?? '',
     event_place: row.event_place ?? '',
     event_price: row.event_price ?? '',
@@ -142,13 +144,33 @@ const handleEdit = (row, index) => {
     tag: row.tag ?? '',
     category: row.category ?? ''
   }
+    // 把 image 解析回陣列
+    let images = []
+    try {
+      images = JSON.parse(row.image || "[]")
+    } catch (e) {
+      console.error("圖片欄位解析失敗", e)
+    }
+    previewImages.value = images  //把值寫到previewImages陣列
 
-  // 還原日期區間
-  if (row.event_date && row.event_date.includes('~')) {
-    const [start, end] = row.event_date.split('~').map(s => s.trim())
-    daterange.value = [start, end] // 還原到 date-picker
+    // 塞回三個 fileList，讓 el-upload 顯示
+    fileLists.value = [[], [], []]
+    images.forEach((url, i) => {
+    if (i < 3 && url ) {
+      fileLists.value[i] = [{
+        name: url.split('/').pop(),
+        url: url,                  // 讓 el-upload 能顯示
+        response: { url }          // 讓 saveActivity() 能取到 response.url
+      }]
+    }
+  })
+
+  
+  // 還原從資料庫取得的日期區間 
+  if (row.event_start && row.event_end) {
+    daterange.value = [row.event_start, row.event_end]
   } else {
-    daterange.value = []
+    daterange.value = []  //存回element 的 daterange 陣列
   }
 
   deadline.value = row.event_deadline || ''
@@ -161,20 +183,22 @@ const handleadd = () => {
   selected_activity.value = {
     ID: '',
     event_name: '',
-    event_date: '',
-    event_time: '',
+    event_start: '',
+    event_end: '',
     event_deadline: '',
-    event_place: '',
+    event_place:  '',
     event_price: '',
     registration_count: '',
     event_description: '',
     is_active: 0,            // 預設不上架
-    event_status: '草稿',    // 預設狀態
+    event_status: '報名中',    // 預設狀態
     homepage_highlight: 0,   // 預設不推薦
     image: '',
     tag: '',
     category: ''
   }
+
+
   daterange.value = []
   deadline.value  = ''
   showActivity.value = true
@@ -183,20 +207,50 @@ const handleadd = () => {
 defineExpose({ handleEdit, handleadd }) // 父層可呼叫新增/編輯
 
 /* ---------------- 儲存活動（寫回表格） ---------------- */
-function saveActivity () {
+ async function saveActivity () {
 
   console.log('送出前的資料:', selected_activity.value)
-  // 將日期區間與截止日，組合成要存回去的欄位
 
-  const event_date = Array.isArray(daterange.value) && daterange.value.length === 2
-  ? `${daterange.value[0]} ~ ${daterange.value[1]}`
-  : ''
-  const newRow = {
-    ...selected_activity.value,
-    event_date,       // 2025-09-10
-    event_deadline: selected_activity.value.event_deadline // 2025-09-08 23:59:59
+  // 1. 觸發三個上傳 Element Plus要手動上船就要呼叫submit()方法
+    uploadRefs.value.forEach(u => u && u.submit())
+
+  // 2. 等待全部上傳完成（檢查 response.url）
+  const urls = await new Promise(resolve => {
+    const timer = setInterval(() => {
+      const allDone = fileLists.value.every(list =>!list.length || list[0].response?.url || list[0]?.url ) //條件1.這一格是空的，也算完成 條件2.上傳成功，後端回傳的檔案網址 條件3.是舊資料(從 DB 帶回來的），也可以
+      if (allDone) {
+        clearInterval(timer)
+        resolve(fileLists.value
+        .map(list => list[0]?.response?.url || list[0]?.url || "") //利用map重組陣列
+        .filter(url => url) // 過濾掉空的
+        )
+      }
+    }, 300) // 每 0.3 秒檢查一次 確定檢查到3個圖片有上傳才回傳 resolve 塞回 urls陣列
+  })
+
+  console.log("要存到 DB 的路徑:", urls)
+
+  //3. 整理要送的資料將 日期區間與截止日，組合成要存回去的欄位
+  let event_start = ''
+  let event_end = ''
+
+  if (Array.isArray(daterange.value) && daterange.value.length === 2) {
+    event_start = daterange.value[0]
+    event_end   = daterange.value[1]
   }
 
+ 
+  const newRow = {
+    ...selected_activity.value,
+    event_start,
+    event_end,       
+    event_deadline: selected_activity.value.event_deadline, // 2025-09-08 23:59:59
+    image: urls 
+  }
+
+  
+
+  // 4. 新增 or 更新
   if (!newRow.ID) { // 沒有 ID → 新增
     return activityAPI('add', newRow)
       .then(res => {
@@ -256,10 +310,17 @@ function saveActivity () {
         </div>
 
         <!-- 活動圖片上傳（示意 UI） -->
-        <div v-for="img in 3" :key="img" class="Admin-Activity-image">
-           <label>活動圖片:</label>                                     <!-- <label>活動圖片 {{ img }}:</label> -->
-          <el-upload class="upload-box" drag action="#" :auto-upload="false"
-          list-type="picture-card">
+        <div v-for="(item, index) in 3" :key="index" class="Admin-Activity-image">
+           <label>活動圖片{{ index + 1 }}:</label>                                     <!-- <label>活動圖片 {{ img }}:</label> -->
+          <el-upload class="upload-box" 
+            drag
+            :ref="InputRef(index)"
+            list-type="picture-card"   
+            :action= "uploadUrl"
+            :auto-upload="false"
+            :limit="1" 
+            :on-success="(res, file) => handleSuccess(res, file, index)"
+            v-model:file-list="fileLists[index]" >
             <div class="el-upload__text">圖片選擇</div>
           </el-upload>
         </div>
@@ -267,10 +328,10 @@ function saveActivity () {
         <!-- 地點 -->
         <div class="Admin-Activity-location">
           <h2>地點</h2>
-          <select v-model="selectedLocation">
-            <option value="">請選擇</option>
+          <select v-model="selected_activity.event_place">
+            <option value="" disabled>請選擇</option>
             <option v-for="(item, i) in props.location" :key="i" :value="item.location_name || item">
-              {{ item.location_name || item }}
+              {{ item.location_name || item }}  <!---確保顯示用 物件陣列 或 純陣列 --->
             </option>
             <!-- <option value="陽明山國家公園">陽明山國家公園</option>
             <option value="太陽公園">太陽公園</option>
@@ -362,7 +423,10 @@ function saveActivity () {
       </div>
     </form>
   </div>
-</template>
+   <img v-for="(url, i) in previewImages" :key="i" :src="url" alt="活動圖片" />  
+  </template>
+
+  
 
 <style scoped lang="scss">
 /*-------------活動列表彈窗內部------------------*/

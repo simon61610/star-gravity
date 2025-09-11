@@ -16,7 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 $data = json_decode(file_get_contents("php://input"), true);
 var_dump($data);
 $event_name = $data['event_name'] ?? '';
-$event_date = $data['event_date'] ?? '';
+$event_start = $data['event_start'] ?? '';
+$event_end = $data['event_end'] ?? '';
 $event_deadline = $data['event_deadline'] ?? '';
 $event_place = $data['event_place'] ?? '';
 $event_price = (int)($data['event_price'] ?? 0);
@@ -32,24 +33,25 @@ $category = $data['category'] ?? '';
 $imageJson = json_encode($image, JSON_UNESCAPED_SLASHES);
 //建立SQL語法
 
-$sql = "INSERT INTO  `Event`(event_name, event_date ,event_deadline , event_place ,event_price,  event_description , is_active , event_status, homepage_highlight ,image , tag , category) VALUES 
-(?, ?, ?, ?, ?, ?, ? , ?, ? , ?,?,?)" ;
+$sql = "INSERT INTO  `Event`(event_name, event_start, event_end ,event_deadline , event_place ,event_price,  event_description , is_active , event_status, homepage_highlight ,image , tag , category) VALUES 
+(?, ?, ?, ?, ?, ?, ?, ? , ?, ? , ?,?,?)" ;
 
 
 //執行並查詢，會回傳查詢結果的物件
 $statement = $pdo->prepare($sql);
 $statement -> bindValue(1,$event_name);
-$statement -> bindValue(2,$event_date);
-$statement -> bindValue(3,$event_deadline);
-$statement -> bindValue(4,$event_place);
-$statement -> bindValue(5,$event_price);
-$statement -> bindValue(6,$event_description);
-$statement -> bindValue(7,$is_active);
-$statement -> bindValue(8,$event_status);
-$statement -> bindValue(9,$homepage_highlight);
-$statement -> bindValue(10,$imageJson);
-$statement -> bindValue(11,$tag);
-$statement -> bindValue(12,$category);
+$statement -> bindValue(2,$event_start);
+$statement -> bindValue(3,$event_end);
+$statement -> bindValue(4,$event_deadline);
+$statement -> bindValue(5,$event_place);
+$statement -> bindValue(6,$event_price);
+$statement -> bindValue(7,$event_description);
+$statement -> bindValue(8,$is_active);
+$statement -> bindValue(9,$event_status);
+$statement -> bindValue(10,$homepage_highlight);
+$statement -> bindValue(11,$imageJson);
+$statement -> bindValue(12,$tag);
+$statement -> bindValue(13,$category);
 $statement -> execute();
 
 
@@ -63,7 +65,8 @@ if($newId > 0){
     "message" => "新增資料成功",
     "ID"=>$newId,
     "event_name" => $event_name,
-    "event_date"=>$event_date,
+    "event_start"=>$event_start,
+    "event_end"=>$event_end,
     "event_deadline"=>$event_deadline,
     "event_place"=>$event_place,
     "event_description"=>$event_description,

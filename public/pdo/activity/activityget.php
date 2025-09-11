@@ -25,22 +25,23 @@ $weekMap = [
     "Friday"    => "五",
     "Saturday"  => "六",
     "Sunday"    => "日"
-];
+]; //用來英文轉中文的陣列對照表
 
 foreach ($rows as &$row) { 
 
-   if (!empty($row["event_date"]) && strpos($row["event_date"], '~') !== false) {
-        list($start, $end) = explode('~', $row["event_date"]);
-        $startTs = strtotime(trim($start));
-        $endTs   = strtotime(trim($end));
+   if (!empty($row["event_start"]) && !empty($row["event_end"])) {
+        $startTs = strtotime($row["event_start"]); //利用strtotime() 把時間轉乘時間戳記(秒數)
+        $endTs   = strtotime($row["event_end"]);
+
+        //利用php date的參數l(小寫l)取出星期幾(英文) 再用上面設定的中文對照英文做轉換
         $row["event_date_display"] = date("Y-m-d", $startTs) . " (" . $weekMap[date("l", $startTs)] . ") ~ " .
-                                     date("Y-m-d", $endTs)   . " (" . $weekMap[date("l", $endTs)]   . ")";
+                                    date("Y-m-d", $endTs)   . " (" . $weekMap[date("l", $endTs)]   . ")";
     } else {
-        $row["event_date_display"] = $row["event_date"];
-    }
+        $row["event_date_display"] = ""; //event_date_display 最後會輸出「日期 (中文星期)」的格式。 沒資料就給空 
+        }
 
 
-    $row["is_active_display"] = $row["is_active"] == 1 ? "上架" : "下架"; 
+    $row["is_active_display"] = $row["is_active"] == 1 ? "上架" : "下架";  //欄位 is_active = 1 or 0 如果是true  欄位 is_active_display顯示上架
     $row["homepage_highlight_display"] = $row["homepage_highlight"] == 1 ? "首先推薦" : "非推薦"; 
 }   
 
