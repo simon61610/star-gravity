@@ -177,260 +177,264 @@ watch(
 <style scoped lang="scss">
 @import '@/assets/styles/main.scss';
 
-.navbar{
+.navbar {
+  width: 100%;
+  background-color: #000000;
+
+  .wrapper {
+    box-sizing: border-box;
+    margin: 0 auto;
+    max-width: 1200px;
     width: 100%;
-    background-color: #000000;
-    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-    .wrapper {
-        box-sizing: border-box;
-        margin: 0 auto;
-        max-width: 1200px;
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        img{
-            width: 100px;
-            padding-left: 10px;
-        }
-       
-
-        .hum{
-            display: none;
-        }
-
-        ul {
-            display: flex;
-            gap: 0px;
-          
-            li {
-                &.menu-active{
-                border-radius: 10px;
-                background-color: $primaryColor-900;
-                }
-
-                font-size:$pcChFont-small;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 120px;
-                height: 50px;
-                text-decoration: none;
-              
-       
-               
-          
-                
-
-                a {
-                    display: flex;
-                    width: 100%;
-                    height: 100%;   
-                    align-items: center;
-                    justify-content: center;
-                    text-decoration: none;
-                    color: $FontColor-white;
-                }
-            }
-        }
+    img {
+      width: 100px;
+      padding-left: 10px;
     }
-}
 
-.navbar ul li:nth-child(8)
-,.navbar ul li:nth-child(9)
-,.navbar ul li:nth-child(10)
-{
-    width: 50px;
-    height: 50px;
-}
+    .hum {
+      display: none;
 
-// .navbar ul li:nth-child(9){
-//     opacity: 30%;
-// }
+      // 1200px 以下顯示漢堡選單
+      @include respond("lg") {
+        display: block;
+        margin-right: 10px;
+        cursor: pointer;
+
+        .bar {
+          display: flex;
+          width: 36px;
+          height: 6px;
+          background-color: #888888;
+          margin: 6px 0px;
+          border-radius: 3px;
+        }
+      }
+    }
+
+    ul {
+      display: flex;
+      gap: 0px;
+
+      li {
+        &.menu-active {
+          border-radius: 10px;
+          background-color: $primaryColor-900;
+        }
+
+        font-size: $pcChFont-small;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 120px;
+        height: 50px;
+        text-decoration: none;
+
+        a {
+          display: flex;
+          width: 100%;
+          height: 100%;
+          align-items: center;
+          justify-content: center;
+          text-decoration: none;
+          color: $FontColor-white;
+        }
+      }
+
+      // 8~10 個選單縮小
+      li:nth-child(8),
+      li:nth-child(9),
+      li:nth-child(10) {
+        width: 50px;
+        height: 50px;
+      }
+
+      // 1200px 以下改成直式選單
+      @include respond("lg") {
+        background-color: $primaryColor-500;
+        flex-direction: column;
+        position: absolute;
+        top: 50px;
+        right: 0%;
+        width: 100%;
+        display: none;
+        z-index: 9999;
+        transition: 3s;
+
+        li {
+          width: 100%;
+
+          a {
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
+    }
+
+    // 1200px 以下wrapper.active → 顯示選單
+    &.active ul {
+      @include respond("lg") {
+        display: block;
+      }
+    }
+  }
+}
 
 // 登出圖示
 .icon-item {
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .icon-btn {
-    background: transparent;
-    border: none;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-.icon-btn i { 
-    color: $FontColor-white;    /* 讓登出 icon 變白色 */
-}   
+  background: transparent;
+  border: none;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 
-/* 人頭 icon 旁邊顯示名字首字的小圓點 */
-.user-link { 
-    position: relative; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    width: 100%; 
-    height: 100%; 
-}
-.avatar-initial{
-    position: absolute;
-    top: 2px;               /* 你可以微調位置 */
-    right: 2px;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: $primaryColor-500;
-    color: $FontColor-white;
-    font-size: 12px;
-    line-height: 18px;
-    text-align: center;
-    font-weight: 700;
+  i {
+    color: $FontColor-white; // 登出 icon 白色
+  }
 }
 
+// 人頭 icon + 名字首字
+.user-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+.avatar-initial {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: $primaryColor-500;
+  color: $FontColor-white;
+  font-size: 12px;
+  line-height: 18px;
+  text-align: center;
+  font-weight: 700;
+}
 
-/*-------------斷點1201--------------*/
-@media screen and (max-width: 1201px){
-    ul {
-    display: none;
+// 漢堡動態效果
+.hum.active {
+  // 1200px 以下第一條橫線旋轉
+  .bar1 {
+    @include respond("lg") {
+      transform: rotate(-45deg) translate(-9px, 8px);
     }
-    .navbar{
+  }
+  // 1200px 以下第二條橫線隱藏
+  .bar2 {
+    @include respond("lg") {
+      opacity: 0;
+    }
+  }
+  // 1200px 以下第三條橫線旋轉
+  .bar3 {
+    @include respond("lg") {
+      transform: rotate(45deg) translate(-9px, -7px);
+    }
+  }
+}
+
+// 1200px 以下動畫過渡
+.transition {
+  @include respond("lg") {
+    transition: 1s;
+  }
+}
+
+
+
+
+
+// @media screen and (max-width: 1201px){
+//     ul {
+//     display: none;
+//     }
+//     .navbar{
        
-        .wrapper{
-            ul{ 
-                background-color:$primaryColor-500;
-                flex-direction: column;
-                position: absolute;
-                top: 50px;
-                right: 0%;
-              //  transform: translateX(100%);
-                width: 100%;
-               display: none;
-              //  transform: translateY(-120%); // 往上藏起來
-                //opacity: 0;
-               // visibility: hidden;
-                z-index: 9999;
-                transition:3s;
+//         .wrapper{
+//             ul{ 
+//                 background-color:$primaryColor-500;
+//                 flex-direction: column;
+//                 position: absolute;
+//                 top: 50px;
+//                 right: 0%;
+//               //  transform: translateX(100%);
+//                 width: 100%;
+//                display: none;
+//               //  transform: translateY(-120%); // 往上藏起來
+//                 //opacity: 0;
+//                // visibility: hidden;
+//                 z-index: 9999;
+//                 transition:3s;
                 
-                li{ 
-                    width: 100%;
-                    a { 
+//                 li{ 
+//                     width: 100%;
+//                     a { 
                         
-                        width: 100%;
-                        height: 100%;
-                    }
-                }
-            }
+//                         width: 100%;
+//                         height: 100%;
+//                     }
+//                 }
+//             }
 
-             &.active ul{
-             //   transform: translateY(0%);
-             //  opacity: 1;
-              //  visibility: visible;
-                display: block;
-             //   opacity: 1;
-              //  top:56px;
-               // right: 0%;
+//              &.active ul{
+//              //   transform: translateY(0%);
+//              //  opacity: 1;
+//               //  visibility: visible;
+//                 display: block;
+//              //   opacity: 1;
+//               //  top:56px;
+//                // right: 0%;
                
-            }
+//             }
            
-            .hum{
+//             .hum{
                 
-                display:block;
-                margin-right: 10px;
-                cursor: pointer;
+//                 display:block;
+//                 margin-right: 10px;
+//                 cursor: pointer;
 
-                .bar{
+//                 .bar{
                     
-                display: flex;
-                width: 36px;
-                height: 6px;
-                background-color: #888888;
-                margin: 6px 0px;
-                border-radius: 3px;
-                }
+//                 display: flex;
+//                 width: 36px;
+//                 height: 6px;
+//                 background-color: #888888;
+//                 margin: 6px 0px;
+//                 border-radius: 3px;
+//                 }
 
-            }
-       }
-    }
+//             }
+//        }
+//     }
 
-    .hum.active .bar1{transform: rotate(-45deg) translate(-9px, 8px);}
-    .hum.active .bar2{opacity: 0;}
-    .hum.active .bar3{transform: rotate(45deg) translate(-9px, -7px);}
-    .transition{
-        transition: 1s;
-    }
+//     .hum.active .bar1{transform: rotate(-45deg) translate(-9px, 8px);}
+//     .hum.active .bar2{opacity: 0;}
+//     .hum.active .bar3{transform: rotate(45deg) translate(-9px, -7px);}
+//     .transition{
+//         transition: 1s;
+//     }			
 
-
-	
-
-					
-
-}
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//改成正常scss寫法 以下應該可以刪了 
-
-/*.navbar ul {
-    border: 1px red solid;
-    display: flex;
-    gap: 0px;
-}*/
-
-/*.navbar ul li {
-    font-size:$pcChFont-small;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 120px;
-    height: 50px;
-    text-decoration: none;
-}*/
-/*.navbar ul li a {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    color: $FontColor-white;
-}*/
+// }
 
 
 

@@ -281,7 +281,7 @@ watch(
         
         img{
           box-sizing: border-box;
-          max-width: 350px !important;
+          max-width: 500px !important;
           width: 100% !important;
             
         }

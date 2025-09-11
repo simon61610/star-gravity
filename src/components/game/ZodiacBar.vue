@@ -280,7 +280,6 @@ const zodiacInfo = ref([
   .zodiac__actions{
     height:0;
     @media (max-width: 501px){
-
     }
     h2{
       display: none;

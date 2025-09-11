@@ -181,7 +181,6 @@ const activeTab = ref('intro')
       left: 12px; 
       right: 12px;
       max-width: 250px;
-      
       width:100%; 
       top: 0px;
     }
