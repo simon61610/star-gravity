@@ -8,15 +8,28 @@ header('Access-Control-Allow-Origin: http://localhost:5173');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, X-Requested-With, Authorization');
 
-// 如果是「預檢請求 (OPTIONS)」，直接結束，不做處理
-if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'OPTIONS') { 
-    exit;
-};
+// 兼容各環境的 Authorization 讀取
+function getAuthorizationHeader(): string {
+    if (!empty($_SERVER['HTTP_AUTHORIZATION'])) {
+        return $_SERVER['HTTP_AUTHORIZATION'];
+    }
+    if (!empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+        return $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+    }
+    if (function_exists('getallheaders')) {
+        $headers = getallheaders();
+        if (isset($headers['Authorization']) && $headers['Authorization'] !== '') {
+            return $headers['Authorization'];
+        }
+        if (isset($headers['authorization']) && $headers['authorization'] !== '') {
+            return $headers['authorization'];
+        }
+    }
+    return '';
+}
 
-// 從 Header 抓 Authorization
-$auth = $_SERVER['HTTP_AUTHORIZATION'] ?? '';  // 讀取前端傳的 "Authorization" 標頭
+$auth = getAuthorizationHeader();
 $token = '';
-
 // 如果有帶 "Bearer " 開頭 → 取出後面的 token
 if (strpos($auth, 'Bearer ') === 0) {
     $token = substr($auth, 7);   // 去掉前面的 "Bearer "
