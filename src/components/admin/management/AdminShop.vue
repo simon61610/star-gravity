@@ -55,7 +55,7 @@ const fetchProducts = async () => {
 
     Shoptable.value = res.data
 
-    console.log(Shoptable.value)
+    // console.log(Shoptable.value)
 }
 
 onMounted (() => {
