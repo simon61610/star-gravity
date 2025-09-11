@@ -1,3 +1,10 @@
+<!-- 
+
+- 若購物車內沒商品，要阻止進入下一頁，並跳通知購物車無商品，應該是用 if else + router.psuh 和 我的吐司
+
+-->
+
+
 <script setup>
 
     import { ref, computed, onMounted } from 'vue'
