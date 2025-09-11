@@ -22,24 +22,28 @@
 			planet:'#6fa8ff'                                        
 		}
 
-		//-------會員-------------
+		// -------會員-----------------------------------------
+		// 只要重新整理或重新開啟網站，就能在一開始檢查會員狀態
 		import { useRouter } from 'vue-router'
 		import { onMounted } from 'vue'
 		import { useMemberStore } from './stores/member';
 		const member = useMemberStore()
 		const router = useRouter()
 
-		onMounted(() => {
-			// 每次進站就恢復狀態
+		onMounted(async () => {
+			// 每次進站先「補回」localStorage 裡的使用者資料
 			member.hydrate()
-			console.log(member.user);
-			
-			// 如果需要：沒登入就跳去登入頁
-			// if (!member.isAuthed) {
-			// 	router.push('/loginfirst')   // ← 強制導去登入頁
-			// }
+
+			// 有 token 才向後端驗證；沒有 token 就維持未登入（不要亂登出）
+			/* if (member.token) {
+				const v = await member.verifyToken()
+				// 只有「明確 invalid/expired」才會在 verify 裡登出
+				// 網路錯誤 -> 不動作，等下次操作再驗證
+				if (v.ok === false && v.reason === 'invalid') {
+					router.replace('/loginfirst')
+				}
+			} */
 		})
-		
 		
 	</script>
 

@@ -37,6 +37,53 @@ export const useMemberStore = defineStore('Member', () => {
         user.value?.name || '訪客'         // 頁面顯示用，沒登入就顯示'訪客'
     )
 
+    /**
+    驗證 token 是否仍有效（向後端 verify.php 詢問）
+    僅在後端明確回覆「無效/過期」時才做登出。
+    網路錯誤或 CORS 問題 → 不主動登出，回傳 { ok:false, reason:'network' }
+    */
+    async function verifyToken () {
+      if (!token.value) return { ok: false, reason: 'no-token' }
+      
+      try {
+        const res = await fetch(import.meta.env.VITE_AJAX_URL + 'Member/verify.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // 後端用這個拿 token：Authorization: Bearer <token>
+                'Authorization': `Bearer ${token.value}`,
+            },
+            // 如果你的後端要用 Session 再一起驗證，就開啟這行
+            // credentials: 'include',
+            body: JSON.stringify({})   // 有些伺服器要求 POST 不能是空 body
+        })
+        // 後端建議固定回 200，內容長這樣：
+        // { valid: true,  user: {...} }  或  { valid: false, reason: 'expired' }
+        const data = await res.json().catch(() => ({}))
+
+        if (data?.valid === true) {
+            // 可選：後端若回 user，就同步更新
+            if (data.user) {
+                user.value = data.user
+                ocalStorage.setItem('user', JSON.stringify(data.user))
+            }
+            return { ok: true }
+        }
+
+        // 明確無效/過期
+        if (data?.valid === false) {
+            logout()
+            return { ok: false, reason: data.reason || 'invalid' }
+        }
+        // 非預期格式，也不要亂登出
+        return { ok: false, reason: 'bad-format' }
+      } catch (err) {
+        // 網路/CORS/預檢錯誤都進這裡：不要登出
+        console.warn('[verifyToken] network error:', err)
+        return { ok: false, reason: 'network', error: err }
+      }
+    }
+
     async function loginByEmail({ email, password}) {
         loading.value = true
         try {
@@ -138,7 +185,8 @@ export const useMemberStore = defineStore('Member', () => {
         loginByEmail, 
         register,
         logout, 
-        hydrate
+        hydrate,
+        verifyToken
     }
 
 })

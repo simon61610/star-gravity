@@ -91,7 +91,9 @@ function create_token($length = 32) {
     return hash('sha256', uniqid(mt_rand(), true));
 }
 $token = create_token(32);
-$expiresAt = date('Y-m-d H:i:s', time() + 7*24*60*60); // 7 天有效
+// $expiresAt = date('Y-m-d H:i:s', time() + 7*24*60*60); // 7 天有效
+$expiresAt = date('Y-m-d H:i:s', time() + 5*60);    // 測試用
+
 
 // 寫入 Tokens 資料表
 // $ins = 'INSERT INTO `Tokens` (member_id, token, expires_at) 
