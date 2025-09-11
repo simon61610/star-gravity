@@ -9,7 +9,8 @@ $data = json_decode(file_get_contents("php://input"), true);
 
 $id = $data['ID'] ?? 0;  // 編輯時一定要有 id
 $event_name = $data['event_name'] ?? '';
-$event_date = $data['event_date'] ?? '';
+$event_start = $data['event_start'] ?? '';
+$event_end = $data['event_end'] ?? '';
 $event_deadline = $data['event_deadline'] ?? '';
 $event_place = $data['event_place'] ?? '';
 $event_description = $data['event_description'] ?? '';
@@ -26,7 +27,8 @@ $imageJson = json_encode($image, JSON_UNESCAPED_SLASHES);
 // 準備 SQL
 $sql = "UPDATE `Event` SET 
             event_name = ?,
-            event_date = ?,
+            event_start = ?,
+            event_end = ?,
             event_deadline = ?,
             event_place = ?,
             event_description = ?,
@@ -40,17 +42,18 @@ $sql = "UPDATE `Event` SET
 
 $statement = $pdo->prepare($sql);
 $statement->bindValue(1, $event_name);
-$statement->bindValue(2, $event_date);
-$statement->bindValue(3, $event_deadline);
-$statement->bindValue(4, $event_place);
-$statement->bindValue(5, $event_description);
-$statement->bindValue(6, $is_active);
-$statement->bindValue(7, $event_status);
-$statement->bindValue(8, $homepage_highlight);
-$statement->bindValue(9, $imageJson);
-$statement->bindValue(10, $tag);
-$statement->bindValue(11, $category);
-$statement->bindValue(12, $id);
+$statement->bindValue(2, $event_start);
+$statement->bindValue(3, $event_end);
+$statement->bindValue(4, $event_deadline);
+$statement->bindValue(5, $event_place);
+$statement->bindValue(6, $event_description);
+$statement->bindValue(7, $is_active);
+$statement->bindValue(8, $event_status);
+$statement->bindValue(9, $homepage_highlight);
+$statement->bindValue(10, $imageJson);
+$statement->bindValue(11, $tag);
+$statement->bindValue(12, $category);
+$statement->bindValue(13, $id);
 
 $success = $statement->execute();
 
@@ -60,7 +63,8 @@ if($success){
         "message" => "更新資料成功",
         "ID" => $id,
         "event_name" => $event_name,
-        "event_date" => $event_date,
+        "event_start"=>$event_start,
+        "event_end"=>$event_end,
         "event_deadline" => $event_deadline,
         "event_place" => $event_place,
         "event_description" => $event_description,
