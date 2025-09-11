@@ -93,7 +93,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -125,6 +125,11 @@ function onSubmit () {
   // 只在按鈕點擊時導頁
   router.push({ name: 'gamewishTransit' })
 }
+
+onMounted(() => {
+  localStorage.removeItem('wishWallLatest')
+  localStorage.removeItem('wishWallSubmissions')
+})
 </script>
 
 <style scoped lang="scss">

@@ -1,6 +1,6 @@
 <!-- src/views/game/GameResultPage.vue -->
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
@@ -47,17 +47,56 @@ const TYPE_ORDER = ['love','career','health','wealth','study']
 const mapIndexToType = (idx) => TYPE_ORDER[((idx % TYPE_ORDER.length) + TYPE_ORDER.length) % TYPE_ORDER.length]
 const primaryType = computed(() => pickedTypes.value[0] || mapIndexToType(firstCardIndex.value))
 
-// ===== 五種結果文案 =====
-const RESULT_CONTENT = {
-  love:   { key: 'love',   label: '愛情 Love',   text: '互動自然、有話題就有火花；誠實溝通界線更拉近距離。' },
-  career: { key: 'career', label: '事業 Career', text: '靈感湧現、效率提升；排好優先順序穩穩推進，容易遇到貴人。' },
-  health: { key: 'health', label: '健康 Health', text: '作息規律最重要；多喝水與伸展運動，精神與專注度同步提升。' },
-  wealth: { key: 'wealth', label: '財運 Wealth', text: '小額穩健勝過躁進；記帳控管支出，善用折扣與回饋。' },
-  study:  { key: 'study',  label: '學業 Study',  text: '分段讀書＋複習清單成效佳；同儕討論能補齊盲點。' }
+// ===== 類型基本資訊（label）=====
+const RESULT_META = {
+  love:   { key: 'love',   label: '愛情 Love' },
+  career: { key: 'career', label: '事業 Career' },
+  health: { key: 'health', label: '健康 Health' },
+  wealth: { key: 'wealth', label: '財運 Wealth' },
+  study:  { key: 'study',  label: '學業 Study' }
 }
 const ALL_TYPES = ['love','career','health','wealth','study']
 
-// ===== 穩定亂數（每種結果各自穩定）=====
+// ===== 多版本文案池（每次進頁隨機）=====
+const TEXT_VARIANTS = {
+  love: [
+    '互動自然、話題不斷；誠實而溫柔的界線能讓距離更靠近。',
+    '今天的你特別有魅力；主動開話題，一來一往很快就擦出火花。',
+    '放慢節奏更能看見真心；傾聽對方感受比急著表現更加分。',
+    '單身：走入人群有機會遇見順眼對象；有伴：安排一個只屬於你們的小儀式。',
+    '別怕示弱，脆弱的分享會換來真誠的回應，關係因此更穩固。'
+  ],
+  career: [
+    '靈感湧現、效率提升；把優先順序排好，成果會比想像更快落地。',
+    '與其多線開戰，不如聚焦一件最關鍵的事，進度會直線上升。',
+    '主動發表你的做法；清晰的提案讓同事放心，把資源推向你。',
+    '補上技術負債或流程漏洞，小修小補就能換到大幅穩定。',
+    '安排一段無打擾的深度工作時段，你的輸出會非常亮眼。'
+  ],
+  health: [
+    '規律作息是底盤；多喝水與伸展 5 分鐘，專注與精神同步回升。',
+    '補充日光與步行 20 分鐘，情緒與睡眠都會更順。',
+    '別把能量花在焦慮上；先吃正餐、再吃零食，身體會謝謝你。',
+    '久坐記得起身走動，肩頸放鬆一下，頭腦才走得更遠。',
+    '少一點熬夜、多一點呼吸練習，今天的你更平穩。'
+  ],
+  wealth: [
+    '小額穩健勝過躁進；記帳控管支出，善用折扣與回饋。',
+    '把「先存後花」當標配；分裝零用錢能避免衝動購物。',
+    '檢查訂閱與重複支出，砍掉無感小漏水，月底更有餘裕。',
+    '學費型投資可以考慮，但別超出預算；長線分散最安心。',
+    '用目標信封法：旅費、應急金各自獨立，心更踏實。'
+  ],
+  study: [
+    '分段讀書＋複習清單成效佳；同儕討論能補齊盲點。',
+    '番茄鐘 25 分鐘＋5 分鐘走動，專注不掉線、效率更穩。',
+    '做題比看書更有效；錯題整理就是你的成長地圖。',
+    '把重點教給別人一次，理解會瞬間加深一個層級。',
+    '模擬考當正式考，正式考就像熟悉的流程。'
+  ]
+}
+
+// ===== 穩定亂數（用於百分比）=====
 function hashStr(s) {
   let h = 2166136261 >>> 0
   for (let i = 0; i < s.length; i++) {
@@ -75,20 +114,34 @@ function rng(seed) {
     return ((r ^ (r >>> 14)) >>> 0) / 4294967296
   }
 }
-// 依「cardsStr/typesStr/類型」三者做種子，確保每一類型都有穩定但不同的百分比
+
+// 百分比（穩定 40%~90%）
 const percentOf = (typeKey) => {
-  const base = 40, span = 50 // 40%~90%
-  const seed = hashStr(`${cardsStr}|${typesStr}|${typeKey}`)
+  const base = 40, span = 50
+  const seed = hashStr(`${cardsStr}|${typesStr}|${typeKey}|percent`)
   const rand = rng(seed)()
   return Math.round(base + rand * span)
 }
 
-// 右側要顯示的五條結果
+// 每次進頁隨機挑一則文案
+const textOf = (typeKey) => {
+  const list = TEXT_VARIANTS[typeKey] || []
+  if (!list.length) return ''
+  const idx = Math.floor(Math.random() * list.length)
+  return list[idx]
+}
+
+// 右側顯示的五條結果
 const allLines = computed(() =>
   ALL_TYPES.map(key => {
-    const info = RESULT_CONTENT[key]
-    return { ...info, percent: percentOf(key) }
+    const info = RESULT_META[key]
+    return { ...info, percent: percentOf(key), text: textOf(key) }
   })
+)
+
+// 最高值（可能並列）
+const maxPercent = computed(() =>
+  Math.max(...allLines.value.map(l => l.percent), 0)
 )
 
 // ===== 卡面：依主要結果換圖（先用通用卡面，可改成五張）=====
@@ -104,19 +157,53 @@ const FRONT_OF_TYPE = {
 }
 const frontSrc = computed(() => FRONT_OF_TYPE[primaryType.value] || frontFallback)
 
-// ===== Bar 顏色（每種不同）=====
+// ===== 進度條色（其餘不動；僅最高改色）=====
 const BAR_COLOR = {
   love:   '#EDD848',
-  career: '#EDD848', 
-  health: '#EDD848', 
-  wealth: '#EDD848', 
-  study:  '#EDD848', 
+  career: '#EDD848',
+  health: '#EDD848',
+  wealth: '#EDD848',
+  study:  '#EDD848',
 }
 
-// ===== 導頁 =====
+// ===== 推薦商品：隨機挑一個 =====
+// 你已經確認存在的一張圖：game-card_Divination ball.png
+// 其他圖片路徑請依你的實際專案替換；不存在時會顯示破圖但不影響功能
+const PRODUCTS = [
+  {
+    id: 1,
+    title: '星座許願球',
+    desc: '搭配三段情境光，床頭夜燈、告白禮、升學與生日祝福，都能承載你的願望。',
+    img: '/src/assets/images/games/GameCardPage/game-card_Divination ball.png'
+  },
+  {
+    id: 2,
+    title: '星空能量蠟燭',
+    desc: '結合香氛與星座能量，點燃時釋放守護力量，陪伴你度過專注或療癒時刻。',
+    img: '/src/assets/images/games/GameCardPage/game-card_Candle.png'
+  },
+  {
+    id: 3,
+    title: '占星書籤組',
+    desc: '十二星座金屬書籤，陪你在知識的宇宙裡航行。',
+    img: '/src/assets/images/games/GameCardPage/game-card_book.png'
+  },
+  {
+    id: 4,
+    title: '星空拼圖',
+    desc: '完成後拼出整片夜空，動手拼湊也像在整理思緒。',
+    img: '/src/assets/images/games/GameCardPage/game-card_puzzle.jpg'
+  }
+]
+
+// 每次進頁面隨機選一個商品
+const pickedProduct = ref(PRODUCTS[Math.floor(Math.random() * PRODUCTS.length)])
+
+// 導向商品詳情（兩種路由寫法二擇一，這裡用你現有 path 風格）
 const goBack = () => router.push({ name: 'gamecard' })
 const goProduct = () => {
-  // 例：router.push({ name: 'shop-product', params: { id: 'wish-ball' } })
+  // 若你有命名路由：router.push({ name: 'shop-product', params: { id: pickedProduct.value.id } })
+  router.push(`/shop/category/product/${pickedProduct.value.id}`)
 }
 </script>
 
@@ -137,7 +224,7 @@ const goProduct = () => {
                alt="背面卡片" />
           <img class="card card--front"
                :src="frontSrc"
-               :alt="`抽到的卡片－${RESULT_CONTENT[primaryType]?.label || '占卜卡'}`" />
+               :alt="`抽到的卡片－${RESULT_META[primaryType]?.label || '占卜卡'}`" />
         </aside>
 
         <!-- 右：一次顯示五種結果 -->
@@ -147,29 +234,33 @@ const goProduct = () => {
               class="line"
               v-for="line in allLines"
               :key="line.key"
-              :class="{ 'is-primary': line.key === primaryType }"
+              :class="{ 'is-max': line.percent === maxPercent }"
               :style="{ '--bar-color': BAR_COLOR[line.key] }"
             >
               <div class="label">{{ line.label }}</div>
-              <div class="bar">
-                <div class="bar__fill" :style="{ width: line.percent + '%' }"></div>
+
+              <!-- 長條 + 右側百分比 -->
+              <div class="row" role="img" :aria-label="`${line.label}：${line.percent}%`">
+                <div class="bar">
+                  <div class="bar__fill" :style="{ width: line.percent + '%' }"></div>
+                </div>
+                <div class="val">{{ line.percent }}%</div>
               </div>
+
               <p class="desc">{{ line.text }}</p>
             </div>
           </div>
 
-          <!-- 推薦商品 -->
+          <!-- 推薦商品（隨機） -->
           <article class="product" aria-label="推薦商品">
             <header class="product__hd">
               <span class="tag">推薦商品</span>
-              <h2 class="product__title">星座許願球</h2>
-              <p class="product__desc">
-                搭配三段情境光，無論是床頭夜燈、告白禮、升學與生日祝福，都能以最溫柔的光，承載你的願望。
-              </p>
-              <router-link to="/shop/category/product/1"><button class="btn btn--gold" type="button" @click="goProduct">查看商品</button></router-link>
+              <h2 class="product__title">{{ pickedProduct.title }}</h2>
+              <p class="product__desc">{{ pickedProduct.desc }}</p>
+              <button class="btn btn--gold" type="button" @click="goProduct">查看商品</button>
             </header>
             <div class="product__thumb">
-              <img src="/src/assets/images/games/GameCardPage/game-card_Divination ball.png" alt="星座許願球" />
+              <img :src="pickedProduct.img" :alt="pickedProduct.title" />
             </div>
           </article>
         </div>
@@ -233,7 +324,7 @@ const goProduct = () => {
 
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
-     gap: 2px;
+    gap: 2px;
   }
 }
 
@@ -321,25 +412,51 @@ const goProduct = () => {
 .label {
   font-size: 20px;
   font-weight: 700;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   color: #5C4B90;
 }
 
+/* 長條 + 百分比並排 */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .bar {
+  flex: 1 1 auto;
   height: 14px;
   border-radius: 999px;
-  background: #5C4B90;
+  background: #5C4B90; /* 進度條底色 */
   overflow: hidden;
   margin-bottom: 8px;
 
   &__fill {
     height: 100%;
-    background: var(--bar-color, $secondaryColor-yellow);
+    background: #EDD848;   /* 預設填充色 */
     transition: width 0.4s ease;
   }
 }
 
-/* 推薦商品卡 */
+
+
+/* 右側百分比數字 */
+.val {
+  flex: 0 0 auto;
+  min-width: 3.5ch;         /* 足夠顯示 100% */
+  text-align: right;
+  font-size: 14px;
+  font-weight: 700;
+  color: #5C4B90;
+  margin-bottom: 8px;
+}
+
+/* 最高分的那一條（可並列）進度條換色 */
+.line.is-max .bar__fill {
+  background: #cab1c9;  /* 你想要的顏色，這裡可改 */
+}
+
+/* 推薦商品卡（隨機顯示 pickedProduct） */
 .product {
   display: grid;
   grid-template-columns: 1fr 220px;
