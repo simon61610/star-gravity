@@ -38,17 +38,18 @@ export const useMemberStore = defineStore('Member', () => {
     )
 
     /**
-    驗證 token 是否仍有效（向後端 verify.php 詢問）
+    驗證 token 是否仍有效（向後端 verify.php  詢問）
     僅在後端明確回覆「無效/過期」時才做登出。
     網路錯誤或 CORS 問題 → 不主動登出，回傳 { ok:false, reason:'network' }
     */
     async function verifyToken () {
+        console.log(token.value)
       if (!token.value) return { ok: false, reason: 'no-token' }
       
       try {
         const res = await fetch(import.meta.env.VITE_AJAX_URL + 'Member/verify.php', {
             method: 'POST',
-            headers: {
+            headers: {  
                 'Content-Type': 'application/json',
                 // 後端用這個拿 token：Authorization: Bearer <token>
                 'Authorization': `Bearer ${token.value}`,

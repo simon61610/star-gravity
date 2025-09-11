@@ -35,14 +35,14 @@
 			member.hydrate()
 
 			// 有 token 才向後端驗證；沒有 token 就維持未登入（不要亂登出）
-			/* if (member.token) {
+			if (member.token) {
 				const v = await member.verifyToken()
 				// 只有「明確 invalid/expired」才會在 verify 裡登出
 				// 網路錯誤 -> 不動作，等下次操作再驗證
 				if (v.ok === false && v.reason === 'invalid') {
 					router.replace('/loginfirst')
 				}
-			} */
+			}
 		})
 		
 	</script>
