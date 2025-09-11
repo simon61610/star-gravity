@@ -1,7 +1,23 @@
 /*
+1. 先引入 store，以下複製貼上
+    import { useMemberStore } from '@/stores/member'
+    const memberStore = useMemberStore()
 
-1. 需要會員 id 的地方 → 在頁面或元件直接 memberStore.user?.id 就能取到
-2. 要驗證會員身分 → 帶上 memberStore.token 給後端，後端才是最終判斷誰是誰
+2. 判斷是否登入，使用 memberStore.isAuthed
+    memberStore.isAuthed => boolean
+    -> true 登入
+    -> false 沒登入(登出狀態)
+
+3. 取用會員資料物件，確認有哪些項目，請：
+    console.log(memberStore.user)
+    
+    使用如下，ex.
+    會員 ID：{{ memberStore.user?.id }}
+    帳號：{{ memberStore.user?.email }}
+
+    補充：用 ?. 運算子，如果前面是 null 或 undefined，就停止，不要往下讀屬性，直接回傳 undefined
+    
+4. 其他方法大家用不到，負責人已經處理好了，若有需要再詢問
 
 */
 import { defineStore } from 'pinia'
