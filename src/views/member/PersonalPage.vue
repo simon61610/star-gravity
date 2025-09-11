@@ -52,12 +52,12 @@
     })
 
     // 登出
-    const router = useRouter()
-    function logout() {
-        alert('已登出')
-        router.push('/loginfirst')   // 登出後跳轉到登入頁
-        localStorage.removeItem('user');
-    }
+    // const router = useRouter()
+    // function logout() {
+    //     alert('已登出')
+    //     router.push('/loginfirst')   // 登出後跳轉到登入頁
+    //     localStorage.removeItem('user');
+    // }
 </script>
 
 <template>  
@@ -78,11 +78,11 @@
                     <button @click="save" :disabled="!file">儲存</button>
                 </div> -->
                 <!-- 登出 -->
-                <div class="buttons">
+                <!-- <div class="buttons">
                     <button @click="logout" class="logout-btn" >
                         <el-icon><SwitchButton /></el-icon>
                     </button>
-                </div>
+                </div> -->
                 <!-- 帳號 -->
                 <p class="username">{{ username }}</p>
     
