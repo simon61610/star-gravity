@@ -50,8 +50,8 @@ const editingProduct = ref(null) // 放編輯中的商品資訊
 
 // 從資料庫抓資料
 const fetchProducts = async () => {
-    const res = await axios.get(import.meta.env.VITE_AJAX_URL + "starshop/admin/product_get.php")
-    // const res = await axios.get("pdo/starshop/admin/product_get.php") // 部屬前待修改路徑
+    const res = await axios.get(import.meta.env.VITE_AJAX_URL + "starshop/admin/products_get.php")
+    // const res = await axios.get("pdo/starshop/admin/products_get.php") // 部屬前待修改路徑
 
     Shoptable.value = res.data
 

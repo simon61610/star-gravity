@@ -63,7 +63,7 @@ const handleEdit = (row, index) => { //偵測編輯按鈕編輯哪個資料
     const address = row.city + row.area + row.recipient_address
 
     selectedOrder.value = {
-        id: row.ID, // ID
+        ID: row.ID, // ID
         order_number: row.order_number, // 訂單編號
         payment_method: row.payment_method, // 付款方式
         payment_status: row.payment_status, // 付款狀態
@@ -87,12 +87,25 @@ function close(){
 }
 
 /*儲存功能-*/
-function save() {                                                                //findIndex()是JS函數 找不到就回傳 -1
-  const idx = Ordertable.value.findIndex(o => o.id === selectedOrder.value.id) //找更改資料的那筆資料對於 membertable[idx] 是在第idx位置
-  if (idx !== -1) {                                       //如果idx不是-1 表示有這筆資料
+const save = async () => {                                                                //findIndex()是JS函數 找不到就回傳 -1
+    /* const idx = Ordertable.value.findIndex(o => o.ID === selectedOrder.value.ID) //找更改資料的那筆資料對於 membertable[idx] 是在第idx位置
+    if (idx !== -1) {                                       //如果idx不是-1 表示有這筆資料
     Ordertable.value[idx] = {...selectedOrder.value }  //membertable.value[idx] 這是整個資料陣列  = {}　→資料的值
-  }
-  show.value = false
+    } */
+
+    const res = await axios.post(import.meta.env.VITE_AJAX_URL + "starshop/admin/order_update.php", {
+        ID: selectedOrder.value.ID,
+        order_status: selectedOrder.value.order_status
+    })
+
+    if(res.data.success){
+        console.log(res.data)
+        alert(res.data.message)
+        await fetchOrders()
+        close()
+    }else{
+        alert('更新失敗')
+    }
 }
 
 
