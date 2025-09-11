@@ -1,11 +1,32 @@
-@mixin mobile() {
-    @media screen and (max-width: 899px) {
-        @content;
-    }
-}
+// @mixin mobile() {
+//     @media screen and (max-width: 899px) {
+//         @content;
+//     }
+// }
 
-@mixin desktop() {
-    @media screen and (min-width: 900px) {
-        @content;
-    }
+// @mixin desktop() {
+//     @media screen and (min-width: 900px) {
+//         @content;
+//     }
+// }
+
+// ==============================
+// RWD Breakpoints
+// ==============================
+$breakpoints: (
+  "xs": 431px,   // 手機小
+  "sm": 651px,   // 手機
+  "md": 901px,   // 平板
+  "lg": 1201px,  // 桌機
+  "xl": 1440px   // 大桌機
+);
+
+// ==============================
+// RWD Mixin
+// 用法：@include respond("md") { ... }
+// ==============================
+@mixin respond($size) {
+  @media (max-width: map-get($breakpoints, $size)) {
+    @content;
+  }
 }

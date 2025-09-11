@@ -79,6 +79,9 @@ aside{
     max-width: 400px;
     width: 100%;
     padding: 10px;
+    @media screen and (max-width: 650px){
+        max-width: 600px;
+    }
     
     
     .article-aside-h2{
