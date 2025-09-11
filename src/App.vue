@@ -32,7 +32,8 @@
 		onMounted(() => {
 			// 每次進站就恢復狀態
 			member.hydrate()
-
+			console.log(member.user);
+			
 			// 如果需要：沒登入就跳去登入頁
 			// if (!member.isAuthed) {
 			// 	router.push('/loginfirst')   // ← 強制導去登入頁

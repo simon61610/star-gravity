@@ -9,6 +9,7 @@ import { ref, computed } from 'vue'
 
 export const useMemberStore = defineStore('Member', () => {
     const user = ref(null)        // 目前登入的使用者物件（未登入為 null）
+    // const token = ref(localStorage.getItem('token') || null)     // 讀 localStorage，讓刷新仍保留登入狀態
     const token = ref(localStorage.getItem('token') || null)     // 讀 localStorage，讓刷新仍保留登入狀態
     const loading = ref(false)    // 登入狀態
 
@@ -91,13 +92,25 @@ export const useMemberStore = defineStore('Member', () => {
     }
 
     // 網頁重新整理後，呼叫 hydrate() 就能把 user 從 localStorage 補回來
-    function hydrate() {
+    /* function hydrate() {
         const raw = localStorage.getItem('user')
         if (raw) {
             try {
                 user.value = JSON.parse(raw)
             } catch {}
         }
+    } */
+
+    function hydrate() {
+    const storageUser = localStorage.getItem('user')
+    const storageToken = localStorage.getItem('token')
+
+    if (storageUser) {
+        user.value = JSON.parse(storageUser)
+    }
+    if (storageToken) {
+        token.value = storageToken
+    }
     }
 
     return {
