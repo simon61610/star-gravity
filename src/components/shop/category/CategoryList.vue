@@ -15,8 +15,8 @@
     // ===================== 開合功能 ======================
     // ====================================================
     // 預設是 false，先關起來，目前陣列長度固定，待修改
-	/* const isShow = ref([false, false, false, false, false])
-	const toggleCategory = (index) => {
+	const isShow = ref([false, false, false, false, false])
+	/* const toggleCategory = (index) => {
 		isShow.value[index] = !isShow.value[index]
 	} */
 
@@ -26,8 +26,17 @@
     const emit = defineEmits(['select'])
 
     // 點擊 main 分類 => 事件傳送 select，資料傳送主類別名稱
-    const selectMain = (main) => {
+    const selectMain = (main, index) => {
         emit('select', {main, sub: null})
+
+        // 全部收合
+        isShow.value = isShow.value.map(() => false)
+
+        // 展開選擇的
+        isShow.value[index] = true
+
+        // 都可展開或收合
+        // isShow.value[index] = !isShow.value[index]
     }
 
 
@@ -52,16 +61,18 @@
                  @click="toggleCategory(index)"
                 > -->
                 <h3 
-                 class="cate-products__area__name"
-                 @click="selectMain(category.name)"
+                    class="cate-products__area__name"
+                    @click="selectMain(category.name, index)"
+                    :class="{open: isShow[index]}"
+
                 >
                 {{ category.name }}
                 </h3>
 
                 <!-- 商品 sub 分類 -->
                 <transition name="slide">
-                    <!-- <ul class="product-items" v-if="isShow[index]"> -->
-                    <ul class="product-items">
+                    <ul class="product-items" v-if="isShow[index]">
+                    <!-- <ul class="product-items"> -->
                         <li
                             v-for="item in category.items"
                             @click = 'selectSub(category.name, item)'
@@ -81,8 +92,8 @@
 
     .cate-list {
         flex-shrink: 0;
-        // width: 176px;
-        width: 148px;
+        width: 176px;
+        // width: 148px;
         color: $FontColor-white;
 
         h2 {
@@ -109,7 +120,7 @@
                     margin-bottom: 16px;
     
                     // 偽元素箭頭
-                    /* &::after{
+                    &::after{
                         content: "";
                         display: block;
                         width: 12px;
@@ -124,7 +135,7 @@
                         transform-origin: center;
                         transform: translateY(-50%) rotate(45deg); // 箭頭向右
                         transition: transform 0.6s ease; // 加過渡動畫
-                    } */
+                    }
 
                     // JS 控制 class open 為 true/false
 					&.open::after {
