@@ -35,7 +35,10 @@
 <template>
     <section class="shop-category">
         <ShopBanner />
-        <Breadcrumbs />
+        <Breadcrumbs 
+            :selected-cate="selectedCate"
+            @updateSelectedCate="value => selectedCate = value"
+        />
         <section class="product-section">
             <CategoryToolbar />
             <div class="main-section">

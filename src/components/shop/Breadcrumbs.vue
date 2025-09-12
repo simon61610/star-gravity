@@ -1,14 +1,38 @@
 <script setup>
 
+    // 接收父層
+    const props = defineProps({
+        selectedCate: {
+            type: Object,
+            default: null,
+        }
+    })
+
+    const emit = defineEmits(['updateSelectedCate'])
+
+    // 點擊全部商品
+    const showAll = () => {
+        emit('updateSelectedCate', null)
+    }
+
+    // 點擊 main 分類
+    const showMain = () => {
+        emit('updateSelectedCate', 
+        {
+            main: props.selectedCate.main,
+            sub: null
+        })
+    }
+
 </script>
 
 <template>
     <nav class="breadcrumb">
         <!-- 先做個假的 -->
         <ol>
-            <li>全部商品</li>
-            <li>天文望遠鏡</li>
-            <li>基礎入門型</li>
+            <li @click="showAll">全部商品</li>
+            <li v-if="props.selectedCate?.main" @click="showMain">{{ props.selectedCate.main }}</li>
+            <li v-if="props.selectedCate?.sub">{{ props.selectedCate.sub }}</li>
         </ol>
     </nav>
     
@@ -35,7 +59,7 @@
                     text-decoration: underline;
                 }
 
-                // 中間的箭頭
+                // 麵包屑箭頭，放在文字後面，除了最後一個
                 &:not(:last-child)::after {
                     content: "";
                     display: inline-block;
