@@ -11,7 +11,8 @@
             <!-- 使用 slot 由父組件自定義內容 -->
             <div class="confirm-details">
                 <slot name="comment-details" v-if="$slots['comment-details']"></slot>     
-                <slot name="member-details" v-if="$slots['member-details']"></slot>     
+                <slot name="member-details" v-if="$slots['member-details']"></slot>
+                <slot name="news-details" v-if="$slots['news-details']"></slot>      
             </div>
 
         </div>

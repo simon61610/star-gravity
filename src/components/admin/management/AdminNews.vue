@@ -7,6 +7,7 @@ import { articleAPI } from '@/api/articleAPI.js'
 import { tagAPI } from '@/api/tagAPI.js'
 import { Plus } from '@element-plus/icons-vue'
 import { useAuthStore } from '@/stores/admin.js'
+import ConfirmDialog from '../ConfirmDialog.vue';
 
 /* ======================= 基本設定 ======================= */
 // props & emit
@@ -22,6 +23,9 @@ const fileList = ref([])         // 上傳圖片 fileList
 const selected_tag = ref(null)   // 選中的 tag
 const selected_article = ref({}) // 選中的文章
 const admin = useAuthStore()
+//確認ConfirmDialog 是否顯示 以及ConfirmDialog要顯示的代辦資料
+const showConfirmDialog = ref(false)
+const pendingUpdate = ref(null)
 
 // 彈窗顯示狀態
 const showtag = ref(false)
@@ -278,9 +282,19 @@ const tagEdit = (row, index) => {
   selected_article.value = { ...row }
   showtag.value = true // 打開燈箱
 }
+function save(){
+  // 儲存待更新的資料
+      pendingUpdate.value = { ...selected_article.value }
+      console.log(pendingUpdate.value);
+      
+  // 顯示確認對話框
+      showConfirmDialog.value = true
+}
 
 /* ======================= 儲存文章 ======================= */
-function save(selected) {
+function confirmUpdate(selected) {
+
+  
   console.log('=== SAVE DEBUG ===')
   // 內文字數檢查
   if (!selected.content || selected.content.trim().length < 50) {
@@ -302,6 +316,7 @@ function save(selected) {
       .then(res => {
         Newstable.value.push(res.data)
         showarticle.value = false
+        showConfirmDialog.value = false
       })
   } else { // 有 ID → 更新
     return articleAPI('update', selected)
@@ -311,9 +326,15 @@ function save(selected) {
           Newstable.value[index] = { ...selected }
         }
         showarticle.value = false
+        showConfirmDialog.value = false
       })
   }
 }
+
+function cancelUpdate (){
+    showConfirmDialog.value = false
+}
+
 
 /* ======================= 彈窗控制 ======================= */
 function close(type) {
@@ -493,6 +514,38 @@ const saveTag = () => {
           </div>       
         </form>
       </div>
+
+  <!--------------確定彈窗------------------>
+  <ConfirmDialog 
+        :show="showConfirmDialog"
+        title="文章改變內容"
+        message="您即將更新此文章內容，請確認以下資訊是否正確："
+        :details="pendingUpdate"
+        @confirm="()=> confirmUpdate(selected_article)"
+        @cancel="cancelUpdate"
+    >
+        <!-- 使用 slot 自定義顯示內容 -->
+        <template #news-details>  <!-- ← 接收 details 數據 -->
+            <div class="comment-details">
+                <div>
+                    <strong>文章標題：</strong>
+                    <span>{{ pendingUpdate.title }}</span>
+                </div>
+                <div>
+                    <strong>顯示狀態：</strong>
+                    <span>{{ pendingUpdate.is_active }}</span>
+                </div>
+                <div>
+                    <strong>文章分類：</strong>
+                    <span>{{ pendingUpdate.category }}</span>
+                </div>
+                <div>
+                    <strong>圖片網址：</strong>
+                    <span>{{ pendingUpdate.image }}</span>
+                </div>
+            </div>
+        </template>
+    </ConfirmDialog>
   </template>
 
 
