@@ -7,6 +7,7 @@
     import bus from '@/composables/useMitt';
     import { showToast } from '@/composables/useToast';
     import axios from 'axios';
+    import { cateList } from '@/composables/useProductsCate';
     // 假資料
     // import products from '@/data/products';
     // const items = ref(products) // 生成假資料
@@ -99,15 +100,8 @@
 
         // 3. 如果選了 main
         if(props.selectedCate.main){
-            const categoryList = {
-                '天文望遠鏡': ['基礎入門型', '進階專業型'],
-                '雙筒/單筒望遠鏡': ['單筒望遠鏡', '雙筒望遠鏡'],
-                '腳架': ['一般三腳架', '天文三腳架'],
-                '配件': ['星座盤', '指北針', '紅光手電筒'],
-                '書籍/小物': ['觀星教學書籍', '星空小物'],
-            }
            return selectedCateProducts.filter(
-                product => categoryList[props.selectedCate.main].includes(product.category_name)
+                product => cateList[props.selectedCate.main].includes(product.category_name)
            )
         }
     })
