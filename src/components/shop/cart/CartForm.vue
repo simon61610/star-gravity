@@ -231,10 +231,10 @@
 
     // ===================================== 送出訂單，進入結帳 =====================================
     const submitOrder = async () => {
-        if (!memberStore.user?.ID) {
+        if (!memberStore.isAuthed) {
             showToast('請先登入會員再結帳')
             // router.push('/login') // 或導去登入頁
-            console.log(memberStore.user)
+            // console.log(memberStore.user)
             return
         }
 

@@ -1,15 +1,16 @@
-<!-- 
-
-- 若購物車內沒商品，要阻止進入下一頁，並跳通知購物車無商品，應該是用 if else + router.psuh 和 我的吐司
-
--->
-
-
 <script setup>
 
     import { ref, computed, onMounted } from 'vue'
     import bus from '@/composables/useMitt'
     // import products from '@/data/products'
+    import { showToast } from '@/composables/useToast'
+    import shopToast from '@/components/common/shopToast.vue';
+    import { useRouter } from 'vue-router';
+    import { useMemberStore } from '@/stores/member'
+
+    const router = useRouter()
+    const memberStore = useMemberStore()
+
     
     
     const orderGuide = ref([
@@ -24,7 +25,7 @@
     // ===================================== Storage =====================================
     // ===================================================================================
     const storage = localStorage
-    const cartItems = ref([])
+    const cartItems = ref([]) // 購物車
 
     // ===================================== 抓資料 =====================================
 
@@ -148,6 +149,23 @@
         // console.log(cartItems.value) // 陣列包物件 [{...}, {...}, {...}]
     })
 
+    // ===================================== 判斷是否能前往CartFotm =====================================
+    const goToCartForm = () => {
+        // 判斷購物車有無商品
+        if(cartItems.value.length === 0){
+            showToast('購物車尚無商品，請前往星空小舖選購')
+            return
+        }
+
+        // 判斷是否登入會員
+        if(!memberStore.isAuthed){
+            alert('請先登入會員再結帳')
+            return
+        }
+
+
+        router.push('/cartpage/cartform')
+    }
     
 
 
@@ -155,6 +173,7 @@
 
 
 <template>
+    <shopToast />
     <section class="checkout-section">
 
         <!-- ---------------- 上方: 購物清單 ---------------- -->
@@ -229,9 +248,9 @@
                         <p><span>運費</span><span>NT${{ shipping_fee }}</span></p>
                         <p><span>總計</span><span>NT${{ totalPrice + shipping_fee }}</span></p>
                     </div>
-                    <router-link to="/cartpage/cartform" class="router-link">
-                        <div class="goto-pay-btn">前往結帳</div>
-                    </router-link>
+                    <!-- <router-link to="/cartpage/cartform" class="router-link"> -->
+                        <div class="goto-pay-btn" @click="goToCartForm">前往結帳</div>
+                    <!-- </router-link> -->
                     <router-link to="/shop/category" class="router-link">
                         <div class="shop-btn">繼續購物</div>
                     </router-link>
