@@ -180,15 +180,20 @@ watch(
 .navbar {
   width: 100%;
   background-color: #000000;
+  box-sizing: border-box;
+  
 
   .wrapper {
     box-sizing: border-box;
     margin: 0 auto;
     max-width: 1200px;
+    padding: 10px 0;
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    overflow: hidden;
+    
 
     img {
       width: 100px;
@@ -250,6 +255,9 @@ watch(
       li:nth-child(10) {
         width: 50px;
         height: 50px;
+        @include respond("lg") {
+          width: 100%;
+        }
       }
 
       // 1200px 以下改成直式選單
@@ -268,6 +276,7 @@ watch(
           width: 100%;
 
           a {
+            
             width: 100%;
             height: 100%;
           }
@@ -286,6 +295,7 @@ watch(
 
 // 登出圖示
 .icon-item {
+  
   width: 50px;
   height: 50px;
   display: flex;

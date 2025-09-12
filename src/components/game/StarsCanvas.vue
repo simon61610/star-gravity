@@ -131,79 +131,174 @@ watch(
 </template>
 
 <style lang="scss" scoped>
-.Stars-Canvs-line { transition: none; }                 /*  切星座時不會有重製動畫 */
-.Stars-Canvs-line.animate { transition: stroke-dashoffset 0.55s linear; } /* 播放才有動畫 */
+@import '@/assets/styles/main.scss';
 
-.Stars-Canvs-box{
-    
-    width: 100% !important;    
-    display: flex !important;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    .Stars-Canvs-alret{
-      
-      width: 100%;
-      text-align: center;
-      animation: alreat  6s   ease-in-out 1 forwards;
-      h1{
-        font-size: 24px;
-        margin-left: 250px;
-        margin-bottom: 50px;
-        color: aliceblue;
-        font-weight: bolder;
-      }
+.Stars-Canvs-line {
+  transition: none; // 切星座時不會有重製動畫
+
+  &.animate {
+    transition: stroke-dashoffset 0.55s linear; // 播放才有動畫
+  }
+}
+
+.Stars-Canvs-box {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .Stars-Canvs-alret {
+    width: 100%;
+    text-align: center;
+    animation: alreat 6s ease-in-out 1 forwards;
+
+    h1 {
+      font-size: 24px;
+      margin-left: 250px;
+      margin-bottom: 50px;
+      color: aliceblue;
+      font-weight: bolder;
     }
+  }
 
-    @keyframes alreat {
-      0%{ opacity: 1; }
-
-      40%{ opacity: 0.8;}
-
-      70%{ opacity: 0.5;}
-
-      90%{opacity: 0.2}
-
-      100%{opacity: 0;}
-      
+  @keyframes alreat {
+    0% {
+      opacity: 1;
     }
-    
-  .Stars-Canvs-wapper{
-   
+    40% {
+      opacity: 0.8;
+    }
+    70% {
+      opacity: 0.5;
+    }
+    90% {
+      opacity: 0.2;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  .Stars-Canvs-wapper {
     max-width: 500px;
     margin-left: 300px;
     width: 100% !important;
     opacity: 1;
     transition: opacity 1s ease-in-out;
-  
-    &.show{
+
+    &.show {
       opacity: 1;
     }
-    @media (max-width: 716px){
+
+    // 716px 以下
+    @media (max-width: 716px) {
       margin-bottom: 20px;
       margin-left: 0px;
+    }
+  }
+
+  // 431px 以下
+  @media (max-width: 431px) {
+    .Stars-Canvs-alret {
+      display: none;
+    }
+
+    .Stars-Canvs-wapper {
+      margin-left: 0px;
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//修改前
+// .Stars-Canvs-line { transition: none; }                 /*  切星座時不會有重製動畫 */
+// .Stars-Canvs-line.animate { transition: stroke-dashoffset 0.55s linear; } /* 播放才有動畫 */
+
+// .Stars-Canvs-box{
+    
+//     width: 100% !important;    
+//     display: flex !important;
+//     flex-direction: column;
+//     justify-content: center;
+//     align-items: center;
+//     .Stars-Canvs-alret{
       
-    }
+//       width: 100%;
+//       text-align: center;
+//       animation: alreat  6s   ease-in-out 1 forwards;
+//       h1{
+//         font-size: 24px;
+//         margin-left: 250px;
+//         margin-bottom: 50px;
+//         color: aliceblue;
+//         font-weight: bolder;
+//       }
+//     }
 
-  }
+//     @keyframes alreat {
+//       0%{ opacity: 1; }
 
-// .Stars-Canvs-line{ 
-//     transition: stroke-dashoffset 0.5s ease
+//       40%{ opacity: 0.8;}
 
-// }
-@media (max-width: 431px){
-  .Stars-Canvs-box{
+//       70%{ opacity: 0.5;}
+
+//       90%{opacity: 0.2}
+
+//       100%{opacity: 0;}
+      
+//     }
     
-    .Stars-Canvs-alret{
-      display:none;
-    }
-    .Stars-Canvs-wapper{
-    
-    margin-left: 0px;
-  }
-
-  }
+//   .Stars-Canvs-wapper{
+   
+//     max-width: 500px;
+//     margin-left: 300px;
+//     width: 100% !important;
+//     opacity: 1;
+//     transition: opacity 1s ease-in-out;
   
-}
-}
+//     &.show{
+//       opacity: 1;
+//     }
+//     @media (max-width: 716px){
+//       margin-bottom: 20px;
+//       margin-left: 0px;
+      
+//     }
+
+//   }
+
+// // .Stars-Canvs-line{ 
+// //     transition: stroke-dashoffset 0.5s ease
+
+// // }
+// @media (max-width: 431px){
+//   .Stars-Canvs-box{
+    
+//     .Stars-Canvs-alret{
+//       display:none;
+//     }
+//     .Stars-Canvs-wapper{
+    
+//     margin-left: 0px;
+//   }
+
+//   }
+  
+// }
+// }
 </style>

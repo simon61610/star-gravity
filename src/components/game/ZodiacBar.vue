@@ -142,31 +142,80 @@ const zodiacInfo = ref([
 
 
 <style scoped lang="scss">
+@import '@/assets/styles/main.scss';
 /* --- 版面 --- */
-.zodiac-tittle{
-/* border:2px solid red ; */
- padding: 0 100px;
-}
+@import '@/assets/styles/main.scss';
 
+/* --- 版面 --- */
+.zodiac-tittle {
+  padding: 0 100px;
+
+  // ≤531px
+  @media (max-width: 531px) {
+    display: flex !important;
+    flex-direction: column;
+    padding: 0;
+
+    .zodiac__actions {
+      height: 0;
+
+      h2 {
+        display: none;
+      }
+
+      .zodiac__icons {
+        position: relative;
+        top: 450px;
+        width: 100%;
+
+        img {
+          &:first-child {
+            margin-right: auto;
+          }
+        }
+      }
+    }
+
+    .zodiac {
+      padding: 0;
+
+      .zodiac__list {
+        display: flex;
+        overflow-x: auto;
+        flex-direction: row;
+      }
+    }
+  }
+}
 
 .zodiac {
   width: 100%;
   display: grid;
-  grid-template-columns: auto 1fr auto; /* 左 標題 / 中 清單 / 右 控制 */  
+  grid-template-columns: auto 1fr auto; /* 左 標題 / 中 清單 / 右 控制 */
   align-items: center;
   gap: 24px 32px;
   padding: 10px 0px;
   color: #fff;
+
+  // ≤768px
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
 }
 
 .zodiac__title {
   margin: 0;
   font-size: 32px;
-  letter-spacing: .15em;
+  letter-spacing: 0.15em;
   color: #fff;
   padding: 0px 46px;
   white-space: nowrap;
 
+  // ≤768px
+  @media (max-width: 768px) {
+    font-size: 24px;
+  }
 }
 
 /* --- 中間清單 --- */
@@ -177,8 +226,18 @@ const zodiacInfo = ref([
   gap: 20px 32px;
   padding: 0;
   margin: 0;
-}
 
+  // ≤1151px
+  @media (max-width: 1151px) {
+    grid-template-columns: repeat(4, minmax(140px, 1fr));
+    gap: 16px;
+  }
+
+  // ≤768px
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(3, minmax(100px, 1fr));
+  }
+}
 
 .zodiac__item {
   display: grid;
@@ -186,22 +245,24 @@ const zodiacInfo = ref([
   align-items: center;
   gap: 5px;
   min-width: 140px;
-  &:hover{ 
+
+  &:hover {
     cursor: pointer;
     background-color: rgba(193, 133, 226, 0.504);
   }
 }
 
-.zodiac__item__on{
-  background:rgba(193, 133, 226, 0.504);
+.zodiac__item__on {
+  background: rgba(193, 133, 226, 0.504);
 }
 
 .zodiac__icon {
   width: 44px;
   height: 44px;
-  object-fit: contain;         /* 等比顯示 */
+  object-fit: contain; /* 等比顯示 */
   display: block;
-  &:hover{
+
+  &:hover {
     cursor: pointer;
   }
 }
@@ -210,15 +271,15 @@ const zodiacInfo = ref([
   display: flex;
   flex-direction: column;
   line-height: 1.1;
-}
 
-.zodiac__text strong {
-  font-weight: 700;
-  font-size: 16px;
-}
+  strong {
+    font-weight: 700;
+    font-size: 16px;
+  }
 
-.zodiac__text span {
-  font-size: 14px;
+  span {
+    font-size: 14px;
+  }
 }
 
 /* --- 右側控制 --- */
@@ -227,90 +288,210 @@ const zodiacInfo = ref([
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+
+  // ≤768px
+  @media (max-width: 768px) {
+    justify-content: flex-end;
+    flex-direction: column;
+  }
 }
 
 .zodiac__icons {
-  
   display: flex;
-  /* color: #fff; */
-  img{
+
+  img {
     &:nth-child(1),
     &:nth-child(2),
-    &:nth-child(3){
-      &:hover{
+    &:nth-child(3) {
+      &:hover {
         transform: scale(1.2);
       }
     }
   }
-  &:hover{
+
+  &:hover {
     cursor: pointer;
   }
-  
 }
 
 .action__icon--star {
   display: flex;
-
 }
 
-/* --- RWD --- */
-@media (max-width: 1151px) {
-  .zodiac__list { grid-template-columns: repeat(4, minmax(140px, 1fr));
-  gap:16px }
-}
 
-@media (max-width: 768px) {
-  .zodiac { grid-template-columns: 1fr; align-items: start; }
-  .zodiac__title { font-size: 24px; }
-  .zodiac__list  { grid-template-columns: repeat(3, minmax(100px, 1fr)); }
-  .zodiac__actions { justify-content: flex-end;
-  flex-direction: column; }
-}
 
-@media (max-width: 531px) {
-//   .zodiac__list  { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
-//   .zodiac__icon  { width: 40px; height: 40px; }
+
+
+
+//修改前
+// .zodiac-tittle{
+// /* border:2px solid red ; */
+//  padding: 0 100px;
 // }
 
-.zodiac-tittle{
+
+// .zodiac {
+//   width: 100%;
+//   display: grid;
+//   grid-template-columns: auto 1fr auto; /* 左 標題 / 中 清單 / 右 控制 */  
+//   align-items: center;
+//   gap: 24px 32px;
+//   padding: 10px 0px;
+//   color: #fff;
+// }
+
+// .zodiac__title {
+//   margin: 0;
+//   font-size: 32px;
+//   letter-spacing: .15em;
+//   color: #fff;
+//   padding: 0px 46px;
+//   white-space: nowrap;
+
+// }
+
+// /* --- 中間清單 --- */
+// .zodiac__list {
+//   list-style: none;
+//   display: grid;
+//   grid-template-columns: repeat(6, minmax(140px, 1fr)); /* 桌機 6 欄 */
+//   gap: 20px 32px;
+//   padding: 0;
+//   margin: 0;
+// }
+
+
+// .zodiac__item {
+//   display: grid;
+//   grid-template-columns: 44px 1fr; /* icon 44px */
+//   align-items: center;
+//   gap: 5px;
+//   min-width: 140px;
+//   &:hover{ 
+//     cursor: pointer;
+//     background-color: rgba(193, 133, 226, 0.504);
+//   }
+// }
+
+// .zodiac__item__on{
+//   background:rgba(193, 133, 226, 0.504);
+// }
+
+// .zodiac__icon {
+//   width: 44px;
+//   height: 44px;
+//   object-fit: contain;         /* 等比顯示 */
+//   display: block;
+//   &:hover{
+//     cursor: pointer;
+//   }
+// }
+
+// .zodiac__text {
+//   display: flex;
+//   flex-direction: column;
+//   line-height: 1.1;
+// }
+
+// .zodiac__text strong {
+//   font-weight: 700;
+//   font-size: 16px;
+// }
+
+// .zodiac__text span {
+//   font-size: 14px;
+// }
+
+// /* --- 右側控制 --- */
+// .zodiac__actions {
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+//   gap: 20px;
+// }
+
+// .zodiac__icons {
   
-  display: flex !important;
-  flex-direction: column;
-  padding: 0;
-  .zodiac__actions{
-    height:0;
-    @media (max-width: 501px){
-    }
-    h2{
-      display: none;
-    }
-    .zodiac__icons{
-      position: relative;
-      top: 450px;
-      width: 100%;
-      img{
-        &:first-child{
-        margin-right: auto;
-      }
-      }
+//   display: flex;
+//   /* color: #fff; */
+//   img{
+//     &:nth-child(1),
+//     &:nth-child(2),
+//     &:nth-child(3){
+//       &:hover{
+//         transform: scale(1.2);
+//       }
+//     }
+//   }
+//   &:hover{
+//     cursor: pointer;
+//   }
+  
+// }
+
+// .action__icon--star {
+//   display: flex;
+
+// }
+
+// /* --- RWD --- */
+// @media (max-width: 1151px) {
+//   .zodiac__list { grid-template-columns: repeat(4, minmax(140px, 1fr));
+//   gap:16px }
+// }
+
+// @media (max-width: 768px) {
+//   .zodiac { grid-template-columns: 1fr; align-items: start; }
+//   .zodiac__title { font-size: 24px; }
+//   .zodiac__list  { grid-template-columns: repeat(3, minmax(100px, 1fr)); }
+//   .zodiac__actions { justify-content: flex-end;
+//   flex-direction: column; }
+// }
+
+// @media (max-width: 531px) {
+// //   .zodiac__list  { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+// //   .zodiac__icon  { width: 40px; height: 40px; }
+// // }
+
+// .zodiac-tittle{
+  
+//   display: flex !important;
+//   flex-direction: column;
+//   padding: 0;
+//   .zodiac__actions{
+//     height:0;
+//     @media (max-width: 501px){
+//     }
+//     h2{
+//       display: none;
+//     }
+//     .zodiac__icons{
+//       position: relative;
+//       top: 450px;
+//       width: 100%;
+//       img{
+//         &:first-child{
+//         margin-right: auto;
+//       }
+//       }
       
-    }
+//     }
     
-  }
-  .zodiac{
+//   }
+//   .zodiac{
         
-  padding: 0;
+//   padding: 0;
   
-    .zodiac__list{
-      display: flex;
-      overflow-x: auto;  
-      flex-direction: row;
-      }
+//     .zodiac__list{
+//       display: flex;
+//       overflow-x: auto;  
+//       flex-direction: row;
+//       }
 
   
-  }
+//   }
 
-}
+// }
 
-}
+// }
 </style>
