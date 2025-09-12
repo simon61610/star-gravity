@@ -24,6 +24,7 @@
             FROM Product p
                 LEFT JOIN ProductImage pi 
                 ON p.ID = pi.product_id
+            WHERE p.is_active = 1
             GROUP BY 
                 p.ID";
 
