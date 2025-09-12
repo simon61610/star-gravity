@@ -14,19 +14,25 @@
     // ===================== 開合功能 ======================
     // ====================================================
     // 預設是 false，先關起來，目前陣列長度固定，待修改
-	const isShow = ref([false, false, false, false, false])
+	/* const isShow = ref([false, false, false, false, false])
 	const toggleCategory = (index) => {
 		isShow.value[index] = !isShow.value[index]
-	}
+	} */
 
     // =====================================================
     // ==================== 商品類型篩選 ====================
     // =====================================================
     const emit = defineEmits(['select'])
 
-    // 點擊分類 => 事件傳送 select，資料傳送主和副的名稱
-    const selectSub = (sub) => {
-        emit('select', sub)
+    // 點擊 main 分類 => 事件傳送 select，資料傳送主類別名稱
+    const selectMain = (main) => {
+        emit('select', {main, sub: null})
+    }
+
+
+    // 點擊 sub 分類 => 事件傳送 select，資料傳送副類別名稱
+    const selectSub = (main, sub) => {
+        emit('select', {main, sub})
     }
 
 
@@ -39,20 +45,25 @@
         <div class="cate-products">
           	<div class="cate-products__area" v-for="(category, index) in productsCate">
                 <!-- 商品 main 分類 -->
-                <h3 
+                <!-- <h3 
                  class="cate-products__area__name"
                  :class="{open: isShow[index]}"
                  @click="toggleCategory(index)"
+                > -->
+                <h3 
+                 class="cate-products__area__name"
+                 @click="selectMain(category.name)"
                 >
                 {{ category.name }}
                 </h3>
 
                 <!-- 商品 sub 分類 -->
                 <transition name="slide">
-                    <ul class="product-items" v-if="isShow[index]">
+                    <!-- <ul class="product-items" v-if="isShow[index]"> -->
+                    <ul class="product-items">
                         <li
                             v-for="item in category.items"
-                            @click = 'selectSub(item)'
+                            @click = 'selectSub(category.name, item)'
                         >
                         {{ item }}
                         </li>
@@ -69,7 +80,8 @@
 
     .cate-list {
         flex-shrink: 0;
-        width: 176px; // 暫定，要刪除
+        // width: 176px;
+        width: 148px;
         color: $FontColor-white;
 
         h2 {
@@ -96,7 +108,7 @@
                     margin-bottom: 16px;
     
                     // 偽元素箭頭
-                    &::after{
+                    /* &::after{
                         content: "";
                         display: block;
                         width: 12px;
@@ -111,7 +123,7 @@
                         transform-origin: center;
                         transform: translateY(-50%) rotate(45deg); // 箭頭向右
                         transition: transform 0.6s ease; // 加過渡動畫
-                    }
+                    } */
 
                     // JS 控制 class open 為 true/false
 					&.open::after {
