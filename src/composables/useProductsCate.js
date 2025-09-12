@@ -1,10 +1,37 @@
+// 分類圖
+import binoculars from '@/assets/images/shop/shophome-binoculars.jpg'
+import souvenirs from '@/assets/images/shop/shophome-souvenirs.jpg'
+import telescope from '@/assets/images/shop/shophome-telescope.jpg'
+import tripod from '@/assets/images/shop/shophome-tripod.png'
+import accessory from '@/assets/images/shop/shophome-accessory.png'
+
 // 商品分類
 export const productsCate = [
-		{name: '天文望遠鏡', items: ['基礎入門型', '進階專業型']},
-		{name: '雙筒/單筒望遠鏡', items: ['單筒望遠鏡', '雙筒望遠鏡']},
-		{name: '腳架', items: ['一般三腳架', '天文三腳架']},
-		{name: '配件', items: ['星座盤', '指北針', '紅光手電筒']},
-		{name: '書籍/小物', items: ['觀星教學書籍', '星空小物']},
+		{
+            name: '天文望遠鏡',
+            img: telescope,
+            items: ['基礎入門型', '進階專業型']
+        },
+		{
+            name: '雙筒/單筒望遠鏡',
+            img: binoculars,
+            items: ['單筒望遠鏡', '雙筒望遠鏡']
+        },
+		{
+            name: '腳架',
+            img: tripod,
+            items: ['一般三腳架', '天文三腳架']
+        },
+		{
+            name: '配件',
+            img: accessory,
+            items: ['星座盤', '指北針', '紅光手電筒']
+        },
+		{
+            name: '書籍/小物',
+            img: souvenirs,
+            items: ['觀星教學書籍', '星空小物']
+        },
 	]
 
 // 建立 main 篩選 sub 的物件
