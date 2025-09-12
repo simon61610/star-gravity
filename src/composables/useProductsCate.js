@@ -14,6 +14,7 @@ export const cateList = productsCate.reduce((list, cate) => {
     return list
 }, {})
 
+// 會變成下面這樣
 /* const categoryList = {
         // cate.name  // cate.items
         '天文望遠鏡': ['基礎入門型', '進階專業型'],
