@@ -5,13 +5,13 @@ header('Content-Type: application/json; charset=utf-8');
 ini_set('display_errors', '0');
 error_reporting(E_ALL);
 
-header('Access-Control-Allow-Credentials: true');
-header('Access-Control-Allow-Origin: http://localhost:5173');
-header('Access-Control-Allow-Methods: POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, X-Requested-With, Authorization');
+// header('Access-Control-Allow-Credentials: true');
+// header('Access-Control-Allow-Origin: http://localhost:5173');
+// header('Access-Control-Allow-Methods: POST, OPTIONS');
+// header('Access-Control-Allow-Headers: Content-Type, X-Requested-With, Authorization');
 
 session_start();
-$data = json_decode(file_get_contents("php://input"), true) ;
+// $data = json_decode(file_get_contents("php://input"), true) ;
 
 // 預檢與方法限制（避免 CORS 預檢卡住、或誤用 GET）
 // if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { 
@@ -23,9 +23,9 @@ $data = json_decode(file_get_contents("php://input"), true) ;
 // };
 
 // CORS 預檢
-if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'OPTIONS') { 
+/* if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'OPTIONS') { 
     exit;
-}
+} */
 
 // 讀取與檢查輸入（避免 $data 為 null 造成 undefined index）
 $raw  = file_get_contents('php://input');   // 拿前端送來的字串

@@ -1,8 +1,10 @@
 <?php
 
-header("Access-Control-Allow-Origin: *");
+include 'cors.php';
+
+/* header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: *");
-header("Access-Control-Allow-Headers: *");
+header("Access-Control-Allow-Headers: *"); */
 
 // 請把這串複製一份放到阿帕契的我們專案的路徑內~ 開發的每個php檔案需要跟資料庫串聯都用incude這個檔案的方式
 // incude到各自的php檔後,就可以直接用 $pdo 了,  只是$sql的語句要自己寫, 後面的資料庫執行也要自己寫
