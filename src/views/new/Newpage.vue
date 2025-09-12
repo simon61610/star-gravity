@@ -15,7 +15,7 @@ const pageSize = ref(4);  //每頁顯示數量
 //----------------------------連接資料庫渲染文章--------------------------//
 
 onMounted(() => {
-    axios.get("pdo/news/newssearch.php")
+    axios.get(import.meta.env.VITE_AJAX_URL +"news/newssearch.php")
         .then((res)=>{
             articles.value = res.data
         })
