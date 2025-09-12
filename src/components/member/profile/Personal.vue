@@ -42,6 +42,8 @@
     // 縣市區域選單
     const cities = ref([])
     const areaOptions = ref([])
+    // 初始化載入期間避免 watch 把已載入的 area 清空
+    const prefilling = ref(true)
 
     onMounted(async() => {
         // 用 token 判斷是否登入
@@ -55,6 +57,7 @@
         try {
             const res = await axios.get('/JSON_CSV_XML/CityCountyData.json')
             cities.value = res.data || []
+            // console.log(cities.value)
         } catch (e) {
             console.warn('載入縣市清單失敗', e)
             cities.value = []
@@ -71,15 +74,34 @@
                 member.name = u.name || ''
                 member.phone = u.phone || ''
                 member.city = u.city || ''
-                member.area = u.area || ''
                 member.address = u.address || ''
                 // 如果預設就有 city，幫它把區域列表也帶好
-                if(member.city) {
+                /* if(member.city) {
                     const city = cities.value.find(c => c.CityName === member.city)
                     areaOptions.value = city ? city.AreaList : []
-                } else {
-                    throw new Error('未授權或資料格式不正確')
-                } 
+                    } else {
+                        throw new Error('未授權或資料格式不正確')
+                } */
+               if (member.city && cities.value.length) {
+                   const city = cities.value.find(c => c.CityName === member.city)
+                   areaOptions.value = city ? city.AreaList : []
+                }
+                
+                if(u.area){
+                    member.area = u.area
+                }
+
+                // member.area = u.area || ''
+                // console.log(data.user);
+                
+                
+                console.log(u)
+                console.log(member.area)
+                console.log(areaOptions.value)
+
+                // 完成首輪帶入，不再視為初始化
+                prefilling.value = false
+
             }
         } catch (e) {
             alert('登入已過期，請重新登入')
@@ -90,10 +112,14 @@
     })
 
     // 切換城市 → 重新整理區域選項，並清空已選區域
-    watch(() => member.city ,(newCity) => {
+    watch(() => member.city ,(newCity, oldCity) => {
+        if (!prefilling.value ) return
         const city = cities.value.find(c => c.CityName === newCity)
         areaOptions.value = city ? city.AreaList : []
-        member.area = ''
+        // 只有使用者真的切換城市時才清空區域；初始化帶值時不要清空
+        if (!prefilling.value && newCity !== oldCity) {
+            member.area = ''
+        }
     })
 
     /* ---- 儲存（更新到資料庫；不再動 localStorage） ---- */
@@ -147,7 +173,7 @@
             <input v-model="member.phone" type="tel" class="rowline" style="font-size: 18px" placeholder="我的電話" />
         </div>
         <!----縣市鄉鎮-------->
-        <div class="join-city">
+        <div class="personal-city">
             <div class="select">
                 <select v-model="member.city" class="select-city" required>
                     <option value="">縣市</option>
@@ -155,7 +181,7 @@
                 </select>
             </div>
             <div class="select">
-                <select v-model="member.area" class="select-city" required :disabled="!member.city">
+                <select v-model="member.area" class="select-city" required>
                     <option value="">鄉鎮</option>
                     <option v-for="d in areaOptions" :key="d.AreaName" :value="d.AreaName">{{ d.AreaName }}</option>
                 </select>

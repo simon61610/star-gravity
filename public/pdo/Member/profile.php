@@ -26,21 +26,36 @@ $memberID = isset($_SESSION['memberID']) ? (int)$_SESSION['memberID'] : 0;
 
 // 取 Bearer Token
 function bearer_token() {
-  $hdr = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+  $hdr = $_SERVER['HTTP_AUTHORIZATION'] ?? ($_SERVER['Authorization'] ?? '');
+  if (!$hdr && function_exists('getallheaders')) {
+    $all = getallheaders();
+    if (isset($all['Authorization'])) $hdr = $all['Authorization'];
+  }
   if (stripos($hdr, 'Bearer ') === 0) return substr($hdr, 7);
   return '';
 }
+// function bearer_token() {
+//   $hdr = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+//   if (stripos($hdr, 'Bearer ') === 0) return substr($hdr, 7);
+//   return '';
+// }
 
 // 若沒有 Session，且帶了 Token，就用 Tokens 表找出 member_id
 if ($memberID === 0) {
   $tok = bearer_token();
   if ($tok !== '') {
-    $ts = 'SELECT member_id FROM `Tokens` 
-          WHERE token=:t AND expires_at>NOW() LIMIT 1
-          ';
-    $ts->execute([':t'=>$tok]);
-    $rowTok = $ts->fetch(PDO::FETCH_ASSOC);
-    if ($rowTok) $memberID = (int)$rowTok['member_id'];
+    $ts = $pdo->prepare('SELECT member_id
+                        FROM `Tokens`
+                        WHERE token = :t AND expires_at > NOW()
+                        LIMIT 1');
+  $ts->execute([':t' => $tok]);
+  $rowTok = $ts->fetch(PDO::FETCH_ASSOC);
+  if ($rowTok) $memberID = (int)$rowTok['member_id'];
+    // $ts = 'SELECT member_id FROM `Tokens` 
+    //       WHERE token=:t AND expires_at>NOW() LIMIT 1
+    //       ';
+    // $ts->execute([':t'=>$tok]);
+    // $rowTok = $ts->fetch(PDO::FETCH_ASSOC);
   }
 }
 
