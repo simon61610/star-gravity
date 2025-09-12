@@ -129,7 +129,7 @@ const routes = [
 
 // ------------------ 星空小舖 shop ------------------
 { path: '/shop', name: 'shop', component: ShopHomePage,},
-{ path: '/shop/category', name: 'category', component: ShopCategoryPage },
+{ path: '/shop/category/:main?', name: 'category', component: ShopCategoryPage },
 { path: '/shop/category/product/:id?', name: 'product', component: ShopProductPage },
 { path: '/cartpage',  // 購物車與步驟頁面
   name: 'cartpage', 

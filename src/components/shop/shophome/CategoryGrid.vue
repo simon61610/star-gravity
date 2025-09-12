@@ -5,6 +5,7 @@ import { productsCate } from '@/composables/useProductsCate';
 const categories = productsCate.map(cate => {
     return {
         name: cate.name,
+        param: cate.param,
         img: cate.img,
         path: '/shop/category',
     }
@@ -20,7 +21,7 @@ const categories = productsCate.map(cate => {
         <div class="cate-grid">
             <router-link 
              v-for="cate in categories"
-             :to="cate.path"
+             :to="`/shop/category/${cate.param}`"
              class="item router-link"
             >
                 <img :src="cate.img" alt="">

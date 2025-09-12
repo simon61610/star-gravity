@@ -9,26 +9,31 @@ import accessory from '@/assets/images/shop/shophome-accessory.png'
 export const productsCate = [
 		{
             name: '天文望遠鏡',
+            param: 'telescope',
             img: telescope,
             items: ['基礎入門型', '進階專業型']
         },
 		{
             name: '雙筒/單筒望遠鏡',
+            param: 'binoculars',
             img: binoculars,
             items: ['單筒望遠鏡', '雙筒望遠鏡']
         },
 		{
             name: '腳架',
+            param: 'tripod',
             img: tripod,
             items: ['一般三腳架', '天文三腳架']
         },
 		{
             name: '配件',
+            param: 'accessory',
             img: accessory,
             items: ['星座盤', '指北針', '紅光手電筒']
         },
 		{
             name: '書籍/小物',
+            param: 'souvenirs',
             img: souvenirs,
             items: ['觀星教學書籍', '星空小物']
         },
