@@ -1,6 +1,7 @@
 <script setup>
 import {ref, onMounted} from 'vue'
 import AdminTable from '@/components/admin/AdminTable.vue';
+import ConfirmDialog from '../ConfirmDialog.vue';
 import img from '@/assets/images/news/news-article-a1.jpg';
 import axios from 'axios';
 
@@ -33,6 +34,12 @@ const Commenttable = ref([
 const selectedComment = ref(null)
 const show = ref(false);
 
+// 新增確認對話框的狀態
+const showConfirmDialog = ref(false);
+const pendingUpdate = ref(null); // 儲存待更新的資料
+
+
+
 const handleEdit = (row, index) => { //偵測編輯按鈕編輯哪個資料
     // console.log(index, row)
     
@@ -61,19 +68,41 @@ function enlargePhoto(el){
     el.requestFullscreen()
 }
 
-/*儲存功能-*/
-function save() {   
-    console.log('selectedComment:', selectedComment.value); // 除錯用
-    // console.log('Commenttable:', Commenttable.value); // 除錯用
-                                                                    //findIndex()是JS函數 找不到就回傳 -1
-  const idx = Commenttable.value.findIndex(c => String(c.location_id) === String(selectedComment.value.id)) //找更改資料的那筆資料對於 membertable[idx] 是在第idx位置
-  if (idx !== -1) { //如果idx不是-1 表示有這筆資料
-    Commenttable.value[idx].review_status = selectedComment.value.review_status;
-    // Commenttable.value[idx] = {...selectedComment.value }  //membertable.value[idx] 這是整個資料陣列  = {}　→資料的值
-  }
-  updateReviews(selectedComment.value)
-  show.value = false
+/*點擊儲存功能 但要跳出另一個視窗-*/
+function save() {
+    // 除錯用   
+    console.log('selectedComment:', selectedComment.value) 
+
+    // 儲存待更新的資料
+    pendingUpdate.value = { ...selectedComment.value }
+    
+    // 顯示確認對話框
+    showConfirmDialog.value = true
 }
+
+
+/*確認更新 並向後端發出請求*/
+function confirmUpdate() {
+                                                                        //findIndex()是JS函數 找不到就回傳 -1
+    const idx = Commenttable.value.findIndex(c => String(c.location_id) === String(pendingUpdate.value.id)) //找更改資料的那筆資料對於 membertable[idx] 是在第idx位置
+    if (idx !== -1) { //如果idx不是-1 表示有這筆資料
+    Commenttable.value[idx].review_status = pendingUpdate.value.review_status;
+    // Commenttable.value[idx] = {...selectedComment.value }  //membertable.value[idx] 這是整個資料陣列  = {}　→資料的值
+    }
+
+    // 呼叫函數 向後端發出請求 
+    updateReviews(pendingUpdate.value)
+    // 關閉所有對話框
+    showConfirmDialog.value = false
+    show.value = false
+    //待儲存的資料回歸null
+    pendingUpdate.value = null
+} 
+
+function cancelUpdate (){
+    showConfirmDialog.value = false
+}
+
 
 /*---------------串接資料庫----------------*/
 //避免打包後路徑錯誤 
@@ -167,6 +196,45 @@ onMounted(()=>{
                 </div>
         </form>
     </div>
+
+    <!-- 引用ConfirmDialog組件 但前後都要包 props和自定義函數的屬性值可以自己改~ -->
+    <ConfirmDialog 
+        :show="showConfirmDialog"
+        title="確認評論審核"
+        message="您即將更新此評論的審核狀態，請確認以下資訊是否正確："
+        :details="pendingUpdate"
+        @confirm="confirmUpdate"
+        @cancel="cancelUpdate"
+    >
+        <!-- 使用 slot 自定義顯示內容 -->
+        <!-- 這個區域你想要ConfirmDialog的框框內呈現什麼樣的資訊 就寫那些html 以及補上scss -->
+        <template #comment-details>  <!-- ← 接收 details 數據 -->
+            <div class="slot-details">
+                <div >
+                    <strong>會員帳號：</strong>
+                    <span>{{ pendingUpdate.member_account }}</span>
+                </div>
+                <div >
+                    <strong>評論地點：</strong>
+                    <span>{{ pendingUpdate.location_name }}</span>
+                </div>
+                <div >
+                    <strong>評論時間：</strong>
+                    <span>{{ pendingUpdate.review_date }}</span>
+                </div>
+                <div >
+                    <strong>審核狀態：</strong>
+                    <span>{{ pendingUpdate.review_status }}</span>
+                </div>
+                <div v-if="pendingUpdate.content" >
+                    <strong>評論內容：</strong>
+                    <p>{{ pendingUpdate.content.length > 50 ? pendingUpdate.content.substring(0, 50) + '...' : pendingUpdate.content }}</p>
+                </div>
+            </div>
+        </template>
+
+
+    </ConfirmDialog>
 </template>
 
 <style scoped  lang="scss">
@@ -252,4 +320,9 @@ form{
         
     }
 
+    .slot-details{
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
 </style>
