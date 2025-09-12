@@ -40,7 +40,7 @@
     // 父傳子接收: Proxy(Object) {main: '天文望遠鏡', sub: '基礎入門型'}
     const props = defineProps({
         selectedCate: {
-            type: String,
+            type: Object,
             default: null,
         }
     })
@@ -77,14 +77,38 @@
     // ==================== 商品類型篩選 ====================
     // =====================================================
     const filteredItems = computed(() => {
-        // 判斷有沒有選
+        
+        const selectedCateProducts = items.value
+
+        // 1. 如果沒選
         if(!props.selectedCate){
-            return items.value
-        }else {
+            return selectedCateProducts
+        }
+        /* else {
             return items.value.filter((product) => {
                 // 商品分類名稱相等
                 return product.category_name === props.selectedCate
             })
+        } */
+
+        // 2. 如果只選 sub
+        if(props.selectedCate.sub){
+            return selectedCateProducts.filter(
+                product => product.category_name === props.selectedCate.sub)
+        }
+
+        // 3. 如果選了 main
+        if(props.selectedCate.main){
+            const categoryList = {
+                '天文望遠鏡': ['基礎入門型', '進階專業型'],
+                '雙筒/單筒望遠鏡': ['單筒望遠鏡', '雙筒望遠鏡'],
+                '腳架': ['一般三腳架', '天文三腳架'],
+                '配件': ['星座盤', '指北針', '紅光手電筒'],
+                '書籍/小物': ['觀星教學書籍', '星空小物'],
+            }
+           return selectedCateProducts.filter(
+                product => categoryList[props.selectedCate.main].includes(product.category_name)
+           )
         }
     })
 

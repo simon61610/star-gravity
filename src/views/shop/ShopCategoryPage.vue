@@ -19,7 +19,7 @@
     // 接收事件的處理函數
     const selected = (selectedObj) => {
         selectedCate.value = selectedObj
-        console.log(selectedCate.value) // Proxy(Object) {main: '天文望遠鏡', sub: '基礎入門型'}
+        console.log(selectedCate.value) // Proxy(Object) {main: '天文望遠鏡', sub: null} or {main: '天文望遠鏡', sub: '基礎入門型'}
     }
     // template 用 selected-cate 當作屬性，準備傳值給子
 
