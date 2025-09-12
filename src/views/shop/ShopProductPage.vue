@@ -226,9 +226,9 @@
                 <div class="detail-text">
                     <p class="detail-text__desc">{{ product.description }}</p>
                     <p class="detail-text__promotion">{{ product.promotion }}</p>
-                    <p class="detail-text__marketing">現享 {{product.discount}} 折好康優惠</p>
+                    <p class="detail-text__marketing" v-if="product.discount !== 100">現享 {{product.discount}} 折好康優惠</p>
                     <div class="product-price">
-                        <p class="product-price__nospecial">NT$ {{ product.original_price }}</p>
+                        <p class="product-price__nospecial" v-if="product.discount !== 100">NT$ {{ product.original_price }}</p>
                         <p class="product-price__special">NT$ {{ product.sale_price }}</p>
                     </div>
                     <!-- 數量按鈕位置，暫時刪除 -->
