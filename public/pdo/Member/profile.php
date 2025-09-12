@@ -1,17 +1,17 @@
 <?php
 
-header('Content-Type: application/json; charset=utf-8');
+// header('Content-Type: application/json; charset=utf-8');
 include '../pdo.php';
 
-header("Access-Control-Allow-Origin: http://localhost:5173");
-header('Access-Control-Allow-Credentials: true');
-header('Access-Control-Allow-Methods: GET, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, X-Requested-With, Authorization');
+// header("Access-Control-Allow-Origin: http://localhost:5173");
+// header('Access-Control-Allow-Credentials: true');
+// header('Access-Control-Allow-Methods: GET, OPTIONS');
+// header('Access-Control-Allow-Headers: Content-Type, X-Requested-With, Authorization');
 
 // 預檢請求
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-  exit;
-}
+// if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+//   exit;
+// }
 
 // 只接受 GET
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {

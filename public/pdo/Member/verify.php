@@ -2,11 +2,11 @@
 
 include '../pdo.php';
 
-header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Credentials: true');
-header('Access-Control-Allow-Origin: http://localhost:5173');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, X-Requested-With, Authorization');
+// header('Content-Type: application/json; charset=utf-8');
+// header('Access-Control-Allow-Credentials: true');
+// header('Access-Control-Allow-Origin: http://localhost:5173');
+// header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+// header('Access-Control-Allow-Headers: Content-Type, X-Requested-With, Authorization');
 
 // 兼容各環境的 Authorization 讀取
 function getAuthorizationHeader(): string {

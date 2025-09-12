@@ -2,18 +2,18 @@
 
 include '../pdo.php';
 
-header('Content-Type: application/json; charset=utf-8');
+// header('Content-Type: application/json; charset=utf-8');
 
 // 簡化 CORS，允許所有本機請求
-header('Access-Control-Allow-Origin: http://localhost:5173');
-header('Access-Control-Allow-Credentials: true');
-header('Access-Control-Allow-Methods: POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, X-Requested-With, Authorization');
+// header('Access-Control-Allow-Origin: http://localhost:5173');
+// header('Access-Control-Allow-Credentials: true');
+// header('Access-Control-Allow-Methods: POST, OPTIONS');
+// header('Access-Control-Allow-Headers: Content-Type, X-Requested-With, Authorization');
 
 // 預檢請求直接結束，避免被下面的「僅允許 POST」誤擋
-if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
-    exit;
-};
+// if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
+//     exit;
+// };
 
 // 僅允許 POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
