@@ -1,40 +1,15 @@
 <script setup>
 
-import binoculars from '@/assets/images/shop/shophome-binoculars.jpg'
-import souvenirs from '@/assets/images/shop/shophome-souvenirs.jpg'
-import telescope from '@/assets/images/shop/shophome-telescope.jpg'
-import tripod from '@/assets/images/shop/shophome-tripod.png'
-import accessory from '@/assets/images/shop/shophome-accessory.png'
+import { productsCate } from '@/composables/useProductsCate';
 
-
-// 分類資料，圖片放在 public，不用打包轉換
-const categories = [
-    { 
-        name: '天文望遠鏡', 
-        img: telescope, 
-        path: '/shop/category' 
-    },
-    { 
-        name: '雙筒/單筒望遠鏡', 
-        img: binoculars, 
-        path: '/shop/category' 
-    },
-    { 
-        name: '腳架', 
-        img: tripod, 
-        path: '/shop/category' 
-    },
-    { 
-        name: '配件', 
-        img: accessory, 
-        path: '/shop/category' 
-    },
-    { 
-        name: '書籍/小物', 
-        img: souvenirs, 
-        path: '/shop/category' 
+const categories = productsCate.map(cate => {
+    return {
+        name: cate.name,
+        param: cate.param,
+        img: cate.img,
+        path: '/shop/category',
     }
-]
+})
 
 
 </script>
@@ -46,7 +21,7 @@ const categories = [
         <div class="cate-grid">
             <router-link 
              v-for="cate in categories"
-             :to="cate.path"
+             :to="`/shop/category/${cate.param}`"
              class="item router-link"
             >
                 <img :src="cate.img" alt="">
