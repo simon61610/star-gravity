@@ -5,8 +5,15 @@
     // import { isLoggedIn } from '@/composables/useAuth'
 
     // 後端 API
-    const PROFILE_API = 'http://localhost/PDO/Member/profile.php'
-    const UPDATE_API  = 'http://localhost/PDO/Member/update_profile.php'
+    // const PROFILE_API = 'http://localhost/PDO/Member/profile.php'
+    // const UPDATE_API  = 'http://localhost/PDO/Member/update_profile.php'
+
+    // API 根路徑 (來自 .env)
+    const API_BASE = import.meta.env.VITE_AJAX_URL + "Member/"
+
+    // 各 API
+    const PROFILE_API = API_BASE + "profile.php"
+    const UPDATE_API  = API_BASE + "update_profile.php"
 
     // localStorage：現在只使用 token 來判斷是否登入
     const LS_TOKEN = 'token'
