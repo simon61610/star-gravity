@@ -61,6 +61,7 @@ const sortedReviews = computed(()=>{
     }
 })
 function enlargePhoto(el){
+    //el 是 img 標籤本身
     el.requestFullscreen()
 }
 
@@ -174,11 +175,15 @@ onUnmounted( ()=>{
     position: absolute;
     top: 12px;
     right: 16px;
+
+    cursor: pointer;
 }
 .mapbox-close2{
     display: none;
 }
 .mapbox-back{
+    cursor: pointer;
+    
     color: $FontColor-white;
 
     position: absolute;
@@ -363,12 +368,11 @@ onUnmounted( ()=>{
     font-size: $pcChFont-p;
 }
 .review-photo{
-    width: 180px;
+    width: 100%;
     cursor: pointer;
 }
 .mapreview-list h6{
     font-size:$pcChFont-small ;
-    align-self: flex-end;
 }
 
 @media screen and (max-width:430px) {

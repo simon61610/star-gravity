@@ -95,17 +95,6 @@ function submit(){
     }else{
         insertReview()       
     }
-
-    
-
-
-    
-
-    //也要走清空和關閉
-    // fillStar(-1)
-    // reviewText.value = ''
-    // photoPreview.value = ''
-    // emit("cencelReview")
 }
 
 

@@ -1,7 +1,8 @@
 <script setup>
-import {ref} from 'vue'
+import {ref, onMounted} from 'vue'
 import AdminTable from '@/components/admin/AdminTable.vue';
 import img from '@/assets/images/news/news-article-a1.jpg';
+import axios from 'axios';
 
 const props = defineProps({
   search: { type: String, default: '' }
@@ -9,9 +10,10 @@ const props = defineProps({
 
 //欄位定義
 const columns = [
-    {label:'地點名稱',prop:'id'},
+    {label:'地點ID',prop:'location_id'},
+    {label:'地點名稱',prop:'location_name'},
     {label:'會員帳號',prop:'member_account'},
-    {label:'評論日期',prop:'review_date'},
+    {label:'評論日期',prop:'created_at'},
     {label:'完整資訊',prop:'order_info' , slot:'查看', align:'right' },
     {label:'審核狀態',prop:'review_status'}, 
 ]
@@ -32,16 +34,16 @@ const selectedComment = ref(null)
 const show = ref(false);
 
 const handleEdit = (row, index) => { //偵測編輯按鈕編輯哪個資料
-    console.log(index, row)
+    // console.log(index, row)
     
     selectedComment.value = {
-        
         member_account: row.member_account,
-        review_date: row.review_date,
-        id: row.id,
+        review_date: row.created_at,
+        id: row.location_id,
+        location_name: row.location_name,
         content: row.content,
         review_status: row.review_status,
-        img: row.img
+        img: row.image
     
   }
 /*打開燈箱*/
@@ -53,14 +55,72 @@ function close(){
     show.value = false;
 }
 
+
+/* 照片全螢幕*/
+function enlargePhoto(el){ 
+    el.requestFullscreen()
+}
+
 /*儲存功能-*/
-  function save() {                                                                //findIndex()是JS函數 找不到就回傳 -1
-  const idx = Commenttable.value.findIndex(c => String(c.id) === String(selectedComment.value.id)) //找更改資料的那筆資料對於 membertable[idx] 是在第idx位置
-  if (idx !== -1) {                                       //如果idx不是-1 表示有這筆資料
-    Commenttable.value[idx] = {...selectedComment.value }  //membertable.value[idx] 這是整個資料陣列  = {}　→資料的值
+function save() {   
+    console.log('selectedComment:', selectedComment.value); // 除錯用
+    // console.log('Commenttable:', Commenttable.value); // 除錯用
+                                                                    //findIndex()是JS函數 找不到就回傳 -1
+  const idx = Commenttable.value.findIndex(c => String(c.location_id) === String(selectedComment.value.id)) //找更改資料的那筆資料對於 membertable[idx] 是在第idx位置
+  if (idx !== -1) { //如果idx不是-1 表示有這筆資料
+    Commenttable.value[idx].review_status = selectedComment.value.review_status;
+    // Commenttable.value[idx] = {...selectedComment.value }  //membertable.value[idx] 這是整個資料陣列  = {}　→資料的值
   }
+  updateReviews(selectedComment.value)
   show.value = false
 }
+
+/*---------------串接資料庫----------------*/
+//避免打包後路徑錯誤 
+const API_URL = import.meta.env.VITE_AJAX_URL
+
+const getTotleReviews = async ()=>{
+    try{
+        const resp = await axios.get(import.meta.env.VITE_AJAX_URL + "Admin/getTotleReviews.php")
+        // console.log(resp.data);
+        Commenttable.value = resp.data
+    }catch(error){
+        console.error('取得評論資料錯誤:', error)
+        console.error('錯誤回應:', error.response)
+    }
+}
+
+const updateReviews = async (target)=>{
+    // console.log(555);
+    try{
+        const resp = await axios.post(
+            import.meta.env.VITE_AJAX_URL + "Admin/updateReviews.php" ,
+            {
+                member_email: target.member_account,
+                location_id: target.id,
+                review_status: target.review_status,
+            }
+        )
+        if(resp.data.success){
+            Commenttable.value = resp.data.data;
+            alert(resp.data.message)
+            // console.log(resp.data.message);
+        }else if( !resp.data.success ){
+            console.log(resp.data.message);
+        }
+
+    }catch(error){
+        console.error('更新失敗:',error )
+        console.error('錯誤回應:',error.response )
+    }
+}
+
+onMounted(()=>{
+    getTotleReviews()
+})
+
+
+
 
 
 </script>
@@ -87,9 +147,9 @@ function close(){
                     <div>評論時間:<span id="">{{ selectedComment.review_date }}</span></div>
                 </div>
                 <div class="Admin-Comment-second">
-                    <div>評論地點:<span id="">{{ selectedComment.id }}</span></div>
+                    <div>評論地點:<span id="">{{ selectedComment.location_name }}</span></div>
                     <div>評論內容:<br></br><br></br><span style="margin-left: 0px; line-height: 1.5;" id="">{{ selectedComment.content}}</span></div>
-                    <div>照片:<br></br><img :src=" selectedComment.img " style="max-width: 150px; height: 50px; margin-top: 15px;"></img></div>
+                    <div v-if="selectedComment.img" >照片:<br></br><img  :src=" API_URL + selectedComment.img " style="max-width: 150px; height: 50px; margin-top: 15px;" @click="enlargePhoto($event.target)"></img></div>
                     <label for="">審核狀態:
                         <br></br>
                         <br></br>
