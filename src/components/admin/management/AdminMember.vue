@@ -1,6 +1,7 @@
 <script setup>
 import {ref, onMounted} from 'vue'
 import AdminTable from '@/components/admin/AdminTable.vue';
+import ConfirmDialog from '../ConfirmDialog.vue';
 import { functions } from 'lodash-es';
 import axios from 'axios';
 
@@ -91,6 +92,12 @@ onMounted(()=>{
 /* 存放當前選中的那筆資料 */
 const selectedMember = ref(null)
 const show = ref(false);
+
+//確認ConfirmDialog 是否顯示 以及ConfirmDialog要顯示的代辦資料
+const showConfirmDialog = ref(false)
+const pendingUpdate = ref(null)
+
+
 /*----------------編輯按鈕+資料渲染------------------*/
 const handleEdit = (row, index) => { //偵測編輯按鈕編輯哪個資料
     // console.log(index, row)
@@ -106,43 +113,59 @@ const handleEdit = (row, index) => { //偵測編輯按鈕編輯哪個資料
     member_address: row.address,
     member_gender: row.gender
   }
-/*打開燈箱*/
-  show.value = true;
+// /*打開燈箱*/
+    show.value = true;
 }
-
-/*儲存功能-*/
-function save() {
-  const newStatus  = selectedMember.value.account_status;   // '正常' / '停權  
-  const id  = selectedMember.value.id;   // 當前會員ID 
-
-//   fetch('http://localhost/PDO/Admin/update.php',
-   fetch(import.meta.env.VITE_AJAX_URL + "Admin/update.php", {
-    method: 'POST',
-    // 若後端用 session 才需要下一行
-    // credentials: 'include',
-    // headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ 
-        account_status: newStatus,
-        id: id
-    })
-  })
-  .then(res => res.json()) 
-  .then(( newMembers ) => {
-    membertable.value = newMembers
-    /*關閉燈箱*/
-    show.value = false;
-    alert("更新完畢")
-    
-  })
-  .catch(err => {
-        alert('更新失敗');
-  });
-}
-
 
 /*---------------彈窗關閉----------------*/
 function close(){
     show.value = false;
+}
+
+
+
+
+/*點擊儲存功能 但要跳出另一個視窗-*/
+function save() {
+    // 儲存待更新的資料
+    pendingUpdate.value = { ...selectedMember.value }
+    console.log(pendingUpdate.value);
+    
+    // 顯示確認對話框
+    showConfirmDialog.value = true
+}
+
+/*確認更新 並向後端發出請求*/
+function confirmUpdate (){
+    const newStatus  = selectedMember.value.account_status;   // '正常' / '停權  
+    const id  = selectedMember.value.id;   // 當前會員ID 
+
+    fetch(import.meta.env.VITE_AJAX_URL + "Admin/update.php", {
+        method: 'POST',
+        // 若後端用 session 才需要下一行
+        // credentials: 'include',
+        // headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            account_status: newStatus,
+            id: id
+        })
+    })
+    .then(res => res.json()) 
+    .then(( newMembers ) => {
+        membertable.value = newMembers
+        /*關閉燈箱*/
+        show.value = false;
+        showConfirmDialog.value = false
+        alert("更新完畢")
+        
+    })
+    .catch(err => {
+        alert('更新失敗');
+    });
+}
+
+function cancelUpdate (){
+    showConfirmDialog.value = false
 }
 
 
@@ -185,11 +208,37 @@ function close(){
                 </div>
             </fieldset>
                 <div class='Admin-member-button'>
-                    <button type="button" @click="close" >關閉</button>
                     <button type="button" @click="save">儲存</button>
+                    <button type="button" @click="close">關閉</button>
                 </div>
         </form>
     </div>
+
+    <ConfirmDialog 
+        :show="showConfirmDialog"
+        title="確認會員審核"
+        message="您即將更新此會員的審核狀態，請確認以下資訊是否正確："
+        :details="pendingUpdate"
+        @confirm="confirmUpdate"
+        @cancel="cancelUpdate"
+    >
+        <!-- 使用 slot 自定義顯示內容 -->
+        <!-- 這個區域你想要ConfirmDialog的框框內呈現什麼樣的資訊 就寫那些html 以及補上scss -->
+        <template #member-details>  <!-- ← 接收 details 數據 -->
+            <div class="comment-details">
+                <div>
+                    <strong>會員帳號：</strong>
+                    <span>{{ pendingUpdate.member_account }}</span>
+                </div>
+                <div>
+                    <strong>審核狀態：</strong>
+                    <span>{{ pendingUpdate.account_status }}</span>
+                </div>
+            </div>
+        </template>
+    </ConfirmDialog>
+
+
 </template>
 
 <style scoped  lang="scss">
