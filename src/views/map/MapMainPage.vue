@@ -141,7 +141,7 @@ function cencelReview(){
     showLayout.value = true
 }
 
- // 重新呼叫取得評論的 API
+ // 因子組件新增評論故重新呼叫取得最新評論
 const getNewReviews = () => {
     getLocationReview(selectedLocationId.value)
 }

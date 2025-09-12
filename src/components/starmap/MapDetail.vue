@@ -315,6 +315,8 @@ function aaa(){
     position: absolute;
     top: 12px;
     right: 16px;
+
+    cursor: pointer;
 }
 
 
@@ -551,12 +553,10 @@ function aaa(){
 
     //單一小格右邊照片
 .singleReview-rightPhoto{
-    height: 100%;
     background-color:transparent ;
 }
 .singleReview-rightPhoto img{
     display: block;
-    height: 100%;
     max-height: 140px;
     margin: 0 0 0 auto;
 }
@@ -616,13 +616,15 @@ function aaa(){
         grid-template-columns:1fr;
     }
     .mapbox-singleReview{   
-    
+        flex-direction: column;
     }
     .singleReview-rightPhoto{
-        width: 100%;
+
     }
     .singleReview-rightPhoto img{
         margin: 0 auto;
+        width: 100%;
+        max-height: none;
     }
 }
 
