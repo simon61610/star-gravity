@@ -1,5 +1,7 @@
 <script setup>
-    import { ref, onMounted, reactive, computed, watch } from 'vue'
+    // import { ref, onMounted, reactive, computed, watch } from 'vue'
+    import { ref, onMounted, reactive, computed } from 'vue'
+
     import { UserFilled } from '@element-plus/icons-vue'
     import axios from 'axios'
     // import { isLoggedIn } from '@/composables/useAuth'
@@ -41,9 +43,21 @@
         
     // 縣市區域選單
     const cities = ref([])
-    const areaOptions = ref([])
+    // const areaOptions = ref([])
     // 初始化載入期間避免 watch 把已載入的 area 清空
-    const prefilling = ref(true)
+    // const prefilling = ref(true)
+
+    // 由 city 動態推導鄉鎮清單（不再用 ref 手動塞）
+    const areaOptions = computed(() => {
+        if (!member.city) return []
+        const city = cities.value.find(c => c.CityName === member.city)
+        return city ? city.AreaList : []
+    })
+
+    // 只有「使用者真的改縣市」時，才清空鄉鎮
+    function onCityChange () {
+        member.area = ''
+    }
 
     onMounted(async() => {
         // 用 token 判斷是否登入
@@ -82,25 +96,31 @@
                     } else {
                         throw new Error('未授權或資料格式不正確')
                 } */
-               if (member.city && cities.value.length) {
-                   const city = cities.value.find(c => c.CityName === member.city)
-                   areaOptions.value = city ? city.AreaList : []
-                }
+            //    if (member.city && cities.value.length) {
+            //        const city = cities.value.find(c => c.CityName === member.city)
+            //        areaOptions.value = city ? city.AreaList : []
+            //     }
                 
-                if(u.area){
-                    member.area = u.area
-                }
+                // if(u.area){
+                //     member.area = u.area
+                // }
 
                 // member.area = u.area || ''
                 // console.log(data.user);
                 
                 
-                console.log(u)
-                console.log(member.area)
-                console.log(areaOptions.value)
+                // console.log(u)
+                // console.log(member.area)
+                // console.log(areaOptions.value)
 
                 // 完成首輪帶入，不再視為初始化
-                prefilling.value = false
+                // prefilling.value = false
+
+                // 帶入的 area 需是當前 city 的有效選項；不是就保持空
+                if (u.area) {
+                    const valid = areaOptions.value.some(a => a.AreaName === u.area)
+                    member.area = valid ? u.area : ''
+                }
 
             }
         } catch (e) {
@@ -112,15 +132,15 @@
     })
 
     // 切換城市 → 重新整理區域選項，並清空已選區域
-    watch(() => member.city ,(newCity, oldCity) => {
-        if (!prefilling.value ) return
-        const city = cities.value.find(c => c.CityName === newCity)
-        areaOptions.value = city ? city.AreaList : []
-        // 只有使用者真的切換城市時才清空區域；初始化帶值時不要清空
-        if (!prefilling.value && newCity !== oldCity) {
-            member.area = ''
-        }
-    })
+    // watch(() => member.city ,(newCity, oldCity) => {
+    //     if (!prefilling.value ) return
+    //     const city = cities.value.find(c => c.CityName === newCity)
+    //     areaOptions.value = city ? city.AreaList : []
+    //     // 只有使用者真的切換城市時才清空區域；初始化帶值時不要清空
+    //     if (!prefilling.value && newCity !== oldCity) {
+    //         member.area = ''
+    //     }
+    // })
 
     /* ---- 儲存（更新到資料庫；不再動 localStorage） ---- */
     async function save () {
@@ -135,7 +155,7 @@
         saving.value = true
         try {
             const { data } = await axios.post(UPDATE_API, {
-                email: member.email,
+                // email: member.email,
                 name: member.name.trim(),
                 phone: member.phone.trim(),
                 city: member.city,
@@ -175,7 +195,7 @@
         <!----縣市鄉鎮-------->
         <div class="personal-city">
             <div class="select">
-                <select v-model="member.city" class="select-city" required>
+                <select v-model="member.city" class="select-city" required @change="onCityChange">
                     <option value="">縣市</option>
                     <option v-for="c in cities" :key="c.CityName" :value="c.CityName">{{ c.CityName }}</option>
                 </select>
