@@ -1,10 +1,6 @@
 <!-- 單一商品頁 -->
 <!-- 待完成
-1. 圖片先靜態，待改用程式方式引入 
-2. thumbs 的 li 要用 v-for 產出
-3. 寫上 thumbs 點擊後切換圖片的功能
-4. 寫上圖片超出要能滑動的功能
-5. 加上商品資料的綁定
+- 寫上圖片超出要能滑動的功能
 -->
 
 <script setup>
@@ -14,6 +10,7 @@
     import shopToast from '@/components/common/shopToast.vue';
     import { showToast } from '@/composables/useToast';
     import axios from 'axios';
+    import { cateList } from '@/composables/useProductsCate';
 
     // 假資料
     // import products from '@/data/products';
@@ -35,6 +32,8 @@
     const product = ref(null)
     const imgArr = ref([])
     const currentPic = ref('')
+
+    const selectedCate = ref(null)
 
     onMounted(async () => {
         const res = await axios.get(import.meta.env.VITE_AJAX_URL + 'starshop/client/products_get.php')
@@ -59,9 +58,28 @@
         stock : 50 
         */
 
-        imgArr.value = product.value.images.split(',')
-        // console.log(imgArr.value)
-        currentPic.value = imgArr.value[0]
+        if(product.value){
+            imgArr.value = product.value.images.split(',')
+            // console.log(imgArr.value)
+            currentPic.value = imgArr.value[0]
+
+            // 逐一取出此 key name
+            let mainCate = null
+            
+            // 找出主分類
+            for(let main in cateList){
+                if(cateList[main].includes(product.value.category_name)){
+                    mainCate = main
+                    break
+                }
+            }
+
+            selectedCate.value = {
+                main : mainCate,
+                sub: product.value.category_name,
+            }
+        }
+
         
     })
 
@@ -175,7 +193,7 @@
 
     <section class="product-page">
         <ShopBanner />
-        <Breadcrumbs />
+        <Breadcrumbs :selected-cate="selectedCate"/>
         <div class="container" v-if="product">
             <!-- 左：商品圖片 -->
             <div class="product-gallery">
