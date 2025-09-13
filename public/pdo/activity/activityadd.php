@@ -30,7 +30,7 @@ $tag = $data['tag'] ?? '';
 $category = $data['category'] ?? '';
 
 // 轉成 JSON 存 DB
-$imageJson = json_encode($image, JSON_UNESCAPED_SLASHES);
+$imageJson = json_encode($image, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ); //不要把 / 轉成 \/  ||  不要把中文轉成 \uXXXX
 //建立SQL語法
 
 $sql = "INSERT INTO  `Event`(event_name, event_start, event_end ,event_deadline , event_place ,event_price,  event_description , is_active , event_status, homepage_highlight ,image , tag , category) VALUES 
@@ -87,6 +87,6 @@ if($newId > 0){
 
 
 //處理回傳的結果
-echo json_encode($respbody,JSON_UNESCAPED_UNICODE); 
+echo json_encode($respbody,JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); 
 
 ?>

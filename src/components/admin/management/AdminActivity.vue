@@ -145,13 +145,14 @@ const handleEdit = (row, index) => {
     category: row.category ?? ''
   }
     // 把 image 解析回陣列
-    let images = []
-    try {
-      images = JSON.parse(row.image || "[]")
-    } catch (e) {
-      console.error("圖片欄位解析失敗", e)
-    }
-    previewImages.value = images  //把值寫到previewImages陣列
+    const images = Array.isArray(row.image) ? row.image : []
+    //let images = []
+    // try {
+    //   images = JSON.parse(row.image || "[]")
+    // } catch (e) {
+    //   console.error("圖片欄位解析失敗", e)
+    // }
+    // previewImages.value = images  //把值寫到previewImages陣列
 
     // 塞回三個 fileList，讓 el-upload 顯示
     fileLists.value = [[], [], []]
@@ -423,7 +424,7 @@ defineExpose({ handleEdit, handleadd }) // 父層可呼叫新增/編輯
       </div>
     </form>
   </div>
-   <img v-for="(url, i) in previewImages" :key="i" :src="url" alt="活動圖片" />  
+   <img v-for="(url, i) in selected_activity.image" :key="i" :src="url" alt="活動圖片" />  
   </template>
 
   

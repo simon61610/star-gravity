@@ -59,10 +59,21 @@ foreach ($rows as &$row) {
 
     $row["is_active_display"] = $row["is_active"] == 1 ? "上架" : "下架";  //欄位 is_active = 1 or 0 如果是true  欄位 is_active_display顯示上架
     $row["homepage_highlight_display"] = $row["homepage_highlight"] == 1 ? "首先推薦" : "非推薦"; 
+
+
+    if (!empty($row["image"])) {
+        $decoded = json_decode($row["image"], true);
+        $row["image"] = is_array($decoded) ? $decoded : [];
+    } else {
+        $row["image"] = [];
+    }
 }   
 
 
-echo json_encode($rows,JSON_UNESCAPED_UNICODE); 
+
+
+
+echo json_encode($rows,JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); 
 
 
 
