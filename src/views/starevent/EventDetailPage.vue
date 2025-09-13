@@ -87,11 +87,12 @@
 
 
     const goToRegistration = () => {
+        
         if(!memberStore.isAuthed){
             alert('請先登入會員')
             return
         }
-        router.push('/eventregistration')
+        router.push(`/eventregistration/${eventData.value.ID}`)
     }
 
 </script>
