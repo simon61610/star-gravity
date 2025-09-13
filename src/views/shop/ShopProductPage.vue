@@ -101,15 +101,36 @@
 
     // 收藏愛心切換
     const isFollow = ref(false)
-    const followProduct = () => {
-        isFollow.value = !isFollow.value
+    const followProduct = async () => {
+        // isFollow.value = !isFollow.value
         
-        if(isFollow.value){
-            showToast('已加入收藏!')
+        /* if(isFollow.value){
+            await axios.post(import.meta.env.VITE_AJAX_URL + 'starshop/client/favorite_add.php', {
+                member_id: 1008,
+                product_id: product.value.ID
+            })
+
         }
         if(!isFollow.value){
             showToast('已取消收藏!')
+        } */
+
+        const res = await axios.post(import.meta.env.VITE_AJAX_URL + 'starshop/client/favorite_add.php', {
+            member_id: 1008, 
+            product_id: product.value.ID
+        })
+
+        if(res.data.action === 'added'){
+            isFollow.value = true
+            showToast('已加入收藏!')
+        }else if(res.data.action === 'removed'){
+            isFollow.value = false
+            showToast('已取消收藏!')
+        }else {
+            console.log(res.data.message)
         }
+
+
     }
 
     // =====================================================

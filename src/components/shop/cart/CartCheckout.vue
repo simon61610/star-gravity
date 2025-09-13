@@ -159,7 +159,7 @@
 
         // 判斷是否登入會員
         if(!memberStore.isAuthed){
-            alert('請先登入會員再結帳')
+            alert('請先登入會員')
             return
         }
 
