@@ -424,7 +424,7 @@ defineExpose({ handleEdit, handleadd }) // 父層可呼叫新增/編輯
       </div>
     </form>
   </div>
-   <img v-for="(url, i) in selected_activity.image" :key="i" :src="url" alt="活動圖片" />  
+   <!-- <img v-for="(url, i) in selected_activity.image" :key="i" :src="url" alt="活動圖片" />   -->
   </template>
 
   
