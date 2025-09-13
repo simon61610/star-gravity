@@ -31,6 +31,13 @@ const pendingUpdate = ref(null)
 const showtag = ref(false)
 const showarticle = ref(false)
 
+//定義查詢函數讓後台資料更新同步渲染
+function refreshTable() {
+  return articleAPI('get').then(res2 => {
+        Newstable.value = res2.data
+  })
+}
+
 /* ======================= 表格欄位定義 ======================= */
 const columns = [
   { label: '文章編號', prop: 'ID' },   // prop 要對應 DB 欄位
@@ -313,20 +320,30 @@ function confirmUpdate(selected) {
 
   if (!selected || !selected.ID) { // 沒有 ID → 新增
     return articleAPI('add', selected)
-      .then(res => {
-        Newstable.value.push(res.data)
-        showarticle.value = false
-        showConfirmDialog.value = false
+      .then(() => {
+        refreshTable()
+      .then(() => {
+          showarticle.value = false
+          showConfirmDialog.value = false
+        })
+        // Newstable.value.push(res.data)
+        // showarticle.value = false
+        // showConfirmDialog.value = false
       })
   } else { // 有 ID → 更新
     return articleAPI('update', selected)
-      .then(res => {
-        const index = Newstable.value.findIndex(a => a.ID === selected.ID) //筆對資料是否有這個value
-        if (index !== -1) { //如果index不等於-1 表示有資料
-          Newstable.value[index] = { ...selected }
-        }
-        showarticle.value = false
-        showConfirmDialog.value = false
+      .then(() => {
+        refreshTable()
+      .then(() => {
+          showarticle.value = false
+          showConfirmDialog.value = false
+        })
+        // const index = Newstable.value.findIndex(a => a.ID === selected.ID) //筆對資料是否有這個value
+        // if (index !== -1) { //如果index不等於-1 表示有資料
+        //   Newstable.value[index] = { ...selected }
+        // }
+        // showarticle.value = false
+        // showConfirmDialog.value = false
       })
   }
 }
