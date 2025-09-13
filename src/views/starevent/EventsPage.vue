@@ -1,3 +1,5 @@
+
+
 <script setup>
 
 import { ref, computed, watch, onMounted } from 'vue';
@@ -17,7 +19,7 @@ import Pagination from '@/components/common/Pagination.vue';
 const eventlist = ref([])
 
 onMounted(async () => {
-    const res = await axios.get(import.meta.env.VITE_AJAX_URL + 'activity/activityget.php')
+    const res = await axios.get(import.meta.env.VITE_AJAX_URL + 'activity/client/activityget_active.php')
     console.log(res.data)
     /* ID : 5 
     category : "高山觀測" 
