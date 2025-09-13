@@ -40,11 +40,13 @@
     const selectedCate = ref(null)
 
     onMounted(async () => {
+
+
+        // 抓出商品資料
         const res = await axios.get(import.meta.env.VITE_AJAX_URL + 'starshop/client/products_get.php')
     
         // console.log(res.data);
         
-
         product.value = res.data.find(p => p.ID === Number(route.params.id))
         // console.log(product.value)
         /* 
@@ -67,6 +69,9 @@
             // console.log(imgArr.value)
             currentPic.value = imgArr.value[0]
 
+
+
+            // ======================== 麵包屑 ==========================
             // 逐一取出此 key name
             let mainCate = null
             
@@ -81,6 +86,22 @@
             selectedCate.value = {
                 main : mainCate,
                 sub: product.value.category_name,
+            }
+        }
+
+
+
+        // ========================== 檢查商品是否已收藏
+        if(memberStore.isAuthed){
+            const member_id = memberStore.user?.ID
+
+            const res = await axios.post(import.meta.env.VITE_AJAX_URL + 'starshop/client/favorite_check.php',{
+                member_id,
+                product_id: product.value.ID
+            }) 
+
+            if(res.data.success){ // 如果有就是 true
+                isFollow.value = res.data.isFavorite
             }
         }
 
