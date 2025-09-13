@@ -11,6 +11,10 @@
     import { showToast } from '@/composables/useToast';
     import axios from 'axios';
     import { cateList } from '@/composables/useProductsCate';
+    import { useMemberStore } from '@/stores/member'
+
+    const memberStore = useMemberStore()
+
 
     // 假資料
     // import products from '@/data/products';
@@ -115,8 +119,15 @@
             showToast('已取消收藏!')
         } */
 
+        if(!memberStore.isAuthed){
+            alert('請先登入會員')
+            return
+        }
+
+        const member_id = memberStore.user?.ID
+
         const res = await axios.post(import.meta.env.VITE_AJAX_URL + 'starshop/client/favorite_add.php', {
-            member_id: 1008, 
+            member_id, 
             product_id: product.value.ID
         })
 
