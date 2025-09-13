@@ -38,6 +38,7 @@
             @getNewReviews="getNewReviews"
         />
         
+        <shopToast />
     </div>
 </template>
 
@@ -49,6 +50,8 @@ import MapReview from '@/components/starmap/MapReview.vue';
 import ReviewPlace from '@/components/starmap/ReviewPlace.vue';
 import { componentSizes } from 'element-plus';
 import axios from 'axios'
+import shopToast from '@/components/common/shopToast.vue';
+
 
 // 假數據
 const locationList = ref([])

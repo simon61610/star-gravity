@@ -11,6 +11,10 @@
     import { showToast } from '@/composables/useToast';
     import axios from 'axios';
     import { cateList } from '@/composables/useProductsCate';
+    import { useMemberStore } from '@/stores/member'
+
+    const memberStore = useMemberStore()
+
 
     // 假資料
     // import products from '@/data/products';
@@ -36,11 +40,13 @@
     const selectedCate = ref(null)
 
     onMounted(async () => {
+
+
+        // 抓出商品資料
         const res = await axios.get(import.meta.env.VITE_AJAX_URL + 'starshop/client/products_get.php')
     
         // console.log(res.data);
         
-
         product.value = res.data.find(p => p.ID === Number(route.params.id))
         // console.log(product.value)
         /* 
@@ -63,6 +69,9 @@
             // console.log(imgArr.value)
             currentPic.value = imgArr.value[0]
 
+
+
+            // ======================== 麵包屑 ==========================
             // 逐一取出此 key name
             let mainCate = null
             
@@ -77,6 +86,22 @@
             selectedCate.value = {
                 main : mainCate,
                 sub: product.value.category_name,
+            }
+        }
+
+
+
+        // ========================== 檢查商品是否已收藏
+        if(memberStore.isAuthed){
+            const member_id = memberStore.user?.ID
+
+            const res = await axios.post(import.meta.env.VITE_AJAX_URL + 'starshop/client/favorite_check.php',{
+                member_id,
+                product_id: product.value.ID
+            }) 
+
+            if(res.data.success){ // 如果有就是 true
+                isFollow.value = res.data.isFavorite
             }
         }
 
@@ -101,15 +126,43 @@
 
     // 收藏愛心切換
     const isFollow = ref(false)
-    const followProduct = () => {
-        isFollow.value = !isFollow.value
+    const followProduct = async () => {
+        // isFollow.value = !isFollow.value
         
-        if(isFollow.value){
-            showToast('已加入收藏!')
+        /* if(isFollow.value){
+            await axios.post(import.meta.env.VITE_AJAX_URL + 'starshop/client/favorite_add.php', {
+                member_id: 1008,
+                product_id: product.value.ID
+            })
+
         }
         if(!isFollow.value){
             showToast('已取消收藏!')
+        } */
+
+        if(!memberStore.isAuthed){
+            alert('請先登入會員')
+            return
         }
+
+        const member_id = memberStore.user?.ID
+
+        const res = await axios.post(import.meta.env.VITE_AJAX_URL + 'starshop/client/favorite_add.php', {
+            member_id, 
+            product_id: product.value.ID
+        })
+
+        if(res.data.action === 'added'){
+            isFollow.value = true
+            showToast('已加入收藏!')
+        }else if(res.data.action === 'removed'){
+            isFollow.value = false
+            showToast('已取消收藏!')
+        }else {
+            console.log(res.data.message)
+        }
+
+
     }
 
     // =====================================================

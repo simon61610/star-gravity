@@ -1,5 +1,12 @@
 <script setup>
 import { ref, defineEmits ,defineProps, onMounted, onUnmounted, computed} from 'vue'
+import { useMemberStore } from '@/stores/member'
+
+import { showToast } from '@/composables/useToast';
+
+// 引用useMemberStore
+const memberStore = useMemberStore()
+
 //向父組件發送事件
 const emit = defineEmits()
 
@@ -10,7 +17,20 @@ function backToDetail(){
     emit('backToDetail')
 }
 function writeReview(){
-    emit('writeReview')
+    //判斷是否為會員
+    if( memberStore.isAuthed ){
+        // console.log("登入中")
+        // console.log(memberStore.user)
+        emit('writeReview')
+    }else{
+        // console.log("未登入")
+        showToast('請先登入!')
+        // console.log(memberStore.user.name)
+
+    }
+
+
+    
 }
 
 //接收父組件傳來資料

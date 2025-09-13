@@ -3,6 +3,11 @@ import { ref, defineEmits, computed} from 'vue'
 import filledStar from '@/assets/icons/icon-filledStar.svg'
 import borderStar from '@/assets/icons/icon-borderStar.svg'
 import axios from 'axios'
+import { useMemberStore } from '@/stores/member'
+import { showToast } from '@/composables/useToast';
+
+// 引用useMemberStore
+const memberStore = useMemberStore()
 
 //建立響應式變數
 const emit = defineEmits(['cencelReview', 'getNewReviews'])
@@ -11,6 +16,11 @@ const score = ref(0)
 const reviewText =ref('')
 const file = ref('')
 const photoPreview = ref('')  //base64
+const memberName = computed(()=>{
+    if( memberStore.isAuthed ){
+        return memberStore.user.name
+    }
+})
 
 const limitWord = computed(()=>{       
     return reviewText.value.length
@@ -52,6 +62,7 @@ const insertReview = async ()=>{
     formData.append("content", reviewText.value)
     formData.append("created_ms",  Date.now())
     formData.append("location_id", selectedLocationId)
+    formData.append("member_id", memberStore.user.ID)
     formData.append("image", file.value)
 
     try{
@@ -59,7 +70,7 @@ const insertReview = async ()=>{
             import.meta.env.VITE_AJAX_URL + "map/postReview.php",
             formData
         )
-        console.log(res.data);
+        // console.log(res.data);
         
         if( res.data.status === "success"){
             cencelReview()
@@ -104,7 +115,7 @@ function submit(){
 <template>
     <!-- 評論攔 -->
     <div class="mapreview-writePlace">
-        <h3>會員名稱</h3>
+        <h3>{{memberName}}</h3>
         <div class="review-writePlace-score">
             <img class="starScore" 
                 v-for="(star, index) in 5"  

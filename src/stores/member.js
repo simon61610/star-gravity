@@ -66,7 +66,7 @@ export const useMemberStore = defineStore('Member', () => {
             // 可選：後端若回 user，就同步更新
             if (data.user) {
                 user.value = data.user
-                ocalStorage.setItem('user', JSON.stringify(data.user))
+                localStorage.setItem('user', JSON.stringify(data.user))
             }
             return { ok: true }
         }
