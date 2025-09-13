@@ -1,6 +1,7 @@
 <script setup>
 
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
+import axios from 'axios';
 
 // 圖檔
 import meteorShower from '@/assets/images/events/home/eventType_meteor-shower.png'
@@ -13,8 +14,37 @@ import EventCarousel from '@/components/starevent/eventPage/EventCarousel.vue';
 import Pagination from '@/components/common/Pagination.vue';
 
 
+const eventlist = ref([])
+
+onMounted(async () => {
+    const res = await axios.get(import.meta.env.VITE_AJAX_URL + 'activity/activityget.php')
+    console.log(res.data)
+    /* ID : 5 
+    category : "高山觀測" 
+    event_date_display : "2025-09-20 (六) ~ 2025-09-21 (日)" 
+    event_deadline : "2025-09-15 23:59:59" 
+    event_description : "於擎天崗草原舉辦的流星雨活動，參加者將能在開闊夜空下欣賞流星劃破天際的美景，並學習相關的天文知識與拍攝技巧。此活動不僅有天文觀測，還結合了趣味講解、互動體驗與攝影分享，讓大家在輕鬆氛圍中收穫知識與交流心得。非常適合所有熱愛星空的朋友，一同在自然草原與繁星下留下難忘回憶。" 
+    event_end : "2025-09-21 02:00:00" 
+    event_name : "來擎天崗吧！許下你的流星願望 | 獅子座流星雨 - 團體觀星活動" 
+    event_place : "擎天崗" 
+    event_price : 2500 
+    event_start : "2025-09-20 21:00:00" 
+    event_status : "報名中" 
+    homepage_highlight : 0 
+    homepage_highlight_display : "非推薦" 
+    image : (3) ['http://localhost/star-gravity/public/pdo/activity/acimg/來擎天崗吧-1.png', 'http://localhost/star-gravity/public/pdo/activity/acimg/來擎天崗吧-2.png', 'http://localhost/star-gravity/public/pdo/activity/acimg/來擎天崗吧-3.png'] 
+    is_active : "1" 
+    is_active_display : "上架" 
+    registration_count : null 
+    tag : "流星雨" */
+
+
+    eventlist.value = res.data
+})
+
+
 // 假資料
-import eventlist from '@/data/eventlist';
+// import eventlist from '@/data/eventlist';
 
 // 預設分類
 const selectedType = ref('流星雨')
@@ -26,11 +56,21 @@ const changeType = (eventType) => {
 }
 
 // 篩選類型
+
+
 const filterEvents = computed(() => {
-    let result =  eventlist.filter(event => event.type == selectedType.value)
+    // 過濾上架
+    let result =  eventlist.value.filter(event => event.is_active == 1)
+
+    // 過濾類型
+    result =  result.filter(event => event.tag == selectedType.value)
+
+
+    // 過濾地點
     if(selectedPlace.value !== '全部'){
-        result = result.filter(event => event.place == selectedPlace.value)
+        result = result.filter(event => event.category == selectedPlace.value)
     }
+
     return result
 })
 
@@ -132,20 +172,25 @@ const placeTags = [
         
                     <!-- 活動項目卡片區 -->
                     <div class="event-list">
+                        <!-- 沒活動 -->
+                        <div v-if="showItems.length === 0" class="no-event">
+                            目前尚無活動，請選擇其他地點或類型！
+                        </div>
+
                         <!-- <div class="event-card" v-for="event in showItems"> -->
                         <div class="event-card" v-for="event in showItems">
-                            <RouterLink :to="`/events/${event.id}` "class="router-link" > 
-                            <img :src="event.imgurl[0]" alt="">
+                            <RouterLink :to="`/events/${event.ID}` "class="router-link" > 
+                            <img :src="event.image[0]" alt="">
                             <div class="card-content">
-                                <div class="date">{{ event.date }}</div>
-                                <h2 class="event-name">{{ event.title }}</h2>
+                                <div class="date">{{ event.event_date_display }}</div>
+                                <h2 class="event-name">{{ event.event_name }}</h2>
                                 <div class="address">
                                     <i class="fa-solid fa-location-dot"></i>
-                                    <p>{{ event.address }}</p>
+                                    <p>{{ event.event_place }}</p>
                                 </div>
                                 <h3 class="tags">
-                                    <div class="type-tag"># {{ event.type }}</div>
-                                    <div class="place-tag"># {{ event.place }}</div>
+                                    <div class="type-tag"># {{ event.category }}</div>
+                                    <div class="place-tag"># {{ event.event_place }}</div>
                                 </h3>
                             </div>
                         </RouterLink>
@@ -313,6 +358,15 @@ const placeTags = [
                         // justify-content: space-between;
                         justify-content: flex-start;
                         gap: 40px;
+
+                        .no-event {
+                            width: 100%;
+                            text-align: center;
+                            padding: 40px 20px;
+                            font-size: 18px;
+                            color: #ccc;
+                        }
+
                         .event-card {
                             cursor: pointer;
                             width: 320px;
