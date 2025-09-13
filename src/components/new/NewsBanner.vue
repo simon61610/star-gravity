@@ -18,77 +18,70 @@ import newsbanner from '@/assets/images/news/news-article-Loudspeaker.svg'; // A
 
 <style scoped lang="scss">
 @import '@/assets/styles/main.scss';
-.news-banner-wrapper{
+.news-banner-wrapper {
+  width: 100%;
+  box-sizing: border-box;
+
+  .wrapper {
+    margin: 0 auto;
+    max-width: 1200px;
     width: 100%;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    align-items: center;
     box-sizing: border-box;
-    .wrapper{   
-        margin: 0 auto;
-        max-width: 1200px;
+
+    .news-image {
+      flex: 0 1 480px;
+      min-width: 0;
+
+      .newsimg {
         width: 100%;
-        padding: 10px;
-    // background-color: $primaryColor-900;
-        display: flex;
-        justify-content:center;
-        gap: 20px;
-        align-items: center;
+        height: auto;
+        display: block;
+      }
+    }
+
+    .news-banner {
+      max-width: 100%;
+      color: $primaryColor-500;
+      flex: 1 1 0;
+      min-width: 0;
+
+      .pcEngFont-banner {
+        max-width: 600px;
+        width: 100%;
+        font-size: clamp(80px, 10vw, 160px) !important;
         box-sizing: border-box;
-    
+        white-space: normal; /* 防止文字一行撐爆 */
+      }
 
-        .news-image{
-            
-            flex: 0 1 480px;
-            min-width: 0;
-            .newsimg{
-                width: 100%;
-                height: auto;
-                display: block;
-            }
-            
-        }
-    
-        .news-banner{   
-            
-            max-width: 100%;
-            color: $primaryColor-500;
-            flex: 1 1 0;
-            min-width: 0;
-                .pcEngFont-banner{
-                    max-width: 600px;
-                    width: 100%;
-                    //font-size: $pcEngFont-numberTitle;
-                    box-sizing: border-box;
-                    white-space: normal; /* 防止文字一行撐爆 */
-                    }
-
-                .pcChFont-H1   {
-                    font-size: $pcChFont-H1;
-                }
-            }
-    }
-}
-
-/*-------------斷點430--------------*/
-@media screen and (max-width: 571px){
-    .news-banner-wrapper{
-        .wrapper{
-            flex-direction: column;
-            .news-banner{
-                h1{
-                    
-                    width: 300px;
-                    font-size: 87px;
-                   
-                }
-                
-            }
-            .news-image{
-                flex:  0 1 300px;
-                width: 300px;
-            }
-        }
+      .pcChFont-H1 {
+        font-size: $pcChFont-H1;
+      }
     }
 
+    // ≤571px
+    @media (max-width: 571px) {
+      flex-direction: column;
+
+      .news-banner {
+        h1 {
+          width: 300px;
+          font-size: 87px;
+        }
+      }
+
+      .news-image {
+        flex: 0 1 300px;
+        width: 300px;
+      }
+    }
+  }
 }
+
 
 
 
