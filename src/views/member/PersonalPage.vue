@@ -1,7 +1,8 @@
 <script setup>
     import { useRoute, useRouter } from 'vue-router'
-    import { computed , onMounted} from 'vue'
+    import { onMounted } from 'vue'
     import { UserFilled, SwitchButton } from '@element-plus/icons-vue'
+    import axios from 'axios' 
 
     // const props = defineProps({
     //     username: { type: String, default: '小姐/先生' },
@@ -13,6 +14,18 @@
     const preview = ref('')
     // 真的要上傳的檔案物件
     const file = ref(null)
+    const router = useRouter() 
+    // const username = ref('小姐/先生') 
+
+    // 後端根路徑（用 Vite 環境變數更彈性）
+    const API_BASE = import.meta.env.VITE_AJAX_URL || '/'
+
+    function url(path) {
+        let base = API_BASE
+        if (!base.endsWith('/')) base += '/'     // base 末端補 /
+        if (path.startsWith('/')) path = path.slice(1) // 路徑前端去掉 /
+        return base + path
+    }
 
     // 選圖後：驗證型別/大小 → 做本地預覽
     function onPick(e) {
@@ -30,6 +43,54 @@
         reader.onload = () => (preview.value = reader.result)
         reader.readAsDataURL(f)
     }
+
+    // 實際上傳到後端（FormData + 支援 Session / Bearer）
+    async function save() {
+        if (!file.value) return alert('請先選擇圖片')
+        const fd = new FormData()
+        fd.append('avatar', file.value)  // 後端用 $_FILES['avatar'] 接
+
+        // 若你登入有回 token，就帶上 Authorization
+        const token = localStorage.getItem('token')
+        const headers = token ? { Authorization: `Bearer ${token}` } : {}
+
+        try {
+            const { data } = await axios.post(
+                url('Member/profile_image.php'),
+                fd,
+                { withCredentials: true, headers } // withCredentials 讓 Session Cookie 帶上去
+            )
+            if (!data?.success) throw new Error(data?.message || '上傳失敗')
+
+            // 用後端回的路徑直接當圖源，並加版本避免快取到舊圖
+            preview.value = data.image + '?v=' + data.version
+            // （可選）清空檔案 input 狀態
+            // file.value = null
+            alert('頭像已更新')
+        } catch (err) {
+            alert(err.message || '發生錯誤，請稍後再試')
+        }
+    }
+    // 進頁面時拉會員資料（需後端 profile.php 回傳 image 與 name）
+    async function fetchProfile() {
+        // 同步 Bearer（可選）
+        const token = localStorage.getItem('token')
+        const headers = token ? { Authorization: `Bearer ${token}` } : {}
+        try{
+            const { data } = await axios.get(
+                url('Member/profile.php'), 
+                { withCredentials: true, headers }
+            )
+            // 假設後端回：{ success:true, user:{ name:'..', image:'/pdo/Member/uploadImages/xxx.jpg' } }
+            if (data?.success) {
+                if (data.user?.name)  username.value = data.user.name
+                if (data.user?.image) preview.value  = data.user.image + '?v=' + Date.now()
+            }
+        } catch(e) {
+            // 不打擾使用者；需要可印 log
+        }
+    }
+
     // 送到後端（示範：改成你的 API 即可）
     // async function save() {
     //     if (!file.value) return alert('請先選擇圖片')
@@ -48,16 +109,12 @@
         if( !localStorage.getItem('user') ){
             alert('請先登入')
             router.push('/loginfirst')   // 登出後跳轉到登入頁
+        } else {
+            fetchProfile()               // 已登入就去抓目前的頭像與姓名
         }
     })
 
-    // 登出
-    // const router = useRouter()
-    // function logout() {
-    //     alert('已登出')
-    //     router.push('/loginfirst')   // 登出後跳轉到登入頁
-    //     localStorage.removeItem('user');
-    // }
+
 </script>
 
 <template>  
@@ -73,18 +130,12 @@
                     <div v-else class="placeholder">+</div>
                     <!-- <span class="edit-tag">更換頭像</span> -->
                 </label>
-
-                <!-- <div class="buttons">
+                <!-- 打開「儲存」按鈕，送出 FormData -->
+                <div class="buttons" style="margin-top:8px; text-align:center">
                     <button @click="save" :disabled="!file">儲存</button>
-                </div> -->
-                <!-- 登出 -->
-                <!-- <div class="buttons">
-                    <button @click="logout" class="logout-btn" >
-                        <el-icon><SwitchButton /></el-icon>
-                    </button>
-                </div> -->
+                </div>
                 <!-- 帳號 -->
-                <p class="username">{{ username }}</p>
+                <!-- <p class="username">{{ username }}</p> -->
     
                 <!-- 清單 -->
                 <ul class="menu">

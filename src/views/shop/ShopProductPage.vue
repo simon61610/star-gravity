@@ -1,10 +1,6 @@
 <!-- 單一商品頁 -->
 <!-- 待完成
-1. 圖片先靜態，待改用程式方式引入 
-2. thumbs 的 li 要用 v-for 產出
-3. 寫上 thumbs 點擊後切換圖片的功能
-4. 寫上圖片超出要能滑動的功能
-5. 加上商品資料的綁定
+- 寫上圖片超出要能滑動的功能
 -->
 
 <script setup>
@@ -14,6 +10,11 @@
     import shopToast from '@/components/common/shopToast.vue';
     import { showToast } from '@/composables/useToast';
     import axios from 'axios';
+    import { cateList } from '@/composables/useProductsCate';
+    import { useMemberStore } from '@/stores/member'
+
+    const memberStore = useMemberStore()
+
 
     // 假資料
     // import products from '@/data/products';
@@ -36,12 +37,16 @@
     const imgArr = ref([])
     const currentPic = ref('')
 
+    const selectedCate = ref(null)
+
     onMounted(async () => {
+
+
+        // 抓出商品資料
         const res = await axios.get(import.meta.env.VITE_AJAX_URL + 'starshop/client/products_get.php')
     
         // console.log(res.data);
         
-
         product.value = res.data.find(p => p.ID === Number(route.params.id))
         // console.log(product.value)
         /* 
@@ -59,9 +64,47 @@
         stock : 50 
         */
 
-        imgArr.value = product.value.images.split(',')
-        // console.log(imgArr.value)
-        currentPic.value = imgArr.value[0]
+        if(product.value){
+            imgArr.value = product.value.images.split(',')
+            // console.log(imgArr.value)
+            currentPic.value = imgArr.value[0]
+
+
+
+            // ======================== 麵包屑 ==========================
+            // 逐一取出此 key name
+            let mainCate = null
+            
+            // 找出主分類
+            for(let main in cateList){
+                if(cateList[main].includes(product.value.category_name)){
+                    mainCate = main
+                    break
+                }
+            }
+
+            selectedCate.value = {
+                main : mainCate,
+                sub: product.value.category_name,
+            }
+        }
+
+
+
+        // ========================== 檢查商品是否已收藏
+        if(memberStore.isAuthed){
+            const member_id = memberStore.user?.ID
+
+            const res = await axios.post(import.meta.env.VITE_AJAX_URL + 'starshop/client/favorite_check.php',{
+                member_id,
+                product_id: product.value.ID
+            }) 
+
+            if(res.data.success){ // 如果有就是 true
+                isFollow.value = res.data.isFavorite
+            }
+        }
+
         
     })
 
@@ -83,15 +126,43 @@
 
     // 收藏愛心切換
     const isFollow = ref(false)
-    const followProduct = () => {
-        isFollow.value = !isFollow.value
+    const followProduct = async () => {
+        // isFollow.value = !isFollow.value
         
-        if(isFollow.value){
-            showToast('已加入收藏!')
+        /* if(isFollow.value){
+            await axios.post(import.meta.env.VITE_AJAX_URL + 'starshop/client/favorite_add.php', {
+                member_id: 1008,
+                product_id: product.value.ID
+            })
+
         }
         if(!isFollow.value){
             showToast('已取消收藏!')
+        } */
+
+        if(!memberStore.isAuthed){
+            alert('請先登入會員')
+            return
         }
+
+        const member_id = memberStore.user?.ID
+
+        const res = await axios.post(import.meta.env.VITE_AJAX_URL + 'starshop/client/favorite_add.php', {
+            member_id, 
+            product_id: product.value.ID
+        })
+
+        if(res.data.action === 'added'){
+            isFollow.value = true
+            showToast('已加入收藏!')
+        }else if(res.data.action === 'removed'){
+            isFollow.value = false
+            showToast('已取消收藏!')
+        }else {
+            console.log(res.data.message)
+        }
+
+
     }
 
     // =====================================================
@@ -175,7 +246,7 @@
 
     <section class="product-page">
         <ShopBanner />
-        <Breadcrumbs />
+        <Breadcrumbs :selected-cate="selectedCate"/>
         <div class="container" v-if="product">
             <!-- 左：商品圖片 -->
             <div class="product-gallery">
@@ -208,9 +279,9 @@
                 <div class="detail-text">
                     <p class="detail-text__desc">{{ product.description }}</p>
                     <p class="detail-text__promotion">{{ product.promotion }}</p>
-                    <p class="detail-text__marketing">現享 {{product.discount}} 折好康優惠</p>
+                    <p class="detail-text__marketing" v-if="product.discount !== 100">現享 {{product.discount}} 折好康優惠</p>
                     <div class="product-price">
-                        <p class="product-price__nospecial">NT$ {{ product.original_price }}</p>
+                        <p class="product-price__nospecial" v-if="product.discount !== 100">NT$ {{ product.original_price }}</p>
                         <p class="product-price__special">NT$ {{ product.sale_price }}</p>
                     </div>
                     <!-- 數量按鈕位置，暫時刪除 -->

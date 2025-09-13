@@ -12,7 +12,7 @@
     console.log(memberStore.user)
     
     使用如下，ex.
-    會員 ID：{{ memberStore.user?.id }}
+    會員 ID：{{ memberStore.user?.ID }}
     帳號：{{ memberStore.user?.email }}
 
     補充：用 ?. 運算子，如果前面是 null 或 undefined，就停止，不要往下讀屬性，直接回傳 undefined
@@ -66,7 +66,7 @@ export const useMemberStore = defineStore('Member', () => {
             // 可選：後端若回 user，就同步更新
             if (data.user) {
                 user.value = data.user
-                ocalStorage.setItem('user', JSON.stringify(data.user))
+                localStorage.setItem('user', JSON.stringify(data.user))
             }
             return { ok: true }
         }

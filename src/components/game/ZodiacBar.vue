@@ -121,9 +121,15 @@ const zodiacInfo = ref([
     <div class="zodiac__actions" aria-label="顯示控制">
           <h2 class="zodiac__title"> 十 二 星 座</h2>
         <div class="zodiac__icons">
-          <img class="action__icon" src="@/assets/images/games/GameSkyPage/btn/gamesky_point.png" alt="點狀顯示" @click="$emit('toggle-lines');console.log('toggle-lines emit 出去了')" title="重置星座連線" />
-          <img class="action__icon" src="@/assets/images/games/GameSkyPage/btn/gamesky_line.png"  alt="連線顯示" @click="DrawNext" title="星連星" />
-          <img class="action__icon action__icon--star" src="@/assets/images/games/GameSkyPage/btn/gamesky_star.png" alt="星星" @click="showAllLines" title="線條全顯示"/>
+          <el-tooltip content="重置星座連線" placement="top" :show-after="0">
+            <img class="action__icon" src="@/assets/images/games/GameSkyPage/btn/gamesky_point.png" alt="點狀顯示" @click="$emit('toggle-lines');console.log('toggle-lines emit 出去了')" />
+          </el-tooltip>
+          <el-tooltip content="星連星" placement="top" :show-after="0">
+            <img class="action__icon" src="@/assets/images/games/GameSkyPage/btn/gamesky_line.png"  alt="連線顯示" @click="DrawNext" />
+          </el-tooltip>
+          <el-tooltip content="線條全顯示" placement="top" :show-after="0">
+            <img class="action__icon action__icon--star" src="@/assets/images/games/GameSkyPage/btn/gamesky_star.png" alt="星星" @click="showAllLines"/>
+          </el-tooltip>
         </div>
       </div>
     <div class="zodiac">

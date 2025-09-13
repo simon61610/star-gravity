@@ -60,8 +60,10 @@
     // watch(偵測的資料, 函數)
     watch(() => props.selectedCate, () => {
         currentPage.value = 1
+
+        const target = document.querySelector('section')
         window.scrollTo({ 
-            top: 0, 
+            top: target.offsetTop, 
             behavior: 'smooth' // 平滑滾動 
         })
     })

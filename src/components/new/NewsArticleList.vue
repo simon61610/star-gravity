@@ -76,37 +76,7 @@ onMounted(()=>{
         });
        
     }
-    // onMounted(()=>{
-    //     props.articles.forEach(article => {   // ← 用 forEach，把每篇文章跑一遍
-    //     const count = localStorage.getItem(`likeCount_${article.ID}`)
-    //     if (count) { //判斷 localStorage 裡有沒有計數
-    //     article.likeCount = parseInt(count,10)
-    //     } else {
-    //     article.likeCount = 0 // 預設 0
-    //     }
-
-    //     const likedStatus = localStorage.getItem(`liked_${article.ID}`)
-    //     if (likedStatus) {    //判斷 localStorage 裡有沒有這個 key
-    //     article.liked = likedStatus === 'true'   //有的話就使用儲存狀態的值
-    //     } else {
-    //     article.liked = false  //沒有就使用預設
-    //     }
-    //         })
-    //     })
-        
-
-
-    //     function toglike(article){   //點擊+1方程式
-    //          if (typeof article.likeCount !== 'number') {
-    //             article.likeCount = 0  // 防呆，避免 NaN
-    //         }
-    //         article.liked = !article.liked  //如果點擊了表是true
-    //         article.likeCount += article.liked ? 1 : -1; // 如果是true就+1 反之-1}
-    //         localStorage.setItem(`likeCount_${article.ID}`, article.likeCount ) //儲存讚到localstorage
-    //         localStorage.setItem(`liked_${article.ID}`,article.liked) //儲存點讚狀態到localStorage
-    //     }
-
-
+   
     
 </script>
 
@@ -173,225 +143,394 @@ onMounted(()=>{
 <style scoped lang="scss">
 @import '@/assets/styles/main.scss';
 
+.news-article-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  width: 100%;
+  margin-top: 40px;
+  box-sizing: border-box;
+  padding-inline: 0; /* 清掉左右 padding */
+  max-width: 100%;   /* 不要超過父層 */
+  overflow-x: clip;
 
-
-/*:global(#app){   //使用:global可以讓scoped失效 讓#APP更改樣式 但又僅限於此頁不影響其他頁面
-
-    padding-inline: 0 !important;
-    max-width: 100%;
-    overflow-x: clip;
-    
-}*/
-
-.news-article-wrapper{
+  .news-article-list {
+    margin: 0 auto;
+    color: $primaryColor-500;
     display: flex;
-    flex-direction: column;
-    gap:36px;
+    justify-content: center;
+    align-items: center;
+    gap: 120px;
+    background-color: $primaryColor-900;
+    padding: 10px;
+    flex-wrap: wrap;
+    max-width: 1200px;
     width: 100%;
-   // border: 1px red solid;
-    margin-top: 40px;
+    height: auto;
     box-sizing: border-box;
-    padding-inline: 0;         /* 清掉左右 padding */
-    max-width: 100%;           /* 不要超過父層 */
-    overflow-x: clip; 
-    
-    .news-article-list{
-        margin: 0 auto;
-        color: $primaryColor-500;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 120px;    
-        background-color: $primaryColor-900;
-        padding: 10px;
-        flex-wrap: wrap;
-        max-width: 1200px;
+    min-width: 0;
+
+    .news-article-img {
+      max-width: 350px;
+      aspect-ratio: 3 / 2;
+      width: 100%;
+      padding: 5px;
+      box-sizing: border-box;
+      min-width: 0;
+
+      img {
         width: 100%;
-        flex-wrap: wrap;
-        height: auto;
-        box-sizing: border-box;
-        min-width: 0;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+      }
+
+      // ≤1070px
+      @media (max-width: 1070px) {
+        max-width: 600px !important;
+        margin-top: 20px;
+      }
+    }
+
+    .news-article-header {
+      max-width: 580px;
+      min-width: 0;
+
+      .router-link-card {
+        display: flex;
+        gap: 120px;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .news-article-h2 {
+        margin: 20px 0;
+        color: $FontColor-white;
+        font-size: $pcChFont-H3;
+        font-weight: 500;
+        text-decoration: none;
+        display: block;
+      }
+
+      .news-article-content {
+        max-width: 580px;
+        width: 100%;
+        margin-top: 20px;
+        color: $primaryColor-100;
+
+        .cnContent--18px {
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
+
+          &:hover {
+            font-weight: bold;
+          }
+        }
+
+        .Readmore {
+          margin-top: 35px;
+          float: right;
+          text-decoration: underline;
+        }
+      }
+
+      .news-article-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: last baseline;
+
+        button {
+          display: flex;
+          justify-content: center;
+          align-items: last baseline;
+          width: 60px;
+          height: 30px;
+          color: white;
+          background-color: $primaryColor-900;
+          border: none;
+
+          &:hover {
+            cursor: pointer;
+          }
+        }
+
+        span {
+          line-height: 30px;
+          font-size: 20px;
+          margin-left: 5px;
+        }
+
+        .fa-solid.fa-star {
+          color: yellow;
+          font-size: 25px;
+        }
+        .fa-regular.fa-star {
+          font-size: 25px;
+        }
+
+        .news-article-title {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          h3 {
+            line-height: 30px;
+            text-align: center;
+            font-weight: 500;
+            color: $primaryColor-100;
+            padding: 5px;
+            font-size: $pcChFont-p;
+          }
+        }
+
+        .news-article-time {
+          align-items: center;
+          color: $primaryColor-100;
+          display: flex;
+          gap: 5px;
+        }
+      }
+    }
+
+    // ≤1070px
+    @media (max-width: 1070px) {
+      max-width: 700px !important;
+      gap: 60px !important;
+    }
+
+    // ≤431px
+    @include respond("xs") {
+      gap: 80px;
+    }
+  }
+
+  // ≤431px
+  @include respond("xs") {
+    padding: 16px;
+  }
+}
+
+
+// /*:global(#app){   //使用:global可以讓scoped失效 讓#APP更改樣式 但又僅限於此頁不影響其他頁面
+
+//     padding-inline: 0 !important;
+//     max-width: 100%;
+//     overflow-x: clip;
+    
+// }*/
+
+// .news-article-wrapper{
+//     display: flex;
+//     flex-direction: column;
+//     gap:36px;
+//     width: 100%;
+//    // border: 1px red solid;
+//     margin-top: 40px;
+//     box-sizing: border-box;
+//     padding-inline: 0;         /* 清掉左右 padding */
+//     max-width: 100%;           /* 不要超過父層 */
+//     overflow-x: clip; 
+    
+//     .news-article-list{
+//         margin: 0 auto;
+//         color: $primaryColor-500;
+//         display: flex;
+//         justify-content: center;
+//         align-items: center;
+//         gap: 120px;    
+//         background-color: $primaryColor-900;
+//         padding: 10px;
+//         flex-wrap: wrap;
+//         max-width: 1200px;
+//         width: 100%;
+//         flex-wrap: wrap;
+//         height: auto;
+//         box-sizing: border-box;
+//         min-width: 0;
         
         
-       // overflow-x: clip;       
+//        // overflow-x: clip;       
         
        
         
 
-        .news-article-img{
-           // flex: 0 1 350px;  
-            max-width:350px;
-            aspect-ratio: 3 / 2;
-            width: 100%;
-            padding: 5px;
-            box-sizing: border-box;
-            min-width: 0;
+//         .news-article-img{
+//            // flex: 0 1 350px;  
+//             max-width:350px;
+//             aspect-ratio: 3 / 2;
+//             width: 100%;
+//             padding: 5px;
+//             box-sizing: border-box;
+//             min-width: 0;
 
-            img{
-                width: 100%;  
-                height: 100%;
-                display: block; 
-                object-fit: cover;       
-            }            
-        }
-        .news-article-header{
-            max-width: 580px;
-           // width: 100%;
-            min-width: 0;
+//             img{
+//                 width: 100%;  
+//                 height: 100%;
+//                 display: block; 
+//                 object-fit: cover;       
+//             }            
+//         }
+//         .news-article-header{
+//             max-width: 580px;
+//            // width: 100%;
+//             min-width: 0;
 
-            .router-link-card{
-                    display: flex; 
-                    gap: 120px;          /* 讓 router-link 變成區塊元素 */
-                    text-decoration: none;    /* 去掉預設底線 */
-                    color: inherit;           /* 繼承原本文字顏色 */
-                }
+//             .router-link-card{
+//                     display: flex; 
+//                     gap: 120px;          /* 讓 router-link 變成區塊元素 */
+//                     text-decoration: none;    /* 去掉預設底線 */
+//                     color: inherit;           /* 繼承原本文字顏色 */
+//                 }
             
 
-            .news-article-h2{ 
-                margin-top: 20px ;
-                margin-bottom: 20px;
-                color:$FontColor-white;
-                font-size:$pcChFont-H3;
-                font-weight: 500;
-                text-decoration: none;
-                display: block;
+//             .news-article-h2{ 
+//                 margin-top: 20px ;
+//                 margin-bottom: 20px;
+//                 color:$FontColor-white;
+//                 font-size:$pcChFont-H3;
+//                 font-weight: 500;
+//                 text-decoration: none;
+//                 display: block;
 
-                } 
+//                 } 
               
         
-            .news-article-content{
-                max-width: 580px;
-                width: 100%;
-                height: auto;
-                margin-top: 20px;
-                color: $primaryColor-100;
-               /* line-height: $linHeight-p;*/
-                .cnContent--18px{
-                    display:-webkit-box;  //使用 WebKit 的舊式彈性盒子模型
-                    -webkit-line-clamp: 3; // 限制行數 3 行 
-                    -webkit-box-orient: vertical; //文字從上到下排列
-                    overflow: hidden; //隱藏超出容器的內容
-                    text-overflow: ellipsis; //顯示省略號 ...
-                    &:hover{
-                        font-weight: bold;
-                    }
-                }
+//             .news-article-content{
+//                 max-width: 580px;
+//                 width: 100%;
+//                 height: auto;
+//                 margin-top: 20px;
+//                 color: $primaryColor-100;
+//                /* line-height: $linHeight-p;*/
+//                 .cnContent--18px{
+//                     display:-webkit-box;  //使用 WebKit 的舊式彈性盒子模型
+//                     -webkit-line-clamp: 3; // 限制行數 3 行 
+//                     -webkit-box-orient: vertical; //文字從上到下排列
+//                     overflow: hidden; //隱藏超出容器的內容
+//                     text-overflow: ellipsis; //顯示省略號 ...
+//                     &:hover{
+//                         font-weight: bold;
+//                     }
+//                 }
 
               
                
 
-                .Readmore{
-                    margin-top: 35px;
-                    float: right;
-                    text-decoration:underline;
-                }
-            }
+//                 .Readmore{
+//                     margin-top: 35px;
+//                     float: right;
+//                     text-decoration:underline;
+//                 }
+//             }
 
-            .news-article-box{
-                display: flex;
-                justify-content: space-between;
-                align-items:last baseline;
+//             .news-article-box{
+//                 display: flex;
+//                 justify-content: space-between;
+//                 align-items:last baseline;
 
-                button{
-                       // all: unset;  可以拿掉所有樣式
-                        display: flex;
-                        justify-content: center;
-                        align-items:last baseline;
-                        width: 60px;
-                        height: 30px;
-                        color: white;
-                        background-color:$primaryColor-900 ;
-                        border: none;      /* 移除邊框 */
-                        &:hover{
-                            cursor: pointer;
-                        }
+//                 button{
+//                        // all: unset;  可以拿掉所有樣式
+//                         display: flex;
+//                         justify-content: center;
+//                         align-items:last baseline;
+//                         width: 60px;
+//                         height: 30px;
+//                         color: white;
+//                         background-color:$primaryColor-900 ;
+//                         border: none;      /* 移除邊框 */
+//                         &:hover{
+//                             cursor: pointer;
+//                         }
       
-                    }
-                      span{
-                        line-height: 30px;
-                        font-size: 20px;
-                        margin-left: 5px;
-                        }
-                    .fa-solid.fa-star{
-                        color: yellow;
-                        font-size: 25px;
-                    }
-                    .fa-regular.fa-star{
+//                     }
+//                       span{
+//                         line-height: 30px;
+//                         font-size: 20px;
+//                         margin-left: 5px;
+//                         }
+//                     .fa-solid.fa-star{
+//                         color: yellow;
+//                         font-size: 25px;
+//                     }
+//                     .fa-regular.fa-star{
                       
-                        font-size: 25px;
+//                         font-size: 25px;
                         
-                    }
+//                     }
                
-                .news-article-title{
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
+//                 .news-article-title{
+//                     display: flex;
+//                     align-items: center;
+//                     gap: 10px;
                     
 
-                    h3{ 
+//                     h3{ 
                         
-                        line-height: 30px;
-                        text-align: center;
-                        font-weight: 500;
-                        color: $primaryColor-100;
-                        padding: 5px;  
-                        font-size: $pcChFont-p;
-                        /*width: 80px;
-                        height: 30px;
-                        background-color: $secondaryColor-orange;
-                        border: 1px solid $primaryColor-500;
-                        font-weight: 500;
-                       */
-                    }
+//                         line-height: 30px;
+//                         text-align: center;
+//                         font-weight: 500;
+//                         color: $primaryColor-100;
+//                         padding: 5px;  
+//                         font-size: $pcChFont-p;
+//                         /*width: 80px;
+//                         height: 30px;
+//                         background-color: $secondaryColor-orange;
+//                         border: 1px solid $primaryColor-500;
+//                         font-weight: 500;
+//                        */
+//                     }
                  
-                }
-                .news-article-time{
-                    align-items: center;
-                    color:$primaryColor-100;
-                    display: flex;
-                    gap:5px;
+//                 }
+//                 .news-article-time{
+//                     align-items: center;
+//                     color:$primaryColor-100;
+//                     display: flex;
+//                     gap:5px;
 
                    
-                }
-            }
+//                 }
+//             }
 
-        }
+//         }
 
 
-    }
+//     }
 
-}
+// }
 
-/*-------------斷點1070---------------*/
-@media screen and (max-width: 1070px){
-.news-article-wrapper{
+// /*-------------斷點1070---------------*/
+// @media screen and (max-width: 1070px){
+// .news-article-wrapper{
     
-    .news-article-list{
-        max-width: 700px !important;
-        gap: 60px !important;
-    }
-    .news-article-img{
+//     .news-article-list{
+//         max-width: 700px !important;
+//         gap: 60px !important;
+//     }
+//     .news-article-img{
         
-        max-width: 600px !important;
-        margin-top: 20px;
-    }
-}
+//         max-width: 600px !important;
+//         margin-top: 20px;
+//     }
+// }
 
-}
+// }
 
-/*-------------斷點430--------------*/
-@media screen and (max-width: 431px){
-.news-article-wrapper{
-    padding: 16px;
+// /*-------------斷點430--------------*/
+// @media screen and (max-width: 431px){
+// .news-article-wrapper{
+//     padding: 16px;
 
-    .news-article-list{
-        gap: 80px;
-    }
+//     .news-article-list{
+//         gap: 80px;
+//     }
 
 
-    }
+//     }
 
-}
+// }
 
 
 </style>

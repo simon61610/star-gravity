@@ -13,6 +13,9 @@
     import $ from 'jquery'
     import axios from 'axios'
     import bus from '@/composables/useMitt'
+    import { useMemberStore } from '@/stores/member';
+    
+    const memberStore = useMemberStore()
 
     const router = useRouter()
     
@@ -228,6 +231,14 @@
 
     // ===================================== 送出訂單，進入結帳 =====================================
     const submitOrder = async () => {
+        if (!memberStore.isAuthed) {
+            showToast('請先登入會員再結帳')
+            // router.push('/login') // 或導去登入頁
+            // console.log(memberStore.user)
+            return
+        }
+
+
         // 表單驗證，資料為空的話
         if(
             !shipping_method.value.trim() || // 運送方式
@@ -245,7 +256,7 @@
         generateOrderNumber()
 
         const orderData = {
-            member_id: 1, // 暫時寫死
+            member_id: memberStore.user?.ID, // 暫時寫死
             order_number: orderNumber.value,
             shipping_method: shipping_method.value, // 運送方式
             payment_method: payment_method.value, // 付款方式
@@ -283,7 +294,10 @@
             
             router.push({
                 path: '/cartpage/cartsuccess',
-                query: { order_id, member_id: 1 }
+                query: { 
+                    order_id, 
+                    member_id: memberStore.user?.ID 
+                }
             })
 
         }else{

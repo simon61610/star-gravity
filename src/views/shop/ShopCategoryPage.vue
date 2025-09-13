@@ -1,6 +1,9 @@
 <!-- 分類列表頁 -->
 <script setup>
-    import { ref, } from 'vue'
+    import { ref, onMounted} from 'vue'
+    import { useRoute } from 'vue-router';
+    import { useRouter } from 'vue-router';
+    import { productsCate } from '@/composables/useProductsCate';
     
     // 組件
     import ShopBanner from '@/components/shop/ShopBanner.vue';
@@ -9,12 +12,27 @@
     import CategoryList from '@/components/shop/category/CategoryList.vue';
     import ProductList from '@/components/shop/category/ProductList.vue';
 
+    const router = useRouter()
+    const route = useRoute()
 
 
     // =====================================================
     // ==================== 商品類型篩選 ====================
     // =====================================================
     const selectedCate = ref(null)
+
+    onMounted(() => {
+        if(route.params.main){
+            const cate = productsCate.find(c => c.param === route.params.main)
+            selectedCate.value = {
+                main: cate.name,
+                sub: null
+            }
+
+            // 暫時先把字串清掉，之後優化再來改
+            router.replace({name: 'category'})
+        }
+    })
 
     // 接收事件的處理函數
     const selected = (selectedObj) => {
