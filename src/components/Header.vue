@@ -9,31 +9,47 @@ const emit = defineEmits(['open'])
 const active = ref(false)
 const route = useRoute()
 const currentActive = ref(null)
-
+const navbarRef = ref(null) // 選單容器的 ref
 const router = useRouter()
 const memberStore = useMemberStore()
 
 
-const toggleactive = (index)=>{
-    if(currentActive.value === index){
-        currentActive.value = index
-    }else{
-        currentActive.value = index
-    }
-}
 
+const toggleactive = (e) => {
+  // 找到最近的 li，並判斷有沒有 data-index
+  const li = e.target.closest('li[data-index]')
+  if (li) {
+    currentActive.value = Number(li.dataset.index)
+  } else {
+    currentActive.value = null
+  }
+}
+const menuList = ['/about', '/Newpage', '/gamesky', '/mapfirst', '/gamehome', '/events', '/shop']
+// const toggleactive = (index)=>{
+//     if(currentActive.value === index){
+//         currentActive.value = index
+//     }else{
+//         currentActive.value = index
+//     }
+// }
+
+const clearActive = () => {
+  currentActive.value = null
+}
 
 function toggleMenu() {
   active.value = !active.value;
 }
-//監聽所有路徑讓麵包選單切頁關閉
+//監聽路由的 path，只要路徑改變就會執行
 watch(
-  function () {
-    return route.fullPath   // 這裡是「監聽來源」
+  () => route.path, // 監聽來源：當前路由的 path
+  (newPath) => {
+    active.value = false // 切換頁面時，先把漢堡選單收合
+    const index = menuList.indexOf(newPath)  // 找出目前路徑在 menuList 裡的索引位置 例如 newPath = '/gamesky'，index = 2
+    currentActive.value = index !== -1 ? index + 1 : null //如果真的是7個選單其1 就+1對應值
   },
-  function () {
-    active.value = false    // 這裡是「回調函式」
-  }
+  { immediate: true } // 一進頁面就會先執行一次
+
 )
 
     // =====================================================
@@ -120,43 +136,44 @@ watch(
 
 
 <template>
-    <nav class="navbar " >
+  <div class="navbar-container" @click="currentActive = null">
+    <nav class="navbar " @click.stop >
         <div class="wrapper" :class="{active:active}">
-            <div class="logo">
+            <div class="logo" @click="clearActive">
                 <router-link to="/homepage"><img :src="logo" alt="星引力logo" width="120" height="50"/></router-link>
             </div>
-            <ul :class ="{ 'is-open': active}">
-                <li :class ="{ 'menu-active': currentActive === 1}" @click="toggleactive(1)"><router-link to="/about">觀星初學指南</router-link></li>
-                <li :class ="{ 'menu-active': currentActive === 2}" @click="toggleactive(2)"><router-link to="/Newpage">天文快訊</router-link></li>       <!--<li><router-link :to="{ name: 'NewpageView' }">天文快訊</router-link></li>--->
-                <li :class ="{ 'menu-active': currentActive === 3}" @click="toggleactive(3)"><router-link to="/gamesky">星視野</router-link></li>
-                <li :class ="{ 'menu-active': currentActive === 4}" @click="toggleactive(4)"><router-link to="/mapfirst">星據點</router-link></li>
-                <li :class ="{ 'menu-active': currentActive === 5}" @click="toggleactive(5)"><router-link to="/gamehome">星遊戲</router-link></li>
-                <li :class ="{ 'menu-active': currentActive === 6}" @click="toggleactive(6)"><router-link to="/events">星星活動</router-link></li>
-                <li :class ="{ 'menu-active': currentActive === 7}" @click="toggleactive(7)"><router-link to="/shop">星空小舖</router-link></li>               
+            <ul :class ="{ 'is-open': active}" @click="toggleactive">
+                <li :class ="{ 'menu-active': currentActive === 1}" data-index="1"><router-link to="/about">觀星初學指南</router-link></li>
+                <li :class ="{ 'menu-active': currentActive === 2}" data-index="2"><router-link to="/Newpage">天文快訊</router-link></li>       <!--<li><router-link :to="{ name: 'NewpageView' }">天文快訊</router-link></li>--->
+                <li :class ="{ 'menu-active': currentActive === 3}" data-index="3"><router-link to="/gamesky">星視野</router-link></li>
+                <li :class ="{ 'menu-active': currentActive === 4}" data-index="4"><router-link to="/mapfirst">星據點</router-link></li>
+                <li :class ="{ 'menu-active': currentActive === 5}" data-index="5"><router-link to="/gamehome">星遊戲</router-link></li>
+                <li :class ="{ 'menu-active': currentActive === 6}" data-index="6"><router-link to="/events">星星活動</router-link></li>
+                <li :class ="{ 'menu-active': currentActive === 7}" data-index="7"><router-link to="/shop">星空小舖</router-link></li>               
                 <!-- <li ><router-link to="/loginfirst"><i class="fa-solid fa-user fa-lg"></i></router-link></li> -->
                 <!-- <li ><router-link to="/"><i class="fa-solid fa-arrow-right-from-bracket"></i></router-link></li> -->
                 
                 <!-- 未登入：顯示人頭 → 登入頁 -->
-                <li v-if="!memberStore.isAuthed" class="icon-item">
+                <li v-if="!memberStore.isAuthed" class="icon-item" @click="clearActive">
                     <router-link to="/loginfirst">
                         <i class="fa-solid fa-user fa-lg"></i>
                     </router-link>
                 </li>
                 <!-- 已登入：顯示會員中心 + 登出  -->
                 <template v-else>
-                    <li class="icon-item user-item">
+                    <li class="icon-item user-item" @click="clearActive">
                         <router-link to="/membercenter/personal" class="user-link" aria-label="會員中心">
                             <i class="fa-solid fa-user fa-lg"></i>
                             <span v-if="initial" class="avatar-initial">{{ initial }}</span>
                         </router-link>
                     </li>
-                    <li class="icon-item">
+                    <li class="icon-item" @click="clearActive">
                         <button class="icon-btn" @click="memberStore.logout(); router.replace('/loginfirst')" aria-label="登出">
                             <i class="fa-solid fa-arrow-right-from-bracket fa-lg"></i>
                         </button>
                     </li>
                 </template>
-                <li>
+                <li @click="clearActive">
                     <router-link to="/cartpage/cart">
                         <i class="fa-solid fa-cart-shopping fa-lg"></i> ( {{cartCount}} )
                     </router-link>
@@ -169,7 +186,7 @@ watch(
             </div>
         </div>
     </nav>
-
+  </div>
 </template>
 
 
