@@ -57,6 +57,11 @@
             "category": "高山觀測",
             "event_date_display": "2025-09-20 (六) ~ 2025-09-21 (日)"
         } */
+       
+       // 圖片效果
+       if(eventData.value){
+           currentPic.value = eventData.value.image[0] // 第一張
+       }
     })
 
 
@@ -68,10 +73,6 @@
 
 
 
-    // 圖片效果
-    if(eventData.value){
-        currentPic.value = eventData.value.image[0] // 第一張
-    }
 
     const changePic = (img) => {
         currentPic.value = img
