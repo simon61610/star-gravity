@@ -1,63 +1,137 @@
 <!----我的評論---->
 <script setup>
     import Pagination from '@/components/common/Pagination.vue'
-    import { ref, computed, watch } from 'vue'
+    import { ref, computed, watch, onMounted } from 'vue'
+    import axios from 'axios' 
 
-    const reviews = ref([
-        {
-            id: 1,
-            title: '陽明山',
-            stars: 5,
-            text: '新手友善，剛好是天文館，可以先在天文館學習新知後，留到晚上用天文望遠鏡看星星。',
-            photo: new URL('../../../assets/images/aboutstar/star space.png', import.meta.url).href
-        },
-        {
-            id: 2,
-            title: '陽明山',
-            stars: 5,
-            text: '新手友善，剛好是天文館，可以先在天文館學習新知後，留到晚上用天文望遠鏡看星星。',
-            photo: new URL('../../../assets/images/aboutstar/Milky Way.png', import.meta.url).href
-        },
-        {
-            id: 3,
-            title: '陽明山',
-            stars: 5,
-            text: '新手友善，剛好是天文館，可以先在天文館學習新知後，留到晚上用天文望遠鏡看星星。',
-            photo: new URL('../../../assets/images/aboutstar/Milky Way.png', import.meta.url).href
-        },
-        {
-            id: 4,
-            title: '陽明山',
-            stars: 5,
-            text: '新手友善，剛好是天文館，可以先在天文館學習新知後，留到晚上用天文望遠鏡看星星。',
-            photo: new URL('../../../assets/images/aboutstar/Milky Way.png', import.meta.url).href
-        },
-        {
-            id: 5,
-            title: '陽明山',
-            stars: 5,
-            text: '新手友善，剛好是天文館，可以先在天文館學習新知後，留到晚上用天文望遠鏡看星星。',
-            photo: new URL('../../../assets/images/aboutstar/Milky Way.png', import.meta.url).href
-        }
-    ])
+    // const reviews = ref([
+    //     {
+    //         id: 1,
+    //         title: '陽明山',
+    //         stars: 5,
+    //         text: '新手友善，剛好是天文館，可以先在天文館學習新知後，留到晚上用天文望遠鏡看星星。',
+    //         photo: new URL('../../../assets/images/aboutstar/star space.png', import.meta.url).href
+    //     },
+    //     {
+    //         id: 2,
+    //         title: '陽明山',
+    //         stars: 5,
+    //         text: '新手友善，剛好是天文館，可以先在天文館學習新知後，留到晚上用天文望遠鏡看星星。',
+    //         photo: new URL('../../../assets/images/aboutstar/Milky Way.png', import.meta.url).href
+    //     },
+    //     {
+    //         id: 3,
+    //         title: '陽明山',
+    //         stars: 5,
+    //         text: '新手友善，剛好是天文館，可以先在天文館學習新知後，留到晚上用天文望遠鏡看星星。',
+    //         photo: new URL('../../../assets/images/aboutstar/Milky Way.png', import.meta.url).href
+    //     },
+    //     {
+    //         id: 4,
+    //         title: '陽明山',
+    //         stars: 5,
+    //         text: '新手友善，剛好是天文館，可以先在天文館學習新知後，留到晚上用天文望遠鏡看星星。',
+    //         photo: new URL('../../../assets/images/aboutstar/Milky Way.png', import.meta.url).href
+    //     },
+    //     {
+    //         id: 5,
+    //         title: '陽明山',
+    //         stars: 5,
+    //         text: '新手友善，剛好是天文館，可以先在天文館學習新知後，留到晚上用天文望遠鏡看星星。',
+    //         photo: new URL('../../../assets/images/aboutstar/Milky Way.png', import.meta.url).href
+    //     }
+    // ])
+    const reviews = ref([])                     // 從後端撈資料後再塞進來
+    const loading = ref(false)                  // 載入中狀態
+    const errorMsg = ref('')                    // 錯誤訊息
     
-    function deleteReview(id) {
-        if (!window.confirm('確定要刪除這則評論嗎？')) return
-        const idx = reviews.value.findIndex(r => r.id === id)
-        if (idx !== -1) reviews.value.splice(idx, 1)
-        const total = reviews.value.length   // 刪除後若當頁沒有資料，往前翻一頁（避免空白頁）
-        const maxPage = Math.max(1, Math.ceil(total / pageSize.value))
-        if (currentPage.value > maxPage) currentPage.value = maxPage
-    }
+    // === API 根路徑 & 工具（對應 VITE_AJAX_URL 與 Member/reviews.php） ===
+    const API_BASE = import.meta.env.VITE_AJAX_URL || '/'  // 後端根路徑
+    function url(path) {
+        let base = API_BASE
+        if (!base.endsWith('/')) base += '/'
+        if (path.startsWith('/')) path = path.slice(1)
+        return base + path
+    };
 
-    // 刪除鍵
-    function onDelete(e) {
-        if (window.confirm('確定要刪除這則評論嗎？')) {
-            // 找到最近的 .comment-1 容器並移除
-            const card = e.currentTarget.closest('.comment-1')
-            if (card) card.remove()
+    // === 登入資訊（依你們實作調整） ===
+    const token = localStorage.getItem('token') || ''                  // Bearer token（若有）
+    const memberID = Number(localStorage.getItem('memberID') || 0)     // 會員識別（也可靠 Session）
+
+    // === 後端欄位 → 前端 UI 欄位轉換 ===
+    function toPhotoSrc(image) {         // 圖片路徑補齊
+        if (!image) return ''
+        if (/^https?:\/\//i.test(image)) return image    // 若已是完整 URL
+        return url(image)                                // 相對路徑補上 API_BASE
+    }
+    function mapReview(row) {                      // DB 欄位對齊到本頁所需欄位
+        return {
+            id: row.ID,                                    // DB: ID
+            title: row.location_name ?? `地點 #${row.location_id ?? ''}`, // 若未 JOIN 地點名就 fallback
+            stars: Number(row.score ?? 0),                 // DB: score
+            text: row.content ?? '',                       // DB: content
+            photo: toPhotoSrc(row.image ?? ''),            // DB: image
+            created_at: row.created_at ?? ''               // DB: created_at（可供排序/顯示）
         }
     }
+
+    // === 讀取我的評論（對應 Member/reviews.php 的 GET） ===
+    async function fetchMyReviews() {
+        loading.value = true
+        errorMsg.value = ''
+        try {
+            const resp = await axios.get(url('Member/comment.php'), {
+                params: { member_id: memberID },                           //   以會員查
+                headers: token ? { Authorization: `Bearer ${token}` } : {},//   有 token 就帶
+                withCredentials: true                                      //   若用 Session
+            })
+            if (!resp.data?.success) throw new Error(resp.data?.message || '讀取失敗')
+            const rows = Array.isArray(resp.data.data) ? resp.data.data : []
+            reviews.value = rows.map(mapReview)                          // 轉換欄位
+        } catch (err) {
+            errorMsg.value = err?.message || '讀取時發生錯誤'
+        } finally {
+            loading.value = false
+        }
+    }
+    onMounted(fetchMyReviews)    
+
+    // function deleteReview(id) {
+    //     if (!window.confirm('確定要刪除這則評論嗎？')) return
+    //     const idx = reviews.value.findIndex(r => r.id === id)
+    //     if (idx !== -1) reviews.value.splice(idx, 1)
+    //     const total = reviews.value.length   // 刪除後若當頁沒有資料，往前翻一頁（避免空白頁）
+    //     const maxPage = Math.max(1, Math.ceil(total / pageSize.value))
+    //     if (currentPage.value > maxPage) currentPage.value = maxPage
+    // }
+
+    // 串後端刪除
+    async function deleteReview(id) {          
+        if (!window.confirm('確定要刪除這則評論嗎？')) return
+        try {
+            await axios.delete(url('Member/comment.php'), {
+                params: { id },
+                headers: token ? { Authorization: `Bearer ${token}` } : {},
+                withCredentials: true
+            })           
+            // 成功後同步刪本地資料 & 修正分頁   
+            const idx = reviews.value.findIndex(r => r.id === id)
+            if (idx !== -1) reviews.value.splice(idx, 1)
+            const total = reviews.value.length
+            const maxPage = Math.max(1, Math.ceil(total / pageSize.value))
+            if (currentPage.value > maxPage) currentPage.value = maxPage
+        } catch (err) {
+            alert(err?.message || '刪除失敗')
+        }
+    }
+    // 刪除鍵
+    // function onDelete(e) {
+    //     if (window.confirm('確定要刪除這則評論嗎？')) {
+    //         // 找到最近的 .comment-1 容器並移除
+    //         const card = e.currentTarget.closest('.comment-1')
+    //         if (card) card.remove()
+    //     }
+    // }
 
     // 分頁
     const currentPage = ref(1)                                   // 目前頁
@@ -84,7 +158,13 @@
     
     <!-----右邊評論-------->
     <div class="comment-area">
+        <!--  三種狀態：載入中 / 錯誤 / 無資料 -->
+        <div v-if="loading" class="loading">載入中...</div>
+        <div v-else-if="errorMsg" class="error">{{ errorMsg }}</div>
+        <div v-else-if="filteredTotal === 0" class="empty">目前沒有評論</div>
+        
         <div class="comment-box">
+            
             <div class="comment-1" v-for="r in showReviews" :key="r.id">
                 <h3>{{ r.title }}</h3>
     
@@ -97,9 +177,11 @@
                 </p>
     
                 <!-- 圖片來源改成用資料帶入 -->
-                <img class="review-photo" :src="r.photo" alt="照片">
+                <!-- <img class="review-photo" :src="r.photo" alt="照片"> -->
+                <!-- 圖片來源改成用資料帶入（可能為空） -->
+                <img v-if="r.photo" class="review-photo" :src="r.photo" alt="照片">
     
-                <!-- 刪除：改成傳 id，內部用 splice 刪陣列 -->
+                <!-- 刪除：會打後端，成功後再 splice 陣列 -->
                 <button class="delete" @click="deleteReview(r.id)">刪除</button>
             </div>
 
@@ -122,6 +204,13 @@
 @import '@/assets/styles/main.scss';
 
 // 右邊評論
+.loading, .empty, .error {
+    padding: 12px 8px;
+    font-size: $pcChFont-p;
+}
+.error { 
+    color: #c0392b; 
+}
 .comment-area{
     margin-top: -20px;
     padding-left: 5px;
