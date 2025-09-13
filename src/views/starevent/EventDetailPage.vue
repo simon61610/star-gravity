@@ -3,11 +3,15 @@
 
     import { ref, onMounted } from 'vue';
     import { useRoute } from 'vue-router';
+    import { useRouter } from 'vue-router';
+    import { useMemberStore } from '@/stores/member';
     // import eventlist from '@/data/eventlist';
     import axios from 'axios';
 
     // 路由
     const route = useRoute()
+    const router = useRouter()
+    const memberStore = useMemberStore()
     
     
     
@@ -53,6 +57,14 @@
     /* const eventData = computed(() => {
         return eventlist.find(ev => ev.id == route.params.id || null)
     }) */
+
+    const goToRegistration = () => {
+        if(!memberStore.isAuthed){
+            alert('請先登入會員')
+            return
+        }
+        router.push('/eventregistration')
+    }
 
 </script>
 
@@ -118,11 +130,11 @@
                     </div>
     
                     <p class="apply-btn-box">
-                        <router-link to="/eventregistration" class="router-link">
-                            <div class="btn">
+                        <!-- <router-link to="/eventregistration" class="router-link"> -->
+                            <div class="btn" @click="goToRegistration">
                                 <i class="fa-solid fa-star"></i> 立即報名
                             </div>
-                        </router-link>
+                        <!-- </router-link> -->
                     </p>
     
                 </div>
