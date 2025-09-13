@@ -183,7 +183,7 @@ function scrollToListItem(index) {
     }, 100)
 }
 
-console.log(location)
+// console.log(location)
 
 function showLocationDetail(location) {
     emit('show-detail', location)

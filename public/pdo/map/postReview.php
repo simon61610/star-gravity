@@ -10,6 +10,7 @@ $score = $_POST['score'];
 $content = $_POST['content'];
 $created_ms = $_POST['created_ms'];
 $location_id = $_POST['location_id'];
+$member_id = $_POST['member_id'];
 $image = isset($_FILES['image'])? $_FILES['image'] : null;
 
 //將前端變數轉換成資料庫所需的created_at (資料型態是Date) php轉換時間是用秒
@@ -50,7 +51,7 @@ if( isset($image) ){
 
 //建立SQL
 $sql = " INSERT into Review(created_at, content, image, review_status, score, member_id, location_id)
-         values(:created_at, :content, :imagePath , '顯示中', :score, 1005, :location_id)
+         values(:created_at, :content, :imagePath , '顯示中', :score, :member_id, :location_id)
 " ;
 
 $statement = $pdo->prepare( $sql);
@@ -59,6 +60,7 @@ $statement->bindValue(":created_at" , $created_at);
 $statement->bindValue(":imagePath" , $imagePath);
 $statement->bindValue(":score" , $score);
 $statement->bindValue(":location_id" , $location_id);
+$statement->bindValue(":member_id" , $member_id);
 
 //$statement->execute()會回傳布林值 可以用變數接收
 $result = $statement->execute();
