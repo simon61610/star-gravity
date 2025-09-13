@@ -1,3 +1,9 @@
+<!-- 
+- 按鈕功能綁定時間待做 
+- 圖片解析度問題
+ -->
+
+
 <script setup>
 
 
@@ -20,6 +26,8 @@
     // console.log(testEvent)
 
     const eventData = ref(null)
+
+    const currentPic = ref('')
 
     onMounted(async () => {
 
@@ -58,6 +66,25 @@
         return eventlist.find(ev => ev.id == route.params.id || null)
     }) */
 
+
+
+    // 圖片效果
+    if(eventData.value){
+        currentPic.value = eventData.value.image[0] // 第一張
+    }
+
+    const changePic = (img) => {
+        currentPic.value = img
+    }
+
+
+
+
+
+
+
+
+
     const goToRegistration = () => {
         if(!memberStore.isAuthed){
             alert('請先登入會員')
@@ -73,13 +100,20 @@
 
         <!-- 圖片選擇區 -->
         <div class="pic-container">
-            <img :src="eventData.image[0]" alt="" class="selected-pic">
-            <div class="pic-box">
-                <img v-for="(img, index) in eventData.image" :src="img" alt="">
+            <img :src="currentPic" alt="" class="selected-pic">
+            <ul class="pic-box">
+                <li 
+                    v-for="img in eventData.image"
+                    @click="changePic(img)"
+                    :class="{ active: currentPic !== img }"
+                >
+                    <img :src="img" >
+
+                </li>
                 <!-- <img :src="eventData.imgurl[0]" alt="">
                 <img :src="eventData.imgurl[1]" alt="">
                 <img :src="eventData.imgurl[2]" alt=""> -->
-            </div>
+            </ul>
         </div>
 
         <!-- 活動內容區 -->
@@ -194,11 +228,27 @@
                 display: flex;
                 justify-content: center;
                 gap: 20px;
-                img {
-                    width: 240px;
-                    aspect-ratio: 3 / 1;
+
+                li {
                     cursor: pointer;
+                    transition: all .5s ease;
+
+                    &.active {
+                        opacity: .3;
+                    }
+
+                    &:hover {
+                        opacity: .8;
+                    }
+
+                    img {
+                        width: 240px;
+                        aspect-ratio: 3 / 1;
+                        object-fit: cover;
+                        display: block;
+                    }
                 }
+
             }
         }
 

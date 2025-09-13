@@ -67,7 +67,7 @@
         if(product.value){
             imgArr.value = product.value.images.split(',')
             // console.log(imgArr.value)
-            currentPic.value = imgArr.value[0]
+            currentPic.value = imgArr.value[0] // 第一張
 
 
 
