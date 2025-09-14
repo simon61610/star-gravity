@@ -13,10 +13,29 @@ include('../pdo.php');
 
 // include('db.php');
 
+$domain  = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http")
+         . "://" . $_SERVER['HTTP_HOST'];
 
-$savepath = $_SERVER['DOCUMENT_ROOT'] . "/tjd102/g1/pdo/news/image/"; 
-$baseUrl = "/tjd102/g1/pdo/news/image/";
-$webUrl = $baseUrl . basename($_FILES["file"]["name"]);
+// 自動判斷 localhost → 用 star-gravity/public
+if ($_SERVER['HTTP_HOST'] === 'localhost') {
+    $savepath = $_SERVER['DOCUMENT_ROOT'] . "/star-gravity/public/pdo/news/image/";
+    $webUrl   = $domain . "/star-gravity/public/pdo/news/image/" . basename($_FILES["file"]["name"]);
+} 
+// 其他情況 (正式環境) → 用 tjd102/g1
+else {
+    $savepath = $_SERVER['DOCUMENT_ROOT'] . "/tjd102/g1/pdo/news/image/";
+    $webUrl   = $domain . "/tjd102/g1/pdo/news/image/" . basename($_FILES["file"]["name"]);
+}
+
+
+// $savepath = $_SERVER['DOCUMENT_ROOT'] . "/tjd102/g1/pdo/news/image/"; 
+
+// $baseUrl = "/tjd102/g1/pdo/news/image/";
+
+// $domain  = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http")
+//          . "://" . $_SERVER['HTTP_HOST'];
+// $webUrl  = $domain . "/tjd102/g1/pdo/news/image/" . basename($_FILES["file"]["name"]);;
+// // $webUrl = $baseUrl . basename($_FILES["file"]["name"]);
 $move_uploaded = $savepath . basename($_FILES["file"]["name"]); //定義圖檔案路徑還沒有檔案
 
 //將檔案搬到 $move_uploaded 上面設置的路徑
