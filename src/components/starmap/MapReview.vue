@@ -147,7 +147,7 @@ onUnmounted( ()=>{
                 <li v-for="review in sortedReviews">
                     <h4>{{review.name}}</h4>
                     <span class="review-score"> <!--到時候img 用v-for跑 評論幾分跑幾次-->
-                        <img v-for="value in review.score" src="../../assets/icons/icon-filledStar.svg" alt="星星">
+                        <img v-for="value in parseInt(review.score)" src="../../assets/icons/icon-filledStar.svg" alt="星星">
                     </span>
                     <p class="cnContent--18px">
                         {{review.content}}

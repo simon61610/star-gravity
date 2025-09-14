@@ -233,7 +233,7 @@ function aaa(){
                         <div class="singleReview-leftContent">
                             <h5>{{review.name}}</h5>
                             <span> <!--到時候img 用v-for跑 評論多少跑幾次-->
-                                <img v-for="value in review.score" src="@/assets/icons/icon-guide_star.svg" alt="星星">
+                                <img v-for="value in parseInt(review.score)" src="@/assets/icons/icon-guide_star.svg" alt="星星">
                             </span>
                             <p class="cnContent--14px">{{ review.content }}</p>
                         </div>

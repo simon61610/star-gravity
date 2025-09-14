@@ -116,7 +116,7 @@
                 <h3>{{ r.location_name }}</h3>
     
                 <span class="review-score">
-                    <img v-for="n in r.score" :key="n" src="@/assets/icons/icon-filledStar.svg" alt="星星"/>
+                    <img v-for="n in parseInt(r.score)" :key="n" src="@/assets/icons/icon-filledStar.svg" alt="星星"/>
                 </span>
     
                 <p class="review-text">
