@@ -18,11 +18,15 @@
     import shopToast from '@/components/common/shopToast.vue';
     import { showToast } from '@/composables/useToast';
 
+    import { useMemberStore } from '@/stores/member';
+
+    const memberStore = useMemberStore()
+
     const router = useRouter()
     const route = useRoute()
 
     const event_id = route.params.id // 活動 id
-    const member_id = 1008 // 暫時寫死
+    const member_id = memberStore.user?.ID // 會員 ID
 
     // 表單物件
     const name = ref('')
@@ -32,6 +36,11 @@
 
     // 前往繳費: 送出報名
     const submitRegistration = async () => {
+        if (!memberStore.isAuthed) {
+            showToast('請先登入會員再報名')
+            return
+        }
+
         if (!name.value.trim() || !gender.value.trim() || !phone.value.trim() || !email.value.trim()) {
             showToast('請填寫必填欄位！')
             return
@@ -49,12 +58,18 @@
         const res = await axios.post(import.meta.env.VITE_AJAX_URL + "activity/client/joiner_insert.php", joiner) 
         
         if(res.data.success){
-            router.push('/eventsuccess')
+            // 跳轉報名成功頁面
+            router.push({
+                path: '/eventsuccess',
+                query: {
+                    registration_number: res.data.registration_number
+                }
+            })
             console.log(res.data.message)
             // showToast('報名成功！')
         }else {
-            console.log(res.data.message)
-            showToast('報名失敗，請洽客服人員')
+            console.log(res.data.error || null)
+            showToast(res.data.message)
         }
     }
     

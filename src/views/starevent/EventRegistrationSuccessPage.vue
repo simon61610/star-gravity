@@ -1,7 +1,20 @@
 <script setup>
     import ApplyBanner from '@/components/starevent/ApplyBanner.vue';
 
+    import { onMounted } from 'vue';
+    import { useRoute, useRouter } from 'vue-router';
 
+    const route = useRoute()
+    const router = useRouter()
+
+    const registration_number = route.query.registration_number
+
+    onMounted(() => {
+        // 沒有報名編號，自動導回活動頁面
+        if(!registration_number){
+            router.push('/events')
+        }
+    })
 
 </script>
 
@@ -15,7 +28,7 @@
                 <img src="@/assets/icons/checkout-success.svg" alt="">
                 <h2>您已報名完成！</h2>
             </div>
-            <h1 class="order-number">報名編號：ABC123</h1>
+            <h1 class="order-number">報名編號：{{ registration_number }}</h1>
             <h3 class="member-center">查詢已報名活動，請至<span>會員中心</span></h3>
         </section>
 
