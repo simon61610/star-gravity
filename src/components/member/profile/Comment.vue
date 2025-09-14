@@ -21,30 +21,14 @@
     // 刪除鍵
     function deleteReview(id, deleteReviewId) {
         if (!window.confirm('確定要刪除這則評論嗎？')) return
-        try {
-            await axios.delete(url('Member/comment.php'), {
-                params: { id },
-                headers: token ? { Authorization: `Bearer ${token}` } : {},
-                withCredentials: true
-            })           
-            // 成功後同步刪本地資料 & 修正分頁   
-            const idx = reviews.value.findIndex(r => r.id === id)
-            if (idx !== -1) reviews.value.splice(idx, 1)
-            const total = reviews.value.length
-            const maxPage = Math.max(1, Math.ceil(total / pageSize.value))
-            if (currentPage.value > maxPage) currentPage.value = maxPage
-        } catch (err) {
-            alert(err?.message || '刪除失敗')
-        }
+        const idx = reviews.value.findIndex(r => r.id === id)
+        if (idx !== -1) reviews.value.splice(idx, 1)
+        const total = reviews.value.length   // 刪除後若當頁沒有資料，往前翻一頁（避免空白頁）
+        const maxPage = Math.max(1, Math.ceil(total / pageSize.value))
+        if (currentPage.value > maxPage) currentPage.value = maxPage
+        // console.log(deleteReviewId);
+        updateMemberReview(deleteReviewId)
     }
-    // 刪除鍵
-    // function onDelete(e) {
-    //     if (window.confirm('確定要刪除這則評論嗎？')) {
-    //         // 找到最近的 .comment-1 容器並移除
-    //         const card = e.currentTarget.closest('.comment-1')
-    //         if (card) card.remove()
-    //     }
-    // }
 
     // 分頁
     const currentPage = ref(1)                                   // 目前頁
