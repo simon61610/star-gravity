@@ -48,7 +48,7 @@
     
         // console.log(res.data);
         
-        product.value = res.data.find(p => p.ID === Number(route.params.id))
+        product.value = res.data.find(p => p.ID == route.params.id)
         // console.log(product.value)
         /* 
         ID : 1 
