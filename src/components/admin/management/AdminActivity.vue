@@ -73,6 +73,11 @@ onMounted(async () => {
 /*------------------ 圖片上傳--------------------*/
 // 每次上傳成功，更新對應的框
 function handleSuccess(response, file, index) {
+   console.log("typeof response:", typeof response, response)
+  // 保險處理：萬一是字串就 parse 一下
+  if (typeof response === "string") {
+    try { response = JSON.parse(response) } catch {}
+  }
   // 後端有成功回傳正式網址
   if (response.success && response.url) {
     file.url = response.url   // 把 blob 換成正式網址
