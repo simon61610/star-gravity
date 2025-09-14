@@ -4,10 +4,13 @@ import { ref,computed,onMounted } from 'vue'
 import AdminTable from '@/components/admin/AdminTable.vue'
 import AdminToolbar from '../AdminToolbar.vue'
 import {activityAPI} from '@/api/activityAPI.js'
+import { useAuthStore } from '@/stores/admin.js'
+
 
 
 /* ---------------- 既有狀態 ---------------- */
 const previewImages = ref([]) //給前台顯示圖片用陣列
+const admin = useAuthStore()
 const selected_activity = ref({})
 const selectedLocation = ref('')
 const uploadRefs = ref([])
@@ -59,6 +62,14 @@ onMounted(() => {
 function refreshTable() {
   emit('refresh')  //呼叫父層方法我要更新
 }
+
+//登入檢查
+onMounted(async () => {
+  await admin.checkSession()
+  if (!admin.isLoggedIn) {
+    router.push('/AdminLoginPage') // 沒登入就跳回登入頁
+  }
+})
 /*------------------ 圖片上傳--------------------*/
 // 每次上傳成功，更新對應的框
 function handleSuccess(response, file, index) {

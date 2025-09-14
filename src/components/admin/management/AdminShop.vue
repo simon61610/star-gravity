@@ -7,10 +7,11 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import axios from 'axios';
+import { useAuthStore } from '@/stores/admin.js'
 
 // 組件
 import AdminTable from '@/components/admin/AdminTable.vue';
-
+const admin = useAuthStore()
 const props = defineProps({
   search: { type: String, default: '' }
 })
@@ -57,6 +58,14 @@ const fetchProducts = async () => {
 
     // console.log(Shoptable.value)
 }
+
+//登入檢查
+onMounted(async () => {
+  await admin.checkSession()
+  if (!admin.isLoggedIn) {
+    router.push('/AdminLoginPage') // 沒登入就跳回登入頁
+  }
+})
 
 onMounted (() => {
     fetchProducts()

@@ -2,7 +2,8 @@
 import { ref, onMounted } from 'vue'
 import AdminTable from '@/components/admin/AdminTable.vue';
 import axios from 'axios';
-
+import { useAuthStore } from '@/stores/admin.js'
+const admin = useAuthStore()
 const props = defineProps({
   search: { type: String, default: '' }
 })
@@ -32,6 +33,14 @@ const fetchOrders = async () => {
 
     Ordertable.value = res.data
 }
+
+//登入檢查
+onMounted(async () => {
+  await admin.checkSession()
+  if (!admin.isLoggedIn) {
+    router.push('/AdminLoginPage') // 沒登入就跳回登入頁
+  }
+})
 
 
 onMounted(() => {

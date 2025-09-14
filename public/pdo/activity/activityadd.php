@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
+// header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+// header("Access-Control-Allow-Headers: Content-Type");
 include('../pdo.php');
 
 // 處理 OPTIONS 預檢請求，直接回應 200

@@ -203,6 +203,7 @@ const routes = [
       name: '/AdminLayoutPage',     
       component: () => import('@/views/admin/AdminLayoutPage.vue'),
       meta: { 
+       
         // requiresAuth: true,
         layout:'backend'  //使用後台的版型
        } , //提示路由這個頁面要認證才可以跳轉
@@ -211,24 +212,36 @@ const routes = [
             path: '/AdminMemberPage',    
             name: 'AdminMemberPage',     
             component: () => import('@/views/admin/AdminMemberPage.vue'),
+            meta: {
+              requiresAuth: true,
+            }
           },
 
           {
             path: '/AdminActivityPage',    
             name: 'AdminActivityPage',     
-            component: () => import('@/views/admin/AdminActivityPage.vue')
+            component: () => import('@/views/admin/AdminActivityPage.vue'),
+            meta: {
+              requiresAuth: true,
+            }
           },
 
           {
             path: '/AdminOrderPage',    
             name: 'AdminOrderPage',     
-            component: () => import('@/views/admin/AdminOrderPage.vue')
+            component: () => import('@/views/admin/AdminOrderPage.vue'),
+            meta: {
+              requiresAuth: true,
+            }
           },
 
            {
             path: '/AdminShopPage',     
             name: 'AdminShopPage',     
-            component: () => import('@/views/admin/AdminShopPage.vue')
+            component: () => import('@/views/admin/AdminShopPage.vue'),
+            meta: {
+              requiresAuth: true,
+            }
           },
 
           {
@@ -237,14 +250,16 @@ const routes = [
             component:  () => import('@/views/admin/AdminNewsPage.vue'),
             meta: {
               requiresAuth: true,
-              
             }
           },
 
           {
             path: '/AdminCommentPage',    
             name: 'AdminCommentPage',     
-            component: () => import('@/views/admin/AdminCommentPage.vue')
+            component: () => import('@/views/admin/AdminCommentPage.vue'),
+            meta: {
+              requiresAuth: true,
+            }
           },
       ]
     },
