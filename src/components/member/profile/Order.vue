@@ -1,6 +1,19 @@
 <script setup>
     import { ref, computed, onMounted, watch } from 'vue'
     import Pagination from '@/components/common/Pagination.vue'
+    import axios from 'axios'
+    import { useMemberStore } from '@/stores/member'
+import { columnAlignment } from 'element-plus'
+
+    // 引用useMemberStore
+    const memberStore = useMemberStore()
+
+    //定義響應式資料
+    const orders = ref([ ]) // 後端回來的訂單
+    const loading = ref(false) // 載入狀態
+    const errorMsg = ref('')  // 錯誤訊息
+
+    const memberId = ref('')
 
     // 定義 props
     const props = defineProps({
@@ -17,41 +30,40 @@
     const builtinColumns = [
     { label: '訂單編號', prop: 'order_number' },
     { label: '訂單日期', prop: 'order_date' },
-    { label: '購買項目', prop: 'order_item' },
-    { label: '金額',     prop: 'dollar' },
-    { label: '狀態',     prop: 'state', align: 'center' },
+    { label: '金額',     prop: 'dollars' },
+    { label: '狀態',     prop: 'order_status'},
     ]
     const columnDefs = computed(() => (props.columns?.length ? props.columns : builtinColumns))
 
     // 內建資料 (之後可改成 props.data 或 API 結果）
-    const ordertable = ref([
-    { order_number: '2025081601', order_date: '2025-08-16', order_item: '雙筒望遠鏡', dollar: '2,500', state: '已出貨' },
-    { order_number: '2025081602', order_date: '', order_item: '', dollar: '', state: '' },
-    { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
+    // const ordertable = ref([
+    // { order_number: '2025081601', order_date: '2025-08-16', order_item: '雙筒望遠鏡', dollar: '2,500', state: '已出貨' },
+    // { order_number: '2025081602', order_date: '', order_item: '', dollar: '', state: '' },
+    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
+    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
+    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
+    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
+    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
+    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
+    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
+    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
+    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
+    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
+    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
+    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
+    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
+    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
+    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
+    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
+    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
+    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
+    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
+    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
     
-    ])
+    // ])
 
-    // 單一資料來源：優先用外部 props.data，否則用內建
-    const dataSource = computed(() => ordertable.value) // ← 先用內建資料
+    // 單一資料來源：有傳入 props.data 就用，否則用 API 回來的 orders
+    const dataSource = computed(() => (props.data?.length ? props.data : orders.value))
 
     // 分頁
     const orderPage = ref(1)
@@ -73,7 +85,28 @@
     }
 
     // 若資料量變動，回到第一頁（可保險）
-    watch(dataSource, () => { currentPage.value = 1 })
+    watch(dataSource, () => { orderPage.value = 1 })
+
+    //-------------連接後端--------------------
+    const getMemberOrders = async (memberId) => {
+        try {
+            const resp = await axios.post(
+                import.meta.env.VITE_AJAX_URL + "Member/getMemberOrders.php",
+                { memberId }
+            )
+            console.log(resp.data);
+
+            orders.value = resp.data
+        } catch(error) {
+            console.log("後端請求失敗");
+        }
+    }
+
+    onMounted(() => {
+        console.log(memberStore.user.ID);
+        memberId.value = memberStore.user.ID
+        getMemberOrders(memberId.value)
+    })
 
 
 </script>
