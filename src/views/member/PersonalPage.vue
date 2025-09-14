@@ -61,7 +61,7 @@
 
         // 若你登入有回 token，就帶上 Authorization
         const token = localStorage.getItem('token')
-        const headers = token ? { Authorization: `Bearer ${token}` } : {} // 與後端驗證一致
+        const headers = token ? { Authorization: `Bearer ${token}` } : {} // 與後端驗證一致 (可拿掉)
 
         // const res = await axios.post("", 資料)
         // res = { data: 接收到的資料, .... }
