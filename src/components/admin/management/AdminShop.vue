@@ -171,7 +171,7 @@ const handleEdit = (row, index) => {
     // 處理圖片預覽
     // console.log(row.images) // "/starshop/images/基礎入門型1-1.png,/starshop/images/基礎入門型1-2.png,/starshop/images/基礎入門型1-3.png" 用逗號隔開，要切割成陣列
     imagesPreview.value = row.images.split(',').map(path => import.meta.env.VITE_AJAX_URL_NOEND + path)
-    // console.log(imagesPreview.value)
+    console.log(imagesPreview.value)
 
     // 若圖片小於 3 張，補 null
     while(imagesPreview.value.length < 3){
