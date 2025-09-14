@@ -1,9 +1,16 @@
+<!-- 
+
+- bug: 顯示筆數替換後卻沒有切分頁
+
+-->
+
+
 <script setup>
     // 組件
     import Pagination from '@/components/common/Pagination.vue';
     import shopToast from '@/components/common/shopToast.vue';
     // 方法
-    import { ref, watch, computed, onMounted } from 'vue'
+    import { ref, watch, computed, onMounted, onUnmounted } from 'vue'
     import bus from '@/composables/useMitt';
     import { showToast } from '@/composables/useToast';
     import axios from 'axios';
@@ -15,6 +22,36 @@
     const BASE_URL = import.meta.env.VITE_AJAX_URL_NOEND
 
     const items = ref([])
+
+    // =========== 商品篩選列的功能 ============
+    const searchKeyword = ref('')
+    const priceOrder = ref('')
+    const pageSize= ref(16) // 每頁顯示幾筆
+    const currentPage = ref(1) // 預設第一頁
+
+    
+    bus.on('searchKeyword', (keyword) => {
+        searchKeyword.value = keyword || ""
+        currentPage.value = 1
+    })
+
+    bus.on('priceOrder', (order) => {
+        priceOrder.value = order || ""
+        currentPage.value = 1
+    })
+
+    bus.on('qtyChanege', (qty) => {
+        pageSize.value = qty || 16
+        currentPage.value = 1
+    })
+
+    onUnmounted(() => {
+        bus.off('searchKeyword')
+        bus.off('priceOrder')
+        bus.off('qtyChanege')
+    })
+
+    // =======================================
 
     onMounted(async() => {
         const res = await axios.get(import.meta.env.VITE_AJAX_URL + 'starshop/client/products_get.php')
@@ -52,9 +89,6 @@
 // -------------------------------------------------------------------------------
 
     // console.log(items)
-    const currentPage = ref(1) // 預設第一頁
-    const pageSize= ref(16) // 每頁顯示幾筆
-
     // const toast = ref(false)
 
 // -------------------------------------------------------------------------------
@@ -83,7 +117,21 @@
     // =====================================================
     const filteredItems = computed(() => {
         
-        const selectedCateProducts = items.value
+        let selectedCateProducts = items.value
+
+        // 搜尋功能
+        if(searchKeyword.value){
+            const keyword = searchKeyword.value
+            selectedCateProducts = selectedCateProducts.filter(p => p.name.includes(keyword))
+        }
+
+        // 價格排序: 用解構，避免原本陣列的值改變
+        if(priceOrder.value == 'asc'){
+            selectedCateProducts = [...selectedCateProducts].sort((a, b) => {return a.sale_price - b.sale_price})
+        }else if(priceOrder.value == 'desc'){
+            selectedCateProducts = [...selectedCateProducts].sort((a, b) => {return b.sale_price - a.sale_price})
+        }
+
 
         // 1. 如果沒選
         if(!props.selectedCate){
