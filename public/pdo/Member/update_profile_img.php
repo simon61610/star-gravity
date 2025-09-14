@@ -50,9 +50,8 @@ if ($uid === 0) {
   exit;
 };
 
-// 取檔案（支援 avatar 或 image 兩種欄位名）
+// 取檔案
 $file = $_FILES['avatar'] ?? ($_FILES['image'] ?? null);
-
 
 if (!$file || !is_uploaded_file($file['tmp_name'])) {
   echo json_encode(['success'=>false,'message'=>'請附上檔案欄位 avatar（或 image）'], JSON_UNESCAPED_UNICODE);
@@ -72,7 +71,7 @@ if ($file['size'] > 2 * 1024 * 1024) {
     exit;
 }
 
-// 檢查型別（盡量不用 GD）：先用 fileinfo，失敗就用簡單 magic number 檢查
+// 檢查型別：先用 fileinfo，失敗就用簡單 magic number 檢查
 $mime = '';
 if (function_exists('finfo_open')) {
     $fi = finfo_open(FILEINFO_MIME_TYPE);
@@ -128,7 +127,6 @@ $imagePath = "/pdo/Member/uploadImages/" . $fileName;
 $sqlImg = "UPDATE Member 
               SET image=:image 
               WHERE ID=:id";
-
 $statementImg = $pdo -> prepare($sqlImg);
 $statementImg -> bindParam(":image", $imagePath);
 
@@ -153,6 +151,65 @@ $statementImg -> execute();
 // }
 
 // // 更新 DB（Member.image），並刪除舊檔（同 uid 目錄內）
+try {
+  $st = $pdo->prepare('SELECT image FROM `Member` 
+                      WHERE ID=:id LIMIT 1');
+  $st->execute([':id'=>$memberID]);
+  $old = $st->fetch(PDO::FETCH_ASSOC);
+  $oldPathDb = $old && !empty($old['image']) ? $old['image'] : null;
+
+  // 更新 DB 指向新圖
+  $up = $pdo->prepare('UPDATE `Member` 
+                        SET image=:img
+                        WHERE ID=:id');
+  $ok = $up->execute([':img'=>$imagePath, ':id'=>$memberID]);
+
+  if (!$ok) {
+    // DB 寫入失敗 → 刪掉新檔避免殘留
+    @unlink($filePath);
+    echo json_encode(['success'=>false,'message'=>'更新資料庫失敗'], JSON_UNESCAPED_UNICODE);
+    exit;
+  };
+
+  // 刪除舊檔（僅限該會員目錄，且避免誤刪剛上傳的新檔）
+  if ($oldPathDb) {
+    // 舊圖在 DB 是 "/pdo/Member/uploadImages/xxx.jpg"
+    if (strpos($oldPathDb, $prefix) === 0) {
+      $rel    = substr($oldPathDb, strlen($prefix)); // "uploadImages/xxx.jpg"
+      $oldAbs = __DIR__ . "/" . $rel;
+
+      $safeBase = realpath(__DIR__ . "/uploadImages/");
+      $oldReal  = (file_exists($oldAbs)) ? realpath($oldAbs) : null;
+      $newReal  = realpath($filePath);
+
+      if ($safeBase && $oldReal && strpos($oldReal, $safeBase) === 0 && $oldReal !== $newReal) {
+        @unlink($oldReal);
+      };
+    } catch (Throwable $e) {
+      @unlink($filePath);
+      echo json_encode(['success'=>false,'message'=>'伺服器錯誤：'.$e->getMessage()], JSON_UNESCAPED_UNICODE);
+      exit;
+    };
+    
+
+
+  };
+
+
+
+
+
+
+};
+
+
+
+
+
+
+
+
+
 // try {
 //     $st = $pdo->prepare('SELECT image FROM `Member` WHERE ID=:id LIMIT 1');
 //     $st->execute([':id'=>$uid]);

@@ -4,7 +4,9 @@ import AdminTable from '@/components/admin/AdminTable.vue';
 import ConfirmDialog from '../ConfirmDialog.vue';
 import img from '@/assets/images/news/news-article-a1.jpg';
 import axios from 'axios';
+import { useAuthStore } from '@/stores/admin.js'
 
+const admin = useAuthStore()
 const props = defineProps({
   search: { type: String, default: '' }
 })
@@ -56,7 +58,13 @@ const handleEdit = (row, index) => { //偵測編輯按鈕編輯哪個資料
 /*打開燈箱*/
   show.value = true;
 }
-
+//登入檢查
+onMounted(async () => {
+  await admin.checkSession()
+  if (!admin.isLoggedIn) {
+    router.push('/AdminLoginPage') // 沒登入就跳回登入頁
+  }
+})
 /*---------------彈窗關閉----------------*/
 function close(){
     show.value = false;
