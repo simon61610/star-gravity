@@ -15,7 +15,7 @@
 <template>
     <section class="tool-bar-section">
         <div class="search-box">
-            <input type="text" placeholder="搜尋商品..." v-model.lazy.trim="keyword" @keyup.enter="doSearch">
+            <input type="text" placeholder="搜尋商品..." v-model.trim="keyword" @keyup="doSearch">
             <div class="search-btn" @click="doSearch">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </div>
@@ -27,9 +27,9 @@
                 <option value="">價格由高到低</option>
             </select>
             <select class="qty-orderby">
-                <option value="">每頁顯示 24 筆</option>
-                <option value="">每頁顯示 16 筆</option>
-                <option value="">每頁顯示 8筆</option>
+                <option value="">每頁 24 筆</option>
+                <option value="">每頁 16 筆</option>
+                <option value="">每頁 8 筆</option>
             </select>
         </div>
     </section>
@@ -81,6 +81,7 @@
                 width: 100%;
                 background-color: transparent;
                 font-size: 20px;
+                padding-right: 24px;
                 color: white;
                 border: none;
                 border-bottom: 1px solid #ccc;

@@ -3,7 +3,7 @@
     import Pagination from '@/components/common/Pagination.vue';
     import shopToast from '@/components/common/shopToast.vue';
     // 方法
-    import { ref, watch, computed, onMounted } from 'vue'
+    import { ref, watch, computed, onMounted, onUnmounted } from 'vue'
     import bus from '@/composables/useMitt';
     import { showToast } from '@/composables/useToast';
     import axios from 'axios';
@@ -15,6 +15,17 @@
     const BASE_URL = import.meta.env.VITE_AJAX_URL_NOEND
 
     const items = ref([])
+
+    const searchKeyword = ref('')
+    
+    bus.on('searchKeyword', (keyword) => {
+        searchKeyword.value = keyword || ""
+        currentPage.value = 1
+    })
+
+    onUnmounted(() => {
+        bus.off('searchKeyword')
+    })
 
     onMounted(async() => {
         const res = await axios.get(import.meta.env.VITE_AJAX_URL + 'starshop/client/products_get.php')
@@ -83,7 +94,14 @@
     // =====================================================
     const filteredItems = computed(() => {
         
-        const selectedCateProducts = items.value
+        let selectedCateProducts = items.value
+
+        // 搜尋功能
+        if(searchKeyword.value){
+            const keyword = searchKeyword.value
+            selectedCateProducts = selectedCateProducts.filter(p => p.name.includes(keyword))
+        }
+
 
         // 1. 如果沒選
         if(!props.selectedCate){
