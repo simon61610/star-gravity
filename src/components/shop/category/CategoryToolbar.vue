@@ -4,7 +4,8 @@
     import bus from '@/composables/useMitt';
 
     const keyword = ref("") // 輸入
-    const priceOrder = ref('')
+    const priceOrder = ref('') // 排序
+    const qtyPerPage = ref('16') // 預設每頁顯示 16 筆
     
 
     const doSearch = () => {
@@ -13,6 +14,10 @@
 
     const doPriceOrder = () => {
         bus.emit('priceOrder', priceOrder.value)
+    }
+
+    const doQtyChange = () => {
+        bus.emit('qtyChanege', qtyPerPage.value)
     }
 
 
@@ -32,10 +37,10 @@
                 <option value="asc">價格由低到高</option>
                 <option value="desc">價格由高到低</option>
             </select>
-            <select class="qty-orderby">
-                <option value="">每頁顯示 24 筆</option>
-                <option value="">每頁顯示 16 筆</option>
-                <option value="">每頁顯示 8 筆</option>
+            <select class="qty-orderby" v-model="qtyPerPage" @change="doQtyChange">
+                <option value="24">每頁顯示 24 筆</option>
+                <option value="16">每頁顯示 16 筆</option>
+                <option value="8">每頁顯示 8 筆</option>
             </select>
         </div>
     </section>

@@ -1,3 +1,10 @@
+<!-- 
+
+- bug: 顯示筆數替換後卻沒有切分頁
+
+-->
+
+
 <script setup>
     // 組件
     import Pagination from '@/components/common/Pagination.vue';
@@ -19,6 +26,9 @@
     // =========== 商品篩選列的功能 ============
     const searchKeyword = ref('')
     const priceOrder = ref('')
+    const pageSize= ref(16) // 每頁顯示幾筆
+    const currentPage = ref(1) // 預設第一頁
+
     
     bus.on('searchKeyword', (keyword) => {
         searchKeyword.value = keyword || ""
@@ -30,9 +40,15 @@
         currentPage.value = 1
     })
 
+    bus.on('qtyChanege', (qty) => {
+        pageSize.value = qty || 16
+        currentPage.value = 1
+    })
+
     onUnmounted(() => {
         bus.off('searchKeyword')
         bus.off('priceOrder')
+        bus.off('qtyChanege')
     })
 
     // =======================================
@@ -73,9 +89,6 @@
 // -------------------------------------------------------------------------------
 
     // console.log(items)
-    const currentPage = ref(1) // 預設第一頁
-    const pageSize= ref(16) // 每頁顯示幾筆
-
     // const toast = ref(false)
 
 // -------------------------------------------------------------------------------
