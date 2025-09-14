@@ -8,8 +8,6 @@
  * 4) 更新 Member.image（相對路徑）
  * 5) 回傳 { success, data: { avatarUrl, cacheBustParam } }
  */
-
-
 include '../pdo.php';
 
 // 若是預檢請求，cors.php 一般已處理；這裡再保險一次
@@ -151,56 +149,56 @@ $statementImg -> execute();
 // }
 
 // // 更新 DB（Member.image），並刪除舊檔（同 uid 目錄內）
-try {
-  $st = $pdo->prepare('SELECT image FROM `Member` 
-                      WHERE ID=:id LIMIT 1');
-  $st->execute([':id'=>$memberID]);
-  $old = $st->fetch(PDO::FETCH_ASSOC);
-  $oldPathDb = $old && !empty($old['image']) ? $old['image'] : null;
+// try {
+  // $st = $pdo->prepare('SELECT image FROM `Member` 
+  //                     WHERE ID=:id LIMIT 1');
+  // $st->execute([':id'=>$memberID]);
+  // $old = $st->fetch(PDO::FETCH_ASSOC);
+  // $oldPathDb = $old && !empty($old['image']) ? $old['image'] : null;
 
-  // 更新 DB 指向新圖
-  $up = $pdo->prepare('UPDATE `Member` 
-                        SET image=:img
-                        WHERE ID=:id');
-  $ok = $up->execute([':img'=>$imagePath, ':id'=>$memberID]);
+  // // 更新 DB 指向新圖
+  // $up = $pdo->prepare('UPDATE `Member` 
+  //                       SET image=:img
+  //                       WHERE ID=:id');
+  // $ok = $up->execute([':img'=>$imagePath, ':id'=>$memberID]);
 
-  if (!$ok) {
-    // DB 寫入失敗 → 刪掉新檔避免殘留
-    @unlink($filePath);
-    echo json_encode(['success'=>false,'message'=>'更新資料庫失敗'], JSON_UNESCAPED_UNICODE);
-    exit;
-  };
+  // if (!$ok) {
+  //   // DB 寫入失敗 → 刪掉新檔避免殘留
+  //   @unlink($filePath);
+  //   echo json_encode(['success'=>false,'message'=>'更新資料庫失敗'], JSON_UNESCAPED_UNICODE);
+  //   exit;
+  // };
 
   // 刪除舊檔（僅限該會員目錄，且避免誤刪剛上傳的新檔）
-  if ($oldPathDb) {
-    // 舊圖在 DB 是 "/pdo/Member/uploadImages/xxx.jpg"
-    if (strpos($oldPathDb, $prefix) === 0) {
-      $rel    = substr($oldPathDb, strlen($prefix)); // "uploadImages/xxx.jpg"
-      $oldAbs = __DIR__ . "/" . $rel;
+  // if ($oldPathDb) {
+  //   // 舊圖在 DB 是 "/pdo/Member/uploadImages/xxx.jpg"
+  //   if (strpos($oldPathDb, $prefix) === 0) {
+  //     $rel    = substr($oldPathDb, strlen($prefix)); // "uploadImages/xxx.jpg"
+  //     $oldAbs = __DIR__ . "/" . $rel;
 
-      $safeBase = realpath(__DIR__ . "/uploadImages/");
-      $oldReal  = (file_exists($oldAbs)) ? realpath($oldAbs) : null;
-      $newReal  = realpath($filePath);
+  //     $safeBase = realpath(__DIR__ . "/uploadImages/");
+  //     $oldReal  = (file_exists($oldAbs)) ? realpath($oldAbs) : null;
+  //     $newReal  = realpath($filePath);
 
-      if ($safeBase && $oldReal && strpos($oldReal, $safeBase) === 0 && $oldReal !== $newReal) {
-        @unlink($oldReal);
-      };
-    } catch (Throwable $e) {
-      @unlink($filePath);
-      echo json_encode(['success'=>false,'message'=>'伺服器錯誤：'.$e->getMessage()], JSON_UNESCAPED_UNICODE);
-      exit;
-    };
+  //     if ($safeBase && $oldReal && strpos($oldReal, $safeBase) === 0 && $oldReal !== $newReal) {
+  //       @unlink($oldReal);
+  //     };
+  //   } catch (Throwable $e) {
+  //     @unlink($filePath);
+  //     echo json_encode(['success'=>false,'message'=>'伺服器錯誤：'.$e->getMessage()], JSON_UNESCAPED_UNICODE);
+  //     exit;
+  //   };
     
 
 
-  };
+  // };
 
 
 
 
 
 
-};
+// };
 
 
 

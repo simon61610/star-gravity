@@ -70,7 +70,8 @@
         captchaCode.value = genCode()   
 
         // =============================
-        let res = await axios.get(import.meta.env.VITE_PUBLIC_URL +'JSON_CSV_XML/CityCountyData.json')
+        let res = await axios.get(import.meta.env.VITE_PUBLIC_URL +'JSON_CSV_XML/CityCountyData.json')  
+
         cities.value = res.data
     })
 
