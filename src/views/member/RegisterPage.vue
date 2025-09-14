@@ -112,7 +112,7 @@
 
             // 呼叫 Pinia store 
             const result = await memberStore.register(form)  
-            console.log('[register result from store]', result)
+            // console.log('[register result from store]', result)
             if (result?.ok !== true) {                                        // 嚴格檢查 ok === true
                 throw new Error(result?.error || '註冊失敗（前端判斷）')        // 若 store 沒回 ok:true，當失敗處理
             }
