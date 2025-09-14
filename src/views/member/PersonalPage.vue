@@ -41,6 +41,7 @@
         if (!okSize) return alert('圖片大小不得超過 2MB')
 
         file.value = f
+
         const reader = new FileReader()
         reader.onload = () => (preview.value = reader.result)
         reader.readAsDataURL(f)
@@ -56,12 +57,18 @@
         const token = localStorage.getItem('token')
         const headers = token ? { Authorization: `Bearer ${token}` } : {} // 與後端驗證一致
 
+        // const res = await axios.post("", 資料)
+        // res = { data: 接收到的資料, .... }
+        // res.data 
+
         try {
             const { data } = await axios.post(
                 url('Member/update_profile_img.php'),
                 fd,
                 { withCredentials: true, headers } // 若用 Cookie 登入，需要 true；純 Bearer 也可留著
             )
+
+            console.log(data)
             // if (!data?.success) throw new Error(data?.message || '上傳失敗')
 
             // 用後端回的路徑直接當圖源，並加版本避免快取到舊圖
