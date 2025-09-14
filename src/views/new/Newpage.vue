@@ -1,5 +1,5 @@
 <script setup>
-import { ref,computed,onMounted, } from 'vue'
+import { ref,computed,onMounted,onBeforeUnmount  } from 'vue'
 import testimg from '@/assets/images/news/news-article-a1.jpg'; // Assuming the image is in the assets folder
 import NewsBanner from '@/components/new/NewsBanner.vue';
 import NewsBar from '@/components/new/NewsBar.vue'; 
@@ -11,20 +11,38 @@ import axios from "axios";
 const articles = ref([])  //幫 articles 加上響應式變化ref
 const currentPage = ref(1);  //目前所在頁面
 const pageSize = ref(4);  //每頁顯示數量 
-
+const uptime = ref(null)    
+let timer = null
 //----------------------------連接資料庫渲染文章--------------------------//
+async function fetchAll() {
+    try {
+        // 第一步：只檢查 updated
+    const check = await axios.get(import.meta.env.VITE_AJAX_URL + "news/checckat.php")
+    if (check.data.updated_at !== uptime.value) {
+        console.log("偵測到更新，重新抓資料")
+         // 第二步：真的有更新 → 打完整 API
+        const res = await axios.get(import.meta.env.VITE_AJAX_URL + "news/newssearch.php")
+        articles.value = res.data
+
+        // 更新本地的 updated
+        uptime.value = check.data.updated_at
+        }else {
+        console.log("資料無變動，不打完整 API")
+        }
+    } catch (error) {
+      console.error("資料抓取失敗")
+    }
+}
 
 onMounted(() => {
-    axios.get(import.meta.env.VITE_AJAX_URL +"news/newssearch.php")
-        .then((res)=>{
-            articles.value = res.data
-        })
-        .catch((err)=>{
-            console.log(err,'資料抓取失敗')
-        })
+    fetchAll()
+    timer = setInterval(fetchAll,5000)
+
 })
 
-
+onBeforeUnmount(() => {
+  clearInterval(timer)
+})
 
 /*文章分類*/
 const categories = ref( ['全部文章','天象事件','知識新知','生活應用'] ) 
@@ -54,6 +72,8 @@ const filterArticles = computed(()=>{
     })
 
 
+
+    
 
 </script>
 

@@ -1,31 +1,38 @@
 <script setup>
     import { useRoute, useRouter } from 'vue-router'
     import { onMounted } from 'vue'
-    import { UserFilled, SwitchButton } from '@element-plus/icons-vue'
+    // import { UserFilled, SwitchButton } from '@element-plus/icons-vue'
     import axios from 'axios' 
+    import { useMemberStore } from '@/stores/member'
+    import { ref } from 'vue'
+
+    const memberStore = useMemberStore()
+
+    const memberID = ref("")
 
     // const props = defineProps({
     //     username: { type: String, default: '小姐/先生' },
     // })
 
     // 頭像
-    import { ref } from 'vue'
     // 預覽用的 base64
     const preview = ref('')
     // 真的要上傳的檔案物件
     const file = ref(null)
     const router = useRouter() 
-    // const username = ref('小姐/先生') 
+    const username = ref('小姐/先生') 
 
     // 後端根路徑（用 Vite 環境變數更彈性）
     const API_BASE = import.meta.env.VITE_AJAX_URL || '/'
 
     function url(path) {
+        // 先處理已是完整網址的情況，避免變成 "http://backend/http://cdn/..."
+        if (/^https?:\/\//i.test(path)) return path
         let base = API_BASE
         if (!base.endsWith('/')) base += '/'     // base 末端補 /
         if (path.startsWith('/')) path = path.slice(1) // 路徑前端去掉 /
         return base + path
-    }
+    } // 小提醒：這個 url() 不只拿來組 API，用來補圖片相對路徑也 OK（例如 uploads/avatars/13/xxx.webp）
 
     // 選圖後：驗證型別/大小 → 做本地預覽
     function onPick(e) {
@@ -39,6 +46,7 @@
         if (!okSize) return alert('圖片大小不得超過 2MB')
 
         file.value = f
+
         const reader = new FileReader()
         reader.onload = () => (preview.value = reader.result)
         reader.readAsDataURL(f)
@@ -48,22 +56,35 @@
     async function save() {
         if (!file.value) return alert('請先選擇圖片')
         const fd = new FormData()
+        fd.append("memberID", memberID.value)
         fd.append('avatar', file.value)  // 後端用 $_FILES['avatar'] 接
 
         // 若你登入有回 token，就帶上 Authorization
         const token = localStorage.getItem('token')
-        const headers = token ? { Authorization: `Bearer ${token}` } : {}
+        const headers = token ? { Authorization: `Bearer ${token}` } : {} // 與後端驗證一致
+
+        // const res = await axios.post("", 資料)
+        // res = { data: 接收到的資料, .... }
+        // res.data 
 
         try {
             const { data } = await axios.post(
-                url('Member/profile_image.php'),
+                url('Member/update_profile_img.php'),
                 fd,
-                { withCredentials: true, headers } // withCredentials 讓 Session Cookie 帶上去
+                { withCredentials: true, headers } // 若用 Cookie 登入，需要 true；純 Bearer 也可留著
             )
-            if (!data?.success) throw new Error(data?.message || '上傳失敗')
+
+            console.log(data)
+            // if (!data?.success) throw new Error(data?.message || '上傳失敗')
 
             // 用後端回的路徑直接當圖源，並加版本避免快取到舊圖
-            preview.value = data.image + '?v=' + data.version
+            // preview.value = data.image + '?v=' + data.version
+            if (!data?.success || !data?.data) throw new Error(data?.message || '上傳失敗')
+            // 後端回傳格式（建議）為：{ success, data:{ avatarUrl, cacheBustParam } }
+            const avatarUrl = data.data.avatarUrl
+            const v = data.data.cacheBustParam ?? Date.now()
+            preview.value = url(avatarUrl) + '?v=' + v // 重要：相對路徑補成完整網址
+
             // （可選）清空檔案 input 狀態
             // file.value = null
             alert('頭像已更新')
@@ -73,6 +94,12 @@
     }
     // 進頁面時拉會員資料（需後端 profile.php 回傳 image 與 name）
     async function fetchProfile() {
+
+        // 以下先暫時用前台抓會員ID
+        memberID.value = memberStore.user?.ID
+        console.log(memberID.value);
+        
+
         // 同步 Bearer（可選）
         const token = localStorage.getItem('token')
         const headers = token ? { Authorization: `Bearer ${token}` } : {}
@@ -84,7 +111,8 @@
             // 假設後端回：{ success:true, user:{ name:'..', image:'/pdo/Member/uploadImages/xxx.jpg' } }
             if (data?.success) {
                 if (data.user?.name)  username.value = data.user.name
-                if (data.user?.image) preview.value  = data.user.image + '?v=' + Date.now()
+                if (data.user?.image) preview.value  = url(data.user.image) + '?v=' + Date.now()
+                // ↑ 關鍵：若後端回 image 為相對路徑（uploads/...），用 url() 補成完整網址，避免跨網域取不到
             }
         } catch(e) {
             // 不打擾使用者；需要可印 log
@@ -106,7 +134,7 @@
 
     //判斷是否已經登入
     onMounted(()=>{
-        if( !localStorage.getItem('user') ){
+        if( !localStorage.getItem('token') ){
             alert('請先登入')
             router.push('/loginfirst')   // 登出後跳轉到登入頁
         } else {
@@ -125,7 +153,9 @@
             <aside class="sidebar">
                 <!-- 頭像，點整個圈圈就能選圖 -->
                 <label class="avatar-uploader">
-                    <input class="file" type="file" accept="image/*" @change="onPick" />
+                    <!-- <input class="file" type="file" accept="image/*" @change="onPick" /> -->
+                    <input class="file" type="file" accept="image/png,image/jpeg,image/webp" @change="onPick" />
+                    <!-- ↑ 與後端白名單一致，避免使用者選到 HEIC、BMP 等非支援格式 -->
                     <img v-if="preview" :src="preview" alt="avatar" />
                     <div v-else class="placeholder">+</div>
                     <!-- <span class="edit-tag">更換頭像</span> -->
@@ -211,6 +241,7 @@
     cursor: pointer;
     background: $bgColor-white;
     margin-left: 23px;
+    // background-image: none !important;
 }
 .avatar-uploader img{
     width: 100%; 
@@ -225,7 +256,7 @@
 }
 // 圖像中間+
 .placeholder{ 
-    font-weight: 700px;
+    font-weight: 600;
     font-size: $pcChFont-H1;
     color: $inputColor-focus;
 }

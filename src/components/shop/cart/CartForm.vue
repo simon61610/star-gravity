@@ -249,7 +249,7 @@
             !selectedDistrict.value.trim() || // 選擇的區，資料庫欄位名: area
             !recipient_address.value.trim() // 填寫地址
         ){
-            showToast('請完整填寫必填欄位！')
+            showToast('請填寫必填欄位！')
             return
         }
 

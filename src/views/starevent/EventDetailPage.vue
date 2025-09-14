@@ -1,20 +1,99 @@
+<!-- 
+- 按鈕功能綁定時間待做 
+- 圖片解析度問題
+ -->
+
+
 <script setup>
 
 
-    import { computed } from 'vue';
+    import { ref, onMounted } from 'vue';
     import { useRoute } from 'vue-router';
-    import eventlist from '@/data/eventlist';
+    import { useRouter } from 'vue-router';
+    import { useMemberStore } from '@/stores/member';
+    // import eventlist from '@/data/eventlist';
+    import axios from 'axios';
 
+    // 路由
+    const route = useRoute()
+    const router = useRouter()
+    const memberStore = useMemberStore()
+    
+    
+    
     // 假資料
     // const testEvent = eventlist[0]
     // console.log(testEvent)
 
-    // 路由
-    const route = useRoute()
+    const eventData = ref(null)
 
-    const eventData = computed(() => {
-        return eventlist.find(ev => ev.id == route.params.id || null)
+    const currentPic = ref('')
+
+    onMounted(async () => {
+
+        const res = await axios.get(import.meta.env.VITE_AJAX_URL + 'activity/client/activityget_one.php?id=' + route.params.id)
+        // console.log(res.data)
+        eventData.value = res.data
+
+        /* {
+            "ID": 5,
+            "event_name": "來擎天崗吧！許下你的流星願望 | 獅子座流星雨 - 團體觀星活動",
+            "event_start": "2025-09-20 21:00:00",
+            "event_end": "2025-09-21 02:00:00",
+            "event_deadline": "2025-09-15 23:59:59",
+            "event_place": "擎天崗",
+            "event_price": 2500,
+            "registration_count": null,
+            "event_description": "於擎天崗草原舉辦的流星雨活動，參加者將能在開闊夜空下欣賞流星劃破天際的美景，並學習相關的天文知識與拍攝技巧。此活動不僅有天文觀測，還結合了趣味講解、互動體驗與攝影分享，讓大家在輕鬆氛圍中收穫知識與交流心得。非常適合所有熱愛星空的朋友，一同在自然草原與繁星下留下難忘回憶。",
+            "is_active": "1",
+            "event_status": "報名中",
+            "homepage_highlight": 0,
+            "image": [
+                "http://localhost/star-gravity/public/pdo/activity/acimg/來擎天崗吧-1.png",
+                "http://localhost/star-gravity/public/pdo/activity/acimg/來擎天崗吧-2.png",
+                "http://localhost/star-gravity/public/pdo/activity/acimg/來擎天崗吧-3.png"
+            ],
+            "tag": "流星雨",
+            "category": "高山觀測",
+            "event_date_display": "2025-09-20 (六) ~ 2025-09-21 (日)"
+        } */
+       
+       // 圖片效果
+       if(eventData.value){
+           currentPic.value = eventData.value.image[0] // 第一張
+       }
     })
+
+
+
+
+    /* const eventData = computed(() => {
+        return eventlist.find(ev => ev.id == route.params.id || null)
+    }) */
+
+
+
+
+    const changePic = (img) => {
+        currentPic.value = img
+    }
+
+
+
+
+
+
+
+
+
+    const goToRegistration = () => {
+        
+        if(!memberStore.isAuthed){
+            alert('請先登入會員')
+            return
+        }
+        router.push(`/eventregistration/${eventData.value.ID}`)
+    }
 
 </script>
 
@@ -23,12 +102,20 @@
 
         <!-- 圖片選擇區 -->
         <div class="pic-container">
-            <img :src="eventData.imgurl[0]" alt="" class="selected-pic">
-            <div class="pic-box">
-                <img :src="eventData.imgurl[0]" alt="">
+            <img :src="currentPic" alt="" class="selected-pic">
+            <ul class="pic-box">
+                <li 
+                    v-for="img in eventData.image"
+                    @click="changePic(img)"
+                    :class="{ active: currentPic !== img }"
+                >
+                    <img :src="img" >
+
+                </li>
+                <!-- <img :src="eventData.imgurl[0]" alt="">
                 <img :src="eventData.imgurl[1]" alt="">
-                <img :src="eventData.imgurl[2]" alt="">
-            </div>
+                <img :src="eventData.imgurl[2]" alt=""> -->
+            </ul>
         </div>
 
         <!-- 活動內容區 -->
@@ -36,10 +123,10 @@
             <main>
                 <div class="title-box">
                     <div class="tags">
-                        <div class="type-tag"># {{ eventData.type }}</div>
-                        <div class="place-tag"># {{ eventData.place }}</div>
+                        <div class="type-tag"># {{ eventData.category }}</div>
+                        <div class="place-tag"># {{ eventData.event_place }}</div>
                     </div>
-                    <h1>{{ eventData.title }}</h1>
+                    <h1>{{ eventData.event_name }}</h1>
                     <!-- <p>觀看人次</p> -->
                 </div>
     
@@ -53,9 +140,9 @@
                                 <h2>日期</h2>
                             </div>
                             <p>
-                                活動日期：{{ eventData.date }}
+                                活動日期：{{ eventData.event_date_display }}
                                 <br>
-                                報名截止：{{ eventData.deadline }}
+                                報名截止：{{ eventData.event_deadline }}
                             </p>
                         </div>
     
@@ -65,7 +152,7 @@
                                 <i class="fa-solid fa-location-dot"></i>
                                 <h2>地點</h2>
                             </div>
-                            <p>{{ eventData.address }}</p>
+                            <p>{{ eventData.event_place }}</p>
                         </div>
     
                         <!-- 費用 -->
@@ -74,23 +161,23 @@
                                 <i class="fa-solid fa-dollar-sign"></i>
                                 <h2>費用</h2>
                             </div>
-                            <p>NT$ {{ eventData.price }} / 位</p>
+                            <p>NT$ {{ eventData.event_price }} / 位</p>
                         </div>
                     </div>
     
                     <p class="apply-btn-box">
-                        <router-link to="/eventregistration" class="router-link">
-                            <div class="btn">
+                        <!-- <router-link to="/eventregistration" class="router-link"> -->
+                            <div class="btn" @click="goToRegistration">
                                 <i class="fa-solid fa-star"></i> 立即報名
                             </div>
-                        </router-link>
+                        <!-- </router-link> -->
                     </p>
     
                 </div>
     
                 <div class="intro-box">
                     <h2>活動內容</h2>
-                    <p>{{ eventData.desc }}</p>
+                    <p>{{ eventData.event_description }}</p>
                 </div>
             </main>
             <router-link to="/events" class="router-link">
@@ -143,11 +230,27 @@
                 display: flex;
                 justify-content: center;
                 gap: 20px;
-                img {
-                    width: 240px;
-                    aspect-ratio: 3 / 1;
+
+                li {
                     cursor: pointer;
+                    transition: all .5s ease;
+
+                    &.active {
+                        opacity: .3;
+                    }
+
+                    &:hover {
+                        opacity: .8;
+                    }
+
+                    img {
+                        width: 240px;
+                        aspect-ratio: 3 / 1;
+                        object-fit: cover;
+                        display: block;
+                    }
                 }
+
             }
         }
 

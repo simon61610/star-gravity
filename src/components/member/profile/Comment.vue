@@ -21,17 +21,30 @@
     // 刪除鍵
     function deleteReview(id, deleteReviewId) {
         if (!window.confirm('確定要刪除這則評論嗎？')) return
-        const idx = reviews.value.findIndex(r => r.id === id)
-        if (idx !== -1) reviews.value.splice(idx, 1)
-        const total = reviews.value.length   // 刪除後若當頁沒有資料，往前翻一頁（避免空白頁）
-        const maxPage = Math.max(1, Math.ceil(total / pageSize.value))
-        if (currentPage.value > maxPage) currentPage.value = maxPage
-        // console.log(deleteReviewId);
-
-        updateMemberReview(deleteReviewId)
-        
+        try {
+            await axios.delete(url('Member/comment.php'), {
+                params: { id },
+                headers: token ? { Authorization: `Bearer ${token}` } : {},
+                withCredentials: true
+            })           
+            // 成功後同步刪本地資料 & 修正分頁   
+            const idx = reviews.value.findIndex(r => r.id === id)
+            if (idx !== -1) reviews.value.splice(idx, 1)
+            const total = reviews.value.length
+            const maxPage = Math.max(1, Math.ceil(total / pageSize.value))
+            if (currentPage.value > maxPage) currentPage.value = maxPage
+        } catch (err) {
+            alert(err?.message || '刪除失敗')
+        }
     }
-
+    // 刪除鍵
+    // function onDelete(e) {
+    //     if (window.confirm('確定要刪除這則評論嗎？')) {
+    //         // 找到最近的 .comment-1 容器並移除
+    //         const card = e.currentTarget.closest('.comment-1')
+    //         if (card) card.remove()
+    //     }
+    // }
 
     // 分頁
     const currentPage = ref(1)                                   // 目前頁
@@ -107,7 +120,13 @@
      <shopToast/>
     <!-----右邊評論-------->
     <div class="comment-area">
+        <!--  三種狀態：載入中 / 錯誤 / 無資料 -->
+        <div v-if="loading" class="loading">載入中...</div>
+        <div v-else-if="errorMsg" class="error">{{ errorMsg }}</div>
+        <div v-else-if="filteredTotal === 0" class="empty">目前沒有評論</div>
+        
         <div class="comment-box">
+            
             <div class="comment-1" v-for="r in showReviews" :key="r.id">
                 <h5>{{ r.created_at }}</h5>
                 <h3>{{ r.location_name }}</h3>
@@ -147,6 +166,13 @@
 @import '@/assets/styles/main.scss';
 
 // 右邊評論
+.loading, .empty, .error {
+    padding: 12px 8px;
+    font-size: $pcChFont-p;
+}
+.error { 
+    color: #c0392b; 
+}
 .comment-area{
     margin-top: -20px;
     padding-left: 5px;

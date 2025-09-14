@@ -29,7 +29,9 @@ function bearer_token() {
   $hdr = $_SERVER['HTTP_AUTHORIZATION'] ?? ($_SERVER['Authorization'] ?? '');
   if (!$hdr && function_exists('getallheaders')) {
     $all = getallheaders();
+    // 某些伺服器會給小寫 key
     if (isset($all['Authorization'])) $hdr = $all['Authorization'];
+    if (!$hdr && !empty($all['authorization'])) $hdr = $all['authorization'];
   }
   if (stripos($hdr, 'Bearer ') === 0) return substr($hdr, 7);
   return '';
@@ -80,7 +82,7 @@ try {
                        WHERE ID = ?
                        LIMIT 1');
   $st->execute([$memberID]);
-  $row = $st->fetch();
+  $row = $st->fetch(PDO::FETCH_ASSOC); // 明確用關聯陣列，避免不同 PDO 預設造成行為差異
 
   if (!$row) {
     echo json_encode(['success' => false, 'message' => '找不到會員資料'], JSON_UNESCAPED_UNICODE);
