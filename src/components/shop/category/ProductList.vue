@@ -12,6 +12,8 @@
     // import products from '@/data/products';
     // const items = ref(products) // 生成假資料
 
+    const BASE_URL = import.meta.env.VITE_AJAX_URL_NOEND
+
     const items = ref([])
 
     onMounted(async() => {
@@ -209,7 +211,7 @@
             <div class="item__card" v-for="( item, index ) in showItems"> <!-- 用顯示的商品陣列跑 v-for -->
 
                 <RouterLink :to="`/shop/category/product/${item.ID}` "class="router-link" > 
-                    <img :src="item.images.split(',')[0]" alt="商品假圖" class="item__card__img">
+                    <img :src="BASE_URL + item.images.split(',')[0]" alt="商品假圖" class="item__card__img">
                     <div class="item__card__text">
                         <h1 class="item__card__text--name">{{ item.name }}</h1>
                         <h2 class="item__card__text--spe-price">NT$ {{ item.sale_price }}</h2>

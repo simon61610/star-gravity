@@ -11,6 +11,8 @@
     const router = useRouter()
     const memberStore = useMemberStore()
 
+    const BASE_URL = import.meta.env.VITE_AJAX_URL_NOEND
+
     
     
     const orderGuide = ref([
@@ -36,7 +38,7 @@
         // ['入門啟蒙款 NovaSight 雙筒望遠鏡', '/pdo/starshop/images/雙筒望遠鏡-入門啟蒙款 NovaSight 雙筒望遠鏡-1.png', '2700', '2']
         
         let name = existInfo[0] // 商品名稱
-        let firstImage = existInfo[1] // 圖片路徑
+        let firstImage = BASE_URL + existInfo[1] // 圖片路徑
         let unitPrice = existInfo[2] // 特價單價
         let qty = existInfo[3] // 單種商品數量
         let originalPrice = existInfo[4] // 商品原價
