@@ -10,8 +10,6 @@
 
     //定義響應式資料
     const orders = ref([ ]) // 後端回來的訂單
-    const loading = ref(false) // 載入狀態
-    const errorMsg = ref('')  // 錯誤訊息
 
     const memberId = ref('')
 
@@ -24,14 +22,16 @@
 
     const activeKey = ref('')
     onMounted(() => { activeKey.value = 'profile'; emit('select', 'profile') })
-    function selectItem(key){ activeKey.value = key; emit('select', key) }
+    function selectItem(key){ 
+        activeKey.value = key; emit('select', key) 
+    }
 
     // 內建欄位（外部沒傳 columns 時用）
     const builtinColumns = [
-    { label: '訂單編號', prop: 'order_number' },
-    { label: '訂單日期', prop: 'order_date' },
-    { label: '金額',     prop: 'dollars' },
-    { label: '狀態',     prop: 'order_status'},
+        { label: '訂單編號', prop: 'order_number' },
+        { label: '訂單日期', prop: 'order_date' },
+        { label: '金額',     prop: 'dollars' },
+        { label: '狀態',     prop: 'order_status'},
     ]
     const columnDefs = computed(() => (props.columns?.length ? props.columns : builtinColumns))
 

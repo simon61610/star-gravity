@@ -28,10 +28,10 @@
 
     // 內建欄位（外部沒傳 columns 時用）
     const builtinColumns = [
-    { label: '活動名稱', prop: 'event_name' },
-    { label: '日期&時間', prop: 'event_date' },
-    { label: '活動地點', prop: 'event_place' },
-    { label: '狀態', prop: 'event_status'},
+        { label: '活動名稱', prop: 'event_name' },
+        { label: '日期&時間', prop: 'event_date' },
+        { label: '活動地點', prop: 'event_place' },
+        { label: '狀態', prop: 'event_status'},
     ]
     const columnDefs = computed(() => (props.columns?.length ? props.columns : builtinColumns))
 
@@ -84,6 +84,28 @@
 
     // 若資料量變動，回到第一頁（可保險）
     watch(dataSource, () => { eventPage.value = 1 })
+
+
+    //-------------連接後端--------------------
+    const getMemberEvents = async (memberId) => {
+        try {
+            const resp = await axios.post(
+                import.meta.env.VITE_AJAX_URL + "Member/getMemberEvents.php",
+                { memberId }
+            )
+            console.log(resp.data);
+
+            Events.value = resp.data
+        } catch(error) {
+            console.log("後端請求失敗");
+        }
+    }
+
+    onMounted(() => {
+        console.log(memberStore.user.ID);
+        memberId.value = memberStore.user.ID
+        getMemberEvents(memberId.value)
+    })
 
 </script>
 
