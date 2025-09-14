@@ -1,8 +1,4 @@
 <?php
-// header("Access-Control-Allow-Origin: *");
-// header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-// header("Access-Control-Allow-Headers: Content-Type, Authorization");
-
 include('../pdo.php');
 
 //前端用formData傳來, php可以用$_POST接收文字資料 $_FILES接收file資料
