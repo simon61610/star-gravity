@@ -43,7 +43,7 @@ const sortType = ref('newest')
 // 定義 API URL
 const API_URL = import.meta.env.VITE_AJAX_URL
 
-//監聽標籤事件
+//監聽事件
 function showSelectUl(){
     showSelect.value = !showSelect.value
 }

@@ -17,7 +17,6 @@ const selectedScenes = ref([])
 const searchText = ref('')
 const placeholder = ref('')
 //避免打包後路徑錯誤
-const baseURL = import.meta.env.BASE_URL
 const API_IMAGESURL = import.meta.env.VITE_AJAX_IMAGESURL
 
 // ========== template狀態數據 ==========
