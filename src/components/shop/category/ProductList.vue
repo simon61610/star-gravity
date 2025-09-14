@@ -16,16 +16,26 @@
 
     const items = ref([])
 
+    // =========== 商品篩選列的功能 ============
     const searchKeyword = ref('')
+    const priceOrder = ref('')
     
     bus.on('searchKeyword', (keyword) => {
         searchKeyword.value = keyword || ""
         currentPage.value = 1
     })
 
+    bus.on('priceOrder', (order) => {
+        priceOrder.value = order || ""
+        currentPage.value = 1
+    })
+
     onUnmounted(() => {
         bus.off('searchKeyword')
+        bus.off('priceOrder')
     })
+
+    // =======================================
 
     onMounted(async() => {
         const res = await axios.get(import.meta.env.VITE_AJAX_URL + 'starshop/client/products_get.php')
@@ -100,6 +110,13 @@
         if(searchKeyword.value){
             const keyword = searchKeyword.value
             selectedCateProducts = selectedCateProducts.filter(p => p.name.includes(keyword))
+        }
+
+        // 價格排序: 用解構，避免原本陣列的值改變
+        if(priceOrder.value == 'asc'){
+            selectedCateProducts = [...selectedCateProducts].sort((a, b) => {return a.sale_price - b.sale_price})
+        }else if(priceOrder.value == 'desc'){
+            selectedCateProducts = [...selectedCateProducts].sort((a, b) => {return b.sale_price - a.sale_price})
         }
 
 

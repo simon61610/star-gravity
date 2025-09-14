@@ -3,10 +3,16 @@
     import { ref } from 'vue';
     import bus from '@/composables/useMitt';
 
-    const keyword = ref("")
+    const keyword = ref("") // 輸入
+    const priceOrder = ref('')
+    
 
     const doSearch = () => {
         bus.emit('searchKeyword', keyword.value)
+    }
+
+    const doPriceOrder = () => {
+        bus.emit('priceOrder', priceOrder.value)
     }
 
 
@@ -21,15 +27,15 @@
             </div>
         </div>
         <div class="select-box">
-            <select class="price-orderby">
+            <select class="price-orderby" v-model="priceOrder" @change="doPriceOrder">
                 <option value="">最新上架</option>
-                <option value="">價格由低到高</option>
-                <option value="">價格由高到低</option>
+                <option value="asc">價格由低到高</option>
+                <option value="desc">價格由高到低</option>
             </select>
             <select class="qty-orderby">
-                <option value="">每頁 24 筆</option>
-                <option value="">每頁 16 筆</option>
-                <option value="">每頁 8 筆</option>
+                <option value="">每頁顯示 24 筆</option>
+                <option value="">每頁顯示 16 筆</option>
+                <option value="">每頁顯示 8 筆</option>
             </select>
         </div>
     </section>
@@ -74,17 +80,19 @@
 
         }
         .select-box{
+            // border: 1px solid green;
             display: flex;
             gap: 32px;
 
             select {
-                width: 100%;
+                width: 200px;
                 background-color: transparent;
                 font-size: 20px;
                 padding-right: 24px;
                 color: white;
                 border: none;
                 border-bottom: 1px solid #ccc;
+                // border: 1px solid red;
                 outline: none;
                 cursor: pointer;
                 
