@@ -2,6 +2,18 @@
 <script setup>
     import { ref, computed, onMounted, watch } from 'vue'
     import Pagination from '@/components/common/Pagination.vue'
+    import axios from 'axios'
+    import { useMemberStore } from '@/stores/member'
+
+    // 引用useMemberStore
+    const memberStore = useMemberStore()
+
+    //定義響應式資料
+    const events = ref([ ]) // 後端回來的訂單
+    const loading = ref(false) // 載入狀態
+    const errorMsg = ref('')  // 錯誤訊息
+
+    const memberId = ref('')
 
     // 定義 props
     const props = defineProps({
@@ -16,41 +28,41 @@
 
     // 內建欄位（外部沒傳 columns 時用）
     const builtinColumns = [
-    { label: '活動名稱', prop: 'activity_name' },
-    { label: '日期&時間', prop: 'date_time' },
-    { label: '地點', prop: 'adress' },
-    { label: '狀態', prop: 'state', align: 'center' },
+    { label: '活動名稱', prop: 'event_name' },
+    { label: '日期&時間', prop: 'event_date' },
+    { label: '活動地點', prop: 'event_place' },
+    { label: '狀態', prop: 'event_status'},
     ]
     const columnDefs = computed(() => (props.columns?.length ? props.columns : builtinColumns))
 
     // 內建資料（之後可改成 props.data 或 API 結果）
-    const eventtable = ref([
-    { activity_name: '流星雨', date_time: '20250816 19:30', adress: '陽明山', state: '已完成' },
-    { activity_name: '夏季大三角', date_time: '20250825 19:30', adress: '阿里山', state: '進行中' },
-    { activity_name: '賞銀河', date_time: '', adress: '', state: '' },
-    { activity_name: '擁抱宇宙', date_time: '', adress: '', state: '' },
-    { activity_name: '墾丁星夜', date_time: '', adress: '', state: '' },
-    { activity_name: '台東最美星空', date_time: '', adress: '', state: '' },
-    { activity_name: '跟羊一起看星星', date_time: '', adress: '', state: '' },
-    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    ])
+    // const eventtable = ref([
+    // { activity_name: '流星雨', date_time: '20250816 19:30', adress: '陽明山', state: '已完成' },
+    // { activity_name: '夏季大三角', date_time: '20250825 19:30', adress: '阿里山', state: '進行中' },
+    // { activity_name: '賞銀河', date_time: '', adress: '', state: '' },
+    // { activity_name: '擁抱宇宙', date_time: '', adress: '', state: '' },
+    // { activity_name: '墾丁星夜', date_time: '', adress: '', state: '' },
+    // { activity_name: '台東最美星空', date_time: '', adress: '', state: '' },
+    // { activity_name: '跟羊一起看星星', date_time: '', adress: '', state: '' },
+    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
+    // ])
 
-    // 單一資料來源：優先用外部 props.data，否則用內建
-    const dataSource = computed(() => eventtable.value) // ← 先用內建資料
+    // 單一資料來源：有傳入 props.data 就用，否則用 API 回來的 orders
+    const dataSource = computed(() => (props.data?.length ? props.data : events.value))
 
     // 分頁
     const eventPage = ref(1)

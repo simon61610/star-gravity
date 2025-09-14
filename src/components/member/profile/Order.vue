@@ -3,7 +3,7 @@
     import Pagination from '@/components/common/Pagination.vue'
     import axios from 'axios'
     import { useMemberStore } from '@/stores/member'
-import { columnAlignment } from 'element-plus'
+    import { columnAlignment } from 'element-plus'
 
     // 引用useMemberStore
     const memberStore = useMemberStore()
