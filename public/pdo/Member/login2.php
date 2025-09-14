@@ -1,31 +1,11 @@
 <?php
 include '../pdo.php';
 
-// header('Content-Type: application/json; charset=utf-8');
 ini_set('display_errors', '0');
 error_reporting(E_ALL);
 
-// header('Access-Control-Allow-Credentials: true');
-// header('Access-Control-Allow-Origin: http://localhost:5173');
-// header('Access-Control-Allow-Methods: POST, OPTIONS');
-// header('Access-Control-Allow-Headers: Content-Type, X-Requested-With, Authorization');
-
 session_start();
 // $data = json_decode(file_get_contents("php://input"), true) ;
-
-// 預檢與方法限制（避免 CORS 預檢卡住、或誤用 GET）
-// if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { 
-//     exit; 
-// };
-// if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-//     echo json_encode(['success'=>false,'message'=>'請用 POST']); 
-//     exit;
-// };
-
-// CORS 預檢
-/* if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'OPTIONS') { 
-    exit;
-} */
 
 // 讀取與檢查輸入（避免 $data 為 null 造成 undefined index）
 $raw  = file_get_contents('php://input');   // 拿前端送來的字串
@@ -36,10 +16,6 @@ $password = isset($data['password']) ? trim($data['password']) : '';
 if ($email === '' || $password === '') {
     echo json_encode(['success'=>false,'message'=>'缺少 email 或 password']); exit;
 };
-
-// $sql = 'SELECT * from Member
-//         where email = :email and password = :password
-//     ';
 
 // 查會員
 $sql = 'SELECT * FROM Member 
@@ -94,12 +70,13 @@ $token = create_token(32);
 $expiresAt = date('Y-m-d H:i:s', time() + 7*24*60*60); // 7 天有效
 // $expiresAt = date('Y-m-d H:i:s', time() + 5*60);    // 測試用
 
+// 先刪掉同會員舊的 token（確保只留最新一筆）
+$delete = $pdo->prepare('DELETE FROM `Tokens` 
+                        WHERE member_id = :mid');
+$delete->execute([':mid' => $member['ID']]);
+
 
 // 寫入 Tokens 資料表
-// $ins = 'INSERT INTO `Tokens` (member_id, token, expires_at) 
-//         VALUES (:mid, :tok, :exp)
-//         ';
-
 $ins = $pdo->prepare('INSERT INTO `Tokens` (member_id, token, expires_at) 
                     VALUES (:mid, :tok, :exp)
                     '); // 用 prepare 回傳 PDOStatement
