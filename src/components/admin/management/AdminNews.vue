@@ -15,7 +15,7 @@ const emit = defineEmits(["added"])
 const props = defineProps({
   search: { type: String, default: '' }
 })
-
+const uploadUrl = ref(import.meta.env.VITE_AJAX_URL + 'news/upload.php')
 // 狀態變數
 const uploadRef = ref(null)
 const Newstable = ref([])        // 文章列表資料
@@ -498,7 +498,7 @@ const saveTag = () => {
 
             <div class="Admin-article-image">
               <h2>圖片:</h2>
-              <el-upload class="upload-demo"  action="https://tibamef2e.com/tjd102/g1/pdo/news/upload.php"  
+              <el-upload class="upload-demo"  :action="uploadUrl"  
                 list-type="picture-card"
                 ref="uploadRef"
                 :auto-upload="false"
