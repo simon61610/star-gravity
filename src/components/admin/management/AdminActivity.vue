@@ -73,6 +73,11 @@ onMounted(async () => {
 /*------------------ 圖片上傳--------------------*/
 // 每次上傳成功，更新對應的框
 function handleSuccess(response, file, index) {
+   console.log("typeof response:", typeof response, response)
+  // 保險處理：萬一是字串就 parse 一下
+  if (typeof response === "string") {
+    try { response = JSON.parse(response) } catch {}
+  }
   // 後端有成功回傳正式網址
   if (response.success && response.url) {
     file.url = response.url   // 把 blob 換成正式網址
@@ -234,17 +239,51 @@ defineExpose({ handleEdit, handleadd }) // 父層可呼叫新增/編輯
 
   // 2. 等待全部上傳完成（檢查 response.url）
   const urls = await new Promise(resolve => {
-    const timer = setInterval(() => {
-      const allDone = fileLists.value.every(list =>!list.length || list[0].response?.url || list[0]?.url ) //條件1.這一格是空的，也算完成 條件2.上傳成功，後端回傳的檔案網址 條件3.是舊資料(從 DB 帶回來的），也可以
-      if (allDone) {
-        clearInterval(timer)
-        resolve(fileLists.value
-        .map(list => list[0]?.response?.url || list[0]?.url || "") //利用map重組陣列
-        .filter(url => url) // 過濾掉空的
-        )
-      }
-    }, 300) // 每 0.3 秒檢查一次 確定檢查到3個圖片有上傳才回傳 resolve 塞回 urls陣列
-  })
+  const timer = setInterval(() => {
+    const allDone = fileLists.value.every(list => {
+      if (!list.length) return true // 空格 → 當完成
+      const f = list[0]
+      // 只有 response.url（新上傳）或非 blob 的舊資料，才算完成
+      return !!(f.response?.url || (f.url && !f.url.startsWith("blob:")))
+    })
+
+    if (allDone) {
+      clearInterval(timer)
+      resolve(
+        fileLists.value
+          .map(list => {
+            const f = list[0]
+            if (!f) return ""
+            if (f.response?.url) return f.response.url   // 新上傳
+            if (f.url && !f.url.startsWith("blob:")) return f.url // 舊資料
+            return ""
+          })
+          .filter(url => url) // 去掉空字串
+      )
+    }
+  }, 300)
+})
+  // const urls = await new Promise(resolve => {
+  //   const timer = setInterval(() => {
+  //     const allDone = fileLists.value.every(list =>!list.length || list[0].response?.url || list[0]?.url ) //條件1.這一格是空的，也算完成 條件2.上傳成功，後端回傳的檔案網址 條件3.是舊資料(從 DB 帶回來的），也可以
+  //     if (allDone) {
+  //       clearInterval(timer)
+  //       resolve(fileLists.value
+  //       .map(list => {
+  //       const f = list[0]
+  //       if (!f) return ""
+  //       // 優先拿 response.url（後端回傳的正式網址）
+  //       if (f.response?.url) return f.response.url
+  //       // 如果還是 blob，就丟掉
+  //       if (f.url && !f.url.startsWith("blob:")) return f.url
+  //       return ""
+  //     })
+  //       // .map(list => list[0]?.response?.url || list[0]?.url || "") //利用map重組陣列
+  //       .filter(url => url) // 過濾掉空的
+  //       )
+  //     }
+  //   }, 300) // 每 0.3 秒檢查一次 確定檢查到3個圖片有上傳才回傳 resolve 塞回 urls陣列
+  // })
 
   console.log("要存到 DB 的路徑:", urls)
 

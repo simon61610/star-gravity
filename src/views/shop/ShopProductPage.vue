@@ -14,6 +14,7 @@
     import { useMemberStore } from '@/stores/member'
 
     const memberStore = useMemberStore()
+    const BASE_URL = import.meta.env.VITE_AJAX_URL_NOEND
 
 
     // 假資料
@@ -65,7 +66,8 @@
         */
 
         if(product.value){
-            imgArr.value = product.value.images.split(',')
+            // imgArr.value = product.value.images.split(',')
+            imgArr.value = product.value.images.split(',').map(path => BASE_URL + path)
             // console.log(imgArr.value)
             currentPic.value = imgArr.value[0] // 第一張
 
@@ -177,7 +179,7 @@
         }
 
         const itemId = product.ID
-        const firstImage = product.images.split(',')[0]
+        const firstImage = BASE_URL + product.images.split(',')[0]
         const unitPrice = product.sale_price
         const originalPrice = product.original_price
 

@@ -4,6 +4,7 @@
     import axios from 'axios'
 
     const route = useRoute()
+    const BASE_URL = import.meta.env.VITE_AJAX_URL_NOEND
 
     const member_id = computed(() => route.query.member_id)
     const order_id = computed(() => route.query.order_id)
@@ -24,7 +25,10 @@
 
         // console.log(typeof(res.data)); // object
         order.value = res.data.order
-        orderDetail.value = res.data.orderDetail
+        orderDetail.value = res.data.orderDetail.map(item => ({
+            ...item,
+            product_image: BASE_URL + item.product_image
+        }))
         // console.log(order.value)
         // console.log(orderDetail.value)
         // console.log(typeof(order.value.notes))

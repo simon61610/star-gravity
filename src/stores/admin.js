@@ -24,7 +24,7 @@ export const useAuthStore = defineStore("admin",()=>{
         //正式部屬呼叫PHP
         const res =  await axios.get(import.meta.env.VITE_AJAX_URL+'admin/admincheck.php',{withCredentials: true})  //withCredentials: true 請求這個網址時要帶上cookie
 
-        isLoggedIn.value = res.data.login
+        isLoggedIn.value = res.data.success === true
         currentUser.value = res.data.user || null
     }
 
