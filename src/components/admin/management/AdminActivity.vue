@@ -73,7 +73,11 @@ onMounted(async () => {
 /*------------------ 圖片上傳--------------------*/
 // 每次上傳成功，更新對應的框
 function handleSuccess(response, file, index) {
-  file.response = response //把資料寫回element資料庫
+  // 後端有成功回傳正式網址
+  if (response.success && response.url) {
+    file.url = response.url   // 把 blob 換成正式網址
+    file.response = response  // 還是保留完整 response
+  }
   fileLists.value[index] = [file] // 每框只留一張
 }
 
