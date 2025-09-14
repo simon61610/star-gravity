@@ -138,7 +138,7 @@
         }
 
         const itemId = product.ID
-        const firstImage = product.images.split(',')[0]
+        const firstImage = BASE_URL + product.images.split(',')[0]
         const unitPrice = product.sale_price
         const originalPrice = product.original_price
 
