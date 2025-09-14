@@ -1,6 +1,6 @@
 <!-- 單一商品頁 -->
 <!-- 待完成
-- 寫上圖片超出要能滑動的功能
+- 資料要用 Get 方法，傳到後端處理，尋找商品資料
 -->
 
 <script setup>
@@ -67,7 +67,7 @@
         if(product.value){
             imgArr.value = product.value.images.split(',')
             // console.log(imgArr.value)
-            currentPic.value = imgArr.value[0]
+            currentPic.value = imgArr.value[0] // 第一張
 
 
 

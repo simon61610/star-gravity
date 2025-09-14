@@ -13,10 +13,13 @@
     const location = ref([])
 
 
-    // 一開始載入動活動資料
-    activityAPI("get").then(res => {
-    eventTable.value = res.data
-    })
+    // 一開始載入動活動資料 方法傳給子層
+    function refreshTable() {
+    activityAPI("get").then(res => {    
+        eventTable.value = res.data
+    })}
+    
+    refreshTable()
 
     //載入地點API
     axios.post(import.meta.env.VITE_AJAX_URL + "map/getLocationList.php",).then(res=>{
@@ -56,7 +59,7 @@
                         </template>             
                     </AdminToolbar>
                
-                <AdminActivity ref="childRef" :search="store.keyword"  @added="eventTable.push($event)" @updated="handleUpdate($event)"  :eventTable = "eventTable" :location= "location" /> <!--這裡要用ref建立子層實例(接彈窗資料)-->
+                <AdminActivity ref="childRef" :search="store.keyword"  @added="eventTable.push($event)" @updated="handleUpdate($event)"  :eventTable = "eventTable" :location= "location" @refresh="refreshTable" /> <!--這裡要用ref建立子層實例(接彈窗資料)-->
 
             </div>
 

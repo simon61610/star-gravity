@@ -1,6 +1,6 @@
 <!-- src/components/admin/management/AdminActivity.vue -->
 <script setup>
-import { ref,computed } from 'vue'
+import { ref,computed,onMounted } from 'vue'
 import AdminTable from '@/components/admin/AdminTable.vue'
 import AdminToolbar from '../AdminToolbar.vue'
 import {activityAPI} from '@/api/activityAPI.js'
@@ -51,6 +51,14 @@ const filteredEvent = computed(() => {
     return props.eventTable
   }
 })
+onMounted(() => {
+  refreshTable()
+})
+
+//定義查詢函數讓後台資料更新同步渲染
+function refreshTable() {
+  emit('refresh')  //呼叫父層方法我要更新
+}
 /*------------------ 圖片上傳--------------------*/
 // 每次上傳成功，更新對應的框
 function handleSuccess(response, file, index) {
@@ -146,13 +154,6 @@ const handleEdit = (row, index) => {
   }
     // 把 image 解析回陣列
     const images = Array.isArray(row.image) ? row.image : []
-    //let images = []
-    // try {
-    //   images = JSON.parse(row.image || "[]")
-    // } catch (e) {
-    //   console.error("圖片欄位解析失敗", e)
-    // }
-    // previewImages.value = images  //把值寫到previewImages陣列
 
     // 塞回三個 fileList，讓 el-upload 顯示
     fileLists.value = [[], [], []]
@@ -198,7 +199,8 @@ const handleadd = () => {
     tag: '',
     category: ''
   }
-
+  
+  fileLists.value = [[], [], []]  //將圖片陣列清空 避免新增還有上個圖檔
 
   daterange.value = []
   deadline.value  = ''
@@ -252,22 +254,43 @@ defineExpose({ handleEdit, handleadd }) // 父層可呼叫新增/編輯
   
 
   // 4. 新增 or 更新
-  if (!newRow.ID) { // 沒有 ID → 新增
-    return activityAPI('add', newRow)
-      .then(res => {
-        emit('added', res.data) 
-        showActivity.value = false
-      })
-  } else { // 有 ID → 更新
-    return activityAPI('update', newRow)
-      .then(res => {
-        emit('updated', res.data)  //子層通知父層
-        showActivity.value = false
-      })
-  }
-
-  
+  if (!newRow || !newRow.ID) { // 沒有 ID → 新增
+  return activityAPI('add', newRow)
+    .then(() => {
+      return refreshTable()
+    })
+    .then(() => {
+      showActivity.value = false
+    
+      // emit('added', res.data)
+    })
+} else { // 有 ID → 更新
+  return activityAPI('update', newRow)
+    .then(() => {
+      return refreshTable()
+    })
+    .then(() => {
+      showActivity.value = false
+    
+      // emit('updated', res.data)
+    })
 }
+//   if (!newRow.ID) { // 沒有 ID → 新增
+
+//     return activityAPI('add', newRow)
+//       .then(res => {
+//          emit('added', res.data) 
+//          showActivity.value = false
+//        })
+//    } else { // 有 ID → 更新
+//      return activityAPI('update', newRow)
+//        .then(res => {
+//         emit('updated', res.data)  //子層通知父層
+//          showActivity.value = false
+//        })
+//    }
+  
+ }
 </script>
 
 <template>
@@ -285,7 +308,7 @@ defineExpose({ handleEdit, handleadd }) // 父層可呼叫新增/編輯
   <div v-if="showActivity" class="Admin-Activity-modal" @click.self="close('activity')">
     <form class="Admin-activity-form" action="">
       <div class="Admin-Activity-h1">
-        <h1>活動編輯查看</h1>
+        <h1>活動編輯與新增</h1>
       </div>
 
       <div class="Admin-Activity-wapper">
