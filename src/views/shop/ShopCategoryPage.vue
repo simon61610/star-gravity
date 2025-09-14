@@ -86,7 +86,7 @@
 
             .main-section {
                 display: flex;
-                justify-content: center;
+                justify-content: flex-start;
                 gap: 60px;
             }
         }
