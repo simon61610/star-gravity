@@ -3,13 +3,18 @@
     import { onMounted } from 'vue'
     // import { UserFilled, SwitchButton } from '@element-plus/icons-vue'
     import axios from 'axios' 
+    import { useMemberStore } from '@/stores/member'
+    import { ref } from 'vue'
+
+    const memberStore = useMemberStore()
+
+    const memberID = ref("")
 
     // const props = defineProps({
     //     username: { type: String, default: '小姐/先生' },
     // })
 
     // 頭像
-    import { ref } from 'vue'
     // 預覽用的 base64
     const preview = ref('')
     // 真的要上傳的檔案物件
@@ -51,6 +56,7 @@
     async function save() {
         if (!file.value) return alert('請先選擇圖片')
         const fd = new FormData()
+        fd.append("memberID", memberID.value)
         fd.append('avatar', file.value)  // 後端用 $_FILES['avatar'] 接
 
         // 若你登入有回 token，就帶上 Authorization
@@ -88,6 +94,12 @@
     }
     // 進頁面時拉會員資料（需後端 profile.php 回傳 image 與 name）
     async function fetchProfile() {
+
+        // 以下先暫時用前台抓會員ID
+        memberID.value = memberStore.user?.ID
+        console.log(memberID.value);
+        
+
         // 同步 Bearer（可選）
         const token = localStorage.getItem('token')
         const headers = token ? { Authorization: `Bearer ${token}` } : {}

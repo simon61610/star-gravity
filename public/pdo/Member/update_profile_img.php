@@ -52,6 +52,8 @@ if ($uid === 0) {
 
 // 取檔案（支援 avatar 或 image 兩種欄位名）
 $file = $_FILES['avatar'] ?? ($_FILES['image'] ?? null);
+
+
 if (!$file || !is_uploaded_file($file['tmp_name'])) {
   echo json_encode(['success'=>false,'message'=>'請附上檔案欄位 avatar（或 image）'], JSON_UNESCAPED_UNICODE);
   exit;
@@ -105,62 +107,89 @@ $ext = ($mime === 'image/png') ? 'png' : (($mime === 'image/webp') ? 'webp' : 'j
 // };
 
 // 目錄與檔名
-$rootDir   = dirname(__DIR__); // Member/.. -> 專案根
-$saveDir   = $rootDir . '/uploads/avatars/' . $uid . '/';
-$publicRel = 'uploads/avatars/' . $uid . '/'; // 存 DB 用相對路徑
+// $rootDir   = dirname(__DIR__); // Member/.. -> 專案根
+// $saveDir   = $rootDir . '/uploads/avatars/' . $uid . '/';
+// $publicRel = 'uploads/avatars/' . $uid . '/'; // 存 DB 用相對路徑
 
-if (!is_dir($saveDir) && !@mkdir($saveDir, 0755, true)) {
-  echo json_encode(['success'=>false,'message'=>'無法建立上傳目錄'], JSON_UNESCAPED_UNICODE);
-  exit;
-};
+$memberID = $_POST['memberID'];
 
-$fname    = 'avatar_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
-$destPath = $saveDir . $fname;
-$relPath  = $publicRel . $fname;
+$fileName = $file['name'];
+
+// 照片存放的資料夾
+$filePath = __DIR__ . "/uploadImages/" . $fileName;
+
+//將暫存檔搬移到正確位置
+move_uploaded_file($file['tmp_name'], $filePath);
+
+// 建立要存到資料庫的圖檔路徑字串
+$imagePath = "/pdo/Member/uploadImages/" . $fileName;
+
+//建立SQL
+$sqlImg = "UPDATE Member 
+              SET image=:image 
+              WHERE ID=:id";
+
+$statementImg = $pdo -> prepare($sqlImg);
+$statementImg -> bindParam(":image", $imagePath);
+
+$statementImg->bindParam(":id", $memberID);
+
+// 執行新增圖片
+$statementImg -> execute();
+
+// if (!is_dir($saveDir) && !@mkdir($saveDir, 0755, true)) {
+//   echo json_encode(['success'=>false,'message'=>'無法建立上傳目錄'], JSON_UNESCAPED_UNICODE);
+//   exit;
+// };
+
+// $fname    = 'avatar_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
+// $destPath = $saveDir . $fname;
+// $relPath  = $publicRel . $fname;
 
 // 直接搬原檔（不壓縮、不轉檔）
-if (!@move_uploaded_file($file['tmp_name'], $destPath)) {
-  echo json_encode(['success'=>false,'message'=>'存檔失敗（move_uploaded_file）'], JSON_UNESCAPED_UNICODE);
-  exit;
-}
+// if (!@move_uploaded_file($file['tmp_name'], $destPath)) {
+//   echo json_encode(['success'=>false,'message'=>'存檔失敗（move_uploaded_file）'], JSON_UNESCAPED_UNICODE);
+//   exit;
+// }
 
-// 更新 DB（Member.image），並刪除舊檔（同 uid 目錄內）
-try {
-    $st = $pdo->prepare('SELECT image FROM `Member` WHERE ID=:id LIMIT 1');
-    $st->execute([':id'=>$uid]);
-    $old = $st->fetch(PDO::FETCH_ASSOC);
-    $oldPath = $old && !empty($old['image']) ? $old['image'] : null;
+// // 更新 DB（Member.image），並刪除舊檔（同 uid 目錄內）
+// try {
+//     $st = $pdo->prepare('SELECT image FROM `Member` WHERE ID=:id LIMIT 1');
+//     $st->execute([':id'=>$uid]);
+//     $old = $st->fetch(PDO::FETCH_ASSOC);
+//     $oldPath = $old && !empty($old['image']) ? $old['image'] : null;
 
-    $up = $pdo->prepare('UPDATE `Member` SET image=:img WHERE ID=:id');
-    $ok = $up->execute([':img'=>$relPath, ':id'=>$uid]);
+//     $up = $pdo->prepare('UPDATE `Member` SET image=:img WHERE ID=:id');
+//     $ok = $up->execute([':img'=>$relPath, ':id'=>$uid]);
 
-    if (!$ok) {
-        @unlink($destPath);
-        echo json_encode(['success'=>false,'message'=>'更新資料庫失敗'], JSON_UNESCAPED_UNICODE);
-        exit;
-    }
+//     if (!$ok) {
+//         @unlink($destPath);
+//         echo json_encode(['success'=>false,'message'=>'更新資料庫失敗'], JSON_UNESCAPED_UNICODE);
+//         exit;
+//     }
 
-    // 刪除舊檔（僅限自己目錄）
-    if ($oldPath) {
-        $oldAbs = $rootDir . '/' . ltrim($oldPath, '/');
-        $safe   = realpath($rootDir . '/uploads/avatars/' . $uid . '/');
-        $oldRp  = realpath($oldAbs);
-        if ($safe && $oldRp && strpos($oldRp, $safe) === 0) @unlink($oldRp); 
-    }
+//     // 刪除舊檔（僅限自己目錄）
+//     if ($oldPath) {
+//         $oldAbs = $rootDir . '/' . ltrim($oldPath, '/');
+//         $safe   = realpath($rootDir . '/uploads/avatars/' . $uid . '/');
+//         $oldRp  = realpath($oldAbs);
+//         if ($safe && $oldRp && strpos($oldRp, $safe) === 0) @unlink($oldRp); 
+//     }
 
-} catch (Throwable $e) {
-    @unlink($destPath);
-    echo json_encode(['success'=>false,'message'=>'伺服器錯誤：'.$e->getMessage()], JSON_UNESCAPED_UNICODE);
-    exit;
-}
+// } catch (Throwable $e) {
+//     @unlink($destPath);
+//     echo json_encode(['success'=>false,'message'=>'伺服器錯誤：'.$e->getMessage()], JSON_UNESCAPED_UNICODE);
+//     exit;
+// }
 
 // 成功
 echo json_encode([
     'success' => true,
     'message' => '頭貼已更新',
     'data'    => [
-        'avatarUrl'      => $relPath,       // 相對路徑，前端用 url() 補成完整
-        'cacheBustParam' => time(),         // 前端用 ?v= 用
+        // 'avatarUrl'      => $relPath,       // 相對路徑，前端用 url() 補成完整
+        'avatarUrl' => $imagePath,
+        'cacheBustParam' => time()         // 前端用 ?v= 用
     ],
 ], JSON_UNESCAPED_UNICODE);
 
