@@ -69,7 +69,7 @@
         }
         // 載入城市/區域 JSON
         try {
-            const res = await axios.get('/JSON_CSV_XML/CityCountyData.json')
+            const res = await axios.get(import.meta.env.VITE_PUBLIC_URL + 'JSON_CSV_XML/CityCountyData.json')
             cities.value = res.data || []
             // console.log(cities.value)
         } catch (e) {
