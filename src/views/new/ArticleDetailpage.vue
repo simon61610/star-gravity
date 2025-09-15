@@ -82,6 +82,7 @@ main{
     main{
         padding:  0 16px;
         .article-page-body{
+        align-items: center;
         margin-top: 36px !important;
         display: flex;
         flex-direction: column;

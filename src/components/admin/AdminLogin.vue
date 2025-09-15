@@ -19,10 +19,10 @@ async function Login() {
   const result = await admin.login(username.value, password.value)  
   // login() return res.data，所以這裡可以拿到 success / message
 
-  if (result.success) {
+  if (result.success == true) {
     // 登入成功
     console.log('登入成功', result)
-    router.push('/AdminMemberPage') // 測試成功後導到後台首頁
+    router.push({ name: 'AdminMemberPage' }) // 測試成功後導到後台首頁
   } else {
     // 登入失敗
     errorMsg.value = result.message || '帳號或密碼錯誤'
