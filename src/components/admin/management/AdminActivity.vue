@@ -5,6 +5,7 @@ import AdminTable from '@/components/admin/AdminTable.vue'
 import AdminToolbar from '../AdminToolbar.vue'
 import {activityAPI} from '@/api/activityAPI.js'
 import { useAuthStore } from '@/stores/admin.js'
+import axios from 'axios'
 
 
 
@@ -108,6 +109,8 @@ const columns = [
 
 /* ---------------- 人員清單 ---------------- */
 const selectedPerson = ref(null)
+const peopleSearch = ref('')
+const people = ref([])
 
 const people_list_Columns = [
   { label:"報名編號", prop:'id' },
@@ -119,8 +122,6 @@ const people_list_Columns = [
   { label:"報名日期", prop:'apply_date' },
   { label:"操作",     slot:'刪除', align:'right' }
 ]
-const peopleSearch = ref('')
-const people = ref([{ id: '01' }])
 
 /* ---------------- 彈窗顯示控制 ---------------- */
 const showpeople   = ref(false)
@@ -131,11 +132,42 @@ function close(type) {
 }
 
 /* ---------------- 人員相關 ---------------- */
-const peopleEdit = (row, index) => {
+/* const peopleEdit = (row, index) => {
   console.log(index, row)
   selectedPerson.value = { ...row }
   showpeople.value = true
+} */
+const peopleEdit = async (row, index) => {
+  console.log("管理活動 ID:", row.ID)
+  selectedPerson.value = null
+
+  // 暫時放假資料
+  /* people.value = [
+    { id: 'A001', member_id: 'M001', name: '王小明', gender: '男', phone: '0912-345678', email: 'test1@example.com', apply_date: '2025-09-01' },
+    { id: 'A002', member_id: 'M002', name: '李小華', gender: '女', phone: '0922-222222', email: 'test2@example.com', apply_date: '2025-09-02' }
+  ] */
+
+  try {
+    const res = await axios.get(import.meta.env.VITE_AJAX_URL + 'activity/activity_people_get.php', { 
+      params: { event_id: row.ID } 
+    })
+
+    if(res.data.success){
+      people.value = res.data.joiners
+    }else {
+      alert(res.data.message || "讀取報名清單失敗")
+      people.value = []
+    }
+  }catch(err){
+    console.error("讀取報名清單錯誤", err)
+    alert("無法取得報名清單")
+    people.value = []
+  }
+
+  showpeople.value = true
 }
+
+
 function delEdit(id) {
   const idx = people.value.findIndex(o => o.id === id)
   if (idx !== -1) people.value.splice(idx, 1)
@@ -485,7 +517,7 @@ defineExpose({ handleEdit, handleadd }) // 父層可呼叫新增/編輯
         <h1>編輯查看</h1>
       </div>
       <AdminToolbar />
-      <!-- <AdminTable
+      <AdminTable
         :columns="people_list_Columns"
         :data="people"
         :search="peopleSearch"
@@ -494,7 +526,7 @@ defineExpose({ handleEdit, handleadd }) // 父層可呼叫新增/編輯
         <template #刪除="{ row }">
           <el-button size="small" @click="delEdit(row.id)">刪除</el-button>
         </template>
-      </AdminTable> -->
+      </AdminTable>
       <div class="Admin-people-button">
         <button type="button" @click="close('people')">關閉</button>
         <button type="button" @click="savepeople(people, selectedPerson?.id ?? selectedPerson?.value?.id)">儲存</button>
