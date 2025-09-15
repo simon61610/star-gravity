@@ -85,13 +85,14 @@ export const useMemberStore = defineStore('Member', () => {
       }
     }
 
-    async function loginByEmail({ email, password}) {
+    async function loginByEmail({ email, password }) {
         loading.value = true
         try {
             const res =await fetch(import.meta.env.VITE_AJAX_URL + 'Member/login2.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
+                body: JSON.stringify({ email, password }),
+                // credentials: 'include' // 讓 PGPSESSID cookie 帶上去
             })                                                            // 成功時把 user、token 同步存到 store + localStorage
             const data = await res.json()
             if(!data.success) throw new Error(data.message || '登入失敗')

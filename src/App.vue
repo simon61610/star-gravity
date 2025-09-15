@@ -11,6 +11,8 @@
 		import Footer from '@/components/Footer.vue';
 		import StarryLoader from '@/components/common/StarryLoader.vue'
 		import loaderKit from '@/composables/loaderState' 
+		import axios from 'axios';
+
 		const { loader } = loaderKit 
 		const defaultPalette = {                                  // 預設配色（未指定時使用）
 			bg:'#050a18', star:'#cfe3ff',                           // 背景 / 星點
@@ -43,6 +45,14 @@
 					router.replace('/loginfirst')
 				}
 			}
+
+
+			/* try{
+				const res = await axios.get(import.meta.env.VITE_AJAX_URL + 'Member/session_test.php', { withCredentials: true })
+				console.log('Session 測試:', res.data)
+			}catch (err) {
+				console.log('Session 測試錯誤：'+ err)
+			} */
 		})
 		
 	</script>
