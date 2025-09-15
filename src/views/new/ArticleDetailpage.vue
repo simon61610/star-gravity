@@ -3,18 +3,26 @@ import ArticleAside from '@/components/new/ArticleAside.vue';
 import ArticleContent from '@/components/new/ArticleContent.vue';
 import axios from "axios";
 import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { ref, onMounted,watch } from 'vue'
 const articles = ref([])
 const article = ref(null)
 const route = useRoute()
+const router = useRouter()
 
 onMounted(() => {
     axios.get(import.meta.env.VITE_AJAX_URL + `news/newsgetall.php?id=${route.params.id}`)
         .then(res => {
-        article.value = res.data.article
+            if (res.data.success && res.data.article){
+                article.value = res.data.article
+            }else {
+                router.push('/Newpage')  // 找不到 → 回首頁
+            }
+        
         })
         .catch((err)=>{
         console.log(err,'資料單篇失敗')
+        router.push('/Newpage')
         })
     axios.get(import.meta.env.VITE_AJAX_URL + `news/newssearch.php`)
     // axios.get(`https://tibamef2e.com/tjd102/g1/pdo/news/newssearch.php`)
@@ -30,10 +38,15 @@ watch(() => route.params.id, async (newId) => {  //監聽單篇文章id
     axios.get(import.meta.env.VITE_AJAX_URL + `news/newsgetall.php?id=${newId}`)
 //   axios.get(`https://tibamef2e.com/tjd102/g1/pdo/news/newsgetall.php?id=${newId}`)
     .then(res => {
-      article.value = res.data.article
+            if (res.data.success && res.data.article){
+                article.value = res.data.article
+            }else {
+                router.push('/Newpage')  // 找不到 → 回首頁
+        }
     })
-    .catch((err) => {
-      console.log(err, '資料單篇失敗')
+        .catch((err) => {
+        console.log(err, '資料單篇失敗')
+        router.push('/Newpage')
     })
 })
 
