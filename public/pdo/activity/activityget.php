@@ -10,7 +10,8 @@ include('../pdo.php');
 
 // $sql = "select * from   `Event`" ;
 $sql = "SELECT e.*, (SELECT COUNT(*) FROM Joiner j WHERE j.event_id = e.ID) AS registration_count
-            FROM Event e";
+            FROM Event e 
+            ORDER BY e.ID DESC";
 
 
 //執行並查詢，會回傳查詢結果的物件

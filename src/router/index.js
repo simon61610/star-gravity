@@ -219,7 +219,7 @@ const routes = [
       children:[
           {
             path: 'AdminMemberPage',    
-            name: 'AdminMemberPage',     
+            name: 'AdminMemberPage', 
             component: () => import('@/views/admin/AdminMemberPage.vue'),
             meta: {
               requiresAuth: true,
@@ -313,11 +313,11 @@ const router = createRouter({
  router.beforeEach(async(to,from,next) => {
   const admin = useAuthStore()
   if(to.meta.requiresAuth){
-      await admin.checkSession()
-
+      await admin.checkSession()  
     if (!admin.isLoggedIn) {
       return next({name:'AdminLoginPage'})
     }
+     
   }
 
   // ------------會員-------------------

@@ -28,7 +28,7 @@ export const useAuthStore = defineStore("admin",()=>{
         currentUser.value = res.data.user || null
     }
 
-    //登入php
+    //登入php   
 
 
 
@@ -45,8 +45,9 @@ export const useAuthStore = defineStore("admin",()=>{
         const res = await axios.post(import.meta.env.VITE_AJAX_URL+'admin/adminlogin.php',{ username, password },{ withCredentials: true })
 
         if(res.data.success){
-            isLoggedIn.value = true
-            currentUser.value = res.data.user // 存 res.data.user
+            await checkSession()
+            // isLoggedIn.value = true
+            // currentUser.value = res.data.user // 存 res.data.user
         }
         return res.data   //回傳到該頁面讓該頁知道登入結果，顯示提示。
     }

@@ -1,3 +1,9 @@
+<!-- 
+
+報名人數上限功能待新增
+
+-->
+
 <!-- src/components/admin/management/AdminActivity.vue -->
 <script setup>
 import { ref,computed,onMounted } from 'vue'

@@ -282,7 +282,7 @@ watch(
         background-color: $primaryColor-500;
         flex-direction: column;
         position: absolute;
-        top: 50px;
+        top: 70px;
         right: 0%;
         width: 100%;
         display: none;

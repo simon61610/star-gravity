@@ -11,7 +11,7 @@ import  logo from '@/assets/logos/logo.svg'
             <section class="footer-left-box">  
 
                 <div class="footer-left-Logo">
-                <router-link to="/AdminLoginPage"> <img :src='logo' height="90"  alt="logo"></router-link> 
+                <img :src='logo' height="90"  alt="logo">
                 </div>
 
                 <div class="footer-left-email">
