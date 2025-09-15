@@ -226,18 +226,40 @@ $white-40: rgba(255,255,255,.4);
 
 /* ===== 送出按鈕 ===== */
 .btn {
-  margin-top: 8px; height: 46px; border: 0; border-radius: 999px; cursor: pointer;
-  font-weight: 700; letter-spacing: .2em; color: $white;
+  margin-top: 8px; 
+  height: 46px; border: 0; 
+  border-radius: 999px; 
+  cursor: pointer;
+  font-weight: 700; 
+  letter-spacing: .2em; color: $white;
   background: linear-gradient(180deg, $purple-400, $purple-600);
   border: 2px solid transparent;
   transition: transform .1s ease, box-shadow .2s ease, filter .2s ease, opacity .2s ease;
 }
-.btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
-.btn:active { transform: translateY(0); filter: brightness(.98); }
-.btn:disabled { opacity: .5; cursor: not-allowed; filter: none; box-shadow: none; }
+.btn:hover { 
+  transform: translateY(-1px); 
+  filter: brightness(1.05); 
+}
+.btn:active { 
+  transform: translateY(0); 
+  filter: brightness(.98);
+}
+.btn:disabled { 
+  opacity: .5; 
+  cursor: not-allowed; 
+  filter: none; 
+  box-shadow: none; 
+}
 
 /* 成功提示（保留） */
-.toast { text-align: center; margin-top: 10px; font-size: 14px; opacity: 0; animation: fadeIn .3s forwards; }
+.toast { 
+  text-align: center; 
+  margin-top: 10px; 
+  font-size: 14px; opacity: 0;
+  animation: fadeIn .3s forwards; 
+}
+
+
 @keyframes fadeIn { to { opacity: 1; } }
 
 /* RWD */
