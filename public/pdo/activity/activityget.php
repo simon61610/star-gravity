@@ -8,7 +8,9 @@ include('../pdo.php');
 
 //建立SQL語法
 
-$sql = "select * from   `Event`" ;
+// $sql = "select * from   `Event`" ;
+$sql = "SELECT e.*, (SELECT COUNT(*) FROM Joiner j WHERE j.event_id = e.ID) AS registration_count
+            FROM Event e";
 
 
 //執行並查詢，會回傳查詢結果的物件

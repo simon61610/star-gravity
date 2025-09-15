@@ -118,6 +118,14 @@ const routes = [
     },
 { path: '/gamestory', name: 'gamestory', component: GameStoryPage },
 { path: '/gamewish/transit', name: 'gamewishTransit', component: GameWishTransitPage, meta: { useLoader: false } },
+{ 
+  path: '/gamewish/result',
+  name: 'gamewishResult',
+  component: () => import('@/views/game/GameWishResultPage.vue'),
+  meta: { useLoader: false },
+  alias: ['/game/wish/result']   // 可選：同時支援你先前寫的 /game/wish/result
+},
+
 
 
 // ------------------ 星星活動 starevent ------------------
