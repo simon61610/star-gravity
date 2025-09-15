@@ -168,10 +168,39 @@ const peopleEdit = async (row, index) => {
 }
 
 
-function delEdit(id) {
-  const idx = people.value.findIndex(o => o.id === id)
-  if (idx !== -1) people.value.splice(idx, 1)
+// function delEdit(id) {
+//   const idx = people.value.findIndex(o => o.id === id)
+//   if (idx !== -1) people.value.splice(idx, 1)
+// }
+
+const delEdit = async (id, memberId) => {
+  if (!confirm("確定要刪除嗎？")) return
+
+  console.log("registration_number:", id, "member_id:", memberId) // 報名編號 | 會員編號
+
+  try {
+    const res = await axios.post(import.meta.env.VITE_AJAX_URL + "activity/activity_people_delete.php", {
+      registration_number: id,
+      member_id: memberId
+    })
+
+    if(res.data.success){
+      const idx = people.value.findIndex(o => o.id === id)
+      if (idx !== -1) people.value.splice(idx, 1)
+
+      refreshTable()
+    }else{
+      // 寫到這裡
+      alert(res.data.message || "刪除失敗")
+    }
+    
+  } catch(err){
+    console.error("刪除錯誤", err)
+    alert("無法刪除")
+  }
 }
+
+
 function savepeople(table, selected) {
   // 保持與你原本呼叫方式相容：傳入 id
   const idx = table.value.findIndex(p => p.id === selected)
@@ -524,7 +553,7 @@ defineExpose({ handleEdit, handleadd }) // 父層可呼叫新增/編輯
         v-model="peopleSearch"
       >
         <template #刪除="{ row }">
-          <el-button size="small" @click="delEdit(row.id)">刪除</el-button>
+          <el-button size="small" @click="delEdit(row.id, row.member_id)">刪除</el-button>
         </template>
       </AdminTable>
       <div class="Admin-people-button">

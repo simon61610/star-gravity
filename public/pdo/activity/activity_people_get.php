@@ -35,9 +35,13 @@
 
     $joiners = $statement -> fetchAll(); // 報名者資料
 
+    // 報名人數
+    // $count = count($joiners);
+
     echo json_encode([
         "success" => true,
-        "joiners" => $joiners
+        "joiners" => $joiners,
+        // "registration_count" => $count
     ]);
 
 
