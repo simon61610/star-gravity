@@ -25,7 +25,7 @@
         //password_verify ( 使用者輸入的密碼 , 資料庫hash的那個欄位 )
         if($data && password_verify($password,$data['password'])){
             $_SESSION["username"]= $username;
-            echo json_encode(["success" => true, "message" => "登入成功"]);
+            echo json_encode(["success" => true, "message" => "登入成功","user" => $username],JSON_UNESCAPED_UNICODE);
 
         }else{
             echo json_encode(["success" => false, "message" => "登入失敗,帳號或密碼輸入錯誤"],JSON_UNESCAPED_UNICODE);
