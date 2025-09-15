@@ -200,8 +200,9 @@ const routes = [
     },
     {
       path: '/AdminLayoutPage',    
-      name: '/AdminLayoutPage',     
+      name: 'AdminLayoutPage',     
       component: () => import('@/views/admin/AdminLayoutPage.vue'),
+      redirect: { name: 'AdminMemberPage' },
       meta: { 
        
         // requiresAuth: true,
@@ -209,7 +210,7 @@ const routes = [
        } , //提示路由這個頁面要認證才可以跳轉
       children:[
           {
-            path: '/AdminMemberPage',    
+            path: 'AdminMemberPage',    
             name: 'AdminMemberPage',     
             component: () => import('@/views/admin/AdminMemberPage.vue'),
             meta: {
@@ -218,7 +219,7 @@ const routes = [
           },
 
           {
-            path: '/AdminActivityPage',    
+            path: 'AdminActivityPage',    
             name: 'AdminActivityPage',     
             component: () => import('@/views/admin/AdminActivityPage.vue'),
             meta: {
@@ -227,7 +228,7 @@ const routes = [
           },
 
           {
-            path: '/AdminOrderPage',    
+            path: 'AdminOrderPage',    
             name: 'AdminOrderPage',     
             component: () => import('@/views/admin/AdminOrderPage.vue'),
             meta: {
@@ -236,7 +237,7 @@ const routes = [
           },
 
            {
-            path: '/AdminShopPage',     
+            path: 'AdminShopPage',     
             name: 'AdminShopPage',     
             component: () => import('@/views/admin/AdminShopPage.vue'),
             meta: {
@@ -245,7 +246,7 @@ const routes = [
           },
 
           {
-            path: '/AdminNewsPage',    
+            path: 'AdminNewsPage',    
             name: 'AdminNewsPage',     
             component:  () => import('@/views/admin/AdminNewsPage.vue'),
             meta: {
@@ -254,7 +255,7 @@ const routes = [
           },
 
           {
-            path: '/AdminCommentPage',    
+            path: 'AdminCommentPage',    
             name: 'AdminCommentPage',     
             component: () => import('@/views/admin/AdminCommentPage.vue'),
             meta: {
