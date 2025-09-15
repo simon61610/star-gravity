@@ -70,7 +70,7 @@
             refreshCode() // 失敗就重產驗證碼
             return
         }
-
+        
         // 登入成功 → 導回原頁或預設頁
         const back = route.query.redirect || '/membercenter/personal'
         router.replace(back)

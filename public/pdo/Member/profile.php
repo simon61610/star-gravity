@@ -18,6 +18,7 @@ session_start();
 // 直接用 Session 判斷登入
 $memberID = isset($_SESSION['memberID']) ? (int)$_SESSION['memberID'] : 0;
 
+
 // 兩者都沒有就視為未登入
 if ($memberID === 0) {
   echo json_encode(['success' => false, 'message' => '尚未登入'], JSON_UNESCAPED_UNICODE);

@@ -59,10 +59,6 @@
         fd.append("memberID", memberID.value)
         fd.append('avatar', file.value)  // 後端用 $_FILES['avatar'] 接
 
-        // 若你登入有回 token，就帶上 Authorization
-        // const token = localStorage.getItem('token')
-        // const headers = token ? { Authorization: `Bearer ${token}` } : {} // 與後端驗證一致 (可拿掉)
-
         // const res = await axios.post("", 資料)
         // res = { data: 接收到的資料, .... }
         // res.data 
@@ -99,10 +95,6 @@
         memberID.value = memberStore.user?.ID
         console.log(memberID.value);
         
-
-        // 同步 Bearer（可選）
-        // const token = localStorage.getItem('token')
-        // const headers = token ? { Authorization: `Bearer ${token}` } : {}
         try{
             const { data } = await axios.get(
                 url('Member/profile.php'), 
