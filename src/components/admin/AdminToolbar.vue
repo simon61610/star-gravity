@@ -38,7 +38,7 @@ const clearinput = () => emit('update:search','') //清空search
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </template>
             </el-input>
-            <button>搜尋</button>
+            <!-- <button>搜尋</button> -->
         </div>
     </div>
     <hr style="margin-bottom: 20px;">
