@@ -4,11 +4,6 @@ header('Content-Type: application/json; charset=utf-8');
 
 include '../pdo.php';
 
-// header('Access-Control-Allow-Origin: http://localhost:5173');
-// header('Access-Control-Allow-Credentials: true');
-// header('Access-Control-Allow-Methods: POST, OPTIONS');
-// header('Access-Control-Allow-Headers: Content-Type, X-Requested-With');
-
 // 處理預檢請求
 // if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 //   exit; 
@@ -20,33 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   exit;
 }
 
-// 同時支援 Session / Token：先試 Session，沒有再試 Bearer Token
+// 同時支援 Session / Token
 session_start();
-$uid = (int)($_SESSION['memberID'] ?? 0);
-
-// 從 Authorization 取 Bearer <token>
-if ($uid === 0) {
-  // 兼容各種 Server 取得 Authorization header 的方式
-  $hdr = $_SERVER['HTTP_AUTHORIZATION'] ?? ($_SERVER['Authorization'] ?? '');
-  if ($hdr === '' && function_exists('getallheaders')) {
-    $all = getallheaders();
-    if (!empty($all['Authorization'])) $hdr = $all['Authorization'];
-    if (!empty($all['authorization'])) $hdr = $all['authorization'];
-  }
-
-  $tok = (stripos($hdr, 'Bearer ') === 0) ? substr($hdr, 7) : '';
-  if ($tok !== '') {
-    $sqlTok = 'SELECT member_id 
-              FROM `Tokens` 
-              WHERE token=:t AND expires_at>NOW() 
-              LIMIT 1
-              ';
-    $ts = $pdo->prepare($sqlTok);
-    $ts->execute([':t' => $tok]);       
-    $rowTok = $ts->fetch(PDO::FETCH_ASSOC);
-    if ($rowTok) $uid = (int)$rowTok['member_id'];
-  }
-}
+// $uid = (int)($_SESSION['memberID'] ?? 0);
+$memberID = isset($_SESSION['memberID']) ? (int)$_SESSION['memberID'] : 0;
 
 // 兩者都沒有 → 視為未登入
 if ($uid === 0) {
