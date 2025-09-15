@@ -13,7 +13,7 @@ const props = defineProps({
 
 //欄位定義
 const columns = [
-    {label:'地點ID',prop:'location_id'},
+    {label:'地點ID',prop:'ID'},
     {label:'地點名稱',prop:'location_name'},
     {label:'會員帳號',prop:'member_account'},
     {label:'評論日期',prop:'created_at'},
@@ -24,9 +24,10 @@ const columns = [
 //欄位資料
 const Commenttable = ref([ 
     {
-    id: '南瀛天文館',
+    ID:'1',
+    location_name: '南瀛天文館',
     member_account: 'jim8599@yahoo.com.tw',
-    review_date: '2025/08/16',
+    created_at: '2025/08/16',
     review_status: '審核中',
     content:'環境清幽，景色優美，適合散步放鬆。服務人員親切，導覽內容生動有趣。交通方便，設施乾淨整齊，讓人感覺舒適自在，是值得再次造訪的景點。',
     img:img
