@@ -32,7 +32,7 @@
         
     // 分頁
     const collectionPage = ref(1)    // 目前頁     
-    const pageSize = ref(8)          // 每頁幾筆
+    const pageSize = ref(6)          // 每頁幾筆
     const filteredTotal = computed(() => products.value.length)  // 總筆數給 Pagination
 
     const showProducts = computed(() => {                       // 依頁碼切資料
