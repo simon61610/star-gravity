@@ -1,55 +1,53 @@
 <!-- 單一商品頁 -->
-<!-- 待完成
-- 資料要用 Get 方法，傳到後端處理，尋找商品資料
+<!-- 
+- TODO: 庫存計算
+- TODO: 資料要用 Get 方法，傳到後端處理，尋找單一商品資料
 -->
 
 <script setup>
-    import { ref, computed, onMounted } from 'vue'
+    import { ref, onMounted } from 'vue'
     import { useRoute } from 'vue-router';
-    import bus from '@/composables/useMitt';
-    import shopToast from '@/components/common/shopToast.vue';
-    import { showToast } from '@/composables/useToast';
-    import axios from 'axios';
-    import { cateList } from '@/composables/useProductsCate';
-    import { useMemberStore } from '@/stores/member'
-
-    const memberStore = useMemberStore()
-    const BASE_URL = import.meta.env.VITE_AJAX_URL_NOEND
-
-
-    // 假資料
-    // import products from '@/data/products';
-
-    // 組件
+    
+    /* ========== 組件 ========== */
     import ShopBanner from '@/components/shop/ShopBanner.vue';
     import Breadcrumbs from '@/components/shop/Breadcrumbs.vue';
     import AccordionItem from '@/components/common/AccordionItem.vue';
-    // import QtyControl from '@/components/shop/product/QtyControl.vue';
     import ProdIntro from '@/components/shop/product/ProdIntro.vue';
+    import shopToast from '@/components/common/shopToast.vue';
+    import { showToast } from '@/composables/useToast';
+    
+    /* ========== 套件 ========== */
+    import bus from '@/composables/useMitt';
+    import axios from 'axios';
 
-    // 路由
+    /* ========== Pinia ========== */
+    import { useMemberStore } from '@/stores/member'
+
+    /* ========== 資料 ========== */
+    import { cateList } from '@/composables/useProductsCate';
+
+    /* ========== 環境變數 ========== */
+    const BASE_URL = import.meta.env.VITE_AJAX_URL_NOEND
+
+    /* ========== 共用 ========== */
     const route = useRoute()
-    /* const product = computed(() => {
-        return products.find(prod => prod.id == route.params.id || null)
-    }) */
+    const memberStore = useMemberStore()
 
     // 商品資料
     const product = ref(null)
     const imgArr = ref([])
     const currentPic = ref('')
 
+    // 已選分類
     const selectedCate = ref(null)
 
     onMounted(async () => {
-
-
-        // 抓出商品資料
+        /* ========== 功能: 抓出商品資料 ========== */
         const res = await axios.get(import.meta.env.VITE_AJAX_URL + 'starshop/client/products_get.php')
-    
         // console.log(res.data);
-        
         product.value = res.data.find(p => p.ID == route.params.id)
         // console.log(product.value)
+
         /* 
         ID : 1 
         category_name : "基礎入門型" 
@@ -66,18 +64,15 @@
         */
 
         if(product.value){
-            // imgArr.value = product.value.images.split(',')
+            /* ========== 功能: 處理圖片顯示，路徑字串串接 ========== */
             imgArr.value = product.value.images.split(',').map(path => BASE_URL + path)
             // console.log(imgArr.value)
             currentPic.value = imgArr.value[0] // 第一張
 
-
-
-            // ======================== 麵包屑 ==========================
-            // 逐一取出此 key name
+            /* ========== 功能: 麵包屑顯示 ========== */
             let mainCate = null
             
-            // 找出主分類
+            // 逐一取出此 key name，找出主分類
             for(let main in cateList){
                 if(cateList[main].includes(product.value.category_name)){
                     mainCate = main
@@ -91,9 +86,7 @@
             }
         }
 
-
-
-        // ========================== 檢查商品是否已收藏
+        /* ========== 功能: 檢查商品是否已收藏，並改變收藏收藏按鈕顯示 ========== */
         if(memberStore.isAuthed){
             const member_id = memberStore.user?.ID
 
@@ -106,42 +99,16 @@
                 isFollow.value = res.data.isFavorite
             }
         }
-
-        
     })
 
+    /* ========== 功能: 選擇商品縮圖顯示 ========== */
     const changePic = (img) => {
         currentPic.value = img
     }
-    
 
-    // 最開始切版的假資料
-    /* const productDetail = reactive({
-        name: '輕巧觀測鏡｜50mm 入門型牛頓式望遠鏡',
-        desc: '適合兒童的觀星好物，入門款天文望遠鏡，支援手機拍攝記錄',
-        promotion: '望遠鏡單筆金額滿 2 萬元，享保固內免費清潔兩次，未滿則享保固內清潔一次。',
-        marketing: '現享8折好康優惠',
-        price: 2500,
-        specialprice: 2000,
-    }) */
-
-
-    // 收藏愛心切換
+    /* ========== 功能: 商品收藏功能 ========== */
     const isFollow = ref(false)
     const followProduct = async () => {
-        // isFollow.value = !isFollow.value
-        
-        /* if(isFollow.value){
-            await axios.post(import.meta.env.VITE_AJAX_URL + 'starshop/client/favorite_add.php', {
-                member_id: 1008,
-                product_id: product.value.ID
-            })
-
-        }
-        if(!isFollow.value){
-            showToast('已取消收藏!')
-        } */
-
         if(!memberStore.isAuthed){
             alert('請先登入會員')
             return
@@ -163,13 +130,9 @@
         }else {
             console.log(res.data.message)
         }
-
-
     }
 
-    // =====================================================
-    // ==================== 加入購物車 ====================
-    // =====================================================
+    /* ========== 功能: 加入購物車 ========== */
     const storage = localStorage
 
     // 商品名稱|圖片路徑|每件價格|數量|原價
@@ -195,51 +158,9 @@
             storage[itemId] = `${product.name}|${firstImage}|${unitPrice}|1|${originalPrice}`
         }
         
-
-        /* Storage 的 Key 和 Value */
-        /* const itemId = `P${product.id}`
-        const itemValue = `${product.name}|${product.pic}|${product.specialPrice}` */
-
-        // alert(itemValue) 
-        // itemId => P1 
-        // itemValue => 基礎入門型 商品 1|https://placehold.co/480x480?text=Product+1|9718
-        // ===============================================================================
-
-        /* 直接從物件中抓的資料字串 */
-        /* const itemName = product.name // 基礎入門型 商品 1
-        const itemPic = product.pic // https://placehold.co/480x480?text=Product+1
-        const itemSpecialPrice = product.specialPrice // 9718 */
-        // alert(itemSpecialPrice)
-
-        // ===============================================================================
-        
-        /* if(storage[itemId]){ // 如果已經買過，價格累加
-            let existInfo = storage[itemId].split('|') // 字串切割成陣列，用 split 方法
-            // console.log(existInfo) ['基礎入門型 商品 1', 'https://placehold.co/480x480?text=Product+1', '9718']
-            let existSpecialPrice = parseInt(existInfo[2]) // 原本的價格
-            let newExistPrice = existSpecialPrice + itemSpecialPrice
-            let updatedInfo = `${existInfo[0]}|${existInfo[1]}|${newExistPrice}`
-            // alert(updatedInfo)
-
-            storage[itemId] = updatedInfo
-
-        }else{ //第一次買
-            storage['addItemList'] += `${itemId}, `
-            storage[itemId] = itemValue
-        } */
-
-        // ===============================================================================
         bus.emit('notifyUpdateCart') // 通知 Header 更新購物車數量
-
         showToast('已成功加入購物車!')
     }
-
-
-
-
-
-
-
 </script>
 
 
@@ -263,15 +184,6 @@
                     >
                         <img :src="img" alt="">
                     </li>
-                    <!-- <li>
-                        <img :src="product.images.split(',')[0]" alt="">
-                    </li>
-                    <li>
-                        <img :src="product.images.split(',')[1]" alt="">
-                    </li>
-                    <li>
-                        <img :src="product.images.split(',')[2]" alt="">
-                    </li> -->
                 </ul>
             </div>
 
