@@ -11,18 +11,31 @@
     const memberStore = useMemberStore()
 
     // 先放 8 張假資料；之後接 API 只要改這個陣列即可
-    const products = ref(
-        Array.from({ length: 8 }, (_, i) => ({
-            id: i + 1,
-            title: '基礎望遠鏡',
-            price: 2500,
-        }))
-    )
+    // const products = ref(
+    //     Array.from({ length: 8 }, (_, i) => ({
+    //         id: i + 1,
+    //         title: '基礎望遠鏡',
+    //         price: 2500,
+    //     }))
+    // )
+
+    // API 回傳的商品清單（空陣列起手）
+    const products = ref([])
 
     const memberId = ref('')
 
     const formatTWD = (n) => `NT$${Number(n).toLocaleString('zh-TW')}`
 
+    // 把後端給的相對路徑，轉成可用的完整網址
+    const toImageUrl = (path) => {
+        if (!path) return ''                             // 沒圖就空字串
+        if (/^https?:\/\//i.test(path)) return path      // 已是完整網址
+        const base = (import.meta.env.VITE_AJAX_URL || '').replace(/\/+$/,'')  // 去掉尾斜線
+        // 若後端回 "/pdo/xxx.jpg" → base + "/pdo/xxx.jpg"
+        // 若後端回 "pdo/xxx.jpg"  → base + "/pdo/xxx.jpg"
+        return base + '/' + path.replace(/^\/+/,'')
+    }
+                
     // 分頁
     const collectionPage = ref(1)    // 目前頁     
     const pageSize = ref(8)          // 每頁幾筆
@@ -37,16 +50,46 @@
         window.scrollTo({ top: 0, behavior: 'smooth' })         // 切頁回頂（可保留/移除）
     }
     // 取消收藏
-    const emit = defineEmits(['unfavorite'])   // 告訴父層「真的要取消了」
+    // const emit = defineEmits(['unfavorite'])   // 告訴父層「真的要取消了」
 
     // function askUnfavorite () {
     //     if (confirm('確定要取消收藏嗎？')) emit('unfavorite')
     // }
-    function askUnfavorite () {                                   
-        if (confirm('確定要取消收藏嗎？')) {
-        emit('unfavorite')
-        showToast('已取消收藏', { type: 'info', duration: 1800 })
+    // function askUnfavorite () {                                   
+    //     if (confirm('確定要取消收藏嗎？')) {
+    //     emit('unfavorite')
+    //     showToast('已取消收藏', { type: 'info', duration: 1800 })
+    //     }
+    // }
+
+    // 取消收藏（先從畫面移除，失敗再回滾）
+    const unfavorite = async (productId) => {
+        if (!confirm('確定要取消收藏嗎？')) return
+
+        // 先從前端移除
+        const prev = [...products.value]
+        products.value = products.value.filter(p => p.id !== productId)
+
+        // 若該頁被清空，往前翻一頁（避免出現空白頁）
+        const start = (collectionPage.value - 1) * pageSize.value
+        if (start >= products.value.length && collectionPage.value > 1) {
+            collectionPage.value--
         }
+
+        try{
+            await axios.post(
+                import.meta.env.VITE_AJAX_URL + 'Member/updateFavorite.php',
+                { memberId: memberId.value, productId },
+                { headers: { 'Content-Type': 'application/json' }, withCredentials: true }
+            )
+            showToast('已取消收藏', { type: 'info', duration: 1800 })
+        } catch (err) {
+            // 失敗回滾
+            products.value = prev
+            console.error('取消收藏失敗', err?.response?.status, err?.response?.data)
+            showToast('取消收藏失敗', { type: 'error', duration: 2000 })
+        }
+
     }
 
     function onBuyNow () {
@@ -59,13 +102,33 @@
         try{
             const resp = await axios.post(
                 import.meta.env.VITE_AJAX_URL + "Member/getCollectionList.php",
-                { memberId }
+                { memberId },
+                { headers: { 'Content-Type': 'application/json' }, withCredentials: true }
             )
+            // console.log(resp.data);
 
-            console.log(resp.data);
+            // 後端應該回傳陣列，直接塞進去
+            const lists = Array.isArray(resp.data) ? resp.data : []
+            // 轉成前端現用鍵名
+            products.value = lists.map((r, i) => ({
+                id: r.product_id ?? i + 1,
+                title: r.name ?? '未命名商品',
+                price: r.original_price ?? 0,
+                photo: toImageUrl(r.photo_url)   // ← 這裡就先轉好
+            }))
+            // 資料更新後回到第 1 頁（可選）
+            collectionPage.value = 1
+
+            console.log(products.value);
             
+
         }catch( error ){
-            console.log("後端請求失敗");
+            // console.log("後端請求失敗");
+            console.error("後端請求失敗",
+                error?.message,
+                error?.response?.status,
+                error?.response?.data
+            )
         }
 
     }
@@ -75,7 +138,9 @@
     onMounted(() => {
         if (window.matchMedia('(max-width: 433px)').matches) pageSize.value = 4
 
-        memberId.value = memberStore.user.ID
+        // memberId.value = memberStore.user.ID
+        // 保險寫法（避免 user 還沒載入）
+        memberId.value = memberStore.user?.ID ?? ''
         getCollectionList(memberId.value)
     })
 
@@ -93,7 +158,12 @@
                 
                 <div class="photoall">
                     <div class="thumb">
-                        <img src="../../../assets/images/shop/shop-banner.jpg" alt="望遠鏡">
+                        <!-- <img src="../../../assets/images/shop/shop-banner.jpg" alt="望遠鏡"> -->
+                        <!-- <img 
+                            :src="p.photo || new URL('@/assets/images/shop/shop-banner.jpg', import.meta.url).href"  
+                            :alt="p.title || '商品圖片'"
+                        > -->
+                        <img v-if="p.photo" :src="p.photo" :alt="p.title || '商品圖片'">
                     </div>
         
                     <div class="down">
@@ -103,7 +173,7 @@
                         </div>
             
                         <div class="actions">
-                            <button class="btn cancel" @click="askUnfavorite">取消收藏</button>
+                            <button class="btn cancel" @click="unfavorite(p.id)">取消收藏</button>
                             <button class="btn primary" @click="onBuyNow">直接購買</button>
                         </div>
                     </div>
@@ -135,7 +205,6 @@
 .products{
     padding: 12px;
     width: 700px;
-    // height: 500px;
     height: auto;            /* 內容多就自然撐開 */
     min-height: 500px;       /* 保留原本大致視覺高度 */
     overflow-y: visible;     /* 明確指定不要在這層裁切/滾動 */
@@ -143,80 +212,81 @@
 }
 .flex {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));     /* 固定4欄 */
-    column-gap: 16px;   /* 左右間距 */
-    row-gap: 32px;     /* 上下間距 */
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); /* 自動塞滿 */
+    gap: 16px 16px;
 }
 .card{
-    // width: 120px;
-    // height: 120px;
-    // margin: 0;
-
-    /* width: 120px; */        /* 交給 grid 分欄，不需固定卡片寬 */
-    /* height: 120px; */       /* ← 移除固定高度 */
     width: 100%;
-    height: auto;
-    margin: 0;
-    /* （可選）讓卡片內的東西垂直堆疊時不會被切掉 */
-    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.04);   /* 淺半透明卡片，深色底才看得出層次 */
+    box-shadow: 0 2px 10px rgba(0,0,0,.15);
 }
 /* 圖片 */
 .photoall{
-    // width: 170px;
-    // display: flex;
-    // flex-direction: column;
-    // justify-content: center;
-    // align-items: center;
-
-    /* 讓內部寬度在每格中置中顯示，但不硬卡卡片大小 */
     width: 100%;
-    max-width: 170px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
+}
+.thumb {
+    width: 100%;
+    aspect-ratio: 4 / 3;   /* 正方形縮圖；想長方形就改 4/3 或 3/2 */
+    overflow: hidden;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.06);
 }
 .thumb img{
-    width: 120px;
-    height: 120px;
-    border-radius: 8px;
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;     /* 等比裁切，避免拉伸變形 */
 }
 /* 文字區 */
 .down{
-    width: 170px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     line-height: $linHeight-p;
+    gap: 8px;
 }
 .titleprice{
-    height: 70px;
-    margin-top: 10px;
     color: $FontColor-white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
 }
 .title { 
-    margin: 10px auto; 
+    margin: 0;
     text-align: center;
-    font-size: $pcChFont-p;
+    font-size: 14px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;   /* 名稱太長時 2 行截斷 */
+    -webkit-box-orient: vertical; /* 垂直排列 */
+    overflow: hidden;
+    text-overflow: ellipsis;      /* 顯示省略號（有些瀏覽器需要） */
 }
 .price { 
     text-align: center;
     font-size: $pcChFont-p;
-    opacity: .9; 
+    opacity: .95; 
+    font-weight: 600;
 }
 /* 按鈕 */
 .actions { 
-    display: flex; 
-    gap: 8px; 
-    justify-content: center; 
-    width: 170px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
 }
 .btn {
-    padding: 3px 10px;
+    padding: 8px 0;
     border-radius: 8px;
     font-size: $pcChFont-small;
     cursor: pointer;
-    margin-top: 10px;
+    margin-top: 0;
     background-color: $primaryColor-500;
     color: $FontColor-white; 
 }
@@ -235,10 +305,6 @@
 }
 // 分頁
 .pager{
-    // width: 700px;
-    // justify-content: center;  
-    // padding-right: 4px; 
-
     width: 100%;
     max-width: 700px;
     margin: 16px auto 0;

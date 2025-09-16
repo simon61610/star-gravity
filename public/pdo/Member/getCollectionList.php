@@ -4,9 +4,6 @@ include '../pdo.php';
 
 $data = json_decode(file_get_contents("php://input"), true);
 
-
-// echo $data['memberId'];
-
 $memberId = (int)($data['memberId'] ?? 0);
 
 if($memberId <= 0) {
@@ -15,20 +12,27 @@ if($memberId <= 0) {
 };
 
 // 建立sql
-$sql = "SELECT j.* , e.event_name, e.event_place, e.event_status
-        from Joiner j
-        join Event e on j.event_id = e.ID 
-        WHERE j.member_id = :memberId  
-        ";
+$sql = "SELECT p.name, p.original_price,
+        (
+            SELECT pi.image
+            FROM ProductImage pi
+            WHERE pi.product_id = p.ID
+            ORDER BY pi.ID ASC
+            LIMIT 1
+        ) AS photo_url
+        FROM Favorite f
+        JOIN Member m ON f.member_id = m.ID
+        JOIN Product p ON f.product_id = p.ID
+        WHERE m.ID = :memberId;";
 
 $statement = $pdo->prepare($sql);
-$statement->bindValue(':memberId', $memberId, PDO::PARAM_INT);
-// $statement->bindValue(':memberId', $data["memberId"]);
+// $statement->bindValue(':memberId', $memberId, PDO::PARAM_INT);
+$statement->bindValue(':memberId', $data["memberId"]);
 $result = $statement->execute();
 
 // echo $result;
 
-$events = $statement->fetchAll();
+$products = $statement->fetchAll();
 // $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // print_r($events);
@@ -46,7 +50,7 @@ $events = $statement->fetchAll();
 //     ];
 // };
 
-// echo json_encode($out, JSON_UNESCAPED_UNICODE);
+echo json_encode($products, JSON_UNESCAPED_UNICODE);
 
 
 
