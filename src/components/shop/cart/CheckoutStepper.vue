@@ -1,14 +1,22 @@
 <script setup>
     import { computed } from 'vue'
 
-    // 接收父組件屬性與屬性值
-    const props = defineProps(['steps', 'current'])
+    // 接收父組件屬性 + 屬性值
+    const props = defineProps({
+        steps: {
+            type: Array,
+            required: true
+        }, 
+        current: {
+            type: Number,
+            required: true
+        }
+    })
 
-    // 計算寬度幾趴
+    /* ========== Progress 百分比 ========== */
     const percent = computed(() => 
         ( props.current / props.steps.length ) * 100
     )
-
 </script>
 
 
@@ -16,8 +24,16 @@
     <section class="checkout-stepper">
         <!-- 步驟 -->
         <div class="steps">
-            <div class="step" v-for="(title, index) in steps" :class="{ active: index + 1 <= current}">
-                <div class="step-number" :class="{ active: index + 1 <= current}">{{ index + 1 }}</div>
+            <div
+                class="step"
+                v-for="(title, index) in steps"
+                :class="{ active: index + 1 <= current}"
+            >
+                <!-- 步驟數字 -->
+                <div class="step-number" :class="{ active: index + 1 <= current}">
+                    {{ index + 1 }}
+                </div>
+                <!-- 步驟標題 -->
                 <p class="step-title">{{ title }}</p>
             </div>
         </div>
@@ -66,7 +82,7 @@
 
                     transition: all .5s ease;
                 }
-                .step-number.active { // 用屬性值 trus false 判斷是否加上
+                .step-number.active { // 用屬性值 true false 判斷是否加上
                     border: 3px solid $primaryColor-900;
                 }
                 .step-title {}

@@ -1,58 +1,55 @@
+<!-- 購物車頁面 -->
+
 <script setup>
+    import { ref, computed, watch } from 'vue'
+    import { useRoute } from 'vue-router'
 
-import { ref, computed, watch } from 'vue'
-import { useRoute } from 'vue-router'
+    /* ========== 組件 ========== */
+    import CartBanner from '@/components/shop/cart/CartBanner.vue';
+    import CheckoutStepper from '@/components/shop/cart/CheckoutStepper.vue';
 
-// 組件
-import CartBanner from '@/components/shop/cart/CartBanner.vue';
-import CheckoutStepper from '@/components/shop/cart/CheckoutStepper.vue';
+    /* ========== 共用 ========== */
+    const route = useRoute()
+    const steps = ['準備結帳', '填寫資料', '完成訂單'] // 步驟內容
 
-// 進度條: 傳屬性值讓子組件接收並套用
-const route = useRoute()
+    const step = computed(() => { // 控制 process
+        if (route.name == 'cartform'){
+            return 2
+        }
+        if (route.name == 'cartsuccess'){
+            return 3
+        }
+        return 1
+    })
 
-const step = computed(() => { // 控制 process
-  if (route.name == 'cartform'){
-    return 2
-  }
-  if (route.name == 'cartsuccess'){
-    return 3
-  }
-  return 1
-})
-
-watch( 
-    () => step.value, 
-    () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth',
-        })
-})
-
-const steps = ['準備結帳', '填寫資料', '完成訂單'] // 步驟內容
-
+    watch( 
+        () => step.value, 
+        () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+            })
+    })
 </script>
 
 
 <template>
     <CartBanner />
     <section class="container">
+
+        <!-- 流程步驟條 -->
         <div>
             <CheckoutStepper :current="step" :steps="steps"/>
         </div>
 
+        <!-- 子頁面容器 -->
         <div class="page-change-box">
             <router-view />
         </div>
 
-        <!-- 假路徑 -->
-        <!-- <p><router-link to="/cartpage/cart">跳到購物車頁</router-link></p>
-        <p><router-link to="/cartpage/cartform">跳到表單頁</router-link></p>
-        <p><router-link to="/cartpage/cartsuccess">跳到完成頁面</router-link></p> -->
     </section>
-    
-
 </template>
+
 
 <style scoped lang="scss">
 @import '@/assets/styles/main.scss';
