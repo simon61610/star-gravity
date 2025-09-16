@@ -5,7 +5,8 @@
     import shopToast from '@/components/common/shopToast.vue'  
     import { showToast } from '@/composables/useToast'  
     import axios from 'axios'
-    import { useMemberStore } from '@/stores/member'   
+    import { useMemberStore } from '@/stores/member'  
+    import bus from '@/composables/useMitt' 
     
     // 引用useMemberStore
     const memberStore = useMemberStore()
@@ -92,9 +93,43 @@
 
     }
 
-    function onBuyNow () {
-        // 這裡可放實際購物流程，成功後提示：
-        showToast('已加入購物車！', { type: 'success', duration: 2000 })
+    // function onBuyNow () {
+    //     // 這裡可放實際購物流程，成功後提示：
+    //     showToast('已加入購物車！', { type: 'success', duration: 2000 })
+    // }
+
+    // 依 header.vue 的規格：addItemList & 每商品 key=ID → 'id|title|price|qty'
+    const addToCart = (p) => {
+        const storage = localStorage
+        const id    = String(p.id)
+        const title = String(p.title ?? '')
+        const price = Number(p.price ?? 0)
+        const addQty = 1
+
+        // 維護 addItemList（以 "3, 4, 1, " 這種格式去重後追加）
+        let list = storage.getItem('addItemList') || ''
+        if (!list.includes(id + ', ')) {
+            list += `${id}, `
+            storage.setItem('addItemList', list)
+        }
+
+        // 維護單品資料：'id|title|price|qty'
+        const raw = storage.getItem(id)
+        if (raw) {
+            const parts = raw.split('|')
+            const curQty = Number(parts[3] || 0)
+            parts[0] = id
+            parts[1] = title
+            parts[2] = String(price)
+            parts[3] = String(curQty + addQty)
+            storage.setItem(id, parts.join('|'))
+        } else {
+            storage.setItem(id, `${id}|${title}|${price}|${addQty}`)
+        }
+
+        // 通知 header 立刻重算徽章數字
+        bus.emit('notifyUpdateCart')
+        showToast('已加入購物車！', { type: 'success', duration: 1800 })
     }
 
     //向後端發出請求
@@ -174,7 +209,7 @@
             
                         <div class="actions">
                             <button class="btn cancel" @click="unfavorite(p.id)">取消收藏</button>
-                            <button class="btn primary" @click="onBuyNow">直接購買</button>
+                            <button class="btn primary" @click="addToCart(p)">直接購買</button>
                         </div>
                     </div>
                 </div>
@@ -263,9 +298,9 @@
     font-size: 14px;
     line-height: 1.3;
     display: -webkit-box;
-    -webkit-line-clamp: 2;   /* 名稱太長時 2 行截斷 */
     -webkit-box-orient: vertical; /* 垂直排列 */
     overflow: hidden;
+    line-clamp: 2;
     text-overflow: ellipsis;      /* 顯示省略號（有些瀏覽器需要） */
 }
 .price { 
