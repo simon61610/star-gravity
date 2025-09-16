@@ -1,7 +1,4 @@
 <!-- 購物車 - 準備結帳 -->
-<!-- 
-- TODO: 免運功能開發
--->
 
 <script setup>
     import { ref, computed, onMounted } from 'vue'
@@ -29,6 +26,7 @@
     
     /* ========== 資料 ========== */
     const orderGuide = ref([
+        "本館宅配運費 60 元，單筆訂單滿 3,999 元即可免運。",
         "商品出貨時間約需 5–7 個工作天，若您無法等待，請斟酌再下單。",
         "宅配服務（黑貓）配送時間通常為 1–2 個工作天，如遇連續假期或重大節慶，恕無法指定送達日期與時段。",
         "本網站保留活動內容之 最終修改與解釋權利。",
@@ -153,8 +151,12 @@
         return sum
     })
 
-    /* ========== 運費 ========== */
-    const shipping_fee = computed(() => { // 未來可針對免運條件做運算
+    /* ========== 運費 or 免運 ========== */
+    const shipping_fee = computed(() => {
+        // 若合計金額大於等於 3999，免運費
+        if(totalPrice.value >= 3999){
+            return 0
+        }
         return 60
     })
 
@@ -287,7 +289,11 @@
                 <div class="order-cal">
                     <div class="cal-box">
                         <p><span>合計</span><span>NT${{ totalPrice }}</span></p>
-                        <p><span>運費</span><span>NT${{ shipping_fee }}</span></p>
+                        <p>
+                            <span>運費</span>
+                            <span v-if="shipping_fee > 0">NT${{ shipping_fee }}</span>
+                            <span v-else>免運費</span>
+                        </p>
                         <p><span>總計</span><span>NT${{ totalPrice + shipping_fee }}</span></p>
                     </div>
                     <!-- <router-link to="/cartpage/cartform" class="router-link"> -->

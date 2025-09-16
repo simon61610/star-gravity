@@ -101,7 +101,11 @@
                     <!-- 金額統計 -->
                     <div class="cal-box">
                             <p><span>合計</span><span>NT${{ order.total_price }}</span></p>
-                            <p><span>運費</span><span>NT${{ order.shipping_fee }}</span></p>
+                            <p>
+                                <span>運費</span>
+                                <span v-if="order.shipping_fee > 0">NT${{ order.shipping_fee }}</span>
+                                <span v-else>免運費</span>
+                            </p>
                             <p><span>總計</span><span>NT${{ TotalIncludeShipFee }}</span></p>
                     </div>
                 </div>

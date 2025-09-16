@@ -236,6 +236,9 @@
                 </div>
                 
                 <div>
+                    <AccordionItem title="運費說明" :default-open="false" class="accordion">
+                        <p>本館宅配運費 60 元，單筆訂單滿 3,999 元即可免運。</p>
+                    </AccordionItem>
                     <AccordionItem title="付款方式" :default-open="false" class="accordion">
                         <p>可選擇以 信用卡付款（支援 Visa、MasterCard、JCB 等主要信用卡）快速完成結帳，亦可選擇 貨到付款，於商品送達時再付款，讓您購物更安心便利。</p>
                     </AccordionItem>
