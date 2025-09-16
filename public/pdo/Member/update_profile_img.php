@@ -1,13 +1,4 @@
 <?php
-
-/**
- * 最基本版：不依賴 GD，不壓縮/不轉檔。
- * 1) 驗證登入（Session 或 Bearer）
- * 2) 驗證檔案型別/大小
- * 3) 直接 move_uploaded_file() 到 uploads/avatars/{uid}/
- * 4) 更新 Member.image（相對路徑）
- * 5) 回傳 { success, data: { avatarUrl, cacheBustParam } }
- */
 include '../pdo.php';
 
 // 若是預檢請求，cors.php 一般已處理；這裡再保險一次
@@ -21,27 +12,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   exit;
 };
 
-// 取得登入會員 ID（先 Session，後 Bearer）
+// 取得登入會員 ID
 session_start();
-$uid = (int)($_SESSION['memberID'] ?? 0);
-
-if ($uid === 0) {
-  // 兼容取得 Authorization header
-  $hdr = $_SERVER['HTTP_AUTHORIZATION'] ?? ($_SERVER['Authorization'] ?? '');
-  if ($hdr === '' && function_exists('getallheaders')) {
-    $all = getallheaders();
-    if (!empty($all['Authorization'])) $hdr = $all['Authorization'];
-    if (!$hdr && !empty($all['authorization'])) $hdr = $all['authorization'];
-  }
-  $tok = (stripos($hdr, 'Bearer ') === 0) ? substr($hdr, 7) : '';
-  if ($tok !== '') {
-    $ts = $pdo->prepare('SELECT member_id FROM `Tokens` 
-                        WHERE token=:t AND expires_at>NOW() 
-                        LIMIT 1');
-    $ts->execute([':t' => $tok]);
-    if ($row = $ts->fetch(PDO::FETCH_ASSOC)) $uid = (int)$row['member_id'];
-  }
-};
+// $uid = (int)($_SESSION['memberID'] ?? 0);
+$memberID = isset($_SESSION['memberID']) ? (int)$_SESSION['memberID'] : 0;
 
 if ($uid === 0) {
   echo json_encode(['success' => false, 'message' => '尚未登入'], JSON_UNESCAPED_UNICODE);

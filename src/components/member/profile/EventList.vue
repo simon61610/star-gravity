@@ -10,8 +10,6 @@
 
     //定義響應式資料
     const events = ref([ ]) // 後端回來的訂單
-    const loading = ref(false) // 載入狀態
-    const errorMsg = ref('')  // 錯誤訊息
 
     const memberId = ref('')
 
@@ -28,38 +26,14 @@
 
     // 內建欄位（外部沒傳 columns 時用）
     const builtinColumns = [
+        { label: '報名時間', prop: 'registration_date'},
+        { label: '報名編號', prop: 'registration_number'},
         { label: '活動名稱', prop: 'event_name' },
-        { label: '日期&時間', prop: 'event_date' },
+        // { label: '日期&時間', prop: 'event_date' },
         { label: '活動地點', prop: 'event_place' },
         { label: '狀態', prop: 'event_status'},
     ]
     const columnDefs = computed(() => (props.columns?.length ? props.columns : builtinColumns))
-
-    // 內建資料（之後可改成 props.data 或 API 結果）
-    // const eventtable = ref([
-    // { activity_name: '流星雨', date_time: '20250816 19:30', adress: '陽明山', state: '已完成' },
-    // { activity_name: '夏季大三角', date_time: '20250825 19:30', adress: '阿里山', state: '進行中' },
-    // { activity_name: '賞銀河', date_time: '', adress: '', state: '' },
-    // { activity_name: '擁抱宇宙', date_time: '', adress: '', state: '' },
-    // { activity_name: '墾丁星夜', date_time: '', adress: '', state: '' },
-    // { activity_name: '台東最美星空', date_time: '', adress: '', state: '' },
-    // { activity_name: '跟羊一起看星星', date_time: '', adress: '', state: '' },
-    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    // { activity_name: '擎天崗看星星', date_time: '', adress: '', state: '' },
-    // ])
 
     // 單一資料來源：有傳入 props.data 就用，否則用 API 回來的 orders
     const dataSource = computed(() => (props.data?.length ? props.data : events.value))
@@ -90,12 +64,13 @@
     const getMemberEvents = async (memberId) => {
         try {
             const resp = await axios.post(
-                import.meta.env.VITE_AJAX_URL + "Member/getMemberEvents.php",
+                import.meta.env.VITE_AJAX_URL + "Member/getMemberEvent.php",
                 { memberId }
             )
             console.log(resp.data);
+            // console.log(resp.data);
 
-            Events.value = resp.data
+            events.value = resp.data
         } catch(error) {
             console.log("後端請求失敗");
         }

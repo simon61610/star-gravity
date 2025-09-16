@@ -3,7 +3,12 @@
     import { ref, computed, onMounted } from 'vue'
     import Pagination from '@/components/common/Pagination.vue'
     import shopToast from '@/components/common/shopToast.vue'  
-    import { showToast } from '@/composables/useToast'         
+    import { showToast } from '@/composables/useToast'  
+    import axios from 'axios'
+    import { useMemberStore } from '@/stores/member'   
+    
+    // 引用useMemberStore
+    const memberStore = useMemberStore()
 
     // 先放 8 張假資料；之後接 API 只要改這個陣列即可
     const products = ref(
@@ -13,6 +18,8 @@
             price: 2500,
         }))
     )
+
+    const memberId = ref('')
 
     const formatTWD = (n) => `NT$${Number(n).toLocaleString('zh-TW')}`
 
@@ -47,9 +54,29 @@
         showToast('已加入購物車！', { type: 'success', duration: 2000 })
     }
 
+    //向後端發出請求
+    const getCollectionList = async (memberId)=>{
+        try{
+            const resp = await axios.post(
+                import.meta.env.VITE_AJAX_URL + "Member/getCollectionList.php",
+                { memberId }
+            )
+
+            console.log(resp.data);
+            
+        }catch( error ){
+            console.log("後端請求失敗");
+        }
+
+    }
+
+
     // 斷點430使用
     onMounted(() => {
         if (window.matchMedia('(max-width: 433px)').matches) pageSize.value = 4
+
+        memberId.value = memberStore.user.ID
+        getCollectionList(memberId.value)
     })
 
 </script>

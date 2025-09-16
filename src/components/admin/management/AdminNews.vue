@@ -1,6 +1,8 @@
   <script setup>
 /* ======================= 匯入模組 ======================= */
 import { ElMessage } from "element-plus"
+import { QuillEditor } from "@vueup/vue-quill"
+import "@vueup/vue-quill/dist/vue-quill.snow.css"  // 引入樣式
 import { ref, computed, nextTick,onMounted } from 'vue'
 import AdminTable from '@/components/admin/AdminTable.vue'
 import { articleAPI } from '@/api/articleAPI.js'
@@ -37,6 +39,7 @@ function refreshTable() {
         Newstable.value = res2.data
   })
 }
+
 
 /* ======================= 表格欄位定義 ======================= */
 const columns = [
@@ -298,6 +301,14 @@ function save(){
       showConfirmDialog.value = true
 }
 
+/*========================字數轉換===========================*/
+const textLength = computed(() => {
+  const html = selected_article.value?.content || ''
+  const el = document.createElement('div')
+  el.innerHTML = html
+  return (el.textContent || el.innerText || '').trim().length
+})
+
 /* ======================= 儲存文章 ======================= */
 function confirmUpdate(selected) {
 
@@ -517,8 +528,9 @@ const saveTag = () => {
             <div class="Admin-article-content">
               <h2>內文:</h2>
               <div class="textarea-box">
-              <textarea name="" id="" v-model="selected_article.content"></textarea>
-              <span>目前字數：{{ selected_article.content?.length || 0 }}</span>
+                <QuillEditor class="textarea" v-model:content="selected_article.content" contentType="html" theme="snow" ></QuillEditor>
+                <!-- <textarea name="" id="" v-model="selected_article.content"></textarea> -->
+                <span>目前字數：{{textLength}}</span>
               </div>
             </div>
             
@@ -626,7 +638,7 @@ const saveTag = () => {
           position: relative;
           flex: 1;
 
-            textarea{
+            :deep(.textarea){
               padding: 0;
               padding-bottom: 24px;
               width: 480px;

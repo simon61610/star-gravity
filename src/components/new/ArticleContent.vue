@@ -160,9 +160,13 @@ watch(
                 </ul>
             </div>
 
-            <div class="article-content-p cnContent cnContent--18px">
-                <p>{{ props.article.content }}</p>
+            <div
+              class="article-content-p cnContent cnContent--18px"
+              v-html="props.article.content">
             </div>
+            <!-- <div class="article-content-p cnContent cnContent--18px" >
+                 <p>{{ props.article.content }}</p> 
+            </div> -->
 
             <router-link to= "/Newpage" class="article-content-back">
                 <p class="decTitle decTitle--medium">BACK</p>
@@ -251,6 +255,8 @@ watch(
     }
 
     .article-content-p {
+      white-space: pre-wrap; //保留換行
+      overflow-wrap: break-word; //超過字數換行
       margin-top: 30px;
       color: $primaryColor-100;
       height: auto;

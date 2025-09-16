@@ -5,11 +5,7 @@ include '../pdo.php';
 $data = json_decode(file_get_contents("php://input"), true);
 
 
-// echo 123;
-// 
-// echo json_encode([
-//     "message" => "Hello"
-// ]);
+// echo $data['memberId'];
 
 $memberId = (int)($data['memberId'] ?? 0);
 
@@ -38,19 +34,19 @@ $events = $statement->fetchAll();
 // print_r($events);
 
 //格式化輸出
-$out = [];
-foreach ($events as $e) {
-    $out[] = [
-        'event_name' => $e['event_name'],
-        // 'event_date'   => $e['event_date'],
-        'event_place'  => $e['event_place'],
-        'event_status' => $e['event_status'],
-        'registration_number' => $e['registration_number'],
-        'registration_date' => $e['registration_date']
-    ];
-};
+// $out = [];
+// foreach ($events as $e) {
+//     $out[] = [
+//         'event_name' => $e['event_name'],
+//         // 'event_date'   => $e['event_date'],
+//         'event_place'  => $e['event_place'],
+//         'event_status' => $e['event_status'],
+//         'registration_number' => $e['registration_number'],
+//         'registration_date' => $e['registration_date']
+//     ];
+// };
 
-echo json_encode($out, JSON_UNESCAPED_UNICODE);
+// echo json_encode($out, JSON_UNESCAPED_UNICODE);
 
 
 

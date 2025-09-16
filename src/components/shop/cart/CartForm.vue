@@ -6,7 +6,7 @@
 -->
 
 <script setup>
-    import { ref, computed, onMounted, watch } from 'vue'
+    import { ref, computed, onMounted, watch, nextTick } from 'vue'
     import { useRouter } from 'vue-router';
     import shopToast from '@/components/common/shopToast.vue';
     import { showToast } from '@/composables/useToast';
@@ -81,6 +81,53 @@
         return city ? city.AreaList : []
     })
 
+    // ===================================== 勾選會員資料相同 =====================================
+    const sameAsMember = ref(false)
+
+    const doSameAsMember = async () => {
+        if(sameAsMember.value){
+            // 抓取會員資料
+            try{
+                const res = await axios.get(import.meta.env.VITE_AJAX_URL + "Member/getMember_forSame.php", {
+                    params: { member_id: memberStore.user?.ID }
+                })
+
+                console.log(res.data.memberInfo)
+
+                if(res.data.success && res.data.memberInfo){
+                    const m = res.data.memberInfo
+                    recipient_name.value = m.name || ''
+                    recipient_phone.value = m.phone || ''
+                    selectedCity.value = m.city || ''
+
+                    nextTick(() => {
+                        selectedDistrict.value = m.area || ''
+                    })
+
+                    recipient_address.value = m.address || ''
+                }else{
+                    showToast('會員資料取得失敗')
+                    console.log(res.data.message)
+                }
+                
+
+            }catch(err){
+                console.error(err)
+                showToast('請稍後再試')
+            }
+        }else{
+            cleanForm()
+        }
+    }
+
+    const cleanForm = () => {
+        // 清空表單
+        recipient_name.value = ''
+        recipient_phone.value = ''
+        selectedCity.value = ''
+        selectedDistrict.value = ''
+        recipient_address.value = ''
+    }
 
     // ===================================== 抓資料 =====================================
 
@@ -268,7 +315,7 @@
             city: selectedCity.value, // 選擇的縣市，資料庫欄位名: city
             area: selectedDistrict.value, // 選擇的區，資料庫欄位名: area
             recipient_address: recipient_address.value, // 填寫地址
-            notes: notes.value, // 訂單備註
+            notes: notes.value.trim() === "" ? null : notes.value, // 訂單備註
             cart: cartItems.value, // 購物車商品
             total_price: totalPrice.value, // 合計(不含運)，資料庫欄位: total_price
             shipping_fee: shipping_fee.value // 運費
@@ -390,13 +437,13 @@
                     <div class="input-box">
                         <h3>送貨方式：{{ shipping_method }}（台灣本島地區適用）</h3>
                         <label class="same-info">
-                            <input type="checkbox"> 收件人資料與會員資料相同
+                            <input type="checkbox" v-model="sameAsMember" @change="doSameAsMember"> 收件人資料與會員資料相同
                         </label>
                     </div>
                     <div class="input-box">
                         <h3><span>*</span>收件人名稱</h3>
                         <div class="receiver">
-                            <input type="text" v-model="recipient_name">
+                            <input type="text" v-model="recipient_name" :disabled="sameAsMember">
                             <p>（請填入真實姓名，以確保順利收件）</p>
                         </div>
                     </div>
@@ -406,13 +453,13 @@
                     </div> -->
                     <div class="input-box">
                         <h3><span>*</span>行動電話</h3>
-                        <input type="text" v-model="recipient_phone" placeholder="0912 345 678">
+                        <input type="text" v-model="recipient_phone" placeholder="0912 345 678" :disabled="sameAsMember">
                     </div>
                     <div class="input-box">
                         <h3><span>*</span>地址</h3>
                         <div class="address">
                             <!-- 縣市 -->
-                            <select v-model="selectedCity">
+                            <select v-model="selectedCity" :disabled="sameAsMember">
                                 <option value="">請選擇縣市</option>
                                 <option v-for="city in cities" :value="city.CityName">
                                     {{ city.CityName }}
@@ -420,14 +467,14 @@
                             </select>
 
                             <!-- 區 -->
-                            <select v-model="selectedDistrict" :disabled="!selectedCity">
+                            <select v-model="selectedDistrict" :disabled="sameAsMember || !selectedCity">
                                 <option value="">請選擇區域</option>
                                 <option v-for="district in districts" :value="district.AreaName">
                                     {{ district.AreaName }}
                                 </option>
                             </select>
                         </div>
-                        <input type="text" v-model="recipient_address" placeholder="請輸入真實地址">
+                        <input type="text" v-model="recipient_address" placeholder="請輸入真實地址" :disabled="sameAsMember">
                     </div>
                     <!-- <div class="input-box">
                         <h3>發票抬頭</h3>

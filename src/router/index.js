@@ -118,6 +118,14 @@ const routes = [
     },
 { path: '/gamestory', name: 'gamestory', component: GameStoryPage },
 { path: '/gamewish/transit', name: 'gamewishTransit', component: GameWishTransitPage, meta: { useLoader: false } },
+{ 
+  path: '/gamewish/result',
+  name: 'gamewishResult',
+  component: () => import('@/views/game/GameWishResultPage.vue'),
+  meta: { useLoader: false },
+  alias: ['/game/wish/result']   // 可選：同時支援你先前寫的 /game/wish/result
+},
+
 
 
 // ------------------ 星星活動 starevent ------------------
@@ -200,8 +208,9 @@ const routes = [
     },
     {
       path: '/AdminLayoutPage',    
-      name: '/AdminLayoutPage',     
+      name: 'AdminLayoutPage',     
       component: () => import('@/views/admin/AdminLayoutPage.vue'),
+      redirect: { name: 'AdminMemberPage' },
       meta: { 
        
         // requiresAuth: true,
@@ -209,8 +218,8 @@ const routes = [
        } , //提示路由這個頁面要認證才可以跳轉
       children:[
           {
-            path: '/AdminMemberPage',    
-            name: 'AdminMemberPage',     
+            path: 'AdminMemberPage',    
+            name: 'AdminMemberPage', 
             component: () => import('@/views/admin/AdminMemberPage.vue'),
             meta: {
               requiresAuth: true,
@@ -218,7 +227,7 @@ const routes = [
           },
 
           {
-            path: '/AdminActivityPage',    
+            path: 'AdminActivityPage',    
             name: 'AdminActivityPage',     
             component: () => import('@/views/admin/AdminActivityPage.vue'),
             meta: {
@@ -227,7 +236,7 @@ const routes = [
           },
 
           {
-            path: '/AdminOrderPage',    
+            path: 'AdminOrderPage',    
             name: 'AdminOrderPage',     
             component: () => import('@/views/admin/AdminOrderPage.vue'),
             meta: {
@@ -236,7 +245,7 @@ const routes = [
           },
 
            {
-            path: '/AdminShopPage',     
+            path: 'AdminShopPage',     
             name: 'AdminShopPage',     
             component: () => import('@/views/admin/AdminShopPage.vue'),
             meta: {
@@ -245,7 +254,7 @@ const routes = [
           },
 
           {
-            path: '/AdminNewsPage',    
+            path: 'AdminNewsPage',    
             name: 'AdminNewsPage',     
             component:  () => import('@/views/admin/AdminNewsPage.vue'),
             meta: {
@@ -254,7 +263,7 @@ const routes = [
           },
 
           {
-            path: '/AdminCommentPage',    
+            path: 'AdminCommentPage',    
             name: 'AdminCommentPage',     
             component: () => import('@/views/admin/AdminCommentPage.vue'),
             meta: {
@@ -304,11 +313,11 @@ const router = createRouter({
  router.beforeEach(async(to,from,next) => {
   const admin = useAuthStore()
   if(to.meta.requiresAuth){
-      await admin.checkSession()
-
+      await admin.checkSession()  
     if (!admin.isLoggedIn) {
       return next({name:'AdminLoginPage'})
     }
+     
   }
 
   // ------------會員-------------------

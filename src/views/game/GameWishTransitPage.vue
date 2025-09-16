@@ -4,9 +4,9 @@
     <img v-if="win" :src="win" alt="" class="layer window" />
     <div v-else class="layer window window--stub"></div>
 
-    <!-- 3) 人物 -->
-    <img v-if="people" :src="people" alt="" class="layer people" />
-    <div v-else class="layer people people--stub"></div>
+    <!-- 3) 人物 - 左右各一個 -->
+    <img v-if="peopleLeft" :src="peopleLeft" alt="" class="layer people people--left" />
+    <img v-if="peopleRight" :src="peopleRight" alt="" class="layer people people--right" />
 
     <!-- 4) 流星 -->
     <div class="comet">
@@ -38,9 +38,10 @@ import { useRouter, useRoute } from 'vue-router'
 // 🎨 直接 import 圖片（背景 PNG 已含漸層）
 import bg     from '@/assets/images/games/GameWishTransitPage/WishPageTransition-bg.svg'
 import win    from '@/assets/images/games/GameWishTransitPage/WishPageTransition-texture04.svg'
-import people from '@/assets/images/games/GameWishTransitPage/WishPageTransition-texture02.svg'
-import star   from '@/assets/images/games/GameSkyPage/gamesky_bg.svg'
-import tail   from '@/assets/images/games/GameSkyPage/gamesky_bg.svg'
+import peopleLeft from '@/assets/images/games/GameWishTransitPage/WishPageTransition-texture01.svg'
+import peopleRight from '@/assets/images/games/GameWishTransitPage/WishPageTransition-texture02.svg'
+import star   from '@/assets/images/games/GameWishTransitPage/WishPageResult-star01.svg'
+import tail   from '@/assets/images/games/GameWishTransitPage/WishPageResult-star02.svg'
 import title  from '@/assets/images/games/GameWishTransitPage/WishPageTransition-texture05.svg'
 
 const router = useRouter()
@@ -59,14 +60,16 @@ function goNext () {
 
   --t-window: .10s;
   --t-people: .70s;
-  --t-star:   1.35s;
-  --t-title:  2.20s;
+  --t-star:   1.10s;
+  --t-title:  2.00s;
 
-  --star-start-left: 30vw;
-  --star-start-top:  52vh;
-  --star-end-left:   58vw;
-  --star-end-top:    34vh;
-  --star-rotate: -10deg;
+  /* ⭐ 路徑：靠上置中（右上 → 左下） */
+  --star-start-left: 68vw;   /* 起點靠右、接近中線 */
+  --star-start-top:  22vh;   /* 更靠上 */
+  --star-end-left:   32vw;   /* 終點靠左、接近中線 */
+  --star-end-top:    40vh;   /* 中上區域 */
+  --star-rotate:     -14deg; /* 與路徑一致的傾斜角 */
+  --star-dir:        -1;     /* 從右往左，水平翻轉 */
 
   min-height:100vh; position:relative; overflow:hidden;
   background-repeat: no-repeat;
@@ -78,7 +81,9 @@ function goNext () {
 
 /* 2) 窗戶 */
 .layer.window{
-  position:absolute; left:50%; top:20vh; transform:translateX(-50%);
+  position:absolute; 
+  left:50%; top:20vh; 
+  transform:translateX(-50%);
   width:min(52vw, 720px); height:auto;
   opacity:0; animation: fadeIn var(--dur-fade) ease-out var(--t-window) forwards;
 }
@@ -88,17 +93,13 @@ function goNext () {
   background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
 }
 
-/* 3) 人物 */
-.layer.people{
-  position:absolute; left:55vw; bottom:7vh; transform:translateX(-50%);
-  width:min(26vw, 360px); height:auto;
+/* 左右人物 */
+.layer.people {
+  position:absolute; bottom:7vh; width:min(8vw, 360px); height:auto;
   opacity:0; animation: fadeUp var(--dur-fade) ease-out var(--t-people) forwards;
 }
-.people--stub{
-  width:min(26vw, 360px); height:min(32vw, 420px);
-  background: linear-gradient(180deg, rgba(255,255,255,.28), rgba(255,255,255,.08));
-  border-radius: 10px;
-}
+.people--left  { left:35vw; transform:translateX(-50%); }
+.people--right { left:55vw; transform:translateX(-50%); }
 
 /* 4) 流星群組 */
 .comet{
@@ -106,7 +107,8 @@ function goNext () {
   left: var(--star-start-left);
   top:  var(--star-start-top);
   width: 260px; height: 72px;
-  transform: rotate(var(--star-rotate));
+  transform: rotate(var(--star-rotate)) scaleX(var(--star-dir));
+  transform-origin: left center; /* 以尾巴起點為基準旋轉/翻轉 */
   opacity:0;
   animation: cometMove var(--dur-star) ease-out var(--t-star) forwards;
   pointer-events:none;
@@ -148,8 +150,8 @@ function goNext () {
 @keyframes fadeUp  { from{opacity:0; transform:translateX(-50%) translateY(10px)} to{opacity:1; transform:translateX(-50%) translateY(0)} }
 @keyframes cometMove{
   0%   { left: var(--star-start-left); top: var(--star-start-top); opacity:0 }
-  12%  { opacity:1 }
-  100% { left: var(--star-end-left, 58vw); top: var(--star-end-top, 34vh); opacity:0 }
+  50%  { opacity:1 }
+  100% { left: var(--star-end-left); top: var(--star-end-top); opacity:0 }
 }
 @keyframes breathe { 0%,100%{transform:translateZ(0) scale(1)} 50%{transform:translateZ(0) scale(1.05)} }
 

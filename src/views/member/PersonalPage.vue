@@ -52,16 +52,12 @@
         reader.readAsDataURL(f)
     }
 
-    // 實際上傳到後端（FormData + 支援 Session / Bearer）
+    // 實際上傳到後端（FormData + 支援 Session）
     async function save() {
         if (!file.value) return alert('請先選擇圖片')
         const fd = new FormData()
         fd.append("memberID", memberID.value)
         fd.append('avatar', file.value)  // 後端用 $_FILES['avatar'] 接
-
-        // 若你登入有回 token，就帶上 Authorization
-        const token = localStorage.getItem('token')
-        const headers = token ? { Authorization: `Bearer ${token}` } : {} // 與後端驗證一致 (可拿掉)
 
         // const res = await axios.post("", 資料)
         // res = { data: 接收到的資料, .... }
@@ -71,7 +67,7 @@
             const { data } = await axios.post(
                 url('Member/update_profile_img.php'),
                 fd,
-                { withCredentials: true, headers } // 若用 Cookie 登入，需要 true；純 Bearer 也可留著
+                { withCredentials: true } 
             )
 
             console.log(data)
@@ -99,14 +95,10 @@
         memberID.value = memberStore.user?.ID
         console.log(memberID.value);
         
-
-        // 同步 Bearer（可選）
-        const token = localStorage.getItem('token')
-        const headers = token ? { Authorization: `Bearer ${token}` } : {}
         try{
             const { data } = await axios.get(
                 url('Member/profile.php'), 
-                { withCredentials: true, headers }
+                { withCredentials: true }
             )
             // 假設後端回：{ success:true, user:{ name:'..', image:'/pdo/Member/uploadImages/xxx.jpg' } }
             if (data?.success) {

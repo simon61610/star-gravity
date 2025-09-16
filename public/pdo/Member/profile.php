@@ -1,12 +1,6 @@
 <?php
 
-// header('Content-Type: application/json; charset=utf-8');
 include '../pdo.php';
-
-// header("Access-Control-Allow-Origin: http://localhost:5173");
-// header('Access-Control-Allow-Credentials: true');
-// header('Access-Control-Allow-Methods: GET, OPTIONS');
-// header('Access-Control-Allow-Headers: Content-Type, X-Requested-With, Authorization');
 
 // 預檢請求
 // if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -21,59 +15,15 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 
 session_start();
 
-// 先從 Session 取，沒有的話再嘗試用 Token
+// 直接用 Session 判斷登入
 $memberID = isset($_SESSION['memberID']) ? (int)$_SESSION['memberID'] : 0;
 
-// 取 Bearer Token
-function bearer_token() {
-  $hdr = $_SERVER['HTTP_AUTHORIZATION'] ?? ($_SERVER['Authorization'] ?? '');
-  if (!$hdr && function_exists('getallheaders')) {
-    $all = getallheaders();
-    // 某些伺服器會給小寫 key
-    if (isset($all['Authorization'])) $hdr = $all['Authorization'];
-    if (!$hdr && !empty($all['authorization'])) $hdr = $all['authorization'];
-  }
-  if (stripos($hdr, 'Bearer ') === 0) return substr($hdr, 7);
-  return '';
-}
-// function bearer_token() {
-//   $hdr = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
-//   if (stripos($hdr, 'Bearer ') === 0) return substr($hdr, 7);
-//   return '';
-// }
-
-// 若沒有 Session，且帶了 Token，就用 Tokens 表找出 member_id
-if ($memberID === 0) {
-  $tok = bearer_token();
-  if ($tok !== '') {
-    $ts = $pdo->prepare('SELECT member_id
-                        FROM `Tokens`
-                        WHERE token = :t AND expires_at > NOW()
-                        LIMIT 1');
-  $ts->execute([':t' => $tok]);
-  $rowTok = $ts->fetch(PDO::FETCH_ASSOC);
-  if ($rowTok) $memberID = (int)$rowTok['member_id'];
-    // $ts = 'SELECT member_id FROM `Tokens` 
-    //       WHERE token=:t AND expires_at>NOW() LIMIT 1
-    //       ';
-    // $ts->execute([':t'=>$tok]);
-    // $rowTok = $ts->fetch(PDO::FETCH_ASSOC);
-  }
-}
 
 // 兩者都沒有就視為未登入
 if ($memberID === 0) {
   echo json_encode(['success' => false, 'message' => '尚未登入'], JSON_UNESCAPED_UNICODE);
   exit;
 }
-// 沒有登入（沒有 Session）
-// if (empty($_SESSION['memberID'])) {
-//   echo json_encode(['ok' => false, 'message' => '尚未登入'], JSON_UNESCAPED_UNICODE);
-//   exit;
-// }
-
-// $memberID = (int)$_SESSION['memberID'];
-
 
 try {
   // 讀取目前登入者的基本資料
@@ -98,7 +48,6 @@ try {
     'city'    => $row['city'] ?? '',
     'area'    => $row['area'] ?? '',
     'address' => $row['address'] ?? '',
-    // 可用可不用：下面先保留
     'gender'         => $row['gender'] ?? '',
     'image'          => $row['image'] ?? '',
     'created_at'     => $row['created_at'] ?? '',

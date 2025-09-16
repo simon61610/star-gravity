@@ -5,12 +5,18 @@
     <aside class="admin-sidebar-aside">
         <div class="admin-sidebar-wapper">
             <ul class="admin-sider-ul">
-                <li><router-link to="/AdminMemberPage">會員管理</router-link></li>
+                <li><router-link :to="{ name: 'AdminMemberPage' }">會員管理</router-link></li>
+                <li><router-link :to="{ name: 'AdminOrderPage' }">訂單管理</router-link></li>
+                <li><router-link :to="{ name: 'AdminActivityPage' }">活動資訊管理</router-link></li>
+                <li><router-link :to="{ name: 'AdminShopPage' }">商城管理</router-link></li>
+                <li><router-link :to="{ name: 'AdminNewsPage' }">天文快訊管理</router-link></li>
+                <li><router-link :to="{ name: 'AdminCommentPage' }">評論管理</router-link></li>
+                <!-- <li><router-link to="/AdminMemberPage">會員管理</router-link></li>
                 <li><router-link to="/AdminOrderPage">訂單管理</router-link></li>
                 <li><router-link to="/AdminActivityPage">活動資訊管理</router-link></li>
                 <li><router-link to="/AdminShopPage">商城管理</router-link></li>
                 <li><router-link to="/AdminNewsPage">天文快訊管理</router-link></li>
-                <li><router-link to="/AdminCommentPage">評論管理</router-link></li>
+                <li><router-link to="/AdminCommentPage">評論管理</router-link></li> -->
             </ul>
         </div>
     </aside>

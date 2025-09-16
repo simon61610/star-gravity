@@ -1,6 +1,4 @@
 <!-- 
- 待新增報名編號
- 待新增確認重複報名
  待串會員
 -->
 
@@ -33,6 +31,50 @@
     const gender = ref('')
     const phone = ref('')
     const email = ref('')
+
+
+    // 會員資料相同功能
+    const sameAsMember = ref(false)
+
+    const doSameAsMember = async () => {
+        // console.log(sameAsMember.value)
+        if(sameAsMember.value){
+            // 抓取會員資料
+            try{
+                const res = await axios.get(import.meta.env.VITE_AJAX_URL + "Member/getMember_forSame.php", {
+                    params: {member_id }
+                })
+
+                console.log(res.data.memberInfo)
+
+                if(res.data.success && res.data.memberInfo){
+                    const m = res.data.memberInfo
+                    name.value = m.name || ''
+                    gender.value = m.gender || ''
+                    phone.value = m.phone || ''
+                    email.value = m.email || ''
+                }else{
+                    showToast('會員資料取得失敗')
+                    console.log(res.data.message)
+                }
+                
+
+            }catch(err){
+                console.error(res.data.message)
+                showToast('請稍後再試')
+            }
+        }else{
+            cleanForm()
+        }
+    }
+
+    const cleanForm = () => {
+        name.value = ''
+        gender.value = ''
+        phone.value = ''
+        email.value = ''
+    }
+
 
     // 前往繳費: 送出報名
     const submitRegistration = async () => {
@@ -68,7 +110,7 @@
             console.log(res.data.message)
             // showToast('報名成功！')
         }else {
-            console.log(res.data.error || null)
+            console.error(res.data.error || null)
             showToast(res.data.message)
         }
     }
@@ -92,34 +134,36 @@
     <section class="registration-section">
         <div class="form">
             <div class="box equal-member">
-                <input type="checkbox"> 報名資料與會員資料相同
+                <label >
+                    <input type="checkbox" v-model="sameAsMember" @change="doSameAsMember"> 報名資料與會員資料相同
+                </label>
             </div>
             <div class="box">
                 <h3>*姓名</h3>
-                <input type="text" v-model="name">
+                <input type="text" v-model="name" :disabled="sameAsMember">
             </div>
             <div class="box">
                 <h3>*性別</h3>
                 <div>
                     <label>
-                        <input type="radio" v-model="gender" value="男"> 男
+                        <input type="radio" v-model="gender" value="男性" :disabled="sameAsMember"> 男
                     </label>
                     <label>
-                        <input type="radio" v-model="gender" value="女"> 女
+                        <input type="radio" v-model="gender" value="女性" :disabled="sameAsMember"> 女
                     </label>
                     <label>
-                        <input type="radio" v-model="gender" value="第三性"> 第三性
+                        <input type="radio" v-model="gender" value="第三性" :disabled="sameAsMember"> 第三性
                     </label>
                 </div>
             </div>
             <div class="box">
                 <h3>*行動電話</h3>
-                <input type="text" v-model="phone">
+                <input type="text" v-model="phone" :disabled="sameAsMember">
             </div>
             <div class="box mail">
                 <h3>*電子信箱</h3>
                 <div>
-                    <input type="text" v-model="email">
+                    <input type="text" v-model="email" :disabled="sameAsMember">
                     <p>（活動資訊將以此 E-mail 通知您）</p>
                 </div>
             </div>

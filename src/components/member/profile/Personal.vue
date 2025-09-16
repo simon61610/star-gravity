@@ -18,8 +18,8 @@
     const UPDATE_API  = API_BASE + "update_profile.php"
 
     // localStorage：現在只使用 token 來判斷是否登入
-    const LS_TOKEN = 'token'
-    const loggedIn = computed(() => !!localStorage.getItem(LS_TOKEN))
+    // const LS_TOKEN = 'token'
+    // const loggedIn = computed(() => !!localStorage.getItem(LS_TOKEN))
 
     /* ---- 狀態 ---- */
     const member = reactive({
@@ -61,12 +61,12 @@
 
     onMounted(async() => {
         // 用 token 判斷是否登入
-        const token = localStorage.getItem(LS_TOKEN)
-        if(!token) {
-            alert('請先登入')
-            window.location.href = "/loginfirst"   // 登出後跳轉到登入頁
-            return
-        }
+        // const token = localStorage.getItem(LS_TOKEN)
+        // if(!token) {
+        //     alert('請先登入')
+        //     window.location.href = "/loginfirst"   // 登出後跳轉到登入頁
+        //     return
+        // }
         // 載入城市/區域 JSON
         try {
             const res = await axios.get(import.meta.env.VITE_PUBLIC_URL + 'JSON_CSV_XML/CityCountyData.json') 
@@ -78,9 +78,11 @@
         }
         // 用 token 向後端拿會員資料
         try {
-            const { data } = await axios.get(PROFILE_API, {
-                headers: { Authorization: `Bearer ${token}` }
-            })
+            const { data } = await axios.get(
+                PROFILE_API, { 
+                    withCredentials: true 
+                }
+            )
 
             if (data?.success && data?.user) {
                 const u = data.user
@@ -161,12 +163,10 @@
                 city: member.city,
                 area: member.area,
                 address: member.address.trim()
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            })
+            }, { 
+                withCredentials: true 
+            }
+        )
 
             // 後端任一種皆可：{ ok: true } 或 { success: true }
             alert('已儲存！')

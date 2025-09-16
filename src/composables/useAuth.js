@@ -29,7 +29,7 @@ function isLoginUrl(url) {
   // return url.endsWith('/PDO/Member/login2.php') || url.endsWith('/PDO/Member/login2.php')
 }
 
-// 新增：哪些 API 需要帶 Authorization / Cookie
+// 需要帶 Cookie 的 API（以 session 驗證）
 function shouldAttachAuth(url) {
   return (
     typeof url === 'string' &&
@@ -52,21 +52,7 @@ if (typeof window !== 'undefined' && window.fetch && !window.__AUTH_FETCH_INSTAL
   const _fetch = window.fetch.bind(window)       // 綁定 this，避免某些瀏覽器報錯
   window.fetch = function (input, init) {
     const url = typeof input === 'string' ? input : (input && input.url) || ''
-    // 非登入 API → 自動帶 Authorization
     try {
-      const t = localStorage.getItem(AUTH_KEY)
-      // 只對「需要驗證」的 API 才帶 token
-      if (t && url && shouldAttachAuth(url))  {
-        init = init || {}
-        init.headers = init.headers || {}
-        if (init.headers instanceof Headers) {
-          init.headers.set('Authorization', 'Bearer ' + t)
-        } else if (typeof init.headers === 'object') {
-          init.headers['Authorization'] = 'Bearer ' + t
-        } else {
-          init.headers = { Authorization: 'Bearer ' + t }
-        }
-      }
       // Cookie 也只在需要驗證的 API 預設帶上
       if (shouldAttachAuth(url)) {
         if (!init || !('credentials' in init)) {
@@ -79,7 +65,7 @@ if (typeof window !== 'undefined' && window.fetch && !window.__AUTH_FETCH_INSTAL
     // 關鍵：回傳 _fetch 的 Promise，永遠把 Response 往外傳
     return _fetch(input, init)
     .then((res) => {
-      // 登入回應 → 解析 JSON → 存 token（不影響回傳值）
+      // 登入回應 → 解析 JSON → 存 token（僅作為登入旗標，不帶到請求））
       try {
         if (url && isLoginUrl(url) && res && res.ok) {
           const ct = res.headers.get('content-type') || ''
@@ -148,19 +134,14 @@ if (typeof window !== 'undefined' && window.fetch && !window.__AUTH_FETCH_INSTAL
 if (axios && axios.interceptors && !axios.__AUTH_INTERCEPTOR_INSTALLED__) {
   axios.__AUTH_INTERCEPTOR_INSTALLED__ = true
 
-  // axios 也只對需要驗證的 API 預設帶 Cookie（其餘照請求自行決定）
+  //預設不帶 Cookie；僅在需要驗證的 API 開啟
   axios.defaults.withCredentials = false
 
   // 請求前：帶上 Authorization（登入 API 除外）
   axios.interceptors.request.use(function (config) {
     try {
-      const t = localStorage.getItem(AUTH_KEY)
-      // 只在需要驗證的 API 帶 Authorization
-      if (t && config && config.url && shouldAttachAuth(config.url)) {
-        // if (t && config && config.url && !isLoginUrl(config.url))
-        config.headers = config.headers || {}
-        config.headers['Authorization'] = 'Bearer ' + t
-        // 需要驗證的 API 也開 Cookie
+      if (config && config.url && shouldAttachAuth(config.url)) {
+        // 只開 Cookie / Session，不再帶 Authorization
         config.withCredentials = true
       }
     } catch (e) {}
@@ -178,16 +159,6 @@ if (axios && axios.interceptors && !axios.__AUTH_INTERCEPTOR_INSTALLED__) {
     }  catch (e) {}
     return res
   })
-
-
-
-
-
-
-
-
-
-
 
 }
 

@@ -123,11 +123,14 @@ onMounted(()=>{
 
                         <router-link :to= "{ name: 'ArticleDetailpage', params: { id: article.ID } }"
                             class="router-link-card">
-
                             <div class="news-article-content">
+                            <div class="cnContent--18px" v-html="article.content"></div>
+                              <p class="Readmore">Read more</p>
+                            </div>
+                            <!-- <div class="news-article-content">
                                 <p class="cnContent--18px">{{ article.content }}</p>
                                 <p class="Readmore">Read more</p>
-                            </div>
+                            </div> -->
                                 
                         </router-link>
                     </div>
