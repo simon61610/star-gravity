@@ -60,7 +60,7 @@
         cartItems.value = cartData
         // console.log(cartItems.value) // 陣列包物件 [{...}, {...}, {...}]
 
-        /* ========== 抓庫存量 ========== */
+        /* ========== 抓庫存量並校正數量至最大庫存量 ========== */
         for(let i = 0; i < cartItems.value.length; i++){
             const item = cartItems.value[i]
 
@@ -75,11 +75,11 @@
                         item.stockWarning = true
                     }
                 }else{
-                    item.stock = null
+                    item.stock = null // template 中會顯示: 查詢中
                 }
             }catch (err) {
                 console.error('庫存取得失敗', err)
-                item.stock = null
+                item.stock = null // template 中會顯示: 查詢中
             }
         } 
     })
@@ -106,7 +106,8 @@
             unitPrice,
             qty,
             itemSubTotal,
-            stockWarning: false // 是否缺貨
+            stockWarning: false, // 是否缺貨
+            stock: null
         }
     }
     
@@ -196,6 +197,12 @@
         // 判斷是否有缺貨商品
         if(hasOutOfStock.value){
             showToast('購物車中有缺貨商品，無法結帳')
+            return
+        }
+        // 判斷是否有超出庫存的商品
+        const overStockItem = cartItems.value.find(item => item.qty > item.stock)
+        if(overStockItem){
+            showToast('購物車中有商品數量超過庫存，請修改後再結帳')
             return
         }
         // 判斷是否登入會員

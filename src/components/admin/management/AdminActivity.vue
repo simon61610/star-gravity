@@ -426,7 +426,8 @@ defineExpose({ handleEdit, handleadd }) // 父層可呼叫新增/編輯
   </AdminTable>
 
   <!-- 活動管理彈窗 -->
-  <div v-if="showActivity" class="Admin-Activity-modal" @click.self="close('activity')">
+  <!-- <div v-if="showActivity" class="Admin-Activity-modal" @click.self="close('activity')"> -->
+  <div v-if="showActivity" class="Admin-Activity-modal">
     <form class="Admin-activity-form" action="">
       <div class="Admin-Activity-h1">
         <h1>活動編輯與新增</h1>
