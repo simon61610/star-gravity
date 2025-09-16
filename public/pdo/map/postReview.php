@@ -11,7 +11,7 @@ $image = isset($_FILES['image'])? $_FILES['image'] : null;
 
 //將前端變數轉換成資料庫所需的created_at (資料型態是Date) php轉換時間是用秒
 $sec = intval($created_ms)/1000 ;
-$created_at = date("Y-m-d", $sec );
+$created_at = date("Y-m-d h-m-s", $sec );
 
 //預設圖片資訊
 $fileName = '';

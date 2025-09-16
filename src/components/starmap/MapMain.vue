@@ -332,11 +332,12 @@ function handleSceneChange(scene, event) {
                             <transition name="accordion">
                                 <div v-show="activeIndex === locationList.findIndex(item => item === location)" class="location-singlePlace-more" >
                                                                                  <!-- ↓ 路徑打包後有亂掉 所以加這個環境變數去抓路徑 -->
-                                    <img class="location-singlePlace-photo" :src="API_IMAGESURL + location.image" alt="" @click="showMore(index)">
+                                    <img class="location-singlePlace-photo" :src="API_IMAGESURL + location.image" alt="" @click="showLocationDetail(location)">
 
                                     <a class="seeMore" href="#" @click.prevent="showLocationDetail(location)">
                                         更多資訊
                                     </a>
+                                    <img class="closeArrow" src="@/assets/icons/icon-map-prupleArrow.svg" alt="" @click="showMore(index)">
                                 </div>
                             </transition>
                             
@@ -614,7 +615,7 @@ input[type="text"]:disabled {
 }
 .locationList ul li{
     /* border: 1px solid blue; */
-    max-height: 355px;
+    // max-height: 355px;
     display: flex;
     flex-direction: column;
 }
@@ -686,19 +687,35 @@ input[type="text"]:disabled {
     align-items: center ;
     justify-content: end;
 
-    margin-bottom: 24px;
+    animation: seeMoreShink 4s ease-in-out infinite ;
 }
 .seeMore:hover{
     color: $secondaryColor-orange;
+    animation:none;
+    font-weight: 500;
 }
-.seeMore img{
-    height: 16px;
+.closeArrow{
+    width: 28px;
+    display: block;
+    justify-self: center;
+}
+@keyframes seeMoreShink{
+    0%{ 
+        color: $FontColor-black;
+    }
+    50%{
+        color: $secondaryColor-orange;
+    }
+    100%{
+        color: $FontColor-black;
+    }
 }
 
 /*裝飾線*/
 .map-decorateLine{
     height: 2px;
     background-color: $primaryColor-100;
+    margin: 4px 0 0;
 }
 
 /*右半邊台灣*/
@@ -717,9 +734,33 @@ input[type="text"]:disabled {
 
 
 //------------RWD-------------
+@media screen and (max-width:651px) {
+    .wrapper{
+        padding: 12px;
+        gap: 0;
+    }
+    .loFilterList h4{
+        display: none;
+    }
+    .regionChoice{
+        flex-direction: column;
+    }
+    .sceneChoice{
+        flex-direction: column;
+    }
+}
 @media screen and (max-width:430px) {
     .map-rightBlock, .map-decorate{
         display: none;
+    }
+    .loFilterList h4{
+        display: block;
+    }
+    .regionChoice{
+        flex-direction: row;
+    }
+    .sceneChoice{
+        flex-direction: row;
     }
 }
 </style>

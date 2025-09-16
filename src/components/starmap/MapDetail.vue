@@ -224,6 +224,11 @@ function aaa(){
                         <img src="@/assets/icons/icon-filledStar.svg" alt="星星">
                         <h3>4.7</h3>
                     </div>
+
+                    <!-- <div class="mapbox-seeMore" @click.prevent="showReview">
+                        <p>更多評論</p>
+                        <img src='@/assets/icons/icon-map-goToBack.svg' alt="">
+                    </div> -->
                 </div>
                 <!-- 評論顯示區 -->
                 <div class="mapbox-reviewList">
@@ -247,7 +252,7 @@ function aaa(){
                 <!-- 更多評論 -->
                 <div class="mapbox-seeMore" @click.prevent="showReview">
                     <p>更多評論</p>
-                    <img src='@/assets/icons/icon-map-goToBack.svg' alt="">
+                    <!-- <img src='@/assets/icons/icon-map-goToBack.svg' alt=""> -->
                 </div>
             </div>
         </div>
@@ -563,24 +568,56 @@ function aaa(){
 
 //查看更多
 .mapbox-seeMore{
-    align-self: self-end;
+    align-self: center;
     cursor: pointer;
 
-    margin: 10px 10px 0 0;
+    margin: 12px 0 0 0;
     display: flex;
     align-items: center;
+
+    animation: seeMoreShink 4s linear infinite ;
+}
+@keyframes seeMoreShink{
+    0%{ 
+        color: $FontColor-black;
+    }
+    25%{
+        color: $secondaryColor-orange;
+    }
+    75%{
+        color: $secondaryColor-orange;
+    }
+    100%{
+        color: $FontColor-black;
+    }
 }
 .mapbox-seeMore p{
-    font-size: $pcChFont-p;
+    font-size: 24px;
 }
 .mapbox-seeMore:hover{
     color:$secondaryColor-orange ;
+    animation: none;
+    font-weight: 500;
 }
-.mapbox-seeMore img{
-    width: 18px;
-    transform: rotate(180deg);
-}
+// .mapbox-seeMore img{
+//     width: 18px;
+//     transform: rotate(180deg);
+// }
+@media screen and (max-width:901px){
+    .mapbox-Up-row1{
+        flex-direction: column;
 
+        .map-detail-weather{
+            justify-content:start;
+        }
+
+    }
+}
+@media screen and (max-width:651px) {
+    .mapbox-Up-row2{
+        flex-direction: column;
+    }
+}
 @media screen and (max-width:430px) {
     .mapbox-Up-row1, .mapbox-Up-row2{
         flex-direction: column;

@@ -395,7 +395,7 @@ onUnmounted( ()=>{
     font-size:$pcChFont-small ;
 }
 
-@media screen and (max-width:430px) {
+@media screen and (max-width:651px) {
     .map-reviewBox{
         flex-direction: column;
     }    
@@ -411,7 +411,7 @@ onUnmounted( ()=>{
     .mapreview-left{
         width: 100%;
         padding: 60px 24px 16px;
-        align-items: start;
+        flex-direction:row;
         box-sizing: border-box;
     }
     .mapreview-btn{
@@ -424,6 +424,20 @@ onUnmounted( ()=>{
         height:58vh;
         box-sizing: border-box;
     }
+}
+
+@media screen and (max-width:431px) {
+    .mapreview-left{
+        flex-direction: column;
+        gap: 24px;
+        justify-content: normal;
+        height: auto;
+    }
+    .mapreview-title{
+        flex-direction: row;
+        margin-bottom: 0;
+    }
+    
 }
 
 </style>
