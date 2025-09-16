@@ -76,48 +76,23 @@ watch(
         for(let i = 0; i < itemsId.length; i++){
             let itemInfo = storage.getItem(itemsId[i])
             if(itemInfo) {
-                let qty = itemInfo.split('|')[3]
+                const parts = itemInfo.split('|')
+                const qty = Number(parts[3]) || 0
                 // console.log(parts)
-                totalQuantity += Number(qty)
+                totalQuantity += qty
             }
         }
-
-        /* let items = itemString.substring(0, itemString.length - 2).split(', ')
-        // console.log(items) // ['P2', 'P1', 'P3']
-        let totalQuantity = 0
-
-        for(let i = 0; i < items.length; i++){
-            let itemInfo = storage.getItem(items[i])
-            // alert(itemInfo)
-            if(itemInfo){
-                let totalPrice = parseInt(itemInfo.split('|')[2]) // 累積的總價
-
-                // 從 products.js 取出單價
-                let productId = items[i].replace('P', '') // 先改成正確 id 號碼
-                let product = products.find(p => p.id == productId) // 找出那件商品
-                let originalSpePrice = product ? product.specialPrice : 1 // 保險，免得 product 變成 undefined ，自動轉型變成除 0 爆掉
-
-                let quantity = Math.round(totalPrice / originalSpePrice)
-
-                totalQuantity += quantity
-            }
-        } */
-
         cartCount.value = totalQuantity
     }
 
-
-
-
-
     // ------------------------------------------------------
-    // 每次事件更新，通知購物車要更新數量
     onMounted(() => {
-        updateCart()
-        bus.on('notifyUpdateCart', updateCart)
+      // 每次事件更新，通知購物車要更新數量
+      updateCart()
+      bus.on('notifyUpdateCart', updateCart)
 
-        //---------會員-------------
-        memberStore.hydrate?.()
+      //---------會員-------------
+      memberStore.hydrate?.()
     })
 
     // -----------會員登入後(取名字/暱稱/信箱，顯示第一個字母)--------------------
