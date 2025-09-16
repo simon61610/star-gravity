@@ -1,3 +1,5 @@
+<!-- 購物車步驟進度條 -->
+
 <script setup>
     import { computed } from 'vue'
 
