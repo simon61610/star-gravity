@@ -16,6 +16,7 @@
     
     /* ========== 套件 ========== */
     import bus from '@/composables/useMitt'
+    import axios from 'axios';
 
     /* ========== 環境變數 ========== */
     // const BASE_URL = import.meta.env.VITE_AJAX_URL_NOEND
@@ -34,8 +35,8 @@
         "若有任何疑問，歡迎於訂單留言或與客服聯繫，感謝您的支持！",
         ])
         
-    /* ========== 抓購物車的內容 ========== */
-    onMounted(() => {
+    onMounted(async () => {
+        /* ========== 抓購物車的內容 ========== */
         const itemString = storage['addItemList']
         // alert(itemString) // 1, 3, 5, 
         if(!itemString){
@@ -58,6 +59,26 @@
 
         cartItems.value = cartData
         // console.log(cartItems.value) // 陣列包物件 [{...}, {...}, {...}]
+
+        /* ========== 抓庫存量 ========== */
+        for(let i = 0; i < cartItems.value.length; i++){
+            const item = cartItems.value[i]
+
+            try{
+                const res = await axios.get(import.meta.env.VITE_AJAX_URL + "starshop/client/check_stock.php", {
+                    params : { product_id: item.ID }
+                })
+
+                if(res.data.success){
+                    item.stock = res.data.stock
+                }else{
+                    item.stock = null
+                }
+            }catch (err) {
+                console.error('庫存取得失敗', err)
+                item.stock = null
+            }
+        } 
     })
 
     /* ========== 建立購物車資料 List ========== */
@@ -88,8 +109,15 @@
     /* ========== 計算新的數量 => 價格 ========== */
     // item 是購物車資料 List 跑 v-for 後的 Object
     const changeItemCount = (item, index) => {
+        // 數量不得小於 1
         if(item.qty < 1){
             item.qty = 1
+        }
+        
+        // 數量不得超過庫存
+        if(item.qty > item.stock){
+            item.qty = item.stock
+            showToast(`此商品最多只能購買 ${item.stock} 件`)
         }
 
         // 重新計算小計
@@ -194,6 +222,7 @@
                                     min="1" 
                                     @input="changeItemCount(item, index)"
                                 >
+                                <p class="stock">尚有庫存 {{ item.stock ?? '查詢中' }} 件</p>
                                 <!-- @blur="checkQty(index)" 移除Blur事件驗證 -->
                             </div>
                             <p class="price-subtotal">
@@ -221,9 +250,6 @@
                 </p>
             </div>
         </section>
-
-        <!-- 暫時移除庫存功能 -->
-        <!-- <p class="stock">尚有庫存 <span>{{ stock }}</span> 件</p> -->
 
         <!-- ---------------- 下方: 說明與訂單金額 ---------------- -->
         <section class="guide-box">
@@ -325,9 +351,12 @@
                                 }
                             }
                             .qty-ctrl {
+                                display: flex;
+                                flex-direction: column;
+                                gap: 12px;
+                                align-items: center;
                                 .stock {
-                                    font-size: $pcChFont-p;
-                                    margin-bottom: 12px;
+                                    font-size: 16px;
 
                                     span {
                                         color: $secondaryColor-orange;
@@ -500,6 +529,8 @@
                                 }
                             }
                             .qty-ctrl {
+                                align-items: flex-start;
+                                margin-bottom: 12px;
                                 .stock {
                                     span {
                                     }

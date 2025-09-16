@@ -198,6 +198,7 @@
                         <p class="product-price__nospecial" v-if="product.discount !== 100">NT$ {{ product.original_price }}</p>
                         <p class="product-price__special">NT$ {{ product.sale_price }}</p>
                     </div>
+                    <p class="stock">尚有庫存 {{ product.stock }} 件</p>
                     <!-- 數量按鈕位置，暫時刪除 -->
                     <!-- <div class="qty-control">
                         <QtyControl />
@@ -364,6 +365,10 @@
                         color: #ccc;
                         text-decoration: line-through;
                     }
+                }
+                
+                .stock {
+                    font-size: 20px;
                 }
 
                 // 購物車 & 追蹤按鈕
