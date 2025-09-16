@@ -137,6 +137,12 @@
 
     // 商品名稱|圖片路徑|每件價格|數量|原價
     function addCart(product){
+        // 加入判斷: 商品庫存 <= 0 不執行
+        if(product.stock <= 0){
+            showToast("此商品缺貨中")
+            return
+        }
+
         if(!storage['addItemList']){
             storage['addItemList'] = ''
         }
@@ -198,16 +204,26 @@
                         <p class="product-price__nospecial" v-if="product.discount !== 100">NT$ {{ product.original_price }}</p>
                         <p class="product-price__special">NT$ {{ product.sale_price }}</p>
                     </div>
-                    <p class="stock">尚有庫存 {{ product.stock }} 件</p>
+                    <p class="stock" v-if="product.stock > 0">尚有庫存 {{ product.stock }} 件</p>
+                    <p class="stock-warning" v-else>缺貨中</p>
                     <!-- 數量按鈕位置，暫時刪除 -->
                     <!-- <div class="qty-control">
                         <QtyControl />
                     </div> -->
                 </div>
                 <div class="product-detail__btn">
-                    <p class="product-detail__btn__add" @click="addCart(product)">
-                        <i class="fa-solid fa-cart-shopping"></i>
-                        加入購物車
+                    <p 
+                        class="product-detail__btn__add"
+                        @click="addCart(product)"
+                        :class="{ disabled: product.stock <= 0 }"
+                    >
+                        <span v-if="product.stock > 0">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                            加入購物車
+                        </span>
+                        <span v-else>
+                            暫無庫存   
+                        </span>
                     </p>
                     <p class="product-detail__btn__follow" @click="followProduct">
                         <span class="add-follow" v-show="!isFollow">
@@ -354,6 +370,11 @@
                         padding: 12px;
                         background-color: $primaryColor-500;
                     }
+                    .stock-warning{
+                        color: rgb(255, 74, 74);
+                        font-size: 20px;
+                        font-weight: bold;
+                    }
                 }
 
                 .product-price {
@@ -397,6 +418,14 @@
                         &:hover {
                             background-color: white;
                             color: $primaryColor-900;
+                        }
+                        
+                        &.disabled {
+                            background-color: #888;
+                            cursor: not-allowed;
+                        }
+                        &.disabled:hover { // 避免 disabled 的時候文字也變色
+                            color: white;
                         }
                     }
                     &__follow {

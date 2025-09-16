@@ -71,6 +71,9 @@
 
                 if(res.data.success){
                     item.stock = res.data.stock
+                    if(item.stock <= 0){
+                        item.stockWarning = true
+                    }
                 }else{
                     item.stock = null
                 }
@@ -102,7 +105,8 @@
             originalPrice,
             unitPrice,
             qty,
-            itemSubTotal
+            itemSubTotal,
+            stockWarning: false // 是否缺貨
         }
     }
     
@@ -153,6 +157,12 @@
         return 60
     })
 
+    /* ========== 判斷有無缺貨商品 ========== */
+    const hasOutOfStock = computed(() => {
+        // 用 some 方法檢查是否有符合的條件，裡面放 callback
+        return cartItems.value.some(item => item.stockWarning == true)
+    })
+
     /* ========== 刪除商品 ========== */
     const deleteItem = (index) => {
         const item = cartItems.value[index] // 要被刪除的該物件
@@ -181,6 +191,11 @@
         // 判斷購物車有無商品
         if(cartItems.value.length === 0){
             showToast('購物車尚無商品，請前往星空小舖選購')
+            return
+        }
+        // 判斷是否有缺貨商品
+        if(hasOutOfStock.value){
+            showToast('購物車中有缺貨商品，無法結帳')
             return
         }
         // 判斷是否登入會員
@@ -222,7 +237,8 @@
                                     min="1" 
                                     @input="changeItemCount(item, index)"
                                 >
-                                <p class="stock">尚有庫存 {{ item.stock ?? '查詢中' }} 件</p>
+                                <p class="stock" v-if="!item.stockWarning">尚有庫存 {{ item.stock ?? '查詢中' }} 件</p>
+                                <p v-if="item.stockWarning" class="stock-warning">缺貨中</p>
                                 <!-- @blur="checkQty(index)" 移除Blur事件驗證 -->
                             </div>
                             <p class="price-subtotal">
@@ -361,6 +377,9 @@
                                     span {
                                         color: $secondaryColor-orange;
                                     }
+                                }
+                                .stock-warning {
+                                    color: red;
                                 }
 
                                 .num {

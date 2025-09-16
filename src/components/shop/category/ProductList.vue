@@ -149,6 +149,12 @@
 
     // storage 設計: 商品名稱|圖片路徑|每件價格|數量|原價
     function addCart(product){
+        // 加入判斷: 商品庫存 <= 0 不執行
+        if(product.stock <= 0){
+            showToast("此商品缺貨中")
+            return
+        }
+
         if(!storage['addItemList']){
             storage['addItemList'] = ''
         }
@@ -193,8 +199,17 @@
                     </div>
                 </RouterLink>
 
-                <div class="item__card--cart-btn" @click="addCart(item)">
-                    <i class="fa-solid fa-cart-shopping"></i>
+                <div 
+                    class="item__card--cart-btn" 
+                    @click="addCart(item)"
+                    :class="{ disabled: item.stock <= 0 }"
+                >
+                    <span v-if="item.stock > 0">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </span>
+                    <span v-else>
+                        缺貨中
+                    </span>
                 </div>
             </div>
 
@@ -269,13 +284,23 @@
                 border: 2px solid white;
                 border-radius: 8px;
                 font-size: 16px;
-                padding: 6px 0;
+                // padding: 6px 0;
+                height: 32px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 transition: all 0.3s ease;
 
                 // 購物車按鈕 hover 效果
                 &:hover {
                     border: 2px solid $primaryColor-500;
                     color: $primaryColor-500;
+                }
+
+                &.disabled{
+                    border: 2px solid #888;
+                    color: #888;
+                    cursor: not-allowed;
                 }
             }
         }
