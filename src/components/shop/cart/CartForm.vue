@@ -198,11 +198,6 @@
         return sum
     })
 
-    /* ========== 運費 ========== */
-    const shipping_fee = computed(() => { // 未來可針對免運條件做運算
-        return 60
-    })
-    
     /* ========== 計算合計金額 ========== */
     const totalPrice = computed(() => {
         let sum = 0;
@@ -214,6 +209,15 @@
         return sum
     })
 
+    /* ========== 運費 or 免運  ========== */
+    const shipping_fee = computed(() => { // 未來可針對免運條件做運算
+        // 若合計金額大於等於 3999，免運費
+        if(totalPrice.value >= 3999){
+            return 0
+        }
+        return 60
+    })
+    
     /* ========== 產生訂單號 ========== */
     const orderNumber = ref("")
 
@@ -363,7 +367,11 @@
                 <!-- 金額統計 -->
                 <div class="cal-box">
                         <p><span>合計</span><span>NT${{ totalPrice }}</span></p>
-                        <p><span>運費</span><span>NT${{ shipping_fee }}</span></p>
+                        <p>
+                            <span>運費</span>
+                            <span v-if="shipping_fee > 0">NT${{ shipping_fee }}</span>
+                            <span v-else>免運費</span>
+                        </p>
                         <p><span>總計</span><span>NT${{ totalPrice + shipping_fee }}</span></p>
                 </div>
 

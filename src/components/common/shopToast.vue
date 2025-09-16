@@ -30,6 +30,10 @@
         opacity: .8;
         z-index: 1000;
         border-radius: 16px;
+
+        div {
+            line-height: 1.5;
+        }
     }
 
 

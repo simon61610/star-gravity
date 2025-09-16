@@ -1,7 +1,4 @@
 <!-- 購物車 - 準備結帳 -->
-<!-- 
-- TODO: 免運功能開發
--->
 
 <script setup>
     import { ref, computed, onMounted } from 'vue'
@@ -29,6 +26,7 @@
     
     /* ========== 資料 ========== */
     const orderGuide = ref([
+        "本館宅配運費 60 元，單筆訂單滿 3,999 元即可免運。",
         "商品出貨時間約需 5–7 個工作天，若您無法等待，請斟酌再下單。",
         "宅配服務（黑貓）配送時間通常為 1–2 個工作天，如遇連續假期或重大節慶，恕無法指定送達日期與時段。",
         "本網站保留活動內容之 最終修改與解釋權利。",
@@ -60,7 +58,7 @@
         cartItems.value = cartData
         // console.log(cartItems.value) // 陣列包物件 [{...}, {...}, {...}]
 
-        /* ========== 抓庫存量 ========== */
+        /* ========== 抓庫存量並校正數量至最大庫存量 ========== */
         for(let i = 0; i < cartItems.value.length; i++){
             const item = cartItems.value[i]
 
@@ -75,11 +73,11 @@
                         item.stockWarning = true
                     }
                 }else{
-                    item.stock = null
+                    item.stock = null // template 中會顯示: 查詢中
                 }
             }catch (err) {
                 console.error('庫存取得失敗', err)
-                item.stock = null
+                item.stock = null // template 中會顯示: 查詢中
             }
         } 
     })
@@ -106,7 +104,8 @@
             unitPrice,
             qty,
             itemSubTotal,
-            stockWarning: false // 是否缺貨
+            stockWarning: false, // 是否缺貨
+            stock: null
         }
     }
     
@@ -152,8 +151,12 @@
         return sum
     })
 
-    /* ========== 運費 ========== */
-    const shipping_fee = computed(() => { // 未來可針對免運條件做運算
+    /* ========== 運費 or 免運 ========== */
+    const shipping_fee = computed(() => {
+        // 若合計金額大於等於 3999，免運費
+        if(totalPrice.value >= 3999){
+            return 0
+        }
         return 60
     })
 
@@ -196,6 +199,12 @@
         // 判斷是否有缺貨商品
         if(hasOutOfStock.value){
             showToast('購物車中有缺貨商品，無法結帳')
+            return
+        }
+        // 判斷是否有超出庫存的商品
+        const overStockItem = cartItems.value.find(item => item.qty > item.stock)
+        if(overStockItem){
+            showToast('購物車中有商品數量超過庫存，請修改後再結帳')
             return
         }
         // 判斷是否登入會員
@@ -280,7 +289,11 @@
                 <div class="order-cal">
                     <div class="cal-box">
                         <p><span>合計</span><span>NT${{ totalPrice }}</span></p>
-                        <p><span>運費</span><span>NT${{ shipping_fee }}</span></p>
+                        <p>
+                            <span>運費</span>
+                            <span v-if="shipping_fee > 0">NT${{ shipping_fee }}</span>
+                            <span v-else>免運費</span>
+                        </p>
                         <p><span>總計</span><span>NT${{ totalPrice + shipping_fee }}</span></p>
                     </div>
                     <!-- <router-link to="/cartpage/cartform" class="router-link"> -->
