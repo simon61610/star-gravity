@@ -16,6 +16,7 @@
     
     /* ========== 套件 ========== */
     import bus from '@/composables/useMitt'
+    import axios from 'axios';
 
     /* ========== 環境變數 ========== */
     // const BASE_URL = import.meta.env.VITE_AJAX_URL_NOEND
@@ -34,8 +35,8 @@
         "若有任何疑問，歡迎於訂單留言或與客服聯繫，感謝您的支持！",
         ])
         
-    /* ========== 抓購物車的內容 ========== */
-    onMounted(() => {
+    onMounted(async () => {
+        /* ========== 抓購物車的內容 ========== */
         const itemString = storage['addItemList']
         // alert(itemString) // 1, 3, 5, 
         if(!itemString){
@@ -58,6 +59,26 @@
 
         cartItems.value = cartData
         // console.log(cartItems.value) // 陣列包物件 [{...}, {...}, {...}]
+
+        /* ========== 抓庫存量 ========== */
+        for(let i = 0; i < cartItems.value.length; i++){
+            const item = cartItems.value[i]
+
+            try{
+                const res = await axios.get(import.meta.env.VITE_AJAX_URL + "starshop/client/check_stock.php", {
+                    params : { product_id: item.ID }
+                })
+
+                if(res.data.success){
+                    item.stock = res.data.stock
+                }else{
+                    item.stock = null
+                }
+            }catch (err) {
+                console.error('庫存取得失敗', err)
+                item.stock = null
+            }
+        } 
     })
 
     /* ========== 建立購物車資料 List ========== */
@@ -194,7 +215,7 @@
                                     min="1" 
                                     @input="changeItemCount(item, index)"
                                 >
-                                <p class="stock">尚有庫存 {{ item.stock ?? '待修改' }} 件</p>
+                                <p class="stock">尚有庫存 {{ item.stock ?? '查詢中' }} 件</p>
                                 <!-- @blur="checkQty(index)" 移除Blur事件驗證 -->
                             </div>
                             <p class="price-subtotal">
