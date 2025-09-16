@@ -48,7 +48,7 @@ function controlScroll(){
         }else{
             if( distance < 30 && distance > 0 ){
                 window.scrollTo({
-                    top: seHeight+50 ,
+                    top: seHeight+ 80 ,
                     behavior:"smooth" 
                 })
             }

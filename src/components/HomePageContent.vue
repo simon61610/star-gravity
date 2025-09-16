@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import eventlist from "@/data/eventlist";
 
+// 取要公告的活動資料json格式
 const activities = ref(eventlist.slice(0, 6))
 
 //假數據
@@ -51,16 +52,17 @@ const activities = ref(eventlist.slice(0, 6))
 ]) */
 
 //定義響應式變數
-const currentIndex = ref(0)
-const isMobile = ref(false)
-const showSatrshoot = ref(false)
+const currentIndex = ref(0)  //頁面中活動區塊,左邊第一個活動的索引, 起始為0
+const isMobile = ref(false)  // 是否為手機大小
+const showSatrshoot = ref(false) //控制流星的class: active 是否啟動
 
+//活動列表顯示的計算屬性 手機板是一次放全部左右滑 pc版靠左右按鈕改變'起始索引'來控制渲染出來的活動
 const showActivities = computed(()=>{  
     if( isMobile.value === true ){
         return activities.value
-    }else{
+    }else{                             
         return activities.value.slice(currentIndex.value, currentIndex.value + itemsPerPage.value )
-    }
+    } 
 })
 const canSlidePrev = computed(()=>{
     return currentIndex.value > 0
@@ -70,8 +72,12 @@ const canSlideNext = computed(()=>{
 })
 
 const itemsPerPage = computed(()=>{
-    if( isMobile.value === true ){
+    if( window.innerWidth <= 435 ){
         return activities.value.length
+    }else if( window.innerWidth > 435 &&  window.innerWidth <= 700){
+        return 1
+    }else if( window.innerWidth > 700 &&  window.innerWidth < 1100 ){
+        return 2
     }else{
         return 3
     }
@@ -294,15 +300,16 @@ onUnmounted(()=>{
     translate: -50% -50%;
 }
 .begining-text{
-    width: 35vw;
+    width: 45vw;
     display: flex;
     flex-direction: column;
     gap: 12px;
     color: $FontColor-white;
 
     position: absolute;
-    top: 45%;
-    left: 50%;
+    bottom: 15%;
+    left: 40%;
+    z-index: 100;
 }
 .begining-text h1{
     color: $primaryColor-500;
@@ -509,7 +516,8 @@ onUnmounted(()=>{
             max-width: 500px;
             display: flex;
             flex-direction: column;
-            justify-content: space-around;
+            // justify-content: space-around;
+            gap: 16px;
             color: $FontColor-white;
 
             .news-rightSide-title {
@@ -531,7 +539,8 @@ onUnmounted(()=>{
             max-width: 500px;
             display: flex;
             flex-direction: column;
-            justify-content: space-around;
+            // justify-content: space-around;
+            gap: 16px;
             color: $FontColor-white;
 
             .sky-leftSide-title {
@@ -613,10 +622,12 @@ onUnmounted(()=>{
             display: flex;
 
             .list-singleInfo {
+                max-width: 430px;
+
                 display: flex;
                 flex-direction: column;
                 gap: 18px;
-                padding: 36px;
+                padding: 24px;
                 box-sizing: border-box;
                 text-decoration: none;
                 color: $FontColor-white;
@@ -629,10 +640,10 @@ onUnmounted(()=>{
                     animation: starTwinkle 2s infinite;
                 }
 
-                .singleInfo-photo {
-                    width: 100%;
+                .singleInfo-photo { 
+                    align-self: center;
+                    width: 90%;
                     border-radius: 20px;
-                    width: 300px;
                 }
 
                 h3 {
@@ -674,6 +685,62 @@ onUnmounted(()=>{
 
 
 //...........RWD.............
+@media screen and (max-width:901px) {
+    .home-contentBlock{
+    
+        .home-news{
+            width: 100%;   
+            gap: 60px;
+            padding: 100px 0px;
+
+            &-photo{
+                height: 30vw;
+            }
+        }
+
+        .home-sky{
+            width: 100%;
+            gap: 60px;
+            padding: 100px 0px;
+            
+            &-photo{
+                width: 35vw;
+                height: 35vw;
+            }
+        }
+
+        
+    }
+}
+
+@media screen and (max-width:651px) {
+    .home-contentBlock{
+        .home-guildExtract{
+            padding: 0;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+        .home-news{
+            flex-direction: column;
+
+            &-photo{
+                width: 80vw;
+                height: auto;
+            }
+        }
+        .home-sky{
+            flex-direction: column-reverse;
+
+            &-photo{
+                width: 60vw;
+                height: 60vw;
+                align-self: center;
+            }
+        }
+    }
+}
+
 @media screen and (max-width:431px) {
     .home-contentBlock button{
         width: 100%;
@@ -706,7 +773,7 @@ onUnmounted(()=>{
         box-sizing: border-box;
         top: auto;
         left: 0;
-        bottom: 10%;
+        bottom: 20%;
         z-index: 10;
     }
     .home-guide{
@@ -778,11 +845,11 @@ onUnmounted(()=>{
     .home-contentBlock .home-activity .activity-content .activity-a{
         display: none;
     }
-    .home-contentBlock .home-activity .activity-list{
-        width: 100%;
-    }
+    // .home-contentBlock .home-activity .activity-list{
+    //     width: 100%;
+    // }
     .home-contentBlock .home-activity .activity-list .list-singleInfo{
-        width: 85vw;
+        min-width: 85vw;
     }
 
 
