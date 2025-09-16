@@ -124,13 +124,13 @@
     onMounted(async() => {
         /* ========== 抓購物車的內容 ========== */
         let itemString = storage['addItemList']
-        let items = itemString.substring(0, itemString.length - 2).split(', ')
-        
         if(!itemString){
             cartItems.value = []
             return
         }
 
+        let items = itemString.substring(0, itemString.length - 2).split(', ')
+        
         let cartData = []
 
         for(let i = 0; i < items.length; i++){
@@ -284,34 +284,39 @@
             total_price: totalPrice.value,                              // 合計(不含運)，資料庫欄位: total_price
             shipping_fee: shipping_fee.value                            // 運費
         }
-
-        const res = await axios.post(import.meta.env.VITE_AJAX_URL + 'starshop/client/order_insert.php', orderData)
-
-        if(res.data.success){
-            // 逐一清除對應商品
-            let itemString = storage['addItemList']
-            let items = itemString.substring(0, itemString.length - 2).split(', ')
-            for(let i = 0; i < items.length; i++){
-                storage.removeItem(items[i])
-            }
-            
-            // 清空 Storage
-            storage.removeItem('addItemList')
-
-            // 通知 header
-            bus.emit('notifyUpdateCart')
-
-            // 傳遞資料到完成頁
-            const order_id = res.data.order_id
-            router.push({
-                path: '/cartpage/cartsuccess',
-                query: { 
-                    order_id, 
-                    member_id: memberStore.user?.ID 
+        try{
+            const res = await axios.post(import.meta.env.VITE_AJAX_URL + 'starshop/client/order_insert.php', orderData)
+            if(res.data.success){
+                console.log(res.data.message);
+                // 逐一清除對應商品
+                let itemString = storage['addItemList']
+                let items = itemString.substring(0, itemString.length - 2).split(', ')
+                for(let i = 0; i < items.length; i++){
+                    storage.removeItem(items[i])
                 }
-            })
-        }else{
-            showToast('訂單建立失敗')
+                
+                // 清空 Storage
+                storage.removeItem('addItemList')
+        
+                // 通知 header
+                bus.emit('notifyUpdateCart')
+        
+                // 傳遞資料到完成頁
+                const order_id = res.data.order_id
+                router.push({
+                    path: '/cartpage/cartsuccess',
+                    query: { 
+                        order_id, 
+                        member_id: memberStore.user?.ID 
+                    }
+                })
+            }else{
+                console.error(res.data.message);
+                showToast( res.data.stockMessage || '訂單建立失敗，請洽客服人員')
+            }
+        } catch (err) {
+            console.error(err)
+            showToast('系統錯誤，請稍後再試')
         }
     }
 </script>

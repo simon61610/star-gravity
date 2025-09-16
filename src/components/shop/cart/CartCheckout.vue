@@ -194,6 +194,7 @@
                                     min="1" 
                                     @input="changeItemCount(item, index)"
                                 >
+                                <p class="stock">尚有庫存 {{ item.stock ?? '待修改' }} 件</p>
                                 <!-- @blur="checkQty(index)" 移除Blur事件驗證 -->
                             </div>
                             <p class="price-subtotal">
@@ -221,9 +222,6 @@
                 </p>
             </div>
         </section>
-
-        <!-- 暫時移除庫存功能 -->
-        <!-- <p class="stock">尚有庫存 <span>{{ stock }}</span> 件</p> -->
 
         <!-- ---------------- 下方: 說明與訂單金額 ---------------- -->
         <section class="guide-box">
@@ -325,9 +323,12 @@
                                 }
                             }
                             .qty-ctrl {
+                                display: flex;
+                                flex-direction: column;
+                                gap: 12px;
+                                align-items: center;
                                 .stock {
-                                    font-size: $pcChFont-p;
-                                    margin-bottom: 12px;
+                                    font-size: 16px;
 
                                     span {
                                         color: $secondaryColor-orange;
@@ -500,6 +501,8 @@
                                 }
                             }
                             .qty-ctrl {
+                                align-items: flex-start;
+                                margin-bottom: 12px;
                                 .stock {
                                     span {
                                     }
