@@ -26,8 +26,8 @@ $sql = "SELECT p.name, p.original_price,
         WHERE m.ID = :memberId;";
 
 $statement = $pdo->prepare($sql);
-// $statement->bindValue(':memberId', $memberId, PDO::PARAM_INT);
-$statement->bindValue(':memberId', $data["memberId"]);
+// $statement->bindValue(':memberId', $data["memberId"]);
+$statement->bindValue(':memberId', $memberId, PDO::PARAM_INT);
 $result = $statement->execute();
 
 // echo $result;
@@ -35,32 +35,7 @@ $result = $statement->execute();
 $products = $statement->fetchAll();
 // $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// print_r($events);
-
-//格式化輸出
-// $out = [];
-// foreach ($events as $e) {
-//     $out[] = [
-//         'event_name' => $e['event_name'],
-//         // 'event_date'   => $e['event_date'],
-//         'event_place'  => $e['event_place'],
-//         'event_status' => $e['event_status'],
-//         'registration_number' => $e['registration_number'],
-//         'registration_date' => $e['registration_date']
-//     ];
-// };
-
 echo json_encode($products, JSON_UNESCAPED_UNICODE);
-
-
-
-
-
-
-
-
-
-
 
 
 ?>

@@ -52,7 +52,7 @@ export const useMemberStore = defineStore('Member', () => {
             headers: {  
                 'Content-Type': 'application/json',
                 // 後端用這個拿 token：Authorization: Bearer <token>
-                'Authorization': `Bearer ${token.value}`,
+                // 'Authorization': `Bearer ${token.value}`,
             },
             // 如果你的後端要用 Session 再一起驗證，就開啟這行
             credentials: 'include',

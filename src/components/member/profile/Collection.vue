@@ -11,21 +11,14 @@
     // 引用useMemberStore
     const memberStore = useMemberStore()
 
-    // 先放 8 張假資料；之後接 API 只要改這個陣列即可
-    // const products = ref(
-    //     Array.from({ length: 8 }, (_, i) => ({
-    //         id: i + 1,
-    //         title: '基礎望遠鏡',
-    //         price: 2500,
-    //     }))
-    // )
-
     // API 回傳的商品清單（空陣列起手）
     const products = ref([])
 
     const memberId = ref('')
 
+    // 防 NaN：undefined/空字串 會被當 0
     const formatTWD = (n) => `NT$${Number(n).toLocaleString('zh-TW')}`
+    // const formatTWD = (n) => `NT$${Number(n ?? 0).toLocaleString('zh-TW')}`
 
     // 把後端給的相對路徑，轉成可用的完整網址
     const toImageUrl = (path) => {
@@ -36,10 +29,10 @@
         // 若後端回 "pdo/xxx.jpg"  → base + "/pdo/xxx.jpg"
         return base + '/' + path.replace(/^\/+/,'')
     }
-                
+        
     // 分頁
     const collectionPage = ref(1)    // 目前頁     
-    const pageSize = ref(8)          // 每頁幾筆
+    const pageSize = ref(6)          // 每頁幾筆
     const filteredTotal = computed(() => products.value.length)  // 總筆數給 Pagination
 
     const showProducts = computed(() => {                       // 依頁碼切資料
@@ -98,41 +91,63 @@
     //     showToast('已加入購物車！', { type: 'success', duration: 2000 })
     // }
 
+    // 加入購物車
     // 依 header.vue 的規格：addItemList & 每商品 key=ID → 'id|title|price|qty'
     const addToCart = (p) => {
         const storage = localStorage
-        const id    = String(p.id)
-        const title = String(p.title ?? '')
-        const price = Number(p.price ?? 0)
+        // ---- 防呆與格式化 ----
+        const id = String(p.id ?? '')
+        if (!id) return
+        const safeTitle = String(p.title ?? '').replace(/\|/g, '／') // 避免破壞 '|' 分隔格式
+        const price = Number.isFinite(Number(p.price)) ? Number(p.price) : 0
         const addQty = 1
 
-        // 維護 addItemList（以 "3, 4, 1, " 這種格式去重後追加）
+        // 維護 addItemList（"...id, "）
         let list = storage.getItem('addItemList') || ''
-        if (!list.includes(id + ', ')) {
-            list += `${id}, `
+        const token = `${id}, `
+        if (!list.includes(token)) {
+            list += token
             storage.setItem('addItemList', list)
         }
 
-        // 維護單品資料：'id|title|price|qty'
+        // 維護單品資料：title | title | price | qty
         const raw = storage.getItem(id)
+        let newQty = addQty
         if (raw) {
-            const parts = raw.split('|')
-            const curQty = Number(parts[3] || 0)
-            parts[0] = id
-            parts[1] = title
-            parts[2] = String(price)
-            parts[3] = String(curQty + addQty)
-            storage.setItem(id, parts.join('|'))
-        } else {
-            storage.setItem(id, `${id}|${title}|${price}|${addQty}`)
+            const parts = raw.split('|') // 兼容舊資料（可能是 id|title|price|qty 或 3 欄）
+            const curQty = Number(parts[3] ?? parts[2] ?? 0) || 0
+            newQty = curQty + addQty
+        } 
+        storage.setItem(id, `${safeTitle}|${safeTitle}|${price}|${newQty}`)
+
+        // ---- 重新計算總件數與小計
+        let totalQty = 0
+        let subtotal = 0
+        const ids = (storage.getItem('addItemList') || '')
+            .split(',')
+            .map(s => s.trim())
+            .filter(Boolean) // 過濾空字串
+
+        for (const pid of ids) {
+            const itemRaw = storage.getItem(pid)
+            if (!itemRaw) continue
+            const [, , priceStr, qtyStr] = itemRaw.split('|')
+            const pr = Number(priceStr || 0)
+            const qy = Number(qtyStr || 0)
+            if (Number.isFinite(pr) && Number.isFinite(qy)) {
+                totalQty += qy
+                subtotal += pr * qy
+            }
         }
 
         // 通知 header 立刻重算徽章數字
-        bus.emit('notifyUpdateCart')
+        bus.emit('notifyUpdateCart') 
+         
+        // 顯示明細（不含 id）
         showToast('已加入購物車！', { type: 'success', duration: 1800 })
     }
 
-    //向後端發出請求
+    // 向後端發出請求
     const getCollectionList = async (memberId)=>{
         try{
             const resp = await axios.post(
@@ -154,7 +169,7 @@
             // 資料更新後回到第 1 頁（可選）
             collectionPage.value = 1
 
-            console.log(products.value);
+            // console.log(products.value);
             
 
         }catch( error ){
@@ -203,8 +218,12 @@
         
                     <div class="down">
                         <div class="titleprice">
-                        <h3 class="title">{{ p.title }}</h3>
-                        <p class="price">{{ formatTWD(p.price) }}</p>
+                            <h3 class="title">{{ p.title }}</h3>
+                            <p class="price">{{ formatTWD(p.price) }}</p>
+                            <!-- 原價高於顯示價才顯示刪除線 -->
+                            <p class="old-price" v-if="p.original_price && p.price < p.original_price">
+                                {{ formatTWD(p.original_price) }}
+                            </p>
                         </div>
             
                         <div class="actions">
@@ -308,6 +327,15 @@
     font-size: $pcChFont-p;
     opacity: .95; 
     font-weight: 600;
+}
+/* 原價（刪除線） */
+.old-price {
+    text-align: center;
+    font-size: 14px;
+    color: $FontColor-white;
+    opacity: .6;
+    text-decoration: line-through;
+    margin-top: -2px;
 }
 /* 按鈕 */
 .actions { 
