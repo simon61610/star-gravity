@@ -1,19 +1,19 @@
+<!-- 商城首頁 - Banner -->
+
 <script setup>
-// Swiper
-import { Swiper, SwiperSlide } from 'swiper/vue'
-import { Autoplay,  Pagination, EffectFade} from 'swiper/modules'
-// Swiper CSS
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'swiper/css/effect-fade'
+    /* ========== Swiper  ========== */
+    // Swiper 元件
+    import { Swiper, SwiperSlide } from 'swiper/vue'
+    // Swiper 模組
+    import { Autoplay,  Pagination, EffectFade} from 'swiper/modules'
+    // Swiper CSS
+    import 'swiper/css';
+    import 'swiper/css/pagination';
+    import 'swiper/css/effect-fade'
 
-
-// 輪播資料
-import prodSlides from '@/data/prodSlides'; // console.log(prodSlides) // Array
-
-
-
+    /* ========== 資料 ========== */
+    // 輪播資料
+    import prodSlides from '@/data/prodSlides'; // console.log(prodSlides) // Array
 </script>
 
 
@@ -33,12 +33,11 @@ import prodSlides from '@/data/prodSlides'; // console.log(prodSlides) // Array
             }"
             :pagination="{el: '.pagination', clickable: true}" 
         >
-            <!-- 分頁 -->
+            <!-- 逐張輪播 -->
             <SwiperSlide v-for="(slide, index) in prodSlides">
-                <div class="slide">
-                    <img :src="slide.img" alt="" class="bg">
+                <div class="slide"> <!-- 單張 Slide -->
+                    <img :src="slide.img" class="bg">
                     <div class="mask"></div>
-
                     <div class="content">
                         <h1>{{ slide.title }}</h1>
                         <h2>{{ slide.desc }}</h2>
@@ -48,7 +47,7 @@ import prodSlides from '@/data/prodSlides'; // console.log(prodSlides) // Array
             </SwiperSlide>
         </Swiper>
 
-        <!-- 圓點點 -->
+        <!-- 分頁圓點 -->
         <div class="pagination"></div>
     </section>
 </template>

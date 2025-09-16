@@ -1,3 +1,5 @@
+<!-- 商城 Banner -->
+
 <template>
     <div class="shop-banner"></div>
 </template>
@@ -12,5 +14,4 @@
             background-size: cover;
             background-position: center;
         }
-
 </style>

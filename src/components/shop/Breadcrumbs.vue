@@ -1,6 +1,7 @@
-<script setup>
+<!-- 麵包屑 -->
 
-    // 接收父層
+<script setup>
+    // 接收父層 ShopCategoryPage.vue 傳遞的屬性 + 值
     const props = defineProps({
         selectedCate: {
             type: Object,
@@ -8,8 +9,10 @@
         }
     })
 
+    // 傳遞給父層事件
     const emit = defineEmits(['updateSelectedCate'])
 
+    /* ========== 功能: 麵包屑分類點擊篩選商品 ========== */
     // 點擊全部商品
     const showAll = () => {
         emit('updateSelectedCate', null)
@@ -23,20 +26,19 @@
             sub: null
         })
     }
-
 </script>
+
 
 <template>
     <nav class="breadcrumb">
-        <!-- 先做個假的 -->
         <ol>
             <li @click="showAll">全部商品</li>
             <li v-if="props.selectedCate?.main" @click="showMain">{{ props.selectedCate.main }}</li>
             <li v-if="props.selectedCate?.sub">{{ props.selectedCate.sub }}</li>
         </ol>
     </nav>
-    
 </template>
+
 
 <style scoped lang="scss">
     @import '@/assets/styles/main.scss';

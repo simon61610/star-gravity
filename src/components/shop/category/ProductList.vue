@@ -1,45 +1,43 @@
+<!-- 商品陳列區 -->
 <!-- 
-
-- bug: 顯示筆數替換後卻沒有切分頁
-
+- TODO: bug - 顯示筆數替換後，卻沒有切分頁
 -->
 
-
 <script setup>
-    // 組件
+    import { ref, watch, computed, onMounted, onUnmounted } from 'vue'
+
+    /* ========== 組件 ========== */
     import Pagination from '@/components/common/Pagination.vue';
     import shopToast from '@/components/common/shopToast.vue';
-    // 方法
-    import { ref, watch, computed, onMounted, onUnmounted } from 'vue'
-    import bus from '@/composables/useMitt';
     import { showToast } from '@/composables/useToast';
+    
+    /* ========== 套件 ========== */
     import axios from 'axios';
-    import { cateList } from '@/composables/useProductsCate';
-    // 假資料
-    // import products from '@/data/products';
-    // const items = ref(products) // 生成假資料
+    import bus from '@/composables/useMitt';
 
+    /* ========== 資料 ========== */
+    import { cateList } from '@/composables/useProductsCate';
+
+    /* ========== 環境變數 ========== */
     const BASE_URL = import.meta.env.VITE_AJAX_URL_NOEND
 
-    const items = ref([])
+    /* ========== 共用 ========== */
+    const items = ref([]) // 篩選後的商品 Array
 
-    // =========== 商品篩選列的功能 ============
-    const searchKeyword = ref('')
-    const priceOrder = ref('')
-    const pageSize= ref(16) // 每頁顯示幾筆
-    const currentPage = ref(1) // 預設第一頁
+    /* ========== 接收從 CategoryToolbar.vue 用 bus 傳遞過來的事件  ========== */
+    const searchKeyword = ref('')   // 搜尋
+    const priceOrder = ref('')      // 價格排序
+    const pageSize= ref(16)         // 每頁顯示幾筆
+    const currentPage = ref(1)      // 預設第一頁
 
-    
     bus.on('searchKeyword', (keyword) => {
         searchKeyword.value = keyword || ""
         currentPage.value = 1
     })
-
     bus.on('priceOrder', (order) => {
         priceOrder.value = order || ""
         currentPage.value = 1
     })
-
     bus.on('qtyChanege', (qty) => {
         pageSize.value = qty || 16
         currentPage.value = 1
@@ -51,14 +49,10 @@
         bus.off('qtyChanege')
     })
 
-    // =======================================
-
+    /* ========== AJAX: 抓取商品資料 ========== */
     onMounted(async() => {
         const res = await axios.get(import.meta.env.VITE_AJAX_URL + 'starshop/client/products_get.php')
-        // console.log(res.data);
-        
         items.value = res.data
-
         /* 
         ID : 1
         category_name : "基礎入門型"
@@ -75,24 +69,16 @@
         */
     })
     
-// -------------------------------------------------------------------------------
-
-    // 父傳子接收: Proxy(Object) {main: '天文望遠鏡', sub: '基礎入門型'}
+    /* ========== 功能: 商品分類篩選 ========== */
+    // 接收父組件傳遞的屬性 + 屬性值: Proxy(Object) {main: '天文望遠鏡', sub: '基礎入門型'}
     const props = defineProps({
         selectedCate: {
             type: Object,
             default: null,
         }
     })
-    // console.log(props.selectedCate)
 
-// -------------------------------------------------------------------------------
-
-    // console.log(items)
-    // const toast = ref(false)
-
-// -------------------------------------------------------------------------------
-    // 分類重選，回到第一頁
+    // 篩選後，分頁回到第一頁
     // watch(偵測的資料, 函數)
     watch(() => props.selectedCate, () => {
         currentPage.value = 1
@@ -100,23 +86,12 @@
         const target = document.querySelector('section')
         window.scrollTo({ 
             top: target.offsetTop, 
-            behavior: 'smooth' // 平滑滾動 
+            behavior: 'smooth'
         })
     })
 
-    // 吐司出現的function
-    /* const showToast = () => {
-        toast.value = true
-        setTimeout(() => {
-            toast.value = false
-        }, 2000)
-    } */
-
-    // =====================================================
-    // ==================== 商品類型篩選 ====================
-    // =====================================================
+    // 商品類型篩選
     const filteredItems = computed(() => {
-        
         let selectedCateProducts = items.value
 
         // 搜尋功能
@@ -131,7 +106,6 @@
         }else if(priceOrder.value == 'desc'){
             selectedCateProducts = [...selectedCateProducts].sort((a, b) => {return b.sale_price - a.sale_price})
         }
-
 
         // 1. 如果沒選
         if(!props.selectedCate){
@@ -158,28 +132,21 @@
         }
     })
 
-    // =====================================================
-    // ==================== Pagination =====================
-    // =====================================================
+    /* ========== 功能: Pagination ========== */
     // 每頁顯示的商品
     const showItems = computed (() => {
-        const start = (currentPage.value - 1) * pageSize.value // 從第幾筆開始
-        return filteredItems.value.slice(start, start + pageSize.value) // 顯示的商品陣列
+        const start = (currentPage.value - 1) * pageSize.value              // 從第幾筆開始
+        return filteredItems.value.slice(start, start + pageSize.value)     // 顯示的商品陣列
     })
 
-    function pageChange(newPage) {
+    const pageChange = (newPage) => {
         currentPage.value = newPage
     }
 
-
-
-    // =====================================================
-    // ==================== 加入購物車 ====================
-    // =====================================================
-    
+    /* ========== 功能: 加入購物車 ========== */
     const storage = localStorage
 
-    // 商品名稱|圖片路徑|每件價格|數量|原價
+    // storage 設計: 商品名稱|圖片路徑|每件價格|數量|原價
     function addCart(product){
         if(!storage['addItemList']){
             storage['addItemList'] = ''
@@ -199,65 +166,23 @@
             let updatedInfo = `${existInfo[0]}|${existInfo[1]}|${existInfo[2]}|${newQty}|${originalPrice}`
 
             storage[itemId] = updatedInfo
-            
         }else{ // 第一次買
             storage['addItemList'] += `${itemId}, `
             storage[itemId] = `${product.name}|${firstImage}|${unitPrice}|1|${originalPrice}`
         }
 
-        /* Storage 的 Key 和 Value */
-        /* const itemId = `P${product.ID}`
-        const firstImage = product.images.split(',')[0]
-        const itemValue = `${product.name}|${firstImage}|${product.sale_price}` // 輕型孩童款 50mm 輕型望遠鏡|/pdo/starshop/images/基礎入門型2-1.png|3840
- */
-        // alert(itemValue) 
-        // itemId => P1 
-        // itemValue => 基礎入門型 商品 1|https://placehold.co/480x480?text=Product+1|9718
-        // ===============================================================================
-
-        /* 直接從物件中抓的資料字串 */
-        /* const itemName = product.name // 基礎入門型 商品 1
-        const itemPic = firstImage // https://placehold.co/480x480?text=Product+1
-        const itemSpecialPrice = product.sale_price // 9718 */
-        // alert(itemSpecialPrice)
-
-        // ===============================================================================
-        
-        /* if(storage[itemId]){ // 如果已經買過，價格累加
-            let existInfo = storage[itemId].split('|') // 字串切割成陣列，用 split 方法
-            // console.log(existInfo) ['基礎入門型 商品 1', 'https://placehold.co/480x480?text=Product+1', '9718']
-            let existSpecialPrice = parseInt(existInfo[2]) // 原本的價格
-            let newExistPrice = existSpecialPrice + itemSpecialPrice
-            let updatedInfo = `${existInfo[0]}|${existInfo[1]}|${newExistPrice}`
-            // alert(updatedInfo)
-
-            storage[itemId] = updatedInfo
-
-        }else{ //第一次買
-            storage['addItemList'] += `${itemId}, `
-            storage[itemId] = itemValue
-        } */
-
-        // ===============================================================================
         bus.emit('notifyUpdateCart') // 通知 Header 更新購物車數量
-
-        
         showToast('已成功加入購物車!')
     }
-
 </script>
-
-
 
 
 <template>
     <section>
-
         <shopToast />
-
         <div class="product-items">
-            <div class="item__card" v-for="( item, index ) in showItems"> <!-- 用顯示的商品陣列跑 v-for -->
 
+            <div class="item__card" v-for="( item, index ) in showItems"> <!-- 用顯示的商品陣列跑 v-for -->
                 <RouterLink :to="`/shop/category/product/${item.ID}` "class="router-link" > 
                     <img :src="BASE_URL + item.images.split(',')[0]" alt="商品假圖" class="item__card__img">
                     <div class="item__card__text">
@@ -271,7 +196,9 @@
                     <i class="fa-solid fa-cart-shopping"></i>
                 </div>
             </div>
+
         </div>
+
         <div class="pagination">  
             <Pagination
                 :modelValue="currentPage"
@@ -284,6 +211,7 @@
         </div>
     </section>
 </template>
+
 
 <style scoped lang="scss">
     @import '@/assets/styles/main.scss';

@@ -1,52 +1,38 @@
+<!-- 商品分類側邊欄 -->
+
 <script setup>
 	import { ref } from 'vue';
+
+    /* ========== 資料 ========== */
     import { productsCate } from '@/composables/useProductsCate';
 
-    // 資料
-	/* const productsCate = ref([
-		{name: '天文望遠鏡', items: ['基礎入門型', '進階專業型']},
-		{name: '雙筒/單筒望遠鏡', items: ['單筒望遠鏡', '雙筒望遠鏡']},
-		{name: '腳架', items: ['一般三腳架', '天文三腳架']},
-		{name: '配件', items: ['星座盤', '指北針', '紅光手電筒']},
-		{name: '書籍/小物', items: ['觀星教學書籍', '星空小物']},
-	]) */
-
-    // ====================================================
-    // ===================== 開合功能 ======================
-    // ====================================================
-    // 預設是 false，先關起來，目前陣列長度固定，待修改
+    /* ========== 功能: 商品分類篩選與開合功能 ========== */
+    // TODO: 陣列長度暫時固定，待之後優化調整
+    // 預設是 false，先關起來
 	const isShow = ref([false, false, false, false, false])
+
 	/* const toggleCategory = (index) => {
 		isShow.value[index] = !isShow.value[index]
 	} */
 
-    // =====================================================
-    // ==================== 商品類型篩選 ====================
-    // =====================================================
     const emit = defineEmits(['select'])
 
-    // 點擊 main 分類 => 事件傳送 select，資料傳送主類別名稱
+    // 點擊 main 分類 => 事件傳送 select，值傳送主類別名稱
     const selectMain = (main, index) => {
         emit('select', {main, sub: null})
 
-        // 全部收合
+        // 先全部收合，再展開選擇的主分類
         isShow.value = isShow.value.map(() => false)
-
-        // 展開選擇的
         isShow.value[index] = true
 
         // 都可展開或收合
         // isShow.value[index] = !isShow.value[index]
     }
 
-
-    // 點擊 sub 分類 => 事件傳送 select，資料傳送副類別名稱
+    // 點擊 sub 分類 => 事件傳送 select，值傳送主類別 + 副類別名稱
     const selectSub = (main, sub) => {
         emit('select', {main, sub})
     }
-
-
-
 </script>
 
 <template>

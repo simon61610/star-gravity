@@ -1,26 +1,27 @@
-<!-- 分類列表頁 -->
+<!-- 商城分類頁 -->
+
 <script setup>
-    import { ref, onMounted} from 'vue'
-    import { useRoute } from 'vue-router';
-    import { useRouter } from 'vue-router';
-    import { productsCate } from '@/composables/useProductsCate';
-    
-    // 組件
+    import { ref, onMounted } from 'vue'
+    import { useRoute, useRouter } from 'vue-router';
+
+    /* ========== 組件 ========== */
     import ShopBanner from '@/components/shop/ShopBanner.vue';
     import Breadcrumbs from '@/components/shop/Breadcrumbs.vue';
     import CategoryToolbar from '@/components/shop/category/CategoryToolbar.vue';
     import CategoryList from '@/components/shop/category/CategoryList.vue';
     import ProductList from '@/components/shop/category/ProductList.vue';
 
+    /* ========== 資料 ========== */
+    import { productsCate } from '@/composables/useProductsCate';
+    
+    /* ========== 通用 ========== */
     const router = useRouter()
     const route = useRoute()
+    
+    /* ========== 功能: 商品類型篩選 ========== */
+    const selectedCate = ref(null) // 傳給子組件的屬性值
 
-
-    // =====================================================
-    // ==================== 商品類型篩選 ====================
-    // =====================================================
-    const selectedCate = ref(null)
-
+    // 一進來先判斷使用者從外部輸入或點擊了什麼分類
     onMounted(() => {
         if(route.params.main){
             const cate = productsCate.find(c => c.param === route.params.main)
@@ -29,24 +30,23 @@
                 sub: null
             }
 
-            // 暫時先把字串清掉，之後優化再來改
+            // TODO: 暫時先把字串清掉，之後優化再來改
             router.replace({name: 'category'})
         }
     })
 
-    // 接收事件的處理函數
+    // selected: 接收子組件傳遞 select 事件的處理函數
+    // template 用 selected-cate 當作屬性，傳值給子組件
     const selected = (selectedObj) => {
         selectedCate.value = selectedObj
         console.log(selectedCate.value) // Proxy(Object) {main: '天文望遠鏡', sub: null} or {main: '天文望遠鏡', sub: '基礎入門型'}
     }
-    // template 用 selected-cate 當作屬性，準備傳值給子
 
-    // ========== 手機分類開關
+    /* ========== 功能: 浮動按鈕顯示 ========== */
     const isCateOpen = ref(false)
     const toggleCate = () => {
         isCateOpen.value = !isCateOpen.value
     }
-
 </script>
 
 
@@ -73,6 +73,7 @@
         </section>
     </section>
 </template>
+
 
 <style scoped lang="scss">
     @import '@/assets/styles/main.scss';

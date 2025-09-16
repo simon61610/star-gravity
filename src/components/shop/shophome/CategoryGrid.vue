@@ -1,33 +1,39 @@
+<!-- 商城首頁 - 分類 -->
+
 <script setup>
+    /* ========== 資料 ========== */
+    import { productsCate } from '@/composables/useProductsCate';
 
-import { productsCate } from '@/composables/useProductsCate';
-
-const categories = productsCate.map(cate => {
-    return {
-        name: cate.name,
-        param: cate.param,
-        img: cate.img,
-        path: '/shop/category',
-    }
-})
-
-
+    // 將資料轉成需要的格式
+    const categories = productsCate.map(cate => {
+        return {
+            name: cate.name,
+            param: cate.param,
+            img: cate.img,
+            path: '/shop/category', // TODO: 之後可用於優化路由
+        }
+    })
 </script>
 
 
 <template>
     <section class="prod-cate">
-        <p>商品分類</p>
+
+        <!-- 首頁區塊標題 -->
+        <h2>商品分類</h2>
+
         <div class="cate-grid">
+            <!-- 商品分類項目 -->
             <router-link 
              v-for="cate in categories"
              :to="`/shop/category/${cate.param}`"
              class="item router-link"
             >
-                <img :src="cate.img" alt="">
+                <img :src="cate.img">
                 <p>{{ cate.name }}</p>
             </router-link>
         </div>
+        
     </section>
 </template>
 
@@ -52,7 +58,7 @@ const categories = productsCate.map(cate => {
         color: $FontColor-white;
 
         // 小標文字
-        > p {
+        h2 {
             font-size: $pcChFont-H1;
             font-weight: bold;
             margin-bottom: 40px;
@@ -115,7 +121,7 @@ const categories = productsCate.map(cate => {
         .prod-cate {
             padding: 40px 16px;
 
-            > p {
+            h2 {
                 font-size: 28px;
                 font-weight: bold;
                 margin-bottom: 20px;

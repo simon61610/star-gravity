@@ -1,27 +1,27 @@
-<script setup>
+<!-- 商品分類工具列: 包含搜尋商品、價格排序、顯示數量控制 -->
 
+<script setup>
     import { ref } from 'vue';
+
+    /* ========== 套件 ========== */
     import bus from '@/composables/useMitt';
 
-    const keyword = ref("") // 輸入
-    const priceOrder = ref('') // 排序
-    const qtyPerPage = ref('16') // 預設每頁顯示 16 筆
+    /* ========== 功能: 商品搜尋、價格排序、顯示數量控制 ========== */
+    const keyword = ref("")         // 商品搜尋關鍵字
+    const priceOrder = ref('')      // 價格排序
+    const qtyPerPage = ref('16')    // 預設每頁顯示 16 筆
     
-
     const doSearch = () => {
         bus.emit('searchKeyword', keyword.value)
     }
-
     const doPriceOrder = () => {
         bus.emit('priceOrder', priceOrder.value)
     }
-
     const doQtyChange = () => {
         bus.emit('qtyChanege', qtyPerPage.value)
     }
-
-
 </script>
+
 
 <template>
     <section class="tool-bar-section">
@@ -45,6 +45,7 @@
         </div>
     </section>
 </template>
+
 
 <style scoped lang="scss">
     .tool-bar-section {
