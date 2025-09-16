@@ -1,15 +1,21 @@
+<!-- 購物車 - 完成訂單 -->
+
 <script setup>
     import { ref, onMounted, computed } from 'vue'
     import { useRoute } from 'vue-router'
+
+    /* ========== 套件 ========== */
     import axios from 'axios'
 
-    const route = useRoute()
+    /* ========== 環境變數 ========== */
     // const BASE_URL = import.meta.env.VITE_AJAX_URL_NOEND
-
+    
+    /* ========== 共用 ========== */
+    const route = useRoute()
     const member_id = computed(() => route.query.member_id)
     const order_id = computed(() => route.query.order_id)
 
-    const order = ref({}) // Object
+    const order = ref({})       // Object
     const orderDetail = ref([]) // Array
 
     onMounted(async () => {
@@ -23,7 +29,6 @@
             }
         )
 
-        // console.log(typeof(res.data)); // object
         order.value = res.data.order
         orderDetail.value = res.data.orderDetail
         /* orderDetail.value = res.data.orderDetail.map(item => ({
@@ -34,45 +39,13 @@
         // console.log(orderDetail.value)
         // console.log(typeof(order.value.notes))
     })
-    
-    /* const products = ref([])
 
-
-    // 商品假資料 => 要改用 storage 傳入
-    const productDetail = ref(
-        [
-            {
-                name: '輕巧觀測鏡｜50mm 入門型牛頓式望遠鏡',
-                price: 2500,
-                specialprice: 2000,
-                pic: 'https://placehold.co/80x80',
-            },
-            {
-                name: '輕巧觀測鏡｜50mm 兒童型牛頓式望遠鏡',
-                price: 2000,
-                specialprice: 1600,
-                pic: 'https://placehold.co/80x80',
-            },
-            {
-                name: '輕巧觀測鏡｜50mm 進階型牛頓式望遠鏡',
-                price: 3000,
-                specialprice: 2400,
-                pic: 'https://placehold.co/80x80',
-            },
-        ]
-    )
-
-    products.value = productDetail.value */
-
-    // =====================================
+    /* ========== 計算總計 ========== */
     const TotalIncludeShipFee = computed(() => {
         let sum = 0
         sum = Number(order.value.total_price) + Number(order.value.shipping_fee)
         return sum
     })
-
-
-
 </script>
 
 

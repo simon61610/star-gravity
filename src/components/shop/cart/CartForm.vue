@@ -1,89 +1,55 @@
+<!-- 購物車 - 填寫資料 -->
 <!-- 
 1. 表單待補上驗證
-2. memerID是假的，暫時用 1，送給後端跟下一頁的 member ID 都要改掉
-3. 購物車若沒東西會報錯
-4. 備註的空值，後端要改，傳 null 給資料庫
+2. 購物車若沒東西會報錯
+3. 免運功能開發
 -->
 
 <script setup>
     import { ref, computed, onMounted, watch, nextTick } from 'vue'
     import { useRouter } from 'vue-router';
+
+    /* ========== 組件 ========== */
     import shopToast from '@/components/common/shopToast.vue';
     import { showToast } from '@/composables/useToast';
+
+    /* ========== Pinia ========== */
+    import { useMemberStore } from '@/stores/member';
+
+    /* ========== 套件 ========== */
     import $ from 'jquery'
     import axios from 'axios'
     import bus from '@/composables/useMitt'
-    import { useMemberStore } from '@/stores/member';
-    
-    const memberStore = useMemberStore()
+
+    /* ========== 環境變數 ========== */
     // const BASE_URL = import.meta.env.VITE_AJAX_URL_NOEND
-
+    
+    /* ========== 共用 ========== */
     const router = useRouter()
-    
-    // 商品假資料 => 要改用 storage 傳入
-    /* const productDetail = ref(
-        [
-            {
-                name: '輕巧觀測鏡｜50mm 入門型牛頓式望遠鏡',
-                price: 2500,
-                specialprice: 2000,
-                pic: 'https://placehold.co/80x80',
-            },
-            {
-                name: '輕巧觀測鏡｜50mm 兒童型牛頓式望遠鏡',
-                price: 2000,
-                specialprice: 1600,
-                pic: 'https://placehold.co/80x80',
-            },
-            {
-                name: '輕巧觀測鏡｜50mm 進階型牛頓式望遠鏡',
-                price: 3000,
-                specialprice: 2400,
-                pic: 'https://placehold.co/80x80',
-            },
-        ]
-    )
-
-    const products = productDetail.value */
-
-    // ===================================================================================
-    // ===================================== Storage =====================================
-    // ===================================================================================
+    const memberStore = useMemberStore()
     const storage = localStorage
-    const cartItems = ref([])
+    const cartItems = ref([]) // 購物車
 
-    // 縣市假資料
-    /* const cities = ref([
-        { name: '台北市', districts: ['中正區', '大同區', '中山區', '松山區', '大安區'] },
-        { name: '新北市', districts: ['板橋區', '新莊區', '中和區', '永和區', '三重區'] },
-        { name: '桃園市', districts: ['桃園區', '中壢區', '平鎮區', '八德區'] },
-    ]) */
-    
-   /* const districts = computed(() => {
-       const city = cities.value.find(c => c.name === selectedCity.value)
-       return city ? city.districts : []
-   }) */
-
-    const cities = ref([]) // 城市陣列
+    // 城市陣列
+    const cities = ref([])
 
     // 表單物件 v-modal 綁定
-    const shipping_method = ref('宅配') // 運送方式
-    const payment_method = ref('') // 付款方式
-    const recipient_name = ref('') // 收件人名稱
-    const recipient_phone = ref('') // 電話
-    const selectedCity = ref('') // 選擇的縣市，資料庫欄位名: city
-    const selectedDistrict = ref('') // 選擇的區，資料庫欄位名: area
-    const recipient_address = ref('') // 填寫地址
-    const notes = ref('') // 訂單備註
+    const shipping_method = ref('宅配')     // 運送方式
+    const payment_method = ref('')          // 付款方式
+    const recipient_name = ref('')          // 收件人名稱
+    const recipient_phone = ref('')         // 電話
+    const selectedCity = ref('')            // 選擇的縣市，資料庫欄位名: city
+    const selectedDistrict = ref('')        // 選擇的區，資料庫欄位名: area
+    const recipient_address = ref('')       // 填寫地址
+    const notes = ref('')                   // 訂單備註
 
     const districts = computed(() => {
         const city = cities.value.find(c => c.CityName === selectedCity.value)
         return city ? city.AreaList : []
     })
 
-    // ===================================== 勾選會員資料相同 =====================================
+    /* ========== 功能: 勾選會員資料相同 ========== */
     const sameAsMember = ref(false)
-
     const doSameAsMember = async () => {
         if(sameAsMember.value){
             // 抓取會員資料
@@ -92,7 +58,7 @@
                     params: { member_id: memberStore.user?.ID }
                 })
 
-                console.log(res.data.memberInfo)
+                // console.log(res.data.memberInfo)
 
                 if(res.data.success && res.data.memberInfo){
                     const m = res.data.memberInfo
@@ -110,7 +76,6 @@
                     console.log(res.data.message)
                 }
                 
-
             }catch(err){
                 console.error(err)
                 showToast('請稍後再試')
@@ -129,22 +94,20 @@
         recipient_address.value = ''
     }
 
-    // ===================================== 抓資料 =====================================
-
+    /* ========== 功能: 建立購物車資料 List ========== */
     const createCartList = (itemId, itemValue) => {
         let existInfo = itemValue.split('|')
 
         // console.log(existInfo); // 商品名稱|圖片路徑|每件價格|數量|原價
         // ['入門啟蒙款 NovaSight 雙筒望遠鏡', '/pdo/starshop/images/雙筒望遠鏡-入門啟蒙款 NovaSight 雙筒望遠鏡-1.png', '2700', '2']
         
-        let name = existInfo[0] // 商品名稱
-        // let firstImage = BASE_URL + existInfo[1] // 圖片路徑
-        let firstImage = existInfo[1] // 圖片路徑
-        let unitPrice = existInfo[2] // 特價單價
-        let qty = existInfo[3] // 單種商品數量
-        let originalPrice = existInfo[4] // 商品原價
-        
-        let itemSubTotal = unitPrice * qty // 商品總價
+        let name = existInfo[0]                         // 商品名稱
+        // let firstImage = BASE_URL + existInfo[1]     // 圖片路徑
+        let firstImage = existInfo[1]                   // 圖片路徑
+        let unitPrice = Number(existInfo[2])            // 特價單價
+        let qty = Number(existInfo[3])                  // 單種商品數量
+        let originalPrice = Number(existInfo[4])        // 商品原價
+        let itemSubTotal = unitPrice * qty              // 商品總價
         // console.log(itemSubTotal);
 
         return {
@@ -158,10 +121,8 @@
         }
     }
 
-    
-    // 引用 jQuery 做 toggle
     onMounted(async() => {
-
+        /* ========== 抓購物車的內容 ========== */
         let itemString = storage['addItemList']
         let items = itemString.substring(0, itemString.length - 2).split(', ')
         
@@ -185,6 +146,7 @@
         cartItems.value = cartData
         // console.log(cartItems.value)
 
+        /* ========== 功能: 引用 jQuery 做 toggle ========== */
         // 預設關起來
         $('.toggle-content').hide()
 
@@ -207,39 +169,41 @@
             }
         })
 
-        // 縣市資料 json
+        /* ========== 功能: 抓取縣市 | 區 json 檔資料 ========== */
         const res = await axios.get(import.meta.env.VITE_PUBLIC_URL + 'JSON_CSV_XML/CityCountyData.json')
         // const res = await axios.get('/JSON_CSV_XML/CityCountyData.json')
         cities.value = res.data
         // console.log(cities.value)
     })
 
+    /* ========== 功能: 重選縣市，區值清空 ========== */
     watch(selectedCity, () => {
         selectedDistrict.value = ""
     })
-    // ===================================== 計算總數量 =====================================
+
+    /* ========== 功能: 計算總數量 ========== */
     const totalQuantity = computed(() => {
         let sum = 0;
 
         for(let i = 0; i < cartItems.value.length; i++){
             let itemInfo = storage.getItem(cartItems.value[i].ID)
             if(itemInfo) {
-                let qty = itemInfo.split('|')[3]
+                let parts = itemInfo.split('|')
+                let qty = Number(parts[3])
                 // console.log(parts)
-                sum += Number(qty)
+                sum += qty
             }
         }
 
         return sum
     })
 
-    // ===================================== 運費 =====================================
+    /* ========== 運費 ========== */
     const shipping_fee = computed(() => { // 未來可針對免運條件做運算
         return 60
     })
     
-
-    // ===================================== 計算合計金額 =====================================
+    /* ========== 計算合計金額 ========== */
     const totalPrice = computed(() => {
         let sum = 0;
 
@@ -249,11 +213,12 @@
 
         return sum
     })
-    // ===================================== 產生訂單號 =====================================
+
+    /* ========== 產生訂單號 ========== */
     const orderNumber = ref("")
 
     const generateOrderNumber = () => {
-        // 目標 => SGABC-202509100945 => SG + - + 隨機三碼英文大寫 + 年月日時分
+        // 目標 => SGABC-202509100945 => SG + - + 隨機三碼英文大寫 + 年月日毫秒
 
         // 隨機三碼英文大寫
         let letters = ''
@@ -279,7 +244,7 @@
         // alert(orderNumber.value)
     }
 
-    // ===================================== 送出訂單，進入結帳 =====================================
+    /* ========== 送出訂單，進入結帳 ========== */
     const submitOrder = async () => {
         if (!memberStore.isAuthed) {
             showToast('請先登入會員再結帳')
@@ -288,16 +253,15 @@
             return
         }
 
-
         // 表單驗證，資料為空的話
         if(
-            !shipping_method.value.trim() || // 運送方式
-            !payment_method.value.trim() || // 付款方式
-            !recipient_name.value.trim() || // 收件人名稱
-            !recipient_phone.value.trim() || // 電話
-            !selectedCity.value.trim() || // 選擇的縣市，資料庫欄位名: city
-            !selectedDistrict.value.trim() || // 選擇的區，資料庫欄位名: area
-            !recipient_address.value.trim() // 填寫地址
+            !shipping_method.value.trim() ||    // 運送方式
+            !payment_method.value.trim() ||     // 付款方式
+            !recipient_name.value.trim() ||     // 收件人名稱
+            !recipient_phone.value.trim() ||    // 電話
+            !selectedCity.value.trim() ||       // 選擇的縣市，資料庫欄位名: city
+            !selectedDistrict.value.trim() ||   // 選擇的區，資料庫欄位名: area
+            !recipient_address.value.trim()     // 填寫地址
         ){
             showToast('請填寫必填欄位！')
             return
@@ -306,28 +270,24 @@
         generateOrderNumber()
 
         const orderData = {
-            member_id: memberStore.user?.ID, // 暫時寫死
-            order_number: orderNumber.value,
-            shipping_method: shipping_method.value, // 運送方式
-            payment_method: payment_method.value, // 付款方式
-            recipient_name: recipient_name.value, // 收件人名稱
-            recipient_phone: recipient_phone.value, // 電話
-            city: selectedCity.value, // 選擇的縣市，資料庫欄位名: city
-            area: selectedDistrict.value, // 選擇的區，資料庫欄位名: area
-            recipient_address: recipient_address.value, // 填寫地址
-            notes: notes.value.trim() === "" ? null : notes.value, // 訂單備註
-            cart: cartItems.value, // 購物車商品
-            total_price: totalPrice.value, // 合計(不含運)，資料庫欄位: total_price
-            shipping_fee: shipping_fee.value // 運費
-            
+            member_id: memberStore.user?.ID,                            // 會員ID
+            order_number: orderNumber.value,                            // 訂單編號
+            shipping_method: shipping_method.value,                     // 運送方式
+            payment_method: payment_method.value,                       // 付款方式
+            recipient_name: recipient_name.value,                       // 收件人名稱
+            recipient_phone: recipient_phone.value,                     // 電話
+            city: selectedCity.value,                                   // 選擇的縣市，資料庫欄位名: city
+            area: selectedDistrict.value,                               // 選擇的區，資料庫欄位名: area
+            recipient_address: recipient_address.value,                 // 填寫地址
+            notes: notes.value.trim() === "" ? null : notes.value,      // 訂單備註
+            cart: cartItems.value,                                      // 購物車商品
+            total_price: totalPrice.value,                              // 合計(不含運)，資料庫欄位: total_price
+            shipping_fee: shipping_fee.value                            // 運費
         }
-
-        // console.log(orderData)
 
         const res = await axios.post(import.meta.env.VITE_AJAX_URL + 'starshop/client/order_insert.php', orderData)
 
         if(res.data.success){
-
             // 逐一清除對應商品
             let itemString = storage['addItemList']
             let items = itemString.substring(0, itemString.length - 2).split(', ')
@@ -338,10 +298,11 @@
             // 清空 Storage
             storage.removeItem('addItemList')
 
-            bus.emit('notifyUpdateCart') // 通知 header
+            // 通知 header
+            bus.emit('notifyUpdateCart')
 
+            // 傳遞資料到完成頁
             const order_id = res.data.order_id
-            
             router.push({
                 path: '/cartpage/cartsuccess',
                 query: { 
@@ -349,16 +310,11 @@
                     member_id: memberStore.user?.ID 
                 }
             })
-
         }else{
             showToast('訂單建立失敗')
         }
     }
-
-
 </script>
-
-
 
 
 <template>

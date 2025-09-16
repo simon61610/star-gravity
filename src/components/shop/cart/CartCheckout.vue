@@ -1,132 +1,40 @@
+<!-- 購物車 - 準備結帳 -->
+<!-- 
+- TODO: 免運功能開發
+-->
+
 <script setup>
-
     import { ref, computed, onMounted } from 'vue'
-    import bus from '@/composables/useMitt'
-    // import products from '@/data/products'
-    import { showToast } from '@/composables/useToast'
-    import shopToast from '@/components/common/shopToast.vue';
     import { useRouter } from 'vue-router';
+
+    /* ========== 組件 ========== */
+    import shopToast from '@/components/common/shopToast.vue';
+    import { showToast } from '@/composables/useToast'
+    
+    /* ========== Pinia ========== */
     import { useMemberStore } from '@/stores/member'
+    
+    /* ========== 套件 ========== */
+    import bus from '@/composables/useMitt'
 
-    const router = useRouter()
-    const memberStore = useMemberStore()
-
+    /* ========== 環境變數 ========== */
     // const BASE_URL = import.meta.env.VITE_AJAX_URL_NOEND
 
+    /* ========== 共用 ========== */
+    const router = useRouter()
+    const memberStore = useMemberStore()
+    const cartItems = ref([]) // 購物車
+    const storage = localStorage
     
-    
+    /* ========== 資料 ========== */
     const orderGuide = ref([
         "商品出貨時間約需 5–7 個工作天，若您無法等待，請斟酌再下單。",
         "宅配服務（黑貓）配送時間通常為 1–2 個工作天，如遇連續假期或重大節慶，恕無法指定送達日期與時段。",
         "本網站保留活動內容之 最終修改與解釋權利。",
         "若有任何疑問，歡迎於訂單留言或與客服聯繫，感謝您的支持！",
-    ])
-   
-
-    // ===================================================================================
-    // ===================================== Storage =====================================
-    // ===================================================================================
-    const storage = localStorage
-    const cartItems = ref([]) // 購物車
-
-    // ===================================== 抓資料 =====================================
-
-    const createCartList = (itemId, itemValue) => {
-        let existInfo = itemValue.split('|')
-
-        // console.log(existInfo); // 商品名稱|圖片路徑|每件價格|數量|原價
-        // ['入門啟蒙款 NovaSight 雙筒望遠鏡', '/pdo/starshop/images/雙筒望遠鏡-入門啟蒙款 NovaSight 雙筒望遠鏡-1.png', '2700', '2']
+        ])
         
-        let name = existInfo[0] // 商品名稱
-        // let firstImage = BASE_URL + existInfo[1] // 圖片路徑
-        let firstImage = existInfo[1] // 圖片路徑
-        let unitPrice = existInfo[2] // 特價單價
-        let qty = existInfo[3] // 單種商品數量
-        let originalPrice = existInfo[4] // 商品原價
-        
-        let itemSubTotal = unitPrice * qty // 商品總價
-        // console.log(itemSubTotal);
-
-        return {
-            ID: itemId,
-            name,
-            firstImage,
-            originalPrice,
-            unitPrice,
-            qty,
-            itemSubTotal
-        }
-    }
-
-    // ===================================== 計算新的數量 => 價格 =====================================
-    // item 是抓資料出來的商品 Object
-    const changeItemCount = (item, index) => {
-        if(item.qty < 1){
-            item.qty = 1
-        }
-
-        // 重新計算小計
-        item.itemSubTotal = item.qty * item.unitPrice
-        
-        // 更新 localStorage 中的數量
-        // 商品名稱|圖片路徑|每件價格|數量|原價
-        let itemInfo = storage.getItem(item.ID)
-        if(itemInfo){
-            let parts = itemInfo.split('|') // ['入門孩童款 50mm 入門望遠鏡', '/pdo/starshop/images/基礎入門型1-3.png', '3840', '1', '4800']
-            parts[3] = item.qty
-            storage.setItem(item.ID, parts.join('|'))
-
-            // console.log(storage.getItem(item.ID))
-        }
-
-
-        bus.emit('notifyUpdateCart') // 通知 header
-    }
-
-    // ===================================== 計算合計金額 =====================================
-    const totalPrice = computed(() => {
-        let sum = 0;
-
-        for(let i = 0; i < cartItems.value.length; i++){
-            sum += cartItems.value[i].itemSubTotal
-        }
-
-        return sum
-    })
-
-    // ===================================== 運費 =====================================
-    const shipping_fee = computed(() => { // 未來可針對免運條件做運算
-        return 60
-    })
-
-    // ===================================== 刪除商品 =====================================
-    const deleteItem = (index) => {
-        const item = cartItems.value[index] // 要被刪除的該物件
-        
-        // 1. 移除 storage 中的該項 & addItemList 的id
-        storage.removeItem(item.ID)
-        let itemString = storage.getItem('addItemList') 
-        if (itemString) {
-            // 移除 "P1, P3, P5, " 格式的字串
-            let updatedItemString = itemString.replace(`${item.ID}, `, '')
-            storage.setItem('addItemList', updatedItemString)
-        }
-
-        // 2. 從畫面上移除該項
-        cartItems.value.splice(index, 1) // 陣列刪除值，用 splice
-
-
-        // 3. 重新計算總金額
-        // 在 computed
-
-        bus.emit('notifyUpdateCart') // 通知 header
-    }
-
-
-
-
-    // ===================================== onMounted =====================================
-    
+    /* ========== 抓購物車的內容 ========== */
     onMounted(() => {
         const itemString = storage['addItemList']
         // alert(itemString) // 1, 3, 5, 
@@ -152,26 +60,108 @@
         // console.log(cartItems.value) // 陣列包物件 [{...}, {...}, {...}]
     })
 
-    // ===================================== 判斷是否能前往CartFotm =====================================
+    /* ========== 建立購物車資料 List ========== */
+    const createCartList = (itemId, itemValue) => {
+        let existInfo = itemValue.split('|')
+            
+        // console.log(existInfo); // 商品名稱|圖片路徑|每件價格|數量|原價
+        
+        let name = existInfo[0]                         // 商品名稱
+        // let firstImage = BASE_URL + existInfo[1]     // 圖片路徑
+        let firstImage = existInfo[1]                   // 圖片路徑
+        let unitPrice = Number(existInfo[2])            // 特價單價
+        let qty = Number(existInfo[3])                  // 單種商品數量
+        let originalPrice = Number(existInfo[4])        // 商品原價
+        let itemSubTotal = unitPrice * qty              // 商品總價
+        
+        return {
+            ID: itemId,
+            name,
+            firstImage,
+            originalPrice,
+            unitPrice,
+            qty,
+            itemSubTotal
+        }
+    }
+    
+    /* ========== 計算新的數量 => 價格 ========== */
+    // item 是購物車資料 List 跑 v-for 後的 Object
+    const changeItemCount = (item, index) => {
+        if(item.qty < 1){
+            item.qty = 1
+        }
+
+        // 重新計算小計
+        item.itemSubTotal = item.qty * item.unitPrice
+        
+        // 更新 localStorage 中的數量
+        // 商品名稱|圖片路徑|每件價格|數量|原價
+        let itemInfo = storage.getItem(item.ID)
+        if(itemInfo){
+            let parts = itemInfo.split('|') // ['入門孩童款 50mm 入門望遠鏡', '/pdo/starshop/images/基礎入門型1-3.png', '3840', '1', '4800']
+            parts[3] = item.qty
+            storage.setItem(item.ID, parts.join('|'))
+
+            // console.log(storage.getItem(item.ID))
+        }
+
+        bus.emit('notifyUpdateCart') // 通知 header
+    }
+
+    /* ========== 計算合計金額 ========== */
+    const totalPrice = computed(() => {
+        let sum = 0;
+
+        for(let i = 0; i < cartItems.value.length; i++){
+            sum += cartItems.value[i].itemSubTotal
+        }
+
+        return sum
+    })
+
+    /* ========== 運費 ========== */
+    const shipping_fee = computed(() => { // 未來可針對免運條件做運算
+        return 60
+    })
+
+    /* ========== 刪除商品 ========== */
+    const deleteItem = (index) => {
+        const item = cartItems.value[index] // 要被刪除的該物件
+        
+        // 1. 移除 storage 中的該項 & addItemList 的id
+        storage.removeItem(item.ID)
+        let itemString = storage.getItem('addItemList') 
+        if (itemString) {
+            // 移除 "1, 3, 5, " 格式的字串
+            let updatedItemString = itemString.replace(`${item.ID}, `, '')
+            storage.setItem('addItemList', updatedItemString)
+        }
+
+        // 2. 從畫面上移除該項
+        cartItems.value.splice(index, 1) // 陣列刪除值，用 splice
+
+        // 3. 重新計算總金額
+        // 在 computed
+
+        bus.emit('notifyUpdateCart') // 通知 header
+    }
+
+
+    /* ========== 判斷是否能前往 CartFotm ========== */
     const goToCartForm = () => {
         // 判斷購物車有無商品
         if(cartItems.value.length === 0){
             showToast('購物車尚無商品，請前往星空小舖選購')
             return
         }
-
         // 判斷是否登入會員
         if(!memberStore.isAuthed){
             alert('請先登入會員')
             return
         }
-
-
         router.push('/cartpage/cartform')
     }
-    
-
-
 </script>
 
 
