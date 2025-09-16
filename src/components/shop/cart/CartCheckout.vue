@@ -109,8 +109,15 @@
     /* ========== 計算新的數量 => 價格 ========== */
     // item 是購物車資料 List 跑 v-for 後的 Object
     const changeItemCount = (item, index) => {
+        // 數量不得小於 1
         if(item.qty < 1){
             item.qty = 1
+        }
+        
+        // 數量不得超過庫存
+        if(item.qty > item.stock){
+            item.qty = item.stock
+            showToast(`此商品最多只能購買 ${item.stock} 件`)
         }
 
         // 重新計算小計
