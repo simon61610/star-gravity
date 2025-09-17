@@ -276,7 +276,7 @@
     padding-top: 50px;
 }
 .sidebar{
-    margin-left: 30px;
+    margin-left: 100px;
     padding-top: 25px;
     color: $secondaryColor-yellow;
 }
