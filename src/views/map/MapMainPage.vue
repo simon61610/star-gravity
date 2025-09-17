@@ -114,14 +114,17 @@ const selectedLocation = ref('')
 const selectedLocationId = ref('')   //抓到當前選擇地點的ID
 const locationReviews = ref([])
 
-function handleShowDetail(location) {
+
+async function handleShowDetail(location) {
     selectedLocation.value = location  //從main那邊點選後 傳來的參數 本身就是該地點的物件 { ID: 1, region: '南部', scene: '市郊', name:'南瀛天文館', img: '../../assets/images/map/map-tainanPhoto.jpg',score:4.7, address:"台南市大內區34-2號" ,coords:[ 385 , 380] }
     selectedLocationId.value = selectedLocation.value.ID
     detailShow.value = true              
     showLayout.value = true
     
     //呼叫函數,把selectedLocationId.value當參數
-    getLocationReview(selectedLocationId.value)
+    await getLocationReview(selectedLocationId.value)
+    // console.log( locationReviews.value);
+    
 }
 
 function closeModel(){
@@ -147,8 +150,17 @@ function cencelReview(){
 }
 
  // 因子組件新增評論故重新呼叫取得最新評論
-const getNewReviews = () => {
-    getLocationReview(selectedLocationId.value)
+const getNewReviews = async () => {
+    await getLocationReview(selectedLocationId.value)
+
+    //重新抓取新的 locationList
+    await getLocationList()
+
+    // 用原本的selectedLocationId 重新抓 selectedLocation 給 MapDetail 和 MapReview
+    const updatedLocation = locationList.value.find(loc => loc.ID === selectedLocationId.value)
+    if (updatedLocation) {
+        selectedLocation.value = updatedLocation
+    }
 }
 
 onMounted(async ()=>{
