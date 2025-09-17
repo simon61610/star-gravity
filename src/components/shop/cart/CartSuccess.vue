@@ -59,9 +59,9 @@
             </div>
             <h1 class="order-number">訂單編號：{{ order.order_number }}</h1>
             <h3 class="member-center">查詢所有訂單，請至
-                <!-- <router-link :to="{ name: 'membercenter', path: '/membercenter/order' }" class="router-link"> -->
+                <router-link to="/membercenter/order" class="router-link">
                     <span>會員中心</span>
-                <!-- </router-link> -->
+                </router-link>
             </h3>
         </section>
 
