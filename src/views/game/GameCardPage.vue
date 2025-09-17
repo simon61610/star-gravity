@@ -201,6 +201,7 @@ const goResult = () => {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+  
 }
 
 /* 舞台固定寬高、背景鋪滿 */
@@ -232,6 +233,7 @@ const goResult = () => {
 
 /* 卡片（絕對定位，動畫用 top/transform） */
 .card {
+  
   -webkit-appearance: none;
   appearance: none;
   background: none;
@@ -264,6 +266,7 @@ const goResult = () => {
   object-fit: cover;
   backface-visibility: hidden;
   border-radius: 12px;
+  
 }
 .card-front { transform: rotateY(180deg); }
 </style>
