@@ -31,7 +31,7 @@
         
     // 分頁
     const collectionPage = ref(1)    // 目前頁     
-    const pageSize = ref(8)          // 每頁幾筆
+    const pageSize = ref(6)          // 每頁幾筆
     const filteredTotal = computed(() => products.value.length)  // 總筆數給 Pagination
 
     const showProducts = computed(() => {                       // 依頁碼切資料
@@ -197,7 +197,7 @@
 
 // 右邊開始
 .products{
-    width: 100%;
+    width: 800px;
     height: auto;            /* 內容多就自然撐開 */
     min-height: 500px;       /* 保留原本大致視覺高度 */
     overflow-y: visible;     /* 明確指定不要在這層裁切/滾動 */
