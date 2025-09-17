@@ -184,11 +184,9 @@
     box-sizing: border-box;
     background-image: url(@/assets/images/member/login-bgi.png);
     background-size: cover;
-    border: 1px solid green;
 }
 .leftright{
     max-width: 1200px;
-    border: 1px solid red;
     justify-content: flex-start;
     align-items: flex-start;
     display: flex;
@@ -197,14 +195,11 @@
     padding-top: 50px;
 }
 .sidebar{
-    border: 1px solid blue;
-    // width: 300px;
     margin-left: 30px;
     padding-top: 25px;
     color: $secondaryColor-yellow;
 }
 .content {
-    border: 1px solid blue;
     flex-grow: 1;
     padding-top: 0;
 }
@@ -248,7 +243,6 @@
 // 選單
 .menu{
     padding: 10px 10px;
-    // width: 150px;
 }
 // 預設/已瀏覽顏色
 .menu .menu-link,
@@ -296,9 +290,6 @@
         height: 96px;
         margin: 0 auto;
     }
-    // .buttons{ 
-    //     margin-top: 8px;
-    // }
     .logout-btn{
         padding-right: 57px;
     }
@@ -339,9 +330,6 @@
         text-decoration: underline;
         background: transparent;
     }
-
-
-
 
 }
 

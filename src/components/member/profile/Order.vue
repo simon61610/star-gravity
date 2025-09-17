@@ -3,7 +3,6 @@
     import Pagination from '@/components/common/Pagination.vue'
     import axios from 'axios'
     import { useMemberStore } from '@/stores/member'
-    import { columnAlignment } from 'element-plus'
 
     // 引用useMemberStore
     const memberStore = useMemberStore()
@@ -34,33 +33,6 @@
         { label: '狀態',     prop: 'order_status'},
     ]
     const columnDefs = computed(() => (props.columns?.length ? props.columns : builtinColumns))
-
-    // 內建資料 (之後可改成 props.data 或 API 結果）
-    // const ordertable = ref([
-    // { order_number: '2025081601', order_date: '2025-08-16', order_item: '雙筒望遠鏡', dollar: '2,500', state: '已出貨' },
-    // { order_number: '2025081602', order_date: '', order_item: '', dollar: '', state: '' },
-    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    // { order_number: '2025081603', order_date: '', order_item: '', dollar: '', state: '' },
-    
-    // ])
 
     // 單一資料來源：有傳入 props.data 就用，否則用 API 回來的 orders
     const dataSource = computed(() => (props.data?.length ? props.data : orders.value))
@@ -157,7 +129,6 @@
     max-width: 1000px;
     width: 100%;
     margin: 0 auto; 
-    padding-top: 20px;
 }
 .pager{
     width: 800px;

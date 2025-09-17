@@ -35,9 +35,6 @@
         
     // 縣市區域選單
     const cities = ref([])
-    // const areaOptions = ref([])
-    // 初始化載入期間避免 watch 把已載入的 area 清空
-    // const prefilling = ref(true)
 
     // 由 city 動態推導鄉鎮清單（不再用 ref 手動塞）
     const areaOptions = computed(() => {
@@ -59,6 +56,7 @@
         //     window.location.href = "/loginfirst"   // 登出後跳轉到登入頁
         //     return
         // }
+
         // 載入城市/區域 JSON
         try {
             const res = await axios.get(import.meta.env.VITE_PUBLIC_URL + 'JSON_CSV_XML/CityCountyData.json') 
@@ -124,7 +122,6 @@
         saving.value = true
         try {
             const { data } = await axios.post(UPDATE_API, {
-                // email: member.email,
                 name: member.name.trim(),
                 phone: member.phone.trim(),
                 city: member.city,
@@ -197,16 +194,9 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    // margin-top: 20px;
-    border: 1px solid blue;
-}
-.row{
-    border: 1px solid orange;
-    // width: 710px;
 }
 .rowline{
     width: 100%;
-    // width: 700px;
     height: 50px;
     box-sizing: border-box;
 }
@@ -227,7 +217,6 @@
 }
 // 儲存按鈕
 .actions{
-    // width: 700px;
     display: flex;
     justify-content: flex-end;
 }
@@ -296,17 +285,7 @@
         font-size: 12px;
     }
 
-
-
-
-
 }
-
-
-
-
-
-
 
 
 
