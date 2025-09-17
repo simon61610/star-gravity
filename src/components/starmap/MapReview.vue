@@ -26,6 +26,7 @@ function writeReview(){
     }else{
         console.log("未登入")
         showToast('請先登入!')
+        emit('show')
         // console.log(memberStore.user.name)
     }
 
@@ -103,7 +104,6 @@ onUnmounted( ()=>{
 </script>
 
 <template>
-    
     <!-- 內容彈窗 -->
     <div class="map-reviewBox">
          <!-- 叉叉按鈕 -->

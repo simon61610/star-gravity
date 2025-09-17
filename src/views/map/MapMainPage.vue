@@ -25,6 +25,7 @@
             @closeModel="closeModel"
             @backToDetail="backToDetail"
             @writeReview="writeReview"
+            @show="showPrompt"
             :selectedLocation="selectedLocation"
             :selectedLocationId="selectedLocationId"
             :locationReviews="locationReviews"
@@ -39,6 +40,7 @@
         />
         
         <shopToast />
+        <LoginPrompt />
     </div>
 </template>
 
@@ -113,7 +115,7 @@ const selectedLocationId = ref('')   //抓到當前選擇地點的ID
 const locationReviews = ref([])
 
 function handleShowDetail(location) {
-    selectedLocation.value = location  //從main那邊點選後 傳來的值 本身就是該地點的物件 { id: 1, region: '南部', scene: '市郊', name:'南瀛天文館', img: '../../assets/images/map/map-tainanPhoto.jpg',score:4.7, address:"台南市大內區34-2號" ,coords:[ 385 , 380] }
+    selectedLocation.value = location  //從main那邊點選後 傳來的參數 本身就是該地點的物件 { ID: 1, region: '南部', scene: '市郊', name:'南瀛天文館', img: '../../assets/images/map/map-tainanPhoto.jpg',score:4.7, address:"台南市大內區34-2號" ,coords:[ 385 , 380] }
     selectedLocationId.value = selectedLocation.value.ID
     detailShow.value = true              
     showLayout.value = true
@@ -149,9 +151,47 @@ const getNewReviews = () => {
     getLocationReview(selectedLocationId.value)
 }
 
-onMounted(()=>{
-    getLocationList()
+onMounted(async ()=>{
+    await getLocationList()
+
+    // 檢查是否是登入後返回 
+    // 因為afterLoginAction 有可能為null 只寫loginPrompt.afterLoginAction.type === 'openReview' 會報錯所以要寫&&
+    if( loginPrompt.afterLoginAction && loginPrompt.afterLoginAction.type === 'openReview'){
+        const action = loginPrompt.afterLoginAction
+        const location = locationList.value.find( loc => loc.ID === action.locationId)
+        
+        if(location){
+            handleShowDetail(location)
+            //延遲一下再打開 確保資料抓完
+            setTimeout(()=>{
+                showReview()
+            }, 500)
+        }
+        //清除儲存的資料
+        loginPrompt.clearAction()
+    }
+
+
 })
+
+
+//會員登入彈窗
+import LoginPrompt from '@/components/common/LoginPrompt.vue';
+import { useLoginPromptStore } from '@/stores/loginPrompt';
+const loginPrompt = useLoginPromptStore()
+//  要引用↑ 它裡面的函數loginPrompt.open(`/events/${eventData.value.ID}`)  紀錄路徑 之後登入完要跳回來
+
+const showPrompt = ()=>{
+    // 儲存當前選中的地點資訊和要開啟的視窗狀態
+    const actionData = {
+        type: 'openReview',
+        locationId: selectedLocationId.value,
+        location: selectedLocation.value
+    }
+    loginPrompt.open(`/mapmain` , actionData)
+}
+
+
 
 </script>
 
