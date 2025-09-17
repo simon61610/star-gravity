@@ -196,7 +196,7 @@
     gap: 20px;
 }
 .rowline{
-    width: 100%;
+    width: 800px;
     height: 50px;
     box-sizing: border-box;
 }
@@ -219,6 +219,7 @@
 .actions{
     display: flex;
     justify-content: flex-end;
+    width: 780px;
 }
 .save{
     background-color: $primaryColor-500;
