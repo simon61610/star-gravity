@@ -18,12 +18,14 @@
 
     // 後端根路徑（用 Vite 環境變數更彈性）
     const API_BASE = import.meta.env.VITE_AJAX_URL || '/'
+    const API_BASE2 = import.meta.env.VITE_AJAX_URL_NOEND || '/'
+
 
     // 改成用 URL 物件，正確處理有無領先斜線與子路徑（例如 http://localhost/PDO/）
     function url(path) {
         if (/^https?:\/\//i.test(path)) return path        // 已是絕對網址就直接用
         try {
-            return new URL(path, API_BASE).href            // 相對或以 / 開頭都 OK
+            return new URL(path, API_BASE2).href            // 相對或以 / 開頭都 OK
         } catch {
             // 後備：最少也把雙斜線問題處理掉
             const base = API_BASE.endsWith('/') ? API_BASE : API_BASE + '/'
