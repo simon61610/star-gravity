@@ -21,6 +21,9 @@ $event_end = $data['event_end'] ?? '';
 $event_deadline = $data['event_deadline'] ?? '';
 $event_place = $data['event_place'] ?? '';
 $event_price = (int)($data['event_price'] ?? 0);
+$max_joiners = isset($data['max_joiners']) && $data['max_joiners'] !== ''
+                    ? (int)$data['max_joiners']
+                    : null;
 $event_description = $data['event_description'] ?? '';
 $is_active = $data['is_active'] ?? '';
 $event_status = $data['event_status'] ?? '';
@@ -33,8 +36,8 @@ $category = $data['category'] ?? '';
 $imageJson = json_encode($image, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ); //不要把 / 轉成 \/  ||  不要把中文轉成 \uXXXX
 //建立SQL語法
 
-$sql = "INSERT INTO  `Event`(event_name, event_start, event_end ,event_deadline , event_place ,event_price,  event_description , is_active , event_status, homepage_highlight ,image , tag , category) VALUES 
-(?, ?, ?, ?, ?, ?, ?, ? , ?, ? , ?,?,?)" ;
+$sql = "INSERT INTO  `Event`(event_name, event_start, event_end ,event_deadline , event_place ,event_price, max_joiners, event_description , is_active , event_status, homepage_highlight ,image , tag , category) VALUES 
+(?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ? , ?,?,?)";
 
 
 //執行並查詢，會回傳查詢結果的物件
@@ -45,13 +48,14 @@ $statement -> bindValue(3,$event_end);
 $statement -> bindValue(4,$event_deadline);
 $statement -> bindValue(5,$event_place);
 $statement -> bindValue(6,$event_price);
-$statement -> bindValue(7,$event_description);
-$statement -> bindValue(8,$is_active);
-$statement -> bindValue(9,$event_status);
-$statement -> bindValue(10,$homepage_highlight);
-$statement -> bindValue(11,$imageJson);
-$statement -> bindValue(12,$tag);
-$statement -> bindValue(13,$category);
+$statement -> bindValue(7,$max_joiners, is_null($max_joiners) ? PDO::PARAM_NULL : PDO::PARAM_INT);
+$statement -> bindValue(8,$event_description);
+$statement -> bindValue(9,$is_active);
+$statement -> bindValue(10,$event_status);
+$statement -> bindValue(11,$homepage_highlight);
+$statement -> bindValue(12,$imageJson);
+$statement -> bindValue(13,$tag);
+$statement -> bindValue(14,$category);
 $statement -> execute();
 
 
@@ -70,6 +74,8 @@ if($newId > 0){
     "event_deadline"=>$event_deadline,
     "event_place"=>$event_place,
     "event_description"=>$event_description,
+    "event_price"=>$event_price,
+    "max_joiners"=>$max_joiners,
     "is_active"=>$is_active,
     "event_status"=>$event_status,
     "homepage_highlight"=>$homepage_highlight,
