@@ -114,7 +114,7 @@ const handleCancel = () => {
     background-color: #f8f9fa;
     border-radius: 8px;
     padding: 16px;
-
+    overflow-wrap: break-word; //超過字數換行
     display: flex;
     flex-direction: column;
     gap: 12px;

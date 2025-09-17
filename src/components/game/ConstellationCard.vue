@@ -13,10 +13,12 @@ const props = defineProps({
 const canvasRef = ref(null)
 
 //呼叫星連星程式
+
 function drawNextLine() {
   console.log(" Card.drawNextLine() 被呼叫了")
-  canvasRef.value?.drawNext()
+  canvasRef.value?.drawAllLinesStepByStep()
 }
+
 
 //呼叫reset程式
 const resetLines = () => {
@@ -28,7 +30,7 @@ const showAllLines = ()=>{
   canvasRef.value.showAllLines();
 }
 
-defineExpose({ drawNextLine,resetLines,showAllLines })
+defineExpose({ drawNextLine,resetLines,showAllLines})
 
 
 // Tab 清單（之後要加/改只改這裡）
@@ -45,7 +47,6 @@ const activeTab = ref('intro')
 <template>
   <main class="scene" aria-label="星空互動場景">
     <aside class="card" aria-live="polite">
-      <div></div>
       <header class="card__hd">
         <div class="card__thumb">
           <img :src="constellation.image"  alt="星座圖示" />
