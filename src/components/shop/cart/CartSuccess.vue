@@ -58,7 +58,11 @@
                 <h2>已經收到您的訂單</h2>
             </div>
             <h1 class="order-number">訂單編號：{{ order.order_number }}</h1>
-            <h3 class="member-center">查詢所有訂單，請至<span>會員中心</span></h3>
+            <h3 class="member-center">查詢所有訂單，請至
+                <!-- <router-link :to="{ name: 'membercenter', path: '/membercenter/order' }" class="router-link"> -->
+                    <span>會員中心</span>
+                <!-- </router-link> -->
+            </h3>
         </section>
 
         <!-- 客戶提醒 -->
