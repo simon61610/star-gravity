@@ -11,6 +11,7 @@
     
     /* ========== Pinia ========== */
     import { useMemberStore } from '@/stores/member'
+    import { useLoginPromptStore } from '@/stores/loginPrompt'
     
     /* ========== 套件 ========== */
     import bus from '@/composables/useMitt'
@@ -24,7 +25,8 @@
     const memberStore = useMemberStore()
     const cartItems = ref([]) // 購物車
     const storage = localStorage
-    const showLoginPrompt = ref(false)
+    // const showLoginPrompt = ref(false)
+    const loginPrompt = useLoginPromptStore()
     
     /* ========== 資料 ========== */
     const orderGuide = ref([
@@ -212,7 +214,8 @@
         // 判斷是否登入會員
         if(!memberStore.isAuthed){
             // alert('請先登入會員')
-            showLoginPrompt.value = true
+            // showLoginPrompt.value = true
+            loginPrompt.open()
             return
         }
         router.push('/cartpage/cartform')
@@ -221,7 +224,7 @@
 
 
 <template>
-    <LoginPrompt v-if="showLoginPrompt" @close="showLoginPrompt = false"/>
+    <LoginPrompt />
     <shopToast />
     <section class="checkout-section">
 
