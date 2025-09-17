@@ -190,7 +190,13 @@ const placeTags = [
                                 <h2 class="event-name">{{ event.event_name }}</h2>
                                 <div class="address">
                                     <i class="fa-solid fa-location-dot"></i>
-                                    <p>{{ event.event_place }}</p>
+                                    <p class="place">{{ event.event_place }}</p>
+                                </div>
+
+                                <!-- 報名人數顯示 -->
+                                <div class="people">
+                                    報名人數：{{ event.registration_count ?? 0 }} / {{ event.max_joiners ?? '無上限' }}
+                                    <span v-if="event.max_joiners && event.registration_count >= event.max_joiners">（已額滿）</span>
                                 </div>
                                 <h3 class="tags">
                                     <div class="type-tag"># {{ event.category }}</div>
@@ -411,6 +417,11 @@ const placeTags = [
                                     p {
                                         font-size: 16px;
                                     }
+                                }
+                                .people {
+                                    font-size: 14px;
+                                    color: #555;
+                                    margin-top: 4px;
                                 }
                                 .tags {
                                     color: #888;

@@ -12,7 +12,9 @@ if (!$eventId) {
 }
 
 // 2. 查詢單筆「上架中」的活動
-$sql = "SELECT * FROM `Event` WHERE ID = ? AND is_active = 1";
+$sql = "SELECT e.*, (SELECT COUNT(*) FROM Joiner j WHERE j.event_id = e.ID) AS registration_count
+            FROM `Event` e 
+            WHERE ID = ? AND is_active = 1";
 $query = $pdo->prepare($sql);
 $query->execute([$eventId]);
 $event = $query->fetch(PDO::FETCH_ASSOC);
@@ -22,6 +24,9 @@ if (!$event) {
     echo json_encode(null, JSON_UNESCAPED_UNICODE);
     exit;
 }
+
+// 確保 max_joiners 為 int 或 null
+$event["max_joiners"] = $event["max_joiners"] !== null ? (int)$event["max_joiners"] : null;
 
 // 4. 英文星期 → 中文星期對照表
 $weekDayMap = [ 

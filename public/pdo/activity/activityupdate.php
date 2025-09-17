@@ -14,6 +14,10 @@ $event_end = $data['event_end'] ?? '';
 $event_deadline = $data['event_deadline'] ?? '';
 $event_place = $data['event_place'] ?? '';
 $event_description = $data['event_description'] ?? '';
+$event_price = (int)($data['event_price'] ?? 0);
+$max_joiners = isset($data['max_joiners']) && $data['max_joiners'] !== ''
+                    ? (int)$data['max_joiners']
+                    : null;
 $is_active = $data['is_active'] ?? '';
 $event_status = $data['event_status'] ?? '';
 $homepage_highlight = $data['homepage_highlight'] ?? ''; 
@@ -31,6 +35,8 @@ $sql = "UPDATE `Event` SET
             event_end = ?,
             event_deadline = ?,
             event_place = ?,
+            event_price = ?,
+            max_joiners = ?,
             event_description = ?,
             is_active = ?,
             event_status = ?,
@@ -46,14 +52,16 @@ $statement->bindValue(2, $event_start);
 $statement->bindValue(3, $event_end);
 $statement->bindValue(4, $event_deadline);
 $statement->bindValue(5, $event_place);
-$statement->bindValue(6, $event_description);
-$statement->bindValue(7, $is_active);
-$statement->bindValue(8, $event_status);
-$statement->bindValue(9, $homepage_highlight);
-$statement->bindValue(10, $imageJson);
-$statement->bindValue(11, $tag);
-$statement->bindValue(12, $category);
-$statement->bindValue(13, $id);
+$statement->bindValue(6, $event_price);
+$statement->bindValue(7, $max_joiners, is_null($max_joiners) ? PDO::PARAM_NULL : PDO::PARAM_INT);
+$statement->bindValue(8, $event_description);
+$statement->bindValue(9, $is_active);
+$statement->bindValue(10, $event_status);
+$statement->bindValue(11, $homepage_highlight);
+$statement->bindValue(12, $imageJson);
+$statement->bindValue(13, $tag);
+$statement->bindValue(14, $category);
+$statement->bindValue(15, $id);
 
 $success = $statement->execute();
 
@@ -67,6 +75,8 @@ if($success){
         "event_end"=>$event_end,
         "event_deadline" => $event_deadline,
         "event_place" => $event_place,
+        "event_price"=>$event_price,
+        "max_joiners"=>$max_joiners,
         "event_description" => $event_description,
         "is_active" => $is_active,
         "event_status" => $event_status,

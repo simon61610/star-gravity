@@ -13,6 +13,8 @@
     import { useMemberStore } from '@/stores/member';
     // import eventlist from '@/data/eventlist';
     import axios from 'axios';
+    import shopToast from '@/components/common/shopToast.vue';
+    import { showToast } from '@/composables/useToast';
 
     // 路由
     const route = useRoute()
@@ -32,7 +34,7 @@
     onMounted(async () => {
 
         const res = await axios.get(import.meta.env.VITE_AJAX_URL + 'activity/client/activityget_one.php?id=' + route.params.id)
-        // console.log(res.data)
+        console.log(res.data)
         eventData.value = res.data
 
         /* {
@@ -92,12 +94,22 @@
             alert('請先登入會員')
             return
         }
+
+        // 判斷是否已額滿
+        if(eventData.value.max_joiners && eventData.value.registration_count >= eventData.value.max_joiners){
+            showToast('報名已額滿')
+            return
+        }
+
+
         router.push(`/eventregistration/${eventData.value.ID}`)
     }
 
 </script>
 
 <template>
+    <shopToast />
+
     <section class="event-detail" v-if="eventData">
 
         <!-- 圖片選擇區 -->
@@ -163,6 +175,19 @@
                             </div>
                             <p>NT$ {{ eventData.event_price }} / 位</p>
                         </div>
+
+                        <!-- 報名人數 -->
+                        <div class="people-box box">
+                            <div class="title">
+                                <i class="fa-solid fa-user-group"></i>
+                                <h2>報名人數</h2>
+                            </div>
+                            <p>
+                                {{ eventData.registration_count ?? 0 }} / {{ eventData.max_joiners ?? '無上限' }}
+                                <span v-if="eventData.max_joiners && eventData.registration_count >= eventData.max_joiners">（已額滿）</span>
+                            </p>
+                        </div>
+
                     </div>
     
                     <p class="apply-btn-box">
@@ -295,6 +320,7 @@
                 // 活動資訊
                 .info-box {
                     display: flex;
+                    flex-direction: column;
                     gap: 60px;
                     align-items: center;
     

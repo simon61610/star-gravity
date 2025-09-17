@@ -104,7 +104,16 @@ const columns = [
   { label:'活動ID',       prop:'ID' },
   { label:'活動名稱',     prop:'event_name' },
   { label:'活動日期',     prop:'event_date_display' },
-  { label:'報名人數',     prop:'registration_count' },
+    { 
+    label:'報名人數',     
+    prop:'registration_count',
+    formatter: (row) => {
+      if (row.max_joiners === null) {
+        return `${row.registration_count} / 無上限`
+      }
+      return `${row.registration_count} / ${row.max_joiners}`
+    }
+  },
   { label:'活動資訊',     slot:'編輯',  align:'right' },
   { label:'參加者列表',   slot:'管理', align:'right' },
   { label:'顯示狀態',     prop:'is_active_display' },
@@ -237,7 +246,8 @@ const handleEdit = (row, index) => {
     homepage_highlight: Number(row.homepage_highlight ?? 0),
     image: row.image ?? '',
     tag: row.tag ?? '',
-    category: row.category ?? ''
+    category: row.category ?? '',
+    max_joiners: row.max_joiners ?? null
   }
     // 把 image 解析回陣列
     const images = Array.isArray(row.image) ? row.image : []
@@ -369,7 +379,8 @@ defineExpose({ handleEdit, handleadd }) // 父層可呼叫新增/編輯
     event_start,
     event_end,       
     event_deadline: selected_activity.value.event_deadline, // 2025-09-08 23:59:59
-    image: urls 
+    image: urls,
+    max_joiners: selected_activity.value.max_joiners === '' ? null : selected_activity.value.max_joiners
   }
 
   
@@ -523,6 +534,16 @@ defineExpose({ handleEdit, handleadd }) // 父層可呼叫新增/編輯
         <div class="Admin-Activity-fee">
           <h1>費用</h1>
           <input type="text" v-model="selected_activity.event_price" placeholder="例如：NT$ 1200" />
+        </div>
+
+        <div class="Admin-Activity-max">
+          <h1>最大報名人數</h1>
+          <input
+            type="number"
+            v-model="selected_activity.max_joiners"
+            placeholder="留空 = 無上限"
+            min="0"
+          />
         </div>
 
         <div class="Admin-Activity-deadline">

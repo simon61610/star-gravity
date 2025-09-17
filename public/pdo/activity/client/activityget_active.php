@@ -3,7 +3,9 @@
 include('../../pdo.php');
 
 // 1. 查詢所有「上架」活動
-$sql = "SELECT * FROM `Event` WHERE is_active = 1";
+$sql = "SELECT e.*, (SELECT COUNT(*) FROM Joiner j WHERE j.event_id = e.ID) AS registration_count
+            FROM `Event` e
+            WHERE is_active = 1";
 $query = $pdo->prepare($sql);
 $query->execute();
 $activeEvents = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -21,6 +23,9 @@ $weekDayMap = [
 
 // 3. 處理每一筆活動資料
 foreach ($activeEvents as &$event) {
+    // 確保 max_joiners 為 int 或 null
+    $event["max_joiners"] = $event["max_joiners"] !== null ? (int)$event["max_joiners"] : null;
+
     // (a) 活動日期顯示格式化（例：2025-09-20 (六) ~ 2025-09-21 (日)）
     if (!empty($event["event_start"]) && !empty($event["event_end"])) {
         $eventStart = new DateTime($event["event_start"]);
