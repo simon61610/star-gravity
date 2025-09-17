@@ -43,14 +43,14 @@ function drawNext() {
 }
 
 async function drawAllLinesStepByStep() {
-  isAnimating.value = true
+  isAnimating.value = true //開始線條動畫
 
-  while (currentStep.value < props.lines.length) {
-    currentStep.value++
+  while (currentStep.value < props.lines.length) {   //如果線條還沒跑完 
+    currentStep.value++   //持續跑
     await new Promise(resolve => setTimeout(resolve, 500)) // 每 200ms 畫一條
   }
 
-  isAnimating.value = false
+  isAnimating.value = false //跑完停止
 }
 
 
