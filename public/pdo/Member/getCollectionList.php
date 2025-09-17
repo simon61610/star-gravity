@@ -12,7 +12,10 @@ if($memberId <= 0) {
 };
 
 // 建立sql
-$sql = "SELECT p.name, p.original_price,
+$sql = "SELECT 
+        p.name, 
+        p.sale_price   AS sale_price,      -- 折扣價
+        p.original_price AS original_price, -- 原價
         (
             SELECT pi.image
             FROM ProductImage pi

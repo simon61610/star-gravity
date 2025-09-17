@@ -18,13 +18,12 @@
 
     // 防 NaN：undefined/空字串 會被當 0
     const formatTWD = (n) => `NT$${Number(n).toLocaleString('zh-TW')}`
-    // const formatTWD = (n) => `NT$${Number(n ?? 0).toLocaleString('zh-TW')}`
 
-    // 把後端給的相對路徑，轉成可用的完整網址
+    // 圖片路徑
     const toImageUrl = (path) => {
         if (!path) return ''                             // 沒圖就空字串
         if (/^https?:\/\//i.test(path)) return path      // 已是完整網址
-        const base = (import.meta.env.VITE_AJAX_URL || '').replace(/\/+$/,'')  // 去掉尾斜線
+        const base = (import.meta.env.VITE_AJAX_URL_NOEND || '').replace(/\/+$/,'')  // 去掉尾斜線
         // 若後端回 "/pdo/xxx.jpg" → base + "/pdo/xxx.jpg"
         // 若後端回 "pdo/xxx.jpg"  → base + "/pdo/xxx.jpg"
         return base + '/' + path.replace(/^\/+/,'')
@@ -43,18 +42,6 @@
         collectionPage.value = newpage
         window.scrollTo({ top: 0, behavior: 'smooth' })         // 切頁回頂（可保留/移除）
     }
-    // 取消收藏
-    // const emit = defineEmits(['unfavorite'])   // 告訴父層「真的要取消了」
-
-    // function askUnfavorite () {
-    //     if (confirm('確定要取消收藏嗎？')) emit('unfavorite')
-    // }
-    // function askUnfavorite () {                                   
-    //     if (confirm('確定要取消收藏嗎？')) {
-    //     emit('unfavorite')
-    //     showToast('已取消收藏', { type: 'info', duration: 1800 })
-    //     }
-    // }
 
     // 取消收藏（先從畫面移除，失敗再回滾）
     const unfavorite = async (productId) => {
@@ -91,55 +78,10 @@
     //     showToast('已加入購物車！', { type: 'success', duration: 2000 })
     // }
 
-    // 加入購物車
-    // 依 header.vue 的規格：addItemList & 每商品 key=ID → 'id|title|price|qty'
+
+    // -----------------------------加入購物車-----------------------------------------
     const addToCart = (p) => {
-        const storage = localStorage
-        // ---- 防呆與格式化 ----
-        const id = String(p.id ?? '')
-        if (!id) return
-        const safeTitle = String(p.title ?? '').replace(/\|/g, '／') // 避免破壞 '|' 分隔格式
-        const price = Number.isFinite(Number(p.price)) ? Number(p.price) : 0
-        const addQty = 1
-
-        // 維護 addItemList（"...id, "）
-        let list = storage.getItem('addItemList') || ''
-        const token = `${id}, `
-        if (!list.includes(token)) {
-            list += token
-            storage.setItem('addItemList', list)
-        }
-
-        // 維護單品資料：title | title | price | qty
-        const raw = storage.getItem(id)
-        let newQty = addQty
-        if (raw) {
-            const parts = raw.split('|') // 兼容舊資料（可能是 id|title|price|qty 或 3 欄）
-            const curQty = Number(parts[3] ?? parts[2] ?? 0) || 0
-            newQty = curQty + addQty
-        } 
-        storage.setItem(id, `${safeTitle}|${safeTitle}|${price}|${newQty}`)
-
-        // ---- 重新計算總件數與小計
-        let totalQty = 0
-        let subtotal = 0
-        const ids = (storage.getItem('addItemList') || '')
-            .split(',')
-            .map(s => s.trim())
-            .filter(Boolean) // 過濾空字串
-
-        for (const pid of ids) {
-            const itemRaw = storage.getItem(pid)
-            if (!itemRaw) continue
-            const [, , priceStr, qtyStr] = itemRaw.split('|')
-            const pr = Number(priceStr || 0)
-            const qy = Number(qtyStr || 0)
-            if (Number.isFinite(pr) && Number.isFinite(qy)) {
-                totalQty += qy
-                subtotal += pr * qy
-            }
-        }
-
+        
         // 通知 header 立刻重算徽章數字
         bus.emit('notifyUpdateCart') 
          
@@ -159,21 +101,24 @@
 
             // 後端應該回傳陣列，直接塞進去
             const lists = Array.isArray(resp.data) ? resp.data : []
-            // 轉成前端現用鍵名
-            products.value = lists.map((r, i) => ({
-                id: r.product_id ?? i + 1,
-                title: r.name ?? '未命名商品',
-                price: r.original_price ?? 0,
-                photo: toImageUrl(r.photo_url)   // ← 這裡就先轉好
-            }))
+            
+            products.value = lists.map((r, i) => {
+                const sale  = Number(r.sale_price ?? 0)
+                const original  = Number(r.original_price ?? 0)
+                return {
+                    id: r.product_id ?? i + 1,
+                    title: r.name ?? '未命名商品',
+                    sale_price: sale,
+                    original_price: original,
+                    price: sale > 0 ? sale : orig,     // 顯示/存入購物車用的售價
+                    photo: toImageUrl(r.photo_url)
+                }
+            })
+            console.log(resp.data);
             // 資料更新後回到第 1 頁（可選）
             collectionPage.value = 1
-
-            // console.log(products.value);
             
-
         }catch( error ){
-            // console.log("後端請求失敗");
             console.error("後端請求失敗",
                 error?.message,
                 error?.response?.status,
@@ -188,7 +133,6 @@
     onMounted(() => {
         if (window.matchMedia('(max-width: 433px)').matches) pageSize.value = 4
 
-        // memberId.value = memberStore.user.ID
         // 保險寫法（避免 user 還沒載入）
         memberId.value = memberStore.user?.ID ?? ''
         getCollectionList(memberId.value)
@@ -208,11 +152,6 @@
                 
                 <div class="photoall">
                     <div class="thumb">
-                        <!-- <img src="../../../assets/images/shop/shop-banner.jpg" alt="望遠鏡"> -->
-                        <!-- <img 
-                            :src="p.photo || new URL('@/assets/images/shop/shop-banner.jpg', import.meta.url).href"  
-                            :alt="p.title || '商品圖片'"
-                        > -->
                         <img v-if="p.photo" :src="p.photo" :alt="p.title || '商品圖片'">
                     </div>
         
@@ -276,7 +215,7 @@
     gap: 10px;
     padding: 12px;
     border-radius: 12px;
-    background: rgba(255,255,255,0.04);   /* 淺半透明卡片，深色底才看得出層次 */
+    // background: rgba(255,255,255,0.04);   /* 淺半透明卡片，深色底才看得出層次 */
     box-shadow: 0 2px 10px rgba(0,0,0,.15);
 }
 /* 圖片 */
@@ -284,17 +223,20 @@
     width: 100%;
 }
 .thumb {
-    width: 100%;
-    aspect-ratio: 4 / 3;   /* 正方形縮圖；想長方形就改 4/3 或 3/2 */
+    width: 85%;
+    max-width: 220px;
+    aspect-ratio: 4 / 3;
+    margin: 0 auto;
+    padding: 8px; 
     overflow: hidden;
     border-radius: 8px;
-    background: rgba(255,255,255,0.06);
+    // background: rgba(255,255,255,0.06);
 }
 .thumb img{
     width: 100%;
     height: 100%;
     display: block;
-    object-fit: cover;     /* 等比裁切，避免拉伸變形 */
+    object-fit: contain;     /* 等比裁切，避免拉伸變形 */
 }
 /* 文字區 */
 .down{
