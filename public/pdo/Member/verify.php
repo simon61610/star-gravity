@@ -2,46 +2,41 @@
 
 include '../pdo.php';
 
-// header('Content-Type: application/json; charset=utf-8');
-// header('Access-Control-Allow-Credentials: true');
-// header('Access-Control-Allow-Origin: http://localhost:5173');
-// header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-// header('Access-Control-Allow-Headers: Content-Type, X-Requested-With, Authorization');
-
 // 兼容各環境的 Authorization 讀取
-function getAuthorizationHeader(): string {
-    if (!empty($_SERVER['HTTP_AUTHORIZATION'])) {
-        return $_SERVER['HTTP_AUTHORIZATION'];
-    }
-    if (!empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
-        return $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
-    }
-    if (function_exists('getallheaders')) {
-        $headers = getallheaders();
-        if (isset($headers['Authorization']) && $headers['Authorization'] !== '') {
-            return $headers['Authorization'];
-        }
-        if (isset($headers['authorization']) && $headers['authorization'] !== '') {
-            return $headers['authorization'];
-        }
-    }
-    return '';
-}
+// function getAuthorizationHeader(): string {
+//     if (!empty($_SERVER['HTTP_AUTHORIZATION'])) {
+//         return $_SERVER['HTTP_AUTHORIZATION'];
+//     }
+//     if (!empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+//         return $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+//     }
+//     if (function_exists('getallheaders')) {
+//         $headers = getallheaders();
+//         if (isset($headers['Authorization']) && $headers['Authorization'] !== '') {
+//             return $headers['Authorization'];
+//         }
+//         if (isset($headers['authorization']) && $headers['authorization'] !== '') {
+//             return $headers['authorization'];
+//         }
+//     }
+//     return '';
+// }
 
 $auth = getAuthorizationHeader();
 $token = '';
-// 如果有帶 "Bearer " 開頭 → 取出後面的 token
-if (strpos($auth, 'Bearer ') === 0) {
-    $token = substr($auth, 7);   // 去掉前面的 "Bearer "
-    $token = trim($token);       // 去除空白
-};
+// // 如果有帶 "Bearer " 開頭 → 取出後面的 token
+// if (strpos($auth, 'Bearer ') === 0) {
+//     $token = substr($auth, 7);   // 去掉前面的 "Bearer "
+//     $token = trim($token);       // 去除空白
+// };
 
 // 如果沒有帶 token → 回傳錯誤 JSON
 if ($token === '') {
     echo json_encode([
         'valid' => false, 
+        'reason' => 'no-token',
         'message' => '缺少 token'
-    ]);
+    ] JSON_UNESCAPED_UNICODE);
     exit;
 };
 

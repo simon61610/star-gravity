@@ -26,7 +26,8 @@ import { ref, computed } from 'vue'
 export const useMemberStore = defineStore('Member', () => {
     const user = ref(null)        // 目前登入的使用者物件（未登入為 null）
     // const token = ref(localStorage.getItem('token') || null)     // 讀 localStorage，讓刷新仍保留登入狀態
-    const token = ref(localStorage.getItem('token') || null)     // 讀 localStorage，讓刷新仍保留登入狀態
+    // const token = ref(localStorage.getItem('token') || null)     // 讀 localStorage，讓刷新仍保留登入狀態
+    const token = ref(null)
     const loading = ref(false)    // 登入狀態
 
     // 一定要 return 布林值
@@ -51,12 +52,11 @@ export const useMemberStore = defineStore('Member', () => {
             method: 'POST',
             headers: {  
                 'Content-Type': 'application/json',
-                // 後端用這個拿 token：Authorization: Bearer <token>
-                // 'Authorization': `Bearer ${token.value}`,
             },
             // 如果你的後端要用 Session 再一起驗證，就開啟這行
             credentials: 'include',
-            body: JSON.stringify({})   // 有些伺服器要求 POST 不能是空 body
+            body: JSON.stringify({ token: token.value })
+            // body: JSON.stringify({})   // 有些伺服器要求 POST 不能是空 body
         })
         // 後端建議固定回 200，內容長這樣：
         // { valid: true,  user: {...} }  或  { valid: false, reason: 'expired' }

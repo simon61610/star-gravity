@@ -10,12 +10,7 @@
 
     const memberID = ref("")
 
-    // const props = defineProps({
-    //     username: { type: String, default: '小姐/先生' },
-    // })
-
-    // 頭像
-    // 預覽用的 base64
+    // 頭像  預覽用的 base64
     const preview = ref('')
     // 真的要上傳的檔案物件
     const file = ref(null)
@@ -36,15 +31,6 @@
             return base + (path.startsWith('/') ? path.slice(1) : path)
         }
     }
-
-    // function url(path) {
-    //     // 先處理已是完整網址的情況，避免變成 "http://backend/http://cdn/..."
-    //     if (/^https?:\/\//i.test(path)) return path
-    //     let base = API_BASE
-    //     if (!base.endsWith('/')) base += '/'     // base 末端補 /
-    //     if (path.startsWith('/')) path = path.slice(1) // 路徑前端去掉 /
-    //     return base + path
-    // } // 小提醒：這個 url() 不只拿來組 API，用來補圖片相對路徑也 OK（例如 uploads/avatars/13/xxx.webp）
 
     // 選圖後：驗證型別/大小 → 做本地預覽
     function onPick(e) {
@@ -82,11 +68,9 @@
                 { withCredentials: true } 
             )
 
-            console.log(data)
-            // if (!data?.success) throw new Error(data?.message || '上傳失敗')
+            // console.log(data)
 
             // 用後端回的路徑直接當圖源，並加版本避免快取到舊圖
-            // preview.value = data.image + '?v=' + data.version
             if (!data?.success || !data?.data) throw new Error(data?.message || '上傳失敗')
             // 後端回傳格式（建議）為：{ success, data:{ avatarUrl, cacheBustParam } }
             const avatarUrl = data.data.avatarUrl
@@ -118,23 +102,8 @@
                 if (data.user?.image) preview.value  = url(data.user.image) + '?v=' + Date.now()
                 // ↑ 關鍵：若後端回 image 為相對路徑（uploads/...），用 url() 補成完整網址，避免跨網域取不到
             }
-        } catch(e) {
-            // 不打擾使用者；需要可印 log
-        }
+        } catch(e) {}
     }
-
-    // 送到後端（示範：改成你的 API 即可）
-    // async function save() {
-    //     if (!file.value) return alert('請先選擇圖片')
-    //     // const fd = new FormData()
-    //     // fd.append('avatar', file.value)
-    //     // await axios.post('/api/me/avatar', fd)
-
-    //     alert(`（示範）已準備上傳：${file.value.name}`)
-    //     // 上傳成功後可清空或保留預覽
-    //     // file.value = null
-    //     // preview.value = ''
-    // }
 
     //判斷是否已經登入
     onMounted(()=>{
