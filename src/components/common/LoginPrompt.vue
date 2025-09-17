@@ -1,21 +1,24 @@
 <script setup>
 
-    import { useRouter, useRoute } from 'vue-router';
+    import { useRouter } from 'vue-router';
+    import { useLoginPromptStore } from '@/stores/loginPrompt';
 
     const router = useRouter()
-    const route = useRoute()
+    const loginPrompt = useLoginPromptStore()
+    // const route = useRoute()
 
-    const emit = defineEmits(['close'])
+    // const emit = defineEmits(['close'])
 
     const goLogin = () => {
         router.push({
             path: "/loginfirst",
-            query: { backTo: route.fullPath } // 帶參數導回原本的頁面
+            query: { redirect: loginPrompt.redirectPath } // 帶參數導回原本的頁面
         })
+        loginPrompt.close()
     }
 
     const cancel = () => {
-        emit('close')
+        loginPrompt.close()
     }
 
 </script>
@@ -23,7 +26,7 @@
 
 
 <template>
-    <section class="login-prompt">
+    <section class="login-prompt" v-if="loginPrompt.isOpen">
         <div class="box">
             <h3>請先登入會員</h3>
             <div class="btns">
@@ -44,6 +47,8 @@
         background: rgba(0,0,0,0.5);
         justify-content: center;
         align-items: center;
+
+        z-index: 5000;
 
         .box {
             padding: 24px;

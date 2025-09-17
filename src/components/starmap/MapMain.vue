@@ -41,7 +41,7 @@ const filteredLocationList = computed(() => {
     // 搜尋篩選
     if (searchText.value.trim() !== '') {
         newLocationList = newLocationList.filter(item => 
-            item.name.includes(searchText.value) ||
+            item.location_name.includes(searchText.value) ||
             item.address.includes(searchText.value)
         )
     }
@@ -297,7 +297,7 @@ function handleSceneChange(scene, event) {
                         <input type="text" id="" class="inputPlace" :disabled=" region !== '全台'" :placeholder="region !== '全台' ? '選擇全台,才可輸入' : '請輸入地點名稱'" v-model="searchText" @focus="handleFocus" @blur="handleBlur">
                         <!-- 動態生成選項 -->
                         <ul v-if="placeList" class="starPlace-list">
-                            <li v-if="filteredLocationList.length > 0" v-for="(location, index) in filteredLocationList  " :key="index" @click="focusLocation(index)">{{location.name}}</li>
+                            <li v-if="filteredLocationList.length > 0" v-for="(location, index) in filteredLocationList  " :key="index" @click="focusLocation(index)">{{location.location_name}}</li>
                             <!-- 無結果時顯示 -->
                             <li v-if="filteredLocationList.length === 0" class="no-result">查無資訊</li>
                         </ul>

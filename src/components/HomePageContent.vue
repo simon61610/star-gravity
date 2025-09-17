@@ -256,15 +256,18 @@ onUnmounted(()=>{
                     <a v-for="activity in showActivities" 
                         class="list-singleInfo" 
                         href="#">
-                        <img class="singleInfo-photo" src="@/assets/images/aboutstar/star space.png" alt="活動資訊圖">
-                        <div class="singleInfo-content">
-                            <!-- <h3 class="activity-list-datetime">{{activity.date}}</h3> -->
-                            <h3 class="activity-list-datetime">{{activity.date}}</h3>
-                            <!-- <h3 class="activity-list-activityName">{{activity.name}}</h3> -->
-                            <h3 class="activity-list-activityName">{{activity.title}}</h3>
-                            <!-- <p class="activity-list-info cnConten--18px">{{ activity.description }}</p> -->
-                            <p class="activity-list-info cnConten--18px">{{ activity.desc }}</p>
-                        </div>
+                        <router-link :to="`/events/${activity.id}`" class="router-link">
+
+                            <img class="singleInfo-photo" src="@/assets/images/aboutstar/star space.png" alt="活動資訊圖">
+                            <div class="singleInfo-content">
+                                <!-- <h3 class="activity-list-datetime">{{activity.date}}</h3> -->
+                                <h3 class="activity-list-datetime">{{activity.date}}</h3>
+                                <!-- <h3 class="activity-list-activityName">{{activity.name}}</h3> -->
+                                <h3 class="activity-list-activityName">{{activity.title}}</h3>
+                                <!-- <p class="activity-list-info cnConten--18px">{{ activity.description }}</p> -->
+                                <p class="activity-list-info cnConten--18px">{{ activity.desc }}</p>
+                            </div>
+                        </router-link>
                     </a>
                 </div>
                 <!-- 右滑鍵 -->
@@ -283,6 +286,12 @@ onUnmounted(()=>{
 @import '@/assets/styles/main.scss';
 
 // -------------------PC----------------------
+.router-link{
+    text-decoration: none;
+    color: inherit;
+}
+
+
 //緣起
 .home-begining{
     width: 100%;

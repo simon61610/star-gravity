@@ -10,7 +10,7 @@ import sunnrRainyIcon from "@/assets/icons/icon-map-sun&rainy.svg"
 const emit = defineEmits(['closeModel', 'showReview'])
 const props = defineProps(["selectedLocation","selectedLocationId", 'locationReviews'])
 const API_KEY = "CWA-CF702105-AC4A-4F92-9483-D47FBE37A110"
-const weatherData = ref([])  //預報資料
+const weatherData = ref([''])  //預報資料
 const temperature = ref('')
 const weather = ref('')
 const sixDaysArray = ref([])
@@ -29,17 +29,22 @@ const fourReviewList = computed(()=>{
 
 //取得預報的天氣圖案
 function getWeatherIcon(weather) {
-    if(weather.includes('雷')|| weather.includes('陣')){
-        return thunderIcon
-    }else if(weather.includes('雨') && weather.includes('晴')){
+    if(weather.includes('雨') && weather.includes('晴')){
         return sunnrRainyIcon
-    }else if(weather.includes('雨') ){
+    }
+    else if(weather.includes('雷') && weather.includes('雨') ){
+        return thunderIcon
+    }
+    else if(weather.includes('雨') ){
         return rainIcon
-    }else if(weather.includes('雲') || weather.includes('陰')){
-        return cloudyIcon
-    }else if(weather.includes('晴')){
+    }
+    else if(weather.includes('晴')){
         return sunnyIcon
     }
+    else if(weather.includes('雲') || weather.includes('陰')){
+        return cloudyIcon
+    }
+
 }
 
 //事件監聽
@@ -53,7 +58,11 @@ function showReview(){
     // console.log(fourReviewList.value); 
 }
 
-const locationName = props.selectedLocation.city  //額外把縣市名稱拿出來, 不然氣象API中直接用props.selectedLocation.city會報錯
+// const locationName = props.selectedLocation.city  //額外把縣市名稱拿出來, 不然氣象API中直接用props.selectedLocation.city會報錯
+const locationName = computed(()=>{
+    return props.selectedLocation.city 
+})
+
 function getSixDays(){
     if (!weatherData.value.records) return;
     let tem = ''
@@ -86,11 +95,14 @@ const getWeather = async()=>{
         const response = await axios.get('https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-D0047-091?Authorization=CWA-CF702105-AC4A-4F92-9483-D47FBE37A110', {
             params: {
             Authorization: API_KEY,
-            LocationName: locationName,
+            LocationName: locationName.value,
             format: 'JSON',
             }   
         })
         weatherData.value = response.data //該縣市整包資訊
+        // console.log('@@@');
+        // console.log(weatherData.value);
+        
         temperature.value = weatherData.value.records.Locations[0].Location[0].WeatherElement[0].Time[0].ElementValue[0].Temperature //當天氣溫
         weather.value = weatherData.value.records.Locations[0].Location[0].WeatherElement[12].Time[0].ElementValue[0].Weather //當天天氣
 
@@ -105,24 +117,25 @@ watch(() => props.selectedLocation, async (newLocation) => {
         getSixDays()
     }
 } )
-    
 
 
 //暫時除錯用
 const locationId = ref('')  //用來賦值父組件過來的selectedLocationId
-function aaa(){
-    locationId.value = props.selectedLocationId
-    // console.log(locationId.value);
-    console.log(fourReviewList.value);
-    console.log(weatherData.value);
-    // console.log(temperature.value);
-    // console.log(weather.value);
-    console.log(sixDaysArray.value);
+// function aaa(){
+//     locationId.value = props.selectedLocationId
+//     console.log(locationId.value);
+//     console.log(fourReviewList.value);
+//     console.log(weatherData.value);
+//     console.log(temperature.value);
+//     console.log(weather.value);
+//     console.log(sixDaysArray.value);
+//     console.log(locationName.value);
+//     console.log(props.selectedLocation.city);
     
-    // console.log(weatherData.value.records.Locations[0].Location[0].WeatherElement[0].Time[0].ElementValue[0].Temperature);
-    // console.log(weatherData.value.records.Locations[0].Location[0].WeatherElement[12].Time[0].ElementValue[0].Weather);
+//     console.log(weatherData.value.records.Locations[0].Location[0].WeatherElement[0].Time[0].ElementValue[0].Temperature);
+//     console.log(weatherData.value.records.Locations[0].Location[0].WeatherElement[12].Time[0].ElementValue[0].Weather);
 
-}
+// }
 
 
 </script>

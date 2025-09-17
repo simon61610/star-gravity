@@ -8,12 +8,12 @@ import capricornimage from '@/assets/images/games/GameSkyPage/zodiac-cardPic/gma
 import capricornbg from '@/assets/images/games/GameSkyPage/zodiac-sky/gamesky_taurus.svg'
 //水瓶座
 import aquariusicon from '@/assets/images/games/GameSkyPage/zodiac-icon/gamesky_aquarius-icon.png'
-import aquariusimage from '@/assets/images/games/GameSkyPage/zodiac-cardPic/gmasky_aquarius.png'
+import aquariusimage from '@/assets/images/games/GameSkyPage/zodiac-cardPic/gmasky_card-pisces.png'
 import aquariusbg from '@/assets/images/games/GameSkyPage/zodiac-sky/gamesky_aquarius.svg'
 
 //雙魚座
 import piscesicon from '@/assets/images/games/GameSkyPage/zodiac-icon/gamesky_pisces-icon.png'
-import piscesimage from '@/assets/images/games/GameSkyPage/zodiac-cardPic/gmasky_card-pisces.png'
+import piscesimage from '@/assets/images/games/GameSkyPage/zodiac-cardPic/gmasky_aquarius.png'
 import piscesbg from '@/assets/images/games/GameSkyPage/zodiac-sky/gamesky_piscis.svg'
 
 
