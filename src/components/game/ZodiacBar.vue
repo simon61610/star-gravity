@@ -35,10 +35,10 @@ function showAllLines() {
 
 const zodiacInfo = ref([
   { 
-    id:"Capricorn",
-    eng: "Capricorn",
-    ch: "摩羯座",
-    imgurl: Capricorn,
+    id:'Aries',
+    eng: "Aries",
+    ch:"牡羊座" ,
+    imgurl: Aries,
   },
   { 
     id: "Aquarius",
@@ -55,10 +55,10 @@ const zodiacInfo = ref([
   },
 
   { 
-    id:'Aries',
-    eng: "Aries",
-    ch:"牡羊座" ,
-    imgurl: Aries,
+    id:"Capricorn",
+    eng: "Capricorn",
+    ch: "摩羯座",
+    imgurl: Capricorn,
   },
   { 
     id:'Taurus',
@@ -134,7 +134,7 @@ const zodiacInfo = ref([
       </div>
     <div class="zodiac">
       <ul class="zodiac__list" aria-label="十二星座清單" >
-        <li class="zodiac__item" :class="{ 'zodiac__item__on': selectedZodiac === zodiac.id }" v-for="zodiac in zodiacInfo" :key="zodiac.id"  @click="() => { console.log('emit id:', zodiac.id); selectedZodiac = zodiac.id; $emit('select-constellation', zodiac.id) }">
+        <li class="zodiac__item" :class="{ 'zodiac__item__on': selectedZodiac === zodiac.id }" v-for="zodiac in zodiacInfo" :key="zodiac.id "  @click="() => { console.log('emit id:', zodiac.id); selectedZodiac = zodiac.id; $emit('select-constellation', zodiac.id) }">
           <img class="zodiac__icon" :src="zodiac.imgurl" :alt="zodiac.eng">
           <div class="zodiac__text"><strong>{{ zodiac.eng }}</strong><span>{{ zodiac.ch }}</span></div>
         </li>

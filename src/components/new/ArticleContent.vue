@@ -7,7 +7,7 @@ import { tagAPI } from '@/api/tagAPI.js'
 import { useRoute } from 'vue-router'  // 取得目前路由資訊
 import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
-
+import '@vueup/vue-quill/dist/vue-quill.snow.css'
 // =======================
 // 路由資訊
 // =======================
@@ -47,6 +47,7 @@ const liked = ref(false)     // 是否已點讚
 // 初始化：從 資料庫 讀取點讚狀態
 // =======================
 onMounted(() => {
+  console.log("文章內容 HTML:", props.article.content)
   axios.post(
     import.meta.env.VITE_AJAX_URL + "news/like.php",
     {
@@ -161,7 +162,7 @@ watch(
             </div>
 
             <div
-              class="article-content-p cnContent cnContent--18px"
+              class="article-content-p cnContent cnContent--18px ql-editor "
               v-html="props.article.content">
             </div>
             <!-- <div class="article-content-p cnContent cnContent--18px" >
