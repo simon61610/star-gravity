@@ -18,7 +18,7 @@
     const UPDATE_API  = API_BASE + "update_profile.php"
 
     // localStorage：現在只使用 token 來判斷是否登入
-    // const LS_TOKEN = 'token'
+    const LS_TOKEN = 'token'
     // const loggedIn = computed(() => !!localStorage.getItem(LS_TOKEN))
 
     /* ---- 狀態 ---- */
