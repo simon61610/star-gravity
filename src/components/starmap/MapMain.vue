@@ -1,6 +1,6 @@
 <script setup>
 // ========== IMPORTS ==========
-import { ref, onMounted, computed, watch, defineProps, defineEmits } from 'vue'
+import { ref, onMounted, computed, watch, defineProps, defineEmits, onUnmounted } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import taiwanMap from '@/assets/images/map/starmap-taiwan.svg'
@@ -16,6 +16,7 @@ const region = ref('全台')
 const selectedScenes = ref([])
 const searchText = ref('')
 const placeholder = ref('')
+const isMobile = ref(window.innerWidth <= 430) 
 //避免打包後路徑錯誤
 const API_IMAGESURL = import.meta.env.VITE_AJAX_IMAGESURL
 
@@ -51,7 +52,10 @@ const filteredLocationList = computed(() => {
 
 // ========== 監視地點清單 ==========
 watch(filteredLocationList, (newFilteredList) => {
-    updateMapMarkers(newFilteredList)
+    // 地圖存在時更新標記
+    if (map && !isMobile.value) {
+        updateMapMarkers(newFilteredList)
+    }
     activeIndex.value = -1
 }, { deep: true })
 
@@ -60,12 +64,48 @@ watch(filteredLocationList, (newFilteredList) => {
 onMounted(() => {
     region.value = '全台'
     placeholder.value = ''
-    setMap()
+
+    if( !isMobile.value ){
+        setMap()
+    }
+
+    window.addEventListener('resize', handleResize)
 })
+
+onUnmounted(()=>{
+    window.removeEventListener('resize', handleResize)
+    if (map) {
+        map.remove()
+        map = null
+    }
+})
+
+// ========== 視窗大小變化 ==========
+function handleResize (){
+    const newIsMobile = window.innerWidth <= 430
+
+    // 從桌面版切換到手機版
+    if (!isMobile.value && newIsMobile) {
+        if (map) {
+            map.remove()
+            map = null
+            marklist = []
+        }
+    }
+    // 從手機版切換到桌面版
+    else if (isMobile.value && !newIsMobile) {
+        setMap()
+    }
+    
+    isMobile.value = newIsMobile
+}
 
 // ========== 地圖相關方法 ==========
 let map, marklist = []
 function setMap() {
+    //地圖生成前檢查
+    if (isMobile.value) return
+
     if (map) {
         map.remove()
     }
@@ -310,6 +350,7 @@ function handleSceneChange(scene, event) {
                 <!-- 地點列表 -->
                 <div class="locationList">
                     <ul>
+                        <li v-if="filteredLocationList.length === 0" class="no-result">很遺憾，此類型地點從缺，請改選其他偏好</li>
                         <li v-for="(location, index) in filteredLocationList " :key="index">
                             <div class="tag" @click="showMore(index)">
                                 <span>{{location.region}}</span>
