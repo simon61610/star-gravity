@@ -531,6 +531,10 @@ const goProduct = () => {
     border-color:$FontColor-white;
     color: $FontColor-white;
     padding: 10px 250px;
+    @media (max-width: 430px) {
+      padding: 10px 100px;
+   
+  }
   }
   &--ghost:hover {
     background: $FontColor-white;

@@ -220,9 +220,10 @@ const activeTab = ref('intro')
     display: none;
     left: 12px;
     right: 12px;
-    max-width: 350px;
+    max-width: 300px;
     width: 100%;
     top: 12px;
+    
   }
 }
 
