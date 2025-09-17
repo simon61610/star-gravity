@@ -4,7 +4,7 @@
 
 
 
-<script setup lang="ts">
+<script setup>
 import Order from '@/components/member/profile/Order.vue';
 
 </script>

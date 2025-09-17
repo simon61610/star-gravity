@@ -163,7 +163,7 @@
         <div class="second-area">
             <form @submit.prevent="handleRegister">
                 <div class="name">
-                    <input type="text" class="name-1" placeholder="請輸入姓名" v-model="name" required />
+                    <input type="text" class="name-1" placeholder="請輸入姓名/暱稱" v-model="name" required />
                 </div>
                 <div class="phone">
                     <input type="text" class="phone-1" placeholder="請輸入電話" v-model="phone" required />

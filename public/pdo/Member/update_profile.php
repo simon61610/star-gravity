@@ -1,6 +1,6 @@
 <?php
 
-header('Content-Type: application/json; charset=utf-8');
+// header('Content-Type: application/json; charset=utf-8');
 
 include '../pdo.php';
 
@@ -62,7 +62,7 @@ try {
     ':city' => $city,
     ':area' => $area,
     ':address' => $address,
-    ':id' => $uid
+    ':id' => $memberID
   ]);
 
   // 回傳 rowCount 幫你判斷是否真的有變更

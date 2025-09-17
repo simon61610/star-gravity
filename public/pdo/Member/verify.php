@@ -36,7 +36,7 @@ if ($token === '') {
         'valid' => false, 
         'reason' => 'no-token',
         'message' => '缺少 token'
-    ] JSON_UNESCAPED_UNICODE);
+    ], JSON_UNESCAPED_UNICODE);
     exit;
 };
 
