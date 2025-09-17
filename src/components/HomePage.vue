@@ -511,7 +511,7 @@ onUnmounted(()=>{
 @import '@/assets/styles/main.scss';
 .wrapper{
     overflow: hidden;
-    // overflow: visible;
+    background-color: $bgColor-shop;
 }
 .special-effects{
     min-height: 400vh; 

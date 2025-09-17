@@ -2,13 +2,14 @@
 import { ref, defineEmits ,defineProps, onMounted, onUnmounted, computed} from 'vue'
 import { useMemberStore } from '@/stores/member'
 
+
 import { showToast } from '@/composables/useToast';
 
 // 引用useMemberStore
 const memberStore = useMemberStore()
 
 //向父組件發送事件
-const emit = defineEmits()
+const emit = defineEmits(['closeModel', 'backToDetail','writeReview' , 'show' ])
 
 function closeModel(){
     emit('closeModel')
@@ -23,10 +24,9 @@ function writeReview(){
         // console.log(memberStore.user)
         emit('writeReview')
     }else{
-        // console.log("未登入")
+        console.log("未登入")
         showToast('請先登入!')
         // console.log(memberStore.user.name)
-
     }
 
 
@@ -39,6 +39,7 @@ const props = defineProps(["selectedLocation","selectedLocationId", 'locationRev
 //定義響應式變數
 const showSelect = ref(false)
 const sortType = ref('newest')
+
 
 // 定義 API URL
 const API_URL = import.meta.env.VITE_AJAX_URL
@@ -102,6 +103,7 @@ onUnmounted( ()=>{
 </script>
 
 <template>
+    
     <!-- 內容彈窗 -->
     <div class="map-reviewBox">
          <!-- 叉叉按鈕 -->

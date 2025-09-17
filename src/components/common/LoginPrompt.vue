@@ -45,6 +45,8 @@
         justify-content: center;
         align-items: center;
 
+        z-index: 5000;
+
         .box {
             padding: 24px;
             background-color: $primaryColor-900;
