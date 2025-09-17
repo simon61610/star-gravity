@@ -55,33 +55,10 @@ const handleEdit = (index, row) => { //偵測編輯按鈕編輯哪個資料
   <div class="admin-table-wrapper">
       <section class="admin-table-box" >
 
-                  <!-- <div class="admin-table-header">
-                    <div class="admin-table-title">
-                        <h1>會員管理</h1>
-                    </div>
-
-                    <div class="admin-table-input">
-                        <el-input v-model="search" size="small"  placeholder="以ID搜索" >
-                          <template #prefix>
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                          </template>
-                        </el-input>
-                        <button>搜尋</button>
-                    </div>
-                  </div>
-                  <hr> -->
-
                 <el-table :data="showTable">
                     <el-table-column v-for = "col in columns" :key="col.prop" :label="col.label" :align="col.align|| 'right' "
                     :prop="col.prop">
- 
-                    <!-- <el-table-column label="會員帳號" prop="member_account" /> -->
-                    <!-- <el-table-column label="會員姓名" prop="member_name" /> -->
-                    <!-- <el-table-column label="帳號狀態" prop="account_status" /> -->
-                    <!-- <el-table-column label="創建日期" prop="created_at" /> -->
-                    <!-- <el-table-column label="編輯" align="right">  -->
-
-                      
+       
                             <template #default="scope"> <!---把這一列(row)的資料，交給我一個變數，變數叫 scope-->
                                <!-- 如果有 slot，優先交給父層自訂的slot 顯示 -->
                               <slot v-if='col.slot'  

@@ -42,6 +42,18 @@ function drawNext() {
   if (currentStep.value === props.lines.length) isAnimating.value = false
 }
 
+async function drawAllLinesStepByStep() {
+  isAnimating.value = true //開始線條動畫
+
+  while (currentStep.value < props.lines.length) {   //如果線條還沒跑完 
+    currentStep.value++   //持續跑
+    await new Promise(resolve => setTimeout(resolve, 500)) // 每 200ms 畫一條
+  }
+
+  isAnimating.value = false //跑完停止
+}
+
+
 
 //重製線段
 const resetLines = () => {
@@ -55,7 +67,8 @@ const resetLines = () => {
 defineExpose({
   drawNext,
   resetLines,
-  showAllLines
+  showAllLines,
+  drawAllLinesStepByStep
 })
 
 // 假設 star 是 {x:數字, y:數字} 直線距離公式...
@@ -77,9 +90,6 @@ watch(
 
     isAnimating.value = false //星點資訊變化了關閉樣式
     currentStep.value = 0 
-  
-    
-  
   
   }, //星點資訊變化了就清0
    { deep: true } // 監聽物件內部變化
@@ -210,95 +220,4 @@ watch(
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//修改前
-// .Stars-Canvs-line { transition: none; }                 /*  切星座時不會有重製動畫 */
-// .Stars-Canvs-line.animate { transition: stroke-dashoffset 0.55s linear; } /* 播放才有動畫 */
-
-// .Stars-Canvs-box{
-    
-//     width: 100% !important;    
-//     display: flex !important;
-//     flex-direction: column;
-//     justify-content: center;
-//     align-items: center;
-//     .Stars-Canvs-alret{
-      
-//       width: 100%;
-//       text-align: center;
-//       animation: alreat  6s   ease-in-out 1 forwards;
-//       h1{
-//         font-size: 24px;
-//         margin-left: 250px;
-//         margin-bottom: 50px;
-//         color: aliceblue;
-//         font-weight: bolder;
-//       }
-//     }
-
-//     @keyframes alreat {
-//       0%{ opacity: 1; }
-
-//       40%{ opacity: 0.8;}
-
-//       70%{ opacity: 0.5;}
-
-//       90%{opacity: 0.2}
-
-//       100%{opacity: 0;}
-      
-//     }
-    
-//   .Stars-Canvs-wapper{
-   
-//     max-width: 500px;
-//     margin-left: 300px;
-//     width: 100% !important;
-//     opacity: 1;
-//     transition: opacity 1s ease-in-out;
-  
-//     &.show{
-//       opacity: 1;
-//     }
-//     @media (max-width: 716px){
-//       margin-bottom: 20px;
-//       margin-left: 0px;
-      
-//     }
-
-//   }
-
-// // .Stars-Canvs-line{ 
-// //     transition: stroke-dashoffset 0.5s ease
-
-// // }
-// @media (max-width: 431px){
-//   .Stars-Canvs-box{
-    
-//     .Stars-Canvs-alret{
-//       display:none;
-//     }
-//     .Stars-Canvs-wapper{
-    
-//     margin-left: 0px;
-//   }
-
-//   }
-  
-// }
-// }
 </style>

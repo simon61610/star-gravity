@@ -11,15 +11,18 @@
     import { useRoute } from 'vue-router';
     import { useRouter } from 'vue-router';
     import { useMemberStore } from '@/stores/member';
+    import { useLoginPromptStore } from '@/stores/loginPrompt';
     // import eventlist from '@/data/eventlist';
     import axios from 'axios';
     import shopToast from '@/components/common/shopToast.vue';
     import { showToast } from '@/composables/useToast';
+    import LoginPrompt from '@/components/common/LoginPrompt.vue';
 
     // 路由
     const route = useRoute()
     const router = useRouter()
     const memberStore = useMemberStore()
+    const loginPrompt = useLoginPromptStore()
     
     
     
@@ -91,7 +94,8 @@
     const goToRegistration = () => {
         
         if(!memberStore.isAuthed){
-            alert('請先登入會員')
+            // alert('請先登入會員')
+            loginPrompt.open(`/events/${eventData.value.ID}`)
             return
         }
 
@@ -109,6 +113,7 @@
 
 <template>
     <shopToast />
+    <LoginPrompt />
 
     <section class="event-detail" v-if="eventData">
 

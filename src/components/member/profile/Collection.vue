@@ -115,6 +115,7 @@
                 }
             })
             console.log(resp.data);
+
             // 資料更新後回到第 1 頁（可選）
             collectionPage.value = 1
             
@@ -196,8 +197,7 @@
 
 // 右邊開始
 .products{
-    padding: 12px;
-    width: 700px;
+    width: 800px;
     height: auto;            /* 內容多就自然撐開 */
     min-height: 500px;       /* 保留原本大致視覺高度 */
     overflow-y: visible;     /* 明確指定不要在這層裁切/滾動 */
@@ -205,7 +205,7 @@
 }
 .flex {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); /* 自動塞滿 */
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); /* 自動塞滿 */
     gap: 16px 16px;
 }
 .card{
@@ -213,9 +213,8 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: 12px;
+    padding: 5px;
     border-radius: 12px;
-    // background: rgba(255,255,255,0.04);   /* 淺半透明卡片，深色底才看得出層次 */
     box-shadow: 0 2px 10px rgba(0,0,0,.15);
 }
 /* 圖片 */
@@ -230,7 +229,6 @@
     padding: 8px; 
     overflow: hidden;
     border-radius: 8px;
-    // background: rgba(255,255,255,0.06);
 }
 .thumb img{
     width: 100%;

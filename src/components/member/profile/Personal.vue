@@ -1,14 +1,6 @@
 <script setup>
-    // import { ref, onMounted, reactive, computed, watch } from 'vue'
     import { ref, onMounted, reactive, computed } from 'vue'
-
-    import { UserFilled } from '@element-plus/icons-vue'
     import axios from 'axios'
-    // import { isLoggedIn } from '@/composables/useAuth'
-
-    // 後端 API
-    // const PROFILE_API = 'http://localhost/PDO/Member/profile.php'
-    // const UPDATE_API  = 'http://localhost/PDO/Member/update_profile.php'
 
     // API 根路徑 (來自 .env)
     const API_BASE = import.meta.env.VITE_AJAX_URL + "Member/"
@@ -43,9 +35,6 @@
         
     // 縣市區域選單
     const cities = ref([])
-    // const areaOptions = ref([])
-    // 初始化載入期間避免 watch 把已載入的 area 清空
-    // const prefilling = ref(true)
 
     // 由 city 動態推導鄉鎮清單（不再用 ref 手動塞）
     const areaOptions = computed(() => {
@@ -67,6 +56,7 @@
         //     window.location.href = "/loginfirst"   // 登出後跳轉到登入頁
         //     return
         // }
+
         // 載入城市/區域 JSON
         try {
             const res = await axios.get(import.meta.env.VITE_PUBLIC_URL + 'JSON_CSV_XML/CityCountyData.json') 
@@ -91,32 +81,7 @@
                 member.phone = u.phone || ''
                 member.city = u.city || ''
                 member.address = u.address || ''
-                // 如果預設就有 city，幫它把區域列表也帶好
-                /* if(member.city) {
-                    const city = cities.value.find(c => c.CityName === member.city)
-                    areaOptions.value = city ? city.AreaList : []
-                    } else {
-                        throw new Error('未授權或資料格式不正確')
-                } */
-            //    if (member.city && cities.value.length) {
-            //        const city = cities.value.find(c => c.CityName === member.city)
-            //        areaOptions.value = city ? city.AreaList : []
-            //     }
                 
-                // if(u.area){
-                //     member.area = u.area
-                // }
-
-                // member.area = u.area || ''
-                // console.log(data.user);
-                
-                
-                // console.log(u)
-                // console.log(member.area)
-                // console.log(areaOptions.value)
-
-                // 完成首輪帶入，不再視為初始化
-                // prefilling.value = false
 
                 // 帶入的 area 需是當前 city 的有效選項；不是就保持空
                 if (u.area) {
@@ -157,7 +122,6 @@
         saving.value = true
         try {
             const { data } = await axios.post(UPDATE_API, {
-                // email: member.email,
                 name: member.name.trim(),
                 phone: member.phone.trim(),
                 city: member.city,
@@ -230,18 +194,16 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    margin-top: 20px;
-}
-.row{
-    width: 710px;
 }
 .rowline{
-    width: 700px;
+    width: 100%;
     height: 50px;
+    box-sizing: border-box;
 }
 // 縣市區域大小
 .personal-city{
     display: flex;
+    width: 100%;
     gap: 24px;
 }
 .select-city{
@@ -255,7 +217,6 @@
 }
 // 儲存按鈕
 .actions{
-    width: 700px;
     display: flex;
     justify-content: flex-end;
 }
@@ -324,17 +285,7 @@
         font-size: 12px;
     }
 
-
-
-
-
 }
-
-
-
-
-
-
 
 
 

@@ -137,10 +137,10 @@
     <!----分頁-------->
     <div class="pager">
         <Pagination
-        :modelValue="currentPage"
-        @update:modelValue="pagechange"
-        :page-size="pageSize"
-        :total="filteredTotal"
+            :modelValue="currentPage"
+            @update:modelValue="pagechange"
+            :page-size="pageSize"
+            :total="filteredTotal"
         />
     </div>
 
@@ -158,17 +158,13 @@
     color: #c0392b; 
 }
 .comment-area{
-    margin-top: -20px;
-    padding-left: 5px;
     padding-top: 10px;
     padding-right: 5px;
     color: $FontColor-black;
     background-color: white;
     width: 850px;
-    // height: 540px; 
 }
 .comment-box{
-    // border: 1px solid black;
     margin: 0 auto;
 }
 .comment-box h5{
@@ -179,7 +175,6 @@
 }
 .comment-1{
     padding: 24px;
-
 }
 .review-score{
     padding-top: 10px;
@@ -195,7 +190,6 @@
 }
 .review-photo{
     padding-top: 10px;
-    // width: 150px;
     height: 150px;
 }
 // 刪除建
@@ -280,23 +274,7 @@
         justify-content: center;
     }
 
-
-
-
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
 
 </style>
 

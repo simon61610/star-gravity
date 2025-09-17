@@ -1,7 +1,6 @@
 <script setup>
     import { useRoute, useRouter } from 'vue-router'
     import { onMounted } from 'vue'
-    // import { UserFilled, SwitchButton } from '@element-plus/icons-vue'
     import axios from 'axios' 
     import { useMemberStore } from '@/stores/member'
     import { ref } from 'vue'
@@ -19,12 +18,14 @@
 
     // 後端根路徑（用 Vite 環境變數更彈性）
     const API_BASE = import.meta.env.VITE_AJAX_URL || '/'
+    const API_BASE2 = import.meta.env.VITE_AJAX_URL_NOEND || '/'
+
 
     // 改成用 URL 物件，正確處理有無領先斜線與子路徑（例如 http://localhost/PDO/）
     function url(path) {
         if (/^https?:\/\//i.test(path)) return path        // 已是絕對網址就直接用
         try {
-            return new URL(path, API_BASE).href            // 相對或以 / 開頭都 OK
+            return new URL(path, API_BASE2).href            // 相對或以 / 開頭都 OK
         } catch {
             // 後備：最少也把雙斜線問題處理掉
             const base = API_BASE.endsWith('/') ? API_BASE : API_BASE + '/'
@@ -126,12 +127,10 @@
             <aside class="sidebar">
                 <!-- 頭像，點整個圈圈就能選圖 -->
                 <label class="avatar-uploader">
-                    <!-- <input class="file" type="file" accept="image/*" @change="onPick" /> -->
                     <input class="file" type="file" accept="image/png,image/jpeg,image/webp" @change="onPick" />
                     <!-- ↑ 與後端白名單一致，避免使用者選到 HEIC、BMP 等非支援格式 -->
                     <img v-if="preview" :src="preview" alt="avatar" />
                     <div v-else class="placeholder">+</div>
-                    <!-- <span class="edit-tag">更換頭像</span> -->
                 </label>
                 <!-- 打開「儲存」按鈕，送出 FormData -->
                 <div class="buttons" style="margin-top:8px; text-align:center">
@@ -140,23 +139,23 @@
                 <!-- 帳號 -->
                 <!-- <p class="username">{{ username }}</p> -->
     
-                <!-- 清單 -->
+                <!-- 選單 -->
                 <ul class="menu">
-                <li>
-                    <router-link class="menu-link" to='/membercenter/personal'>個人資料管理</router-link>
-                </li>
-                <li>
-                    <router-link class="menu-link" to='/membercenter/order'>我的訂單</router-link>
-                </li>
-                <li>
-                    <router-link class="menu-link" to='/membercenter/eventlist'>報名活動列表</router-link>
-                </li>
-                <li>
-                    <router-link class="menu-link" to='/membercenter/collection'>我的收藏</router-link>
-                </li>
-                <li>
-                    <router-link class="menu-link" to='/membercenter/comment'>我的評論</router-link>
-                </li>
+                    <li>
+                        <router-link class="menu-link" to='/membercenter/personal'>個人資料管理</router-link>
+                    </li>
+                    <li>
+                        <router-link class="menu-link" to='/membercenter/order'>我的訂單</router-link>
+                    </li>
+                    <li>
+                        <router-link class="menu-link" to='/membercenter/eventlist'>報名活動列表</router-link>
+                    </li>
+                    <li>
+                        <router-link class="menu-link" to='/membercenter/collection'>我的收藏</router-link>
+                    </li>
+                    <li>
+                        <router-link class="menu-link" to='/membercenter/comment'>我的評論</router-link>
+                    </li>
                 </ul>
 
             </aside>
@@ -189,17 +188,22 @@
     background-size: cover;
 }
 .leftright{
-    justify-content: center;
-    align-items: center;
+    max-width: 1200px;
+    justify-content: flex-start;
+    align-items: flex-start;
     display: flex;
     gap: 50px;
     margin: 0 auto;
     padding-top: 50px;
 }
 .sidebar{
-    width: 150px;
-    padding-top: 50px;
+    margin-left: 30px;
+    padding-top: 25px;
     color: $secondaryColor-yellow;
+}
+.content {
+    flex-grow: 1;
+    padding-top: 0;
 }
 // 圓形頭像框
 .avatar-uploader{
@@ -214,7 +218,6 @@
     cursor: pointer;
     background: $bgColor-white;
     margin-left: 23px;
-    // background-image: none !important;
 }
 .avatar-uploader img{
     width: 100%; 
@@ -233,19 +236,6 @@
     font-size: $pcChFont-H1;
     color: $inputColor-focus;
 }
-// 登出
-.logout-btn {
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    font-size: 32px; 
-    padding-left: 58px;
-    padding-top: 14px;
-    color: $primaryColor-500;
-    &:hover {
-        color: $secondaryColor-orange;
-    }
-}
 // 顯示小姐/先生文字
 .username{
     font-size: $pcChFont-H4;
@@ -255,7 +245,6 @@
 // 選單
 .menu{
     padding: 10px 10px;
-    width: 150px;
 }
 // 預設/已瀏覽顏色
 .menu .menu-link,
@@ -303,9 +292,6 @@
         height: 96px;
         margin: 0 auto;
     }
-    // .buttons{ 
-    //     margin-top: 8px;
-    // }
     .logout-btn{
         padding-right: 57px;
     }
@@ -346,9 +332,6 @@
         text-decoration: underline;
         background: transparent;
     }
-
-
-
 
 }
 
