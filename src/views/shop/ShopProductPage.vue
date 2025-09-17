@@ -15,6 +15,7 @@
     import ProdIntro from '@/components/shop/product/ProdIntro.vue';
     import shopToast from '@/components/common/shopToast.vue';
     import { showToast } from '@/composables/useToast';
+    import LoginPrompt from '@/components/common/LoginPrompt.vue';
     
     /* ========== 套件 ========== */
     import bus from '@/composables/useMitt';
@@ -32,6 +33,7 @@
     /* ========== 共用 ========== */
     const route = useRoute()
     const memberStore = useMemberStore()
+    const showLoginPrompt = ref(false)
 
     // 商品資料
     const product = ref(null)
@@ -110,7 +112,8 @@
     const isFollow = ref(false)
     const followProduct = async () => {
         if(!memberStore.isAuthed){
-            alert('請先登入會員')
+            showLoginPrompt.value = true
+            // alert('請先登入會員')
             return
         }
 
@@ -172,6 +175,7 @@
 
 <template>
     <shopToast />
+    <LoginPrompt v-if="showLoginPrompt" @close="showLoginPrompt = false"/>
 
     <section class="product-page">
         <ShopBanner />
