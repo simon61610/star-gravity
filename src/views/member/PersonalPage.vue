@@ -18,20 +18,40 @@
 
     // 後端根路徑（用 Vite 環境變數更彈性）
     const API_BASE = import.meta.env.VITE_AJAX_URL || '/'
-    const API_BASE2 = import.meta.env.VITE_AJAX_URL_NOEND || '/'
+    const API_BASE2 = import.meta.env.VITE_AJAX_URL_NOEND || 'http://localhost/PDO/'
 
+    // 強制確保 base 最後有斜線
+    const BACKEND_BASE = API_BASE2.endsWith('/') ? API_BASE2 : API_BASE2 + '/'
+
+    function url(path) {
+        if (/^https?:\/\//i.test(path)) return path
+        // 關鍵：把領先斜線拿掉，才會接在 /PDO/ 後面，而不是覆蓋成 /pdo/ 根目錄
+        const clean = path.startsWith('/') ? path.slice(1) : path
+        return new URL(clean, BACKEND_BASE).href
+    }
+
+    // 專給 <img> 用的 URL 轉換：
+    // - 若已是 http(s) 絕對網址：原樣回傳
+    // - 若以 / 開頭：接在 BACKEND_ORIGIN 後面（避免變成 5173 的相對路徑）
+    // - 其他相對路徑：以 API_BASE 為基底補齊
+    function imgUrl(path) {
+        if (!path) return ''
+        if (/^https?:\/\//i.test(path)) return path
+        if (path.startsWith('/')) return BACKEND_ORIGIN + path
+        return new URL(path, API_BASE).href
+    }
 
     // 改成用 URL 物件，正確處理有無領先斜線與子路徑（例如 http://localhost/PDO/）
-    function url(path) {
-        if (/^https?:\/\//i.test(path)) return path        // 已是絕對網址就直接用
-        try {
-            return new URL(path, API_BASE2).href            // 相對或以 / 開頭都 OK
-        } catch {
-            // 後備：最少也把雙斜線問題處理掉
-            const base = API_BASE.endsWith('/') ? API_BASE : API_BASE + '/'
-            return base + (path.startsWith('/') ? path.slice(1) : path)
-        }
-    }
+    // function url(path) {
+    //     if (/^https?:\/\//i.test(path)) return path        // 已是絕對網址就直接用
+    //     try {
+    //         return new URL(path, API_BASE2).href            // 相對或以 / 開頭都 OK
+    //     } catch {
+    //         // 後備：最少也把雙斜線問題處理掉
+    //         const base = API_BASE2.endsWith('/') ? API_BASE2 : API_BASE2 + '/'
+    //         return base + (path.startsWith('/') ? path.slice(1) : path)
+    //     }
+    // }
 
     // 選圖後：驗證型別/大小 → 做本地預覽
     function onPick(e) {
@@ -58,32 +78,56 @@
         // fd.append("memberID", memberID.value)
         fd.append('avatar', file.value)  // 後端用 $_FILES['avatar'] 接
 
-        // const res = await axios.post("", 資料)
-        // res = { data: 接收到的資料, .... }
-        // res.data 
-
         try {
             const { data } = await axios.post(
-                url('Member/update_profile_img.php'),
+                import.meta.env.VITE_AJAX_URL + 'Member/update_profile_img.php',
                 fd,
-                { withCredentials: true } 
+                { withCredentials: true }
             )
 
-            // console.log(data)
+            if (!data?.success || !data?.data) {
+                throw new Error(data?.message || '上傳失敗')
+            }
 
-            // 用後端回的路徑直接當圖源，並加版本避免快取到舊圖
-            if (!data?.success || !data?.data) throw new Error(data?.message || '上傳失敗')
-            // 後端回傳格式（建議）為：{ success, data:{ avatarUrl, cacheBustParam } }
+            // 後端回傳的 avatarUrl = 照片路徑 (例如 "/pdo/Member/uploadImages/xxx.jpg")
             const avatarUrl = data.data.avatarUrl
             const v = data.data.cacheBustParam ?? Date.now()
-            preview.value = url(avatarUrl) + '?v=' + v // 重要：相對路徑補成完整網址
 
-            // （可選）清空檔案 input 狀態
-            // file.value = null
+            // 這裡就直接用 avatarUrl，不要再補 VITE_AJAX_URL
+            preview.value = imgUrl(avatarUrl) + '?v=' + v
+
+            file.value = null
             alert('頭像已更新')
         } catch (err) {
             alert(err.message || '發生錯誤，請稍後再試')
         }
+
+        // const res = await axios.post("", 資料)
+        // res = { data: 接收到的資料, .... }
+        // res.data 
+
+        // try {
+        //     const { data } = await axios.post(
+        //         url('Member/update_profile_img.php'),
+        //         fd,
+        //         { withCredentials: true } 
+        //     )
+
+        //     // console.log(data)
+
+        //     // 用後端回的路徑直接當圖源，並加版本避免快取到舊圖
+        //     if (!data?.success || !data?.data) throw new Error(data?.message || '上傳失敗')
+        //     // 後端回傳格式（建議）為：{ success, data:{ avatarUrl, cacheBustParam } }
+        //     const avatarUrl = data.data.avatarUrl
+        //     const v = data.data.cacheBustParam ?? Date.now()
+        //     preview.value = url(avatarUrl) + '?v=' + v // 重要：相對路徑補成完整網址
+
+        //     // 儲存完成後清空暫存檔，讓「儲存」按鈕再次隱藏
+        //     file.value = null
+        //     alert('頭像已更新')
+        // } catch (err) {
+        //     alert(err.message || '發生錯誤，請稍後再試')
+        // }
     }
     // 進頁面時拉會員資料（需後端 profile.php 回傳 image 與 name）
     async function fetchProfile() {
@@ -91,19 +135,48 @@
         // 以下先暫時用前台抓會員ID
         memberID.value = memberStore.user?.ID
         console.log(memberID.value);
-        
-        try{
+
+        try {
             const { data } = await axios.get(
-                url('Member/profile.php'), 
+                import.meta.env.VITE_AJAX_URL + 'Member/profile.php',
                 { withCredentials: true }
             )
+
             // 假設後端回：{ success:true, user:{ name:'..', image:'/pdo/Member/uploadImages/xxx.jpg' } }
             if (data?.success) {
                 if (data.user?.name)  username.value = data.user.name
-                if (data.user?.image) preview.value  = url(data.user.image) + '?v=' + Date.now()
-                // ↑ 關鍵：若後端回 image 為相對路徑（uploads/...），用 url() 補成完整網址，避免跨網域取不到
             }
-        } catch(e) {}
+
+            if (data.user?.image) {
+                // 照片：用後端原始路徑，不再經過 url() 或再拼 VITE_AJAX_URL
+                preview.value = imgUrl(data.user.image) + '?v=' + Date.now()
+            } else {
+               preview.value = '' 
+            }
+            console.log(preview.value);
+        } catch (e) {}
+        
+        // try{
+        //     const { data } = await axios.get(
+        //         url('Member/profile.php'), 
+        //         { withCredentials: true }
+        //     )
+        //     // 假設後端回：{ success:true, user:{ name:'..', image:'/pdo/Member/uploadImages/xxx.jpg' } }
+        //     if (data?.success) {
+        //         if (data.user?.name)  username.value = data.user.name
+        //         // if (data.user?.image) preview.value  = url(data.user.image) + '?v=' + Date.now()
+        //         if (data.user?.image) {
+        //             // 有頭貼時顯示頭貼；按鈕仍隱藏（因為 file 為 null）
+        //             preview.value = url(data.user.image) + '?v=' + Date.now()
+        //         } else {
+        //             // 沒頭貼就保持預設圖或空白；按鈕隱藏
+        //             preview.value = ''
+        //         }
+        //         // ↑ 關鍵：若後端回 image 為相對路徑（uploads/...），用 url() 補成完整網址，避免跨網域取不到
+        //     }
+        // } catch(e) {}
+        
+        
     }
 
     //判斷是否已經登入
@@ -133,9 +206,15 @@
                     <div v-else class="placeholder">+</div>
                 </label>
                 <!-- 打開「儲存」按鈕，送出 FormData -->
-                <div class="buttons" style="margin-top:8px; text-align:center">
+                <!-- <div class="buttons" style="margin-top:8px; text-align:center">
                     <button @click="save" :disabled="!file">儲存</button>
-                </div>
+                </div> -->
+                <!-- 只有選到檔案才顯示，並加進場動畫 -->
+                <transition name="float">
+                    <div v-if="!!file" class="buttons" style="margin-top:8px; text-align:center">
+                        <button @click="save">儲存</button>
+                    </div>
+                </transition>
                 <!-- 帳號 -->
                 <!-- <p class="username">{{ username }}</p> -->
     
@@ -235,6 +314,13 @@
     font-weight: 600;
     font-size: $pcChFont-H1;
     color: $inputColor-focus;
+}
+.float-enter-active, .float-leave-active {
+    transition: all .25s ease;
+}
+.float-enter-from, .float-leave-to {
+    opacity: 0; 
+    transform: translateY(6px) scale(0.98); 
 }
 // 顯示小姐/先生文字
 .username{
