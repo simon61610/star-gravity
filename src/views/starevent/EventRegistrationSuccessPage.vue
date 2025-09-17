@@ -30,9 +30,9 @@
             </div>
             <h1 class="order-number">報名編號：{{ registration_number }}</h1>
             <h3 class="member-center">查詢已報名活動，請至
-                <!-- <router-link :to="{ name: 'membercenter', path: '/membercenter/eventlist' }" class="router-link"> -->
+                <router-link to="/membercenter/eventlist" class="router-link">
                     <span>會員中心</span>
-                <!-- </router-link> -->
+                </router-link>
             </h3>
         </section>
 
