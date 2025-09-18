@@ -87,10 +87,11 @@
     bottom: -6px; 
 }
 .cards{
-    margin-top: 20px;
-    margin-left: 100px;
+    width: 100%;
+    margin-top: 30px;
+    margin-left: 80px;
     display: flex;
-    gap: 5px;
+    gap: 15px;
 }
 .cardall{
     position: relative;               
