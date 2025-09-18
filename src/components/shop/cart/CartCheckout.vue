@@ -73,10 +73,15 @@
 
                 if(res.data.success){
                     item.stock = res.data.stock
-                    if(item.stock <= 0){
+                    item.is_active = res.data.is_active
+
+                    if(item.is_active == 0){
+                        item.stockWarning = true
+                    } else if(item.stock <= 0){
                         item.stockWarning = true
                     }
                 }else{
+                    item.is_active = null
                     item.stock = null // template 中會顯示: 查詢中
                 }
             }catch (err) {
@@ -200,6 +205,12 @@
             showToast('購物車尚無商品，請前往星空小舖選購')
             return
         }
+        // 判斷是否有下架商品
+        const discontinuedItem = cartItems.value.find(item => item.is_active == 0)
+        if(discontinuedItem){
+            showToast('購物車中有已下架商品，無法結帳')
+            return
+        }
         // 判斷是否有缺貨商品
         if(hasOutOfStock.value){
             showToast('購物車中有缺貨商品，無法結帳')
@@ -253,8 +264,9 @@
                                     min="1" 
                                     @input="changeItemCount(item, index)"
                                 >
-                                <p class="stock" v-if="!item.stockWarning">尚有庫存 {{ item.stock ?? '查詢中' }} 件</p>
-                                <p v-if="item.stockWarning" class="stock-warning">缺貨中</p>
+                                <p class="stock" v-if="item.is_active == 1 && !item.stockWarning">尚有庫存 {{ item.stock ?? '查詢中' }} 件</p>
+                                <p v-if="item.is_active == 0" class="stock-warning">已下架</p>
+                                <p v-if="item.is_active != 0 && item.stockWarning" class="stock-warning">缺貨中</p>
                                 <!-- @blur="checkQty(index)" 移除Blur事件驗證 -->
                             </div>
                             <p class="price-subtotal">
