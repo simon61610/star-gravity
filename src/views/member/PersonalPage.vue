@@ -18,7 +18,7 @@
 
     // 後端根路徑（用 Vite 環境變數更彈性）
     const API_BASE = import.meta.env.VITE_AJAX_URL || '/'
-    const API_BASE2 = import.meta.env.VITE_AJAX_URL_NOEND || 'http://localhost/PDO/'
+    const API_BASE2 = import.meta.env.VITE_AJAX_URL_NOEND || 'http://localhost/pdo/'
 
     // 強制確保 base 最後有斜線
     const BACKEND_BASE = API_BASE2.endsWith('/') ? API_BASE2 : API_BASE2 + '/'
@@ -34,11 +34,21 @@
     // - 若已是 http(s) 絕對網址：原樣回傳
     // - 若以 / 開頭：接在 BACKEND_ORIGIN 後面（避免變成 5173 的相對路徑）
     // - 其他相對路徑：以 API_BASE 為基底補齊
-    function imgUrl(path) {
+    /* function imgUrl(path) {
         if (!path) return ''
         if (/^https?:\/\//i.test(path)) return path
-        if (path.startsWith('/')) return BACKEND_ORIGIN + path
-        return new URL(path, API_BASE).href
+        // if (path.startsWith('/')) return BACKEND_ORIGIN + path
+        // return new URL(path, API_BASE).href
+
+        const clean = path.startsWith('/') ? path.slice(1) : path
+        return new URL(clean, BACKEND_BASE).href
+    } */
+
+    // 組完整圖片 URL：直接用 VITE_AJAX_URL  資料庫存的相對路徑
+    function imgUrl(path) {
+        if (!path) return ''
+        if (/^https?:\/\//i.test(path)) return path // 已是完整網址
+        return import.meta.env.VITE_AJAX_URL + path
     }
 
     // 改成用 URL 物件，正確處理有無領先斜線與子路徑（例如 http://localhost/PDO/）
