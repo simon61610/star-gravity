@@ -178,6 +178,9 @@
     /* ========== 刪除商品 ========== */
     const deleteItem = (index) => {
         const item = cartItems.value[index] // 要被刪除的該物件
+
+        const confirmed = window.confirm(`確定要刪除「${item.name}」嗎？`)
+        if(!confirmed) return
         
         // 1. 移除 storage 中的該項 & addItemList 的id
         storage.removeItem(item.ID)
