@@ -136,7 +136,6 @@
     width: 100%;
     box-sizing: border-box;
     background-color: $bgColor-shop;
-    // height: 2000px;
 }
 .container{
     max-width: 1200px;
@@ -167,12 +166,12 @@
 /* 上下兩條線（顏色與距離自己調） */
 .section h2::before,
 .section h2::after{
-  content: "";
-  position: absolute;
-  left: 0; 
-  right: 0;       // 線寬 = 文字寬 + padding
-  height: 2px;
-  background: rgba(255,255,255,.25);
+    content: "";
+    position: absolute;
+    left: 0; 
+    right: 0;       // 線寬 = 文字寬 + padding
+    height: 2px;
+    background: rgba(255,255,255,.25);
 }
 .section h2::before{ 
     top: -6px;     // 線距離文字頂部 6px
@@ -350,6 +349,150 @@
     line-height: $linHeight-p;
 }
 
+//-------------------------斷點開始----------------------------------------------
+/* 斷點901 */
+@media screen and (max-width:901px) {
+
+    .cards {
+        width: 100%;
+        grid-template-columns: repeat(3, 1fr);
+        justify-items: center;
+        margin-left: 5px;
+    }
+    .card {
+        width: 75%;
+    }
+    .container-two {
+        flex-direction: row;  
+        margin: 0 auto;
+        align-items: center;
+        width: 100%;
+    }
+    .container-two img {
+        width: 180px;
+        height: 180px;
+        margin-left: 60px;
+    }
+    .lookmoonall {
+        padding: 0 10px;
+    }
+    .container-third {
+        flex-direction: row;   
+        align-items: center;
+        width: 84%;
+    }
+    .spaceall {
+        width: 100%;
+        padding: 0 10px;
+    }
+    .starsapce img {
+        width: 250px;
+        height: 250px;
+    }
+    .container-four {
+        flex-direction: row;  
+        align-items: center;
+        width: 88%;
+    }
+    .season img {
+        width: 100%;
+        height: auto;
+        margin-left: 15px;
+    }
+    .seasonall {
+        padding: 0 10px;
+    }
+}
+
+/* 斷點651 */
+@media screen and (max-width:652px) {
+
+    .cards {
+        grid-template-columns: 1fr;     // 單欄直排
+        justify-items: stretch;         // 拉滿整欄
+        padding: 0;                     // 取消內邊距，直排更貼齊
+        gap: 20px;
+    }
+    .card {
+        width: 35%;                     
+        padding: 16px;                  // 留內距避免文字貼邊
+        margin: 0 auto;                 // 置中保險
+    }
+    .card-top, .card-right {
+        width: 100%;
+        margin: 0;                       // 直排時完全置中
+    }
+    .card-top img {
+        display: block;
+        margin: 0 auto;                 // 圖示水平置中
+    }
+    .card-right img {
+        display: block;
+        margin: 0 25px;
+    }
+    .list {
+        width: 100%;
+        margin: 12px auto 0;                 // 上間距 + 自動置中
+    }
+    .list li { 
+        text-align: center; 
+    }
+    .container-two {
+        flex-direction: column;   // 圖片 + 文字上下堆疊
+        align-items: center;
+        gap: 10px;
+        width: 65%;
+    }
+    .container-two img {
+        width: 180px;
+        height: auto;
+    }
+    .lookmoonall {
+        padding: 0 10px;
+        text-align: center;
+    }
+    .container-third {
+        flex-direction: column-reverse;   // 改直排
+        gap: 10px;
+        width: 66%;
+        align-items: center;
+    }
+    .spaceall {
+        width: 100%;
+    }
+    .starsapce img {
+        width: 80%;
+        height: 80%;
+        padding: 0 40px;
+    }
+    .container-four {
+        flex-direction: column;   
+        gap: 10px;
+        width: 72%;
+        align-items: center;
+    }
+    .season img {
+        width: 80%;
+        height: auto;
+        margin-top: 20px;
+    }
+    .seasonall {
+        padding: 0 50px;
+        text-align: center;
+    }
+    .tip-text {
+        text-align: start;
+    }
+    .tip {
+        align-items: center;
+        margin-top: 0;
+        margin-right: 0;
+    }
+    .notion {
+        text-align: start;
+    }
+}
+
 /* 斷點430 */
 @media screen and (max-width: 433px) {
     /* 卡片：3欄 → 單欄 */
@@ -390,9 +533,6 @@
         padding-top: 20px;
         margin: 0 auto; 
     }
-    .lookmoonall{
-        // padding: 0;
-    }
     /* 文字區 */
     .tips{
         font-size: $pcChFont-p;
@@ -406,11 +546,6 @@
         flex-direction: column-reverse;
         gap: 20px;
         text-align: center;
-    }
-    .spaceall{
-        // width: 100%;
-        // padding: 0;
-        // margin: 0;
     }
     .starsapce img{
         width: 80%;
@@ -431,16 +566,6 @@
         height: auto;
         margin: 0 auto;
     }
-    .seasonall {
-        // margin-top: 10px;
-    }
-    
-
-
 }
-
-
-
-
 
 </style>
