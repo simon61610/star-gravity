@@ -143,7 +143,8 @@
                     original_price: original,
                     price: sale > 0 ? sale : original,     // 顯示/存入購物車用的售價
                     photo: toImageUrl(r.photo_url),
-                    stock: Number(r.stock ?? 0) 
+                    stock: Number(r.stock ?? 0),
+                    is_active: Number(r.is_active ?? 0)
                 }
             })
             console.log(resp.data);
@@ -203,11 +204,12 @@
                             <button 
                                 class="btn primary" 
                                 @click="addToCart(p)"
-                                :class="{ disabled: p.stock <= 0 }"
-                                :disabled="p.stock <= 0"
+                                :class="{ disabled: p.is_active == 0 || p.stock <= 0 }"
+                                :disabled="p.is_active == 0 || p.stock <= 0"
                             >
-                                <span v-if="p.stock > 0">直接購買</span>
-                                <span v-else>缺貨中</span>
+                                <span v-if="p.is_active == 0">已下架</span>
+                                <span v-else-if="p.stock <= 0">缺貨中</span>
+                                <span v-else>直接購買</span>
                             </button>
                         </div>
                     </div>

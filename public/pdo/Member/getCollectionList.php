@@ -18,6 +18,7 @@ $sql = "SELECT
         p.sale_price   AS sale_price,      -- 折扣價
         p.original_price AS original_price, -- 原價
         p.stock,
+        p.is_active,
         (
             SELECT pi.image
             FROM ProductImage pi
