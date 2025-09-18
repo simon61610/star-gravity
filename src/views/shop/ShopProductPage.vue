@@ -103,6 +103,16 @@
         }
     })
 
+    /* ========== 功能: 商品折扣去掉 0 結尾 ========== */
+    const formatDiscount = (discountNum) => {
+        if(discountNum % 10 == 0){
+            const discountStr = String(discountNum).slice(0, -1)
+            return discountStr
+        }else {
+            return discountNum
+        }
+    }
+
     /* ========== 功能: 選擇商品縮圖顯示 ========== */
     const changePic = (img) => {
         currentPic.value = img
@@ -203,10 +213,10 @@
                 <div class="detail-text">
                     <p class="detail-text__desc">{{ product.description }}</p>
                     <p class="detail-text__promotion">{{ product.promotion }}</p>
-                    <p class="detail-text__marketing" v-if="product.discount !== 100">現享 {{product.discount}} 折好康優惠</p>
+                    <p class="detail-text__marketing" v-if="product.discount !== 100">現享 {{ formatDiscount(product.discount)}} 折好康優惠</p>
                     <div class="product-price">
-                        <p class="product-price__nospecial" v-if="product.discount !== 100">NT$ {{ product.original_price }}</p>
                         <p class="product-price__special">NT$ {{ product.sale_price }}</p>
+                        <p class="product-price__nospecial" v-if="product.discount !== 100">NT$ {{ product.original_price }}</p>
                     </div>
                     <p class="stock" v-if="product.stock > 0">尚有庫存 {{ product.stock }} 件</p>
                     <p class="stock-warning" v-else>缺貨中</p>
@@ -390,8 +400,10 @@
                     font-size: $pcChFont-H4;
 
                     &__nospecial {
+                        align-self: flex-end;
                         color: #ccc;
                         text-decoration: line-through;
+                        font-size: 14px;
                     }
                 }
                 
