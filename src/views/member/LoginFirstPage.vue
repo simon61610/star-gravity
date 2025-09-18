@@ -32,7 +32,7 @@
         captchaCode.value = genCode()
     }
 
-    /* 信箱基本檢查樣式 */
+    /* 信箱、密碼基本檢查樣式 */
     const MIN_PWD_LEN = 6
     const emailRe = /\S+@\S+\.\S+/
 
@@ -76,30 +76,6 @@
         router.replace(back)
     }
 
-    
-    // const login = () => {
-        
-    //     // fetch('http://localhost/PDO/Member/login2.php', {
-    //     fetch(import.meta.env.VITE_AJAX_URL + "Member/login2.php", {
-    //         method: 'POST',
-    //         headers: { 'Content-Type': 'application/json' },
-    //         body:JSON.stringify({
-    //             email: email.value,
-    //             password: pwd1.value
-    //         }),
-    //     })
-    //     .then(res => res.json()) 
-    //     .then( result => {
-    //         if (result.success) {
-    //             console.log(result.user);
-    //             handleLoginSuccess(result)
-    //         }else{
-    //             console.log(result.message);
-    //             console.log(result.success);
-    //         }
-    //     })
-        
-    // }
     function handleLoginSuccess (result){
         localStorage.setItem('user', JSON.stringify(result.user))
         setTimeout(() => {
@@ -371,6 +347,219 @@
     height: 35px;
 }
 
+/*----------斷點------------*/
+@media screen and (max-width: 901px) {
+
+    .login-all{
+        min-height: 100dvh;
+        overflow-x: hidden;            /* 保險，避免殘留橫向卷軸 */
+        padding: 0 10px 40px;
+        background-position: center top;
+    }
+    .tabs{
+        gap: 8px;
+        padding: 0 8px;
+    }
+    .tab{
+        width: 100%;
+        max-width: 300px;
+        height: 44px;
+        font-size: 16px;
+    }
+    .area{
+        width: 100%;
+        margin-top: 12px;
+        padding: 0 12px;
+        box-sizing: border-box;
+    }
+    /* 信箱 input → 全寬 */
+    .email-1{
+        width: 100%;
+        height: 48px;
+        font-size: 16px;
+        padding-left: 12px;
+        box-sizing: border-box;
+    }
+    /* 密碼 el-input 三層全寬 */
+    .custom-placeholder{
+        display: block;
+        width: 100% !important;
+    }
+    .custom-placeholder :deep(.el-input){
+        width: 100% !important;
+    }
+    .custom-placeholder :deep(.el-input__wrapper){
+        width: 100% !important;
+        height: 48px;
+        padding: 0 12px;
+        box-sizing: border-box;
+    }
+    .custom-placeholder :deep(.el-input__inner){
+        height: 48px;
+        font-size: 16px;
+    }
+    /* 驗證碼區塊 → grid，讓三格不撐爆 */
+    .captcha-group{
+        display: grid;
+        grid-template-columns: 1fr 100px 32px;
+        column-gap: 8px;
+        align-items: center;
+        margin-top: 12px;
+    }
+    .captcha-1{
+        width: 100%;
+        height: 48px;
+        font-size: 16px;
+        padding-left: 12px;
+        box-sizing: border-box;
+    }
+    .captcha-code{
+        width: 100%;
+        height: 48px;
+        line-height: 48px;
+        font-size: 16px;
+    }
+    .refresh-btn img{
+        width: 24px;
+        height: 24px;
+    }
+    /* 登入按鈕／忘記密碼：垂直排列、全寬 */
+    .forget-area{
+        display: grid;
+        grid-template-columns: 1fr;
+        row-gap: 12px;
+        align-items: center;
+    }
+    .login-btn{
+        width: 100%;
+        height: 48px;
+        margin: 12px 0 0 0;
+        font-size: 16px;
+        border-radius: 999px;
+    }
+    .forgot{
+        margin: 0;
+        width: 100%;
+        height: auto;
+        line-height: 1.6;
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 651px) {
+    
+    .login-all{
+        padding: 0 8px 40px;
+        overflow-x: hidden;              /* 保險：避免殘留橫向卷軸 */
+        background-position: center top;
+    }
+    /* 標籤列：允許換行，兩個 Tab 平均分配 */
+    .tabs{
+        gap: 8px;
+        padding: 0 6px;
+        flex-wrap: wrap;
+    }
+    .tab{
+        flex: 1 1 0;
+        max-width: none;
+        height: 44px;
+        font-size: 16px;
+    }
+    /* 內容區 */
+    .area{
+        width: 100%;
+        margin-top: 12px;
+        padding: 0 8px;
+        box-sizing: border-box;
+    }
+    /* Email 輸入：全寬 + 縮小高度/字級 */
+    .email-1{
+        width: 100%;
+        height: 44px;
+        font-size: 14px;
+        padding-left: 12px;
+        box-sizing: border-box;
+    }
+    /* 密碼 el-input 三層全寬，並縮高度/字級 */
+    .custom-placeholder{
+        display: block;
+        width: 100% !important;
+    }
+    .custom-placeholder :deep(.el-input){
+        width: 100% !important;
+    }
+    .custom-placeholder :deep(.el-input__wrapper){
+        width: 100% !important;
+        height: 44px;
+        padding: 0 12px;
+        box-sizing: border-box;
+        border-radius: 0;
+    }
+    .custom-placeholder :deep(.el-input__inner){
+        height: 44px;
+        font-size: 14px;
+    }
+    /* 驗證碼：用 grid 避免撐爆，三欄分別是 輸入框 / 顯示碼 / 刷新鈕 */
+    .captcha-group{
+        display: grid;
+        grid-template-columns: 1fr 96px 28px;
+        column-gap: 8px;
+        align-items: center;
+        margin-top: 10px;
+    }
+    .captcha-1{
+        width: 100%;
+        height: 44px;
+        font-size: 14px;
+        padding-left: 12px;
+        box-sizing: border-box;
+    }
+    .captcha-code{
+        width: 100%;
+        height: 44px;
+        line-height: 44px;
+        font-size: 14px;
+    }
+    .refresh-btn img{
+        width: 22px;
+        height: 22px;
+    }
+    /* 登入按鈕 / 忘記密碼：改為直向排列、全寬 */
+    .forget-area{
+        display: grid;
+        grid-template-columns: 1fr auto; /* 左：按鈕，右：連結 */
+        column-gap: 12px;
+        align-items: center;
+    }
+    .login-btn{
+        width: 95%;
+        height: 48px;
+        margin: 12px 0 0 0;     /* 與連結同一基準線 */
+        font-size: 16px;
+        border-radius: 999px;
+    }
+    .forgot{
+        margin: 0;
+        width: 100%;
+        height: auto;
+        line-height: 1.6;
+        text-align: center;
+    }
+    /* OR 分隔線與社群按鈕微調 */
+    .or{ 
+        font-size: 18px; 
+    }
+    .or::before, .or::after{
+        margin: 16px 8px;
+    }
+    .social-login{
+        gap: 20px;
+    }
+    .social-login img{
+        width: 30px;
+        height: 30px;
+    }
+}
 
 @media screen and (max-width: 433px) {
     .login-all{
