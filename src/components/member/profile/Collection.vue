@@ -7,6 +7,9 @@
     import axios from 'axios'
     import { useMemberStore } from '@/stores/member'  
     import bus from '@/composables/useMitt' 
+    import { useRouter } from 'vue-router'
+
+    const router = useRouter()
     
     // 引用useMemberStore
     const memberStore = useMemberStore()
@@ -120,6 +123,12 @@
         // showToast('已加入購物車！', { type: 'success', duration: 1800 })
     }
 
+    // -----------------------------點擊到對應頁面-----------------------------------------
+    const goProduct = (ID) => router.push({
+        name: "product",
+        params: {id: ID}
+    })
+
     // 向後端發出請求
     const getCollectionList = async (memberId)=>{
         try{
@@ -185,11 +194,11 @@
             <article v-for="p in showProducts" :key="p.id" class="card">
                 
                 <div class="photoall">
-                    <div class="thumb">
+                    <div class="thumb" @click="goProduct(p.id)">
                         <img v-if="p.photo" :src="p.photo" :alt="p.title || '商品圖片'">
                     </div>
         
-                    <div class="down">
+                    <div class="down" @click="goProduct(p.id)">
                         <div class="titleprice">
                             <h3 class="title">{{ p.title }}</h3>
                             <p class="price">{{ formatTWD(p.price) }}</p>
@@ -271,6 +280,7 @@
     padding: 8px; 
     overflow: hidden;
     border-radius: 8px;
+    cursor: pointer;
 }
 .thumb img{
     width: 100%;
