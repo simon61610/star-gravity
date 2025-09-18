@@ -238,121 +238,134 @@ const resetForm = () => {
     imagesFiles.value = [null, null, null]
 }
 
-
+// 控制儲存狀態
+const isSaving = ref(false)
 
 const save = async () => {
-
-    // 檢查是否都有輸入
-    if( !name.value || category_name.value === 'null' || !description.value || !promotion.value || !original_price.value || !discount.value || !introduction.value){
-        alert("請輸入完整商品資料")
-        return
-    }
-
-    // 檢查至少一張圖片
-    /* let hasImage = false
-    for(let i = 0; i < imagesPreview.value.length; i++){
-        if(imagesPreview.value[i] !== null){
-            hasImage = true
-            break
-        }
-    } */
-
-    // 檢查圖片都要有
-    let hasImage = true
-    for(let i = 0; i < imagesPreview.value.length; i++){
-        if(imagesPreview.value[i] === null){
-            hasImage = false
-            break
-        }
-    }
-
-    if(!hasImage){
-        alert('請上傳完整的三張商品照片')
-        return
-    }
-
+    if(isSaving.value) return
+    isSaving.value = true
     
-    // 用 FormData 儲存
-    const formData = new FormData()
-
-    // 如果是編輯模式，先加上 ID
-    if(editingProduct.value){
-        formData.append("ID", editingProduct.value.ID)
-    }
+    try {
+        // 檢查是否都有輸入
+        if( !name.value || category_name.value === 'null' || !description.value || !promotion.value || !original_price.value || !discount.value || !introduction.value){
+            alert("請輸入完整商品資料")
+            // isSaving.value = false
+            return
+        }
     
-    formData.append("name", name.value)
-    formData.append("category_name", category_name.value)
-    formData.append("original_price", original_price.value)
-    formData.append("discount", discount.value)
-    formData.append("sale_price", sale_price.value)
-    formData.append("promotion", promotion.value)
-    formData.append("description", description.value)
-    formData.append("introduction", introduction.value)
-    formData.append("stock", stock.value)
-    formData.append("is_active", is_active.value)
-
-    // 第一版
-    // 編輯商品時: 如果沒選新圖片，就不要 append images[]
-    /* imagesFiles.value.forEach((file, i) => {
-        if (file) {
-            formData.append("images[]", file)
-        }
-    }) */
-
-    // 有bug
-    /* for(let i = 0; i < imagesFiles.value.length; i++){
-        const file = imagesFiles.value[i]
-        if (file) {
-            formData.append("images[]", file)
-        }
-    }
-
-    if(editingProduct.value){
-        for(let i = 0; i < image_ids.value.length; i++){
-            formData.append("image_ids[]", image_ids.value[i])
-        }
-    } */
-
-    // 對應圖片ID與圖片路徑
-        for(let i = 0; i < imagesFiles.value.length; i++ ){
-            const file = imagesFiles.value[i]
-            if (file) {
-                formData.append(`images[${i}]`, file)
-                formData.append(`image_ids[${i}]`, image_ids.value[i])
-            }else{
-                formData.append(`image_ids[${i}]`, image_ids.value[i])
+        // 檢查至少一張圖片
+        /* let hasImage = false
+        for(let i = 0; i < imagesPreview.value.length; i++){
+            if(imagesPreview.value[i] !== null){
+                hasImage = true
+                break
+            }
+        } */
+    
+        // 檢查圖片都要有
+        let hasImage = true
+        for(let i = 0; i < imagesPreview.value.length; i++){
+            if(imagesPreview.value[i] === null){
+                hasImage = false
+                break
             }
         }
     
-
-    let response
-    if (!editingProduct.value) {
-        // 新增: 發送請求 product_add.php
-        response = await axios.post(import.meta.env.VITE_AJAX_URL + 'starshop/admin/product_add.php' , formData)
-        // const response = await axios.post('pdo/starshop/admin/product_add.php' , formData) // 部屬前待修改路徑
+        if(!hasImage){
+            alert('請上傳完整的三張商品照片')
+            // isSaving.value = false
+            return
+        }
+    
         
-        // const response = await axios.post('http://localhost/pdo/starshop/admin/product_add.php' , product.value)
-        // const response = await axios.post('pdo/starshop/admin/product_add.php' , product.value)
-    } 
-    else {
-        /* alert("編輯功能尚未完成")
-        return */
-        // 編輯: 發送請求 product_update.php
-        // formData.append("ID", editingProduct.value.ID)
-        response = await axios.post(import.meta.env.VITE_AJAX_URL + 'starshop/admin/product_update.php', formData)
-        // response = await axios.post('http://localhost/pdo/starshop/admin/product_update.php', formData)
-        // const response = await axios.post('pdo/starshop/admin/product_update.php' , formData) // 部屬前待修改路徑
+        // 用 FormData 儲存
+        const formData = new FormData()
+    
+        // 如果是編輯模式，先加上 ID
+        if(editingProduct.value){
+            formData.append("ID", editingProduct.value.ID)
+        }
+        
+        formData.append("name", name.value)
+        formData.append("category_name", category_name.value)
+        formData.append("original_price", original_price.value)
+        formData.append("discount", discount.value)
+        formData.append("sale_price", sale_price.value)
+        formData.append("promotion", promotion.value)
+        formData.append("description", description.value)
+        formData.append("introduction", introduction.value)
+        formData.append("stock", stock.value)
+        formData.append("is_active", is_active.value)
+    
+        // 第一版
+        // 編輯商品時: 如果沒選新圖片，就不要 append images[]
+        /* imagesFiles.value.forEach((file, i) => {
+            if (file) {
+                formData.append("images[]", file)
+            }
+        }) */
+    
+        // 有bug
+        /* for(let i = 0; i < imagesFiles.value.length; i++){
+            const file = imagesFiles.value[i]
+            if (file) {
+                formData.append("images[]", file)
+            }
+        }
+    
+        if(editingProduct.value){
+            for(let i = 0; i < image_ids.value.length; i++){
+                formData.append("image_ids[]", image_ids.value[i])
+            }
+        } */
+    
+        // 對應圖片ID與圖片路徑
+            for(let i = 0; i < imagesFiles.value.length; i++ ){
+                const file = imagesFiles.value[i]
+                if (file) {
+                    formData.append(`images[${i}]`, file)
+                    formData.append(`image_ids[${i}]`, image_ids.value[i])
+                }else{
+                    formData.append(`image_ids[${i}]`, image_ids.value[i])
+                }
+            }
+        
+    
+        let response
+        if (!editingProduct.value) {
+            // 新增: 發送請求 product_add.php
+            response = await axios.post(import.meta.env.VITE_AJAX_URL + 'starshop/admin/product_add.php' , formData)
+            // const response = await axios.post('pdo/starshop/admin/product_add.php' , formData) // 部屬前待修改路徑
+            
+            // const response = await axios.post('http://localhost/pdo/starshop/admin/product_add.php' , product.value)
+            // const response = await axios.post('pdo/starshop/admin/product_add.php' , product.value)
+        } 
+        else {
+            /* alert("編輯功能尚未完成")
+            return */
+            // 編輯: 發送請求 product_update.php
+            // formData.append("ID", editingProduct.value.ID)
+            response = await axios.post(import.meta.env.VITE_AJAX_URL + 'starshop/admin/product_update.php', formData)
+            // response = await axios.post('http://localhost/pdo/starshop/admin/product_update.php', formData)
+            // const response = await axios.post('pdo/starshop/admin/product_update.php' , formData) // 部屬前待修改路徑
+        }
+        
+        if(response.data.success){
+            console.log(response.data)
+            alert(response.data.message)
+            resetForm()
+            await fetchProducts() // 新增後，更新資料表
+            close()
+        }else {
+            alert('新增失敗')
+        }
+    } catch(err) {
+        console.error(err)
+        alert("儲存失敗，請稍後再試")
+    } finally {
+        isSaving.value = false
     }
     
-    if(response.data.success){
-        console.log(response.data)
-        alert(response.data.message)
-        resetForm()
-        await fetchProducts() // 新增後，更新資料表
-        close()
-    }else {
-        alert('新增失敗')
-    }
 
 } 
 
@@ -494,8 +507,10 @@ const save = async () => {
             <!-- =================================================== -->
             
             <div class='Admin-product-button'>
-                <button @click="close" >關閉</button>
-                <button @click="save">儲存</button> <!-- save 事件待定義 -->
+                <button @click="close">關閉</button>
+                <button @click="save" :disabled="isSaving">
+                    {{ isSaving ? "儲存中..." : "儲存" }}
+                </button> <!-- save 事件待定義 -->
             </div>
         </section>
     </div>
@@ -693,6 +708,12 @@ const save = async () => {
                     background-color: gray;
                     color: white;
                 }
+            }
+
+            button:disabled {
+                cursor: not-allowed;
+                background-color: #ccc;
+                color: #666;
             }
         }
     }

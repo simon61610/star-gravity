@@ -117,7 +117,7 @@
 
         <!-- 按鈕區 -->
         <section class="btn-box">
-            <router-link to="/" class="router-link">
+            <router-link to="/homepage" class="router-link">
                 <p class="back-home">回到首頁</p>
             </router-link>
             <router-link to="/shop/category" class="router-link">
