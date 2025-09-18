@@ -219,7 +219,8 @@ onUnmounted(()=>{
                 <h1 class="news-rightSide-title decTitle--medium">NEWS</h1>
                 <h2 class="news-rightSide-title2 cnTitle--h2">天文快訊</h2>
                 <p class="news-rightSide-text cnContent--18px">最新的天文觀測與星象消息，包含流星雨、行星衝、日食與月食等第一手資訊，讓抬頭看星不再錯過精彩瞬間。天文快訊將提供清楚的時間、地點與觀測建議，幫助愛好者在最佳時刻捕捉夜空的美麗。</p>
-                <button class="news-rightSide-button button--normal">查看更多</button>
+                <!-- <button class="news-rightSide-button button--normal">查看更多</button> -->
+                <router-link class="news-rightSide-button" to="/Newpage">查看更多</router-link>
             </div>
         </div>
 
@@ -230,7 +231,8 @@ onUnmounted(()=>{
                 <h1 class="sky-leftSide-title decTitle--medium">FOUR SEASONS</h1>
                 <h2 class="sky-leftSide-title2 cnTitle--h2">星視野</h2>
                 <p class="sky-leftSide-text cnContent--18px">以互動星空圖呈現十二星座的樣貌，不僅能清楚看到星座的樣子，還能點擊圖示展開「星連星」的效果，讓星座線條一目了然，一起快速理解星座的形狀與故事，享受觀星的樂趣與臨場感。</p>
-                <button class="sky-leftSide-button button--normal">查看更多</button>
+                <!-- <button class="sky-leftSide-button button--normal">查看更多</button> -->
+                <router-link class="sky-leftSide-button" to="/gamesky">查看更多</router-link>
             </div>
             <!-- 右邊圖片 -->
             <img class="home-sky-photo" src="@/assets/images/aboutstar/constellation-4.png" alt="四季星空">
@@ -532,6 +534,23 @@ onUnmounted(()=>{
             .news-rightSide-title {
                 color: $primaryColor-500;
             }
+
+            .news-rightSide-button {
+                border: none;
+                text-align: center;
+                text-decoration: none;
+                width: 216px;
+                height: 60px;
+                font-size: 24px;
+                line-height: 55px;
+                border-radius: 999px;
+                background-color: $primaryColor-500;
+                color: $primaryColor-900;
+            }
+            .news-rightSide-button:hover {
+                background-color: $primaryColor-100;
+                color: $primaryColor-500;
+            }
         }
     }
 
@@ -561,6 +580,23 @@ onUnmounted(()=>{
             width: 450px;
             height: 450px;
             border-radius: 999px;
+        }
+
+        .sky-leftSide-button {
+            border: none;
+            text-align: center;
+            text-decoration: none;
+            width: 216px;
+            height: 60px;
+            font-size: 24px;
+            line-height: 55px;
+            border-radius: 999px;
+            background-color: $primaryColor-500;
+            color: $primaryColor-900;
+        }
+        .sky-leftSide-button:hover {
+            background-color: $primaryColor-100;
+            color: $primaryColor-500;
         }
     }
 
