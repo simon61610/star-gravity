@@ -306,6 +306,16 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes, // 等同 routes: routes 1
+  scrollBehavior(to, from, savedPosition) {
+    // 如果有瀏覽器紀錄 (例如用上一頁/下一頁)，就回到之前的位置
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      // 否則就捲到最上面
+      return { top: 0 }
+    }
+  }
+  
 })
 
 
