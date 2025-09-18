@@ -24,6 +24,9 @@
     const email = ref('')
     const captcha = ref('')
 
+    // 台灣手機格式驗證：09 開頭 + 共 10 碼
+    const isValidTWPhone = (v) => /^09\d{8}$/.test((v ?? '').trim())
+
     // 註冊後，把 email 暫存起來，登入頁會自動帶入
     const LS_REGISTER_EMAIL = 'registerEmail'
 
@@ -38,6 +41,7 @@
         pwd1.value === pwd2.value &&
         !!name.value.trim() &&
         !!phone.value.trim() &&
+        isValidTWPhone(phone.value) &&      // 格式必須通過
         !!gender.value &&
         !!member.city &&
         !!member.area &&
@@ -53,6 +57,7 @@
         if (pwd1.value !== pwd2.value) return '兩次密碼不一致'
         if (!name.value.trim()) return '缺姓名'
         if (!phone.value.trim()) return '缺電話'
+        if (!isValidTWPhone(phone.value)) return '電話須為 09 開頭的 10 碼'
         if (!gender.value) return '缺性別'
         if (!member.city) return '缺縣市'
         if (!member.area) return '缺鄉鎮'
@@ -73,19 +78,25 @@
         let res = await axios.get(import.meta.env.VITE_PUBLIC_URL +'JSON_CSV_XML/CityCountyData.json')  
 
         cities.value = res.data
-    })
-
-    // 圖片檔案上傳
-    // const file = ref(null)              
+    })            
 
     // 送出：改為呼叫後端 PHP
     const handleRegister = async () => {
-        // console.log('[submit]', { canSubmit: canSubmit.value, why: whyDisabled })
-        console.log('[submit]', { canSubmit: canSubmit.value, why: whyDisabled.value }) 
+    
+        console.log('[submit]', { canSubmit: canSubmit.value, phone: phone.value, why: whyDisabled.value }) 
+
         if (!canSubmit.value) {
-            ElMessage.error('欄位未完成或密碼不一致')
-            return
+           // 用你已經有的 whyDisabled 告知第一個不通過的原因
+           ElMessage.error(whyDisabled.value || '欄位未完成或格式不正確')
+           return
         }
+
+        // 送出前再保險一次驗證手機格式
+        if (!isValidTWPhone(phone.value)) {
+          ElMessage.error('電話須為 09 開頭的 10 碼數字')
+          return
+        }
+
         // 驗證碼（不分大小寫）
         if (captcha.value.trim().toUpperCase() !== captchaCode.value.trim().toUpperCase()) {
             ElMessage.error('驗證碼錯誤')
@@ -106,13 +117,9 @@
             form.append('area', member.area)
             form.append('address', address.value.trim())
             form.append('gender', gender.value)
-            // if (file?.value) form.append('image', file.value)
-            // 檔案欄位：只有真的選了檔案才附上
-            // if (file?.value instanceof File) form.append('image', file.value)
 
             // 呼叫 Pinia store 
             const result = await memberStore.register(form)  
-            // console.log('[register result from store]', result)
             if (result?.ok !== true) {                                        // 嚴格檢查 ok === true
                 throw new Error(result?.error || '註冊失敗（前端判斷）')        // 若 store 沒回 ok:true，當失敗處理
             }
@@ -129,17 +136,6 @@
             // loading.value = false
         }
     }
-    // 依實際路徑調整
-    // const REGISTER_API = import.meta.env.VITE_AJAX_URL + "Member/register.php";
-    
-    // const res = await fetch(REGISTER_API, {
-    //     method: 'POST',
-    //     // 註冊是公開 API，不帶 Cookie，避免不必要的預檢
-    //     credentials: 'omit',
-    //     // 不手動設定 Content-Type（瀏覽器會自動帶 multipart 邊界）
-    //     headers: { 'Accept': 'application/json' },
-    //     body: form,
-    // })
 
     /* ---- 狀態 ---- */
     const member = reactive({
@@ -161,12 +157,23 @@
     <div class="register-all">
 
         <div class="second-area">
-            <form @submit.prevent="handleRegister">
+            <form @submit.prevent="handleRegister" novalidate>
                 <div class="name">
-                    <input type="text" class="name-1" placeholder="請輸入姓名/暱稱" v-model="name" required />
+                    <input type="text" class="name-1" placeholder="請輸入姓名 / 暱稱 (不可更改)" v-model="name" required />
                 </div>
                 <div class="phone">
-                    <input type="text" class="phone-1" placeholder="請輸入電話" v-model="phone" required />
+                    <input 
+                        type="text"
+                        class="phone-1"
+                        placeholder="請輸入電話"
+                        v-model="phone"
+                        required
+                        inputmode="numeric"          
+                        pattern="^09\d{8}$"          
+                        maxlength="10"               
+                        @input="phone = phone.replace(/\D/g,'').slice(0,10)"  
+                    />
+                    <!-- <input type="text" class="phone-1" placeholder="請輸入電話" v-model="phone" required /> -->
                 </div>
                 <!------勾選性別--------->
                 <div class="gender-group">
@@ -241,7 +248,7 @@
                 </div>
                 <!-- 送出按鈕 -->
                 <!-- <button class="register-btn" type="submit" :disabled="loading || !canSubmit"> -->
-                <button class="register-btn" type="submit" :disabled="memberStore.loading || !canSubmit">
+                <button class="register-btn" type="submit" :disabled="memberStore.loading">
                     {{ loading ? '送出中...' : '送出' }}
                 </button>
                 
@@ -259,11 +266,12 @@
 .register-all{
     width: 100%;
     min-height: 100dvh;                 
-    overflow: visible;                   /* 不在此層產生內捲軸 */
+    // overflow: visible;                   /* 不在此層產生內捲軸 */
     padding-top: 0;
     margin-top: 0;
     overflow-x: hidden;
     padding-left: 10px;
+    box-sizing: border-box;
 }
 .tabs{
     display: flex;
@@ -422,6 +430,218 @@
     height: 45px;
 }
 
+//---------------斷點---------------------------------
+@media screen and (max-width: 901px) {
+
+    .register-all{
+        min-height: 100dvh;
+        padding: 0 10px 40px;
+        overflow-x: hidden; /* 保險 */
+    }
+    .second-area{
+        width: 100%;
+        margin-top: 12px;
+        padding: 0;
+    }
+    /* 輸入格：全寬，不再固定 558px */
+    .name-1, .phone-1, .adress-2, .email-2, .captcha-2{
+        width: 100%;
+        max-width: 100%;
+        height: 48px;
+        font-size: 16px;
+        padding-left: 12px;
+        box-sizing: border-box;
+    }
+    /* 性別 */
+    .gender-group{
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .gender-group label{
+        font-size: 16px;
+        line-height: 1.6;
+    }
+    /* 縣市/鄉鎮：兩欄彈性，不再固定 277px */
+    .join-city{
+        margin-top: 16px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+    .select { 
+        min-width: 0; 
+    }
+    .select-city{
+        width: 100%;
+        max-width: 100%;
+        height: 48px;
+        padding-left: 12px;
+        font-size: 16px;
+        box-sizing: border-box;
+    }
+    /* 密碼 el-input（Element Plus 外層與內層都要放寬至 100%） */
+    .password-area{ 
+        margin-top: 8px; 
+    }
+    /* 讓密碼欄位跟上方原生 input 一樣寬 */
+    .area1, .area2 { 
+        width: 100%; 
+    }
+    .custom-placeholder{
+        display: block;      /* 避免 inline-flex 造成計算誤差 */
+        width: 100%;
+    }
+    /* Element Plus 三層都鎖定 100% 寬 */
+    .custom-placeholder :deep(.el-input),
+    .custom-placeholder :deep(.el-input__wrapper),
+    .custom-placeholder :deep(.el-input__inner) {
+        width: 104% !important;
+        max-width: 105% !important;
+        box-sizing: border-box;
+        border-radius: 0;
+    }
+    .custom-placeholder ::v-deep(.el-input__wrapper){
+        height: 48px;          /* 對齊你的高度 */
+    }
+    .custom-placeholder ::v-deep(.el-input__inner){
+        height: 44px;
+        font-size: 14px;
+    }
+    /* 驗證碼區塊：避免相加超寬 */
+    .captcha-group-1{
+        display: grid;
+        grid-template-columns: 1fr 96px 32px;
+        column-gap: 8px;
+        align-items: center;
+        margin-top: 12px;
+    }
+    .captcha-code-1{
+        width: 100%;
+        height: 48px;
+        line-height: 48px;
+        font-size: 16px;
+    }
+    .refresh-btn-1 img{
+        width: 24px;
+        height: 24px;
+    }
+    /* 送出按鈕：全寬置中，移除 margin-left:60px */
+    .register-btn{
+        width: 100%;
+        height: 48px;
+        margin: 10px 0 0 0;
+        font-size: 16px;
+        border-radius: 999px;
+    }
+}
+
+@media screen and (max-width: 651px) {
+    
+    .register-all{
+        min-height: 100dvh;
+        padding: 0 8px 40px;
+        overflow-x: hidden; /* 保險 */
+    }
+    .second-area{
+        width: 100%;
+        margin-top: 12px;
+        padding: 0;
+    }
+    /* 輸入格：全寬 */
+    .name-1, .phone-1, .adress-2, .email-2, .captcha-2{
+        width: 100%;
+        max-width: 100%;
+        height: 44px;
+        font-size: 14px;
+        padding-left: 12px;
+        box-sizing: border-box;
+    }
+    /* 性別 */
+    .gender-group{
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .gender-group label{
+        font-size: 14px;
+        line-height: 1.3;
+    }
+    /* 縣市/鄉鎮：改 grid */
+    .join-city{
+        margin-top: 14px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+    .select { 
+        min-width: 0; 
+    }
+    .select-city{
+        width: 100%;
+        max-width: 100%;
+        height: 44px;
+        padding-left: 12px;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+    /* 密碼 el-input */
+    .password-area{ 
+        margin-top: 8px; 
+    }
+    /* 讓密碼欄位跟上方原生 input 一樣寬 */
+    .area1, .area2 { 
+        width: 120%; 
+    }
+    .custom-placeholder{
+        display: block;      /* 避免 inline-flex 造成計算誤差 */
+        width: 100%;
+    }
+    /* Element Plus 三層都鎖定 100% 寬 */
+    .custom-placeholder :deep(.el-input),
+    .custom-placeholder :deep(.el-input__wrapper),
+    .custom-placeholder :deep(.el-input__inner) {
+        width: 104% !important;
+        max-width: 105% !important;
+        box-sizing: border-box;
+        border-radius: 0;
+    }
+    .custom-placeholder ::v-deep(.el-input__wrapper){
+        height: 44px;          /* 對齊你的高度 */
+        padding-left: 12px;     /* 與上方輸入框一致 */
+        padding-right: 12px;
+    }
+    .custom-placeholder ::v-deep(.el-input__inner){
+        height: 44px;
+        font-size: 14px;
+    }
+    /* 驗證碼 */
+    .captcha-group-1{
+        display: grid;
+        grid-template-columns: 1fr 96px 32px;
+        column-gap: 8px;
+        align-items: center;
+        margin-top: 12px;
+    }
+    .captcha-code-1{
+        width: 100%;
+        height: 44px;
+        line-height: 44px;
+        font-size: 14px;
+    }
+    .refresh-btn-1 img{
+        width: 22px;
+        height: 22px;
+    }
+    /* 送出按鈕 */
+    .register-btn{
+        width: 60%;
+        height: 44px;
+        margin: 14px 112px;
+        // margin: 14px 0 0 0;
+        font-size: 15px;
+        border-radius: 999px;
+    }
+}
+
 @media screen and (max-width: 433px) {
     .register-all{
         min-height: 100dvh;
@@ -485,8 +705,7 @@
         height: auto !important;
     }
     .custom-placeholder ::v-deep(.el-input__wrapper){
-        width: 100% !important;
-        max-width: 390px;
+        width: 82% !important;
         height: 44px;
         padding-left: 12px;
         box-sizing: border-box;
