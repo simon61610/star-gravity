@@ -1,9 +1,9 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import eventlist from "@/data/eventlist";
+import axios from "axios";
 
-// 取要公告的活動資料json格式
-const activities = ref(eventlist.slice(0, 6))
+
 
 //假數據
 /* const activities =ref([
@@ -56,6 +56,7 @@ const currentIndex = ref(0)  //頁面中活動區塊,左邊第一個活動的索
 const isMobile = ref(false)  // 是否為手機大小
 const showSatrshoot = ref(false) //控制流星的class: active 是否啟動
 const itemsPerPage = ref('')  //不同視窗大小 活動顯示數量不同
+const activities = ref([]) //資料庫活動資訊
 
 //活動列表顯示的計算屬性 手機板是一次放全部左右滑 pc版靠左右按鈕改變'起始索引'來控制渲染出來的活動
 const showActivities = computed(()=>{  
@@ -118,12 +119,40 @@ onMounted(()=>{
     window.scrollTo({
         top: 0,
     })
-    
+
+    getEventLists()
 })
 onUnmounted(()=>{
     window.removeEventListener('resize', checkScreenSize)
     window.removeEventListener('scroll', controlStar)
 })
+
+
+//--------後端串接取資料---------
+const getEventLists = async ()=>{
+    try{
+        const resp = await axios.get( import.meta.env.VITE_AJAX_URL + "map/getEventLists.php" )
+        console.log(resp.data);
+        activities.value = resp.data;
+
+    }catch(error){
+        console.log('取得活動資料失敗');
+    }
+}
+
+const getFirstImage = (imageData) => {
+  try {
+    const images = JSON.parse(imageData)
+    //要確認images是不是陣列 且 長度大於0 
+    return Array.isArray(images) && images.length > 0 ? images[0] : ''
+  } catch (error) {
+    console.error('解析圖片數據失敗:', error)
+    return ''
+  }
+}
+
+
+
 
 </script>
 
@@ -256,17 +285,17 @@ onUnmounted(()=>{
                 <div class="activity-list">
                     <a v-for="activity in showActivities" 
                         class="list-singleInfo" 
-                        href="#">
-                        <router-link :to="`/events/${activity.id}`" class="router-link">
+                        href="#" >
+                        <router-link :to="`/events/${activity.ID}`" class="router-link">
 
-                            <img class="singleInfo-photo" src="@/assets/images/aboutstar/star space.png" alt="活動資訊圖">
+                            <img class="singleInfo-photo" :src="getFirstImage(activity.image)" alt="活動資訊圖">
                             <div class="singleInfo-content">
                                 <!-- <h3 class="activity-list-datetime">{{activity.date}}</h3> -->
-                                <h3 class="activity-list-datetime">{{activity.date}}</h3>
+                                <h3 class="activity-list-datetime">{{activity.event_start}}</h3>
                                 <!-- <h3 class="activity-list-activityName">{{activity.name}}</h3> -->
-                                <h3 class="activity-list-activityName">{{activity.title}}</h3>
+                                <h3 class="activity-list-activityName">{{activity.event_name}}</h3>
                                 <!-- <p class="activity-list-info cnConten--18px">{{ activity.description }}</p> -->
-                                <p class="activity-list-info cnConten--18px">{{ activity.desc }}</p>
+                                <p class="activity-list-info cnConten--18px">{{ activity.event_description }}</p>
                             </div>
                         </router-link>
                     </a>
@@ -687,6 +716,8 @@ onUnmounted(()=>{
                 .singleInfo-photo { 
                     align-self: center;
                     width: 100%;
+                    height: 180px;
+                    object-fit: cover;
                     border-radius: 20px;
                 }
 
@@ -696,7 +727,7 @@ onUnmounted(()=>{
                 }
 
                 .singleInfo-content {
-                    padding: 0 16px;
+                    padding: 12px 16px 0;
                     display: flex;
                     flex-direction: column;
                     gap: 12px;
