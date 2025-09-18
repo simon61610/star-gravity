@@ -19,7 +19,7 @@ echo json_encode($list);
 
 //將資料庫原有的分數統一算平均值並塞回資料庫
 //建立SQL
-for( $i=1 ; $i<20 ; $i++){
+/* for( $i=1 ; $i<20 ; $i++){
     $id = $i ;
     $sqlScore = " SELECT score from Review
                   where location_id = :id " ;
@@ -42,6 +42,6 @@ for( $i=1 ; $i<20 ; $i++){
     $statement3 ->bindValue(":scoreAverage" , $scoreAverage);
     $statement3 ->bindValue(":id" , $id);
     $statement3 ->execute();
-};
+}; */
 
 ?>
