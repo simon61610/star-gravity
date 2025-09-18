@@ -80,13 +80,44 @@
 
 
     // -----------------------------加入購物車-----------------------------------------
-    const addToCart = (p) => {
-        
+    const storage = localStorage
+    const BASE_URL = import.meta.env.VITE_AJAX_URL_NOEND
+
+    const addToCart = (product) => {
+        // 加入判斷: 商品庫存 <= 0 不執行
+        if(product.stock <= 0){
+            showToast("此商品缺貨中")
+            return
+        }
+
+        if(!storage['addItemList']){
+            storage['addItemList'] = ''
+        }
+
+        const itemId = product.id
+        const firstImage = product.photo || ''   // 收藏頁已經處理好的完整圖
+        const unitPrice = product.sale_price
+        const originalPrice = product.original_price
+
+                // 如果已經買過，增加數量
+        if(storage[itemId]){
+            let existInfo = storage[itemId].split('|')
+            let newQty = +existInfo[3] + 1
+            let updatedInfo = `${existInfo[0]}|${existInfo[1]}|${existInfo[2]}|${newQty}|${originalPrice}`
+            storage[itemId] = updatedInfo
+        }else{ // 第一次買
+            storage['addItemList'] += `${itemId}, `
+            storage[itemId] = `${product.title}|${firstImage}|${unitPrice}|1|${originalPrice}`
+        }
+
+        bus.emit('notifyUpdateCart') // 通知 Header 更新購物車數量
+        showToast('已成功加入購物車!', { type: 'success', duration: 1800 })
+    
         // 通知 header 立刻重算徽章數字
-        bus.emit('notifyUpdateCart') 
+        // bus.emit('notifyUpdateCart') 
          
         // 顯示明細（不含 id）
-        showToast('已加入購物車！', { type: 'success', duration: 1800 })
+        // showToast('已加入購物車！', { type: 'success', duration: 1800 })
     }
 
     // 向後端發出請求
@@ -106,12 +137,13 @@
                 const sale  = Number(r.sale_price ?? 0)
                 const original  = Number(r.original_price ?? 0)
                 return {
-                    id: r.product_id ?? i + 1,
+                    id: r.ID ?? i + 1,
                     title: r.name ?? '未命名商品',
                     sale_price: sale,
                     original_price: original,
-                    price: sale > 0 ? sale : orig,     // 顯示/存入購物車用的售價
-                    photo: toImageUrl(r.photo_url)
+                    price: sale > 0 ? sale : original,     // 顯示/存入購物車用的售價
+                    photo: toImageUrl(r.photo_url),
+                    stock: Number(r.stock ?? 0) 
                 }
             })
             console.log(resp.data);
@@ -168,7 +200,15 @@
             
                         <div class="actions">
                             <button class="btn cancel" @click="unfavorite(p.id)">取消收藏</button>
-                            <button class="btn primary" @click="addToCart(p)">直接購買</button>
+                            <button 
+                                class="btn primary" 
+                                @click="addToCart(p)"
+                                :class="{ disabled: p.stock <= 0 }"
+                                :disabled="p.stock <= 0"
+                            >
+                                <span v-if="p.stock > 0">直接購買</span>
+                                <span v-else>缺貨中</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -299,6 +339,14 @@
 }
 .btn.primary:hover {
     background-color: $inputColor-focus;
+}
+.btn.disabled {
+    background-color: #888;
+    color: #ccc;
+    cursor: not-allowed;
+}
+.btn.disabled:hover {
+    background-color: #888;
 }
 .btn:active { 
     transform: translateY(1px); 
