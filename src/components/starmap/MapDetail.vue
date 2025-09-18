@@ -235,7 +235,7 @@ const locationId = ref('')  //用來賦值父組件過來的selectedLocationId
 
                     <div class="mapbox-review-score">
                         <img src="@/assets/icons/icon-filledStar.svg" alt="星星">
-                        <h3>4.7</h3>
+                        <h3>{{props.selectedLocation.score}}</h3>
                     </div>
 
                     <!-- <div class="mapbox-seeMore" @click.prevent="showReview">

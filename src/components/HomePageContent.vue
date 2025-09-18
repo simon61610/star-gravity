@@ -55,6 +55,7 @@ const activities = ref(eventlist.slice(0, 6))
 const currentIndex = ref(0)  //頁面中活動區塊,左邊第一個活動的索引, 起始為0
 const isMobile = ref(false)  // 是否為手機大小
 const showSatrshoot = ref(false) //控制流星的class: active 是否啟動
+const itemsPerPage = ref('')  //不同視窗大小 活動顯示數量不同
 
 //活動列表顯示的計算屬性 手機板是一次放全部左右滑 pc版靠左右按鈕改變'起始索引'來控制渲染出來的活動
 const showActivities = computed(()=>{  
@@ -71,17 +72,8 @@ const canSlideNext = computed(()=>{
     return currentIndex.value < activities.value.length - itemsPerPage.value
 })
 
-const itemsPerPage = computed(()=>{
-    if( window.innerWidth <= 435 ){
-        return activities.value.length
-    }else if( window.innerWidth > 435 &&  window.innerWidth <= 700){
-        return 1
-    }else if( window.innerWidth > 700 &&  window.innerWidth < 1100 ){
-        return 2
-    }else{
-        return 3
-    }
-})
+
+
 
 //事件監聽
 function slidePrev (){
@@ -96,13 +88,20 @@ function slideNext (){
         currentIndex.value++
     }
 }
+
 function checkScreenSize(){
     if( window.innerWidth <= 435 ){
         isMobile.value = true
-    }else {
-        isMobile.value = false 
+        itemsPerPage.value = activities.value.length
+    }else if( window.innerWidth > 435 &&  window.innerWidth <= 700){
+        itemsPerPage.value = 1
+    }else if( window.innerWidth > 700 &&  window.innerWidth < 1100 ){
+        itemsPerPage.value = 2
+    }else{
+        itemsPerPage.value = 3
     }
 }
+
 function controlStar(){
     const homeContentBlock = document.querySelector('.home-contentBlock')
     const homeBlockRectTop = homeContentBlock.getBoundingClientRect().top
@@ -687,7 +686,7 @@ onUnmounted(()=>{
 
                 .singleInfo-photo { 
                     align-self: center;
-                    width: 90%;
+                    width: 100%;
                     border-radius: 20px;
                 }
 

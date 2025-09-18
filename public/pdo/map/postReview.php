@@ -75,3 +75,29 @@ if ($result) {
         JSON_UNESCAPED_UNICODE
     );
 };
+
+
+
+//計算地點的平均分數
+//建立SQL
+$sqlScore = " SELECT score from Review
+              where location_id = :location_id " ;
+$statement2 = $pdo->prepare( $sqlScore);
+$statement2 ->bindValue(":location_id" , $location_id);
+$statement2 ->execute();
+
+$scoreList = $statement2->fetchAll();
+$scoreSum = 0;
+for( $i = 0; $i < count($scoreList); $i++ ){
+    $scoreSum += intval($scoreList[$i]['score']);
+};
+$scoreAverage =  round( $scoreSum / count($scoreList) , 1 ) ;
+
+//把平均值塞回去該地點的資料庫
+$sqlSc = " UPDATE Location SET score = :scoreAverage
+           WHERE ID = :location_id " ;
+$statement3 = $pdo->prepare( $sqlSc);
+$statement3 ->bindValue(":scoreAverage" , $scoreAverage);
+$statement3 ->bindValue(":location_id" , $location_id);
+$statement3 ->execute();
+
