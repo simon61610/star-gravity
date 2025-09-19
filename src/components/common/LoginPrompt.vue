@@ -49,7 +49,7 @@
         justify-content: center;
         align-items: center;
 
-        z-index: 5000;
+        z-index: 100;
 
         .box {
             padding: 24px;

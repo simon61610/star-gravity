@@ -391,8 +391,7 @@ const handleCancelSave = () => {
 <template>
     <Confirm
         :show="showConfirm"
-        title="確認儲存"
-        message="確定要儲存這筆商品資料嗎？"
+        message="確定儲存嗎？"
         @confirm="handleConfirmSave"
         @cancel="handleCancelSave"
     />
@@ -744,7 +743,7 @@ const handleCancelSave = () => {
     // ------------------- 彈出視窗 -------------------
     .Admin-product-modal{
         position: fixed;
-        z-index: 9999;
+        z-index: 10;
         left: 0;
         top: 0;
         width: 100%;
