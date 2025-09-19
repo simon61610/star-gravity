@@ -50,7 +50,7 @@
         justify-content: center;
         align-items: center;
 
-        z-index: 500;  //至少要500 地點那邊才跳得出來
+        z-index: 600;  //至少要500 地點那邊才跳得出來
 
         .box {
             padding: 24px;

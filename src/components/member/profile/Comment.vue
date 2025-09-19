@@ -55,8 +55,6 @@
         
     }
 
-
-
     // -------------與後端串接----------------
     const getMemberReviews = async (memberId) => {        
         try{
@@ -162,7 +160,7 @@
     padding-right: 5px;
     color: $FontColor-black;
     background-color: white;
-    width: 850px;
+    // width: 850px;
 }
 .comment-box{
     margin: 0 auto;
@@ -211,6 +209,228 @@
     width: 100%;
     height: 2px;
     background-color: $primaryColor-100;
+}
+
+//------------------段點----------------------
+@media screen and (max-width: 1200px) {
+    /* 讓右側內容在 flex 版面不撐寬 */
+    .content{ 
+        min-width: 0;                 /* 避免子元素把父層撐出橫捲 */
+        margin-right: 10px;
+    }
+    /* 評論容器：流體寬 + 左右留白（不要用 margin 以免溢出） */
+    .comment-area{
+        width: 100%;
+        max-width: 100%;
+        padding: 12px 16px;       /* ← 左右各 16px 留白 */
+        box-sizing: border-box;   /* padding 計入寬度，避免橫捲 */
+        overflow-x: hidden;       /* 保險 */
+        background: #fff;
+    }
+    /* 每則評論內距微調 */
+    .comment-1{ 
+        padding: 16px 12px; 
+    }
+    /* 長字/URL 不撐寬 */
+    .review-text{
+        font-size: 15px;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+    /* 圖片不超出容器 */
+    .comment-area img,
+    .review-photo{
+        max-width: 30%;
+        height: auto;
+        display: block;
+    }
+    /* 星星稍微縮一點 */
+    .review-score img{ 
+        width: 18px; 
+    }
+    /* 刪除鍵靠右，不再加額外右邊距（讓它吃容器的 padding） */
+    .delete{
+        margin-left: auto;
+        padding-right: 0;
+        text-align: right;
+    }
+    /* 分頁滿版置中，可換行 */
+    .pager{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding-top: 10px;
+        box-sizing: border-box;
+    }
+    .pager :deep(.el-pagination){
+        flex-wrap: wrap;
+        row-gap: 6px;
+    }
+}
+
+@media screen and (max-width: 901px) {
+    /* 右側欄在 flex 版面不被撐寬 */
+    .content{ 
+        min-width: 0;
+    }
+    /* 評論容器 */
+    .comment-area{
+        width: 100%;
+        max-width: 100%;
+        padding: 12px 14px;        /* 比 1201px 再窄一點 */
+        box-sizing: border-box;
+        overflow-x: hidden;
+        background: #fff;
+        border-radius: 8px;        /* 可留可不留 */
+    }
+    /* 每則評論：縮些內距與字級 */
+    .comment-1{
+        padding: 14px 10px;
+    }
+    .comment-box h5{
+        margin-bottom: 6px;
+        font-size: 14px;
+    }
+    .comment-area h3{
+        font-size: 15px;
+    }
+    /* 星星與文字微縮；長字不撐寬 */
+    .review-score{ 
+        gap: 3px; 
+    }
+    .review-score img{ 
+        width: 16px; 
+    }
+    .review-text{
+        font-size: 14px;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+    /* 圖片不超出容器；高度限制更緊 */
+    .comment-area img,
+    .review-photo{
+        max-width: 35%;
+        height: auto;
+        display: block;
+        max-height: 260px;         /* 依需要可再調 */
+        object-fit: cover;
+    }
+    /* 刪除鍵靠右，吃外層 padding 的邊界 */
+    .delete{
+        margin-left: auto;
+        padding-right: 0;
+        font-size: 14px;
+        text-align: right;
+    }
+    /* 分隔線細一點 */
+    .decorateLine{
+        height: 1px;
+    }
+    /* 分頁：全寬置中，縮尺寸可換行 */
+    .pager{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding-top: 8px;
+        box-sizing: border-box;
+    }
+    .pager :deep(.el-pagination){
+        flex-wrap: wrap;
+        row-gap: 4px;
+        font-size: 12px;
+    }
+    .pager :deep(.el-pagination .el-pager li),
+    .pager :deep(.el-pagination .btn-prev),
+    .pager :deep(.el-pagination .btn-next){
+        min-width: 26px;
+        height: 40px;
+        line-height: 26px;
+    }
+}
+
+@media screen and (max-width: 651px) {
+    /* 右側內容在小尺寸不被子元素撐寬 */
+    .content{ 
+        min-width: 0;
+    }
+    /* 評論容器：流體寬 + 小一點的左右留白 */
+    .comment-area{
+        width: 90%;
+        max-width: 90%;
+        margin: 0 auto;
+        padding: 10px 12px;       /* 左右留白 */
+        box-sizing: border-box;
+        overflow-x: hidden;       /* 保險 */
+        background: #fff;
+        border-radius: 8px;
+    }
+    /* 每則評論內距縮小 */
+    .comment-1{
+        padding: 12px 8px;
+    }
+    /* 標題/時間字級 */
+    .comment-box h5{
+        margin-bottom: 4px;
+        font-size: 12px;
+    }
+    .comment-area h3{
+        font-size: 14px;
+    }
+    /* 內容文字：易讀且不撐寬 */
+    .review-text{
+        font-size: 14px;
+        line-height: 1.6;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+    /* 星星更小一點 */
+    .review-score{ 
+        gap: 2px; 
+    }
+    .review-score img{ 
+        width: 14px; 
+    }
+    /* 圖片不超出容器、限高 */
+    .comment-area img,
+    .review-photo{
+        max-width: 33%;
+        height: auto;
+        display: block;
+        max-height: 200px;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+    /* 刪除鍵靠右，吃容器 padding 的邊界 */
+    .delete{
+        margin-left: auto;
+        padding-right: 0;
+        text-align: right;
+        font-size: 14px;
+    }
+    /* 分隔線細一點 */
+    .decorateLine{ 
+        height: 1px; 
+    }
+    /* 分頁：更小、可換行 */
+    .pager{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding-top: 8px;
+        box-sizing: border-box;
+    }
+    .pager :deep(.el-pagination){
+        flex-wrap: wrap;
+        row-gap: 4px;
+        font-size: 12px;
+    }
+    .pager :deep(.el-pagination .el-pager li),
+    .pager :deep(.el-pagination .btn-prev),
+    .pager :deep(.el-pagination .btn-next){
+        min-width: 24px;
+        height: 33px;
+        line-height: 24px;
+    }
 }
 
 @media screen and (max-width: 433px) {

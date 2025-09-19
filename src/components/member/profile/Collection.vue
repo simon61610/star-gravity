@@ -76,12 +76,6 @@
 
     }
 
-    // function onBuyNow () {
-    //     // 這裡可放實際購物流程，成功後提示：
-    //     showToast('已加入購物車！', { type: 'success', duration: 2000 })
-    // }
-
-
     // -----------------------------加入購物車-----------------------------------------
     const storage = localStorage
     const BASE_URL = import.meta.env.VITE_AJAX_URL_NOEND
@@ -102,7 +96,7 @@
         const unitPrice = product.sale_price
         const originalPrice = product.original_price
 
-                // 如果已經買過，增加數量
+        // 如果已經買過，增加數量
         if(storage[itemId]){
             let existInfo = storage[itemId].split('|')
             let newQty = +existInfo[3] + 1
@@ -116,11 +110,6 @@
         bus.emit('notifyUpdateCart') // 通知 Header 更新購物車數量
         showToast('已成功加入購物車!', { type: 'success', duration: 1800 })
     
-        // 通知 header 立刻重算徽章數字
-        // bus.emit('notifyUpdateCart') 
-         
-        // 顯示明細（不含 id）
-        // showToast('已加入購物車！', { type: 'success', duration: 1800 })
     }
 
     // -----------------------------點擊到對應頁面-----------------------------------------
@@ -170,7 +159,6 @@
         }
 
     }
-
 
     // 斷點430使用
     onMounted(() => {
@@ -232,10 +220,10 @@
         <!----分頁-------->
         <div class="pager">
             <Pagination
-            :modelValue="collectionPage"
-            @update:modelValue="pagechange"
-            :page-size="pageSize"
-            :total="filteredTotal"
+                :modelValue="collectionPage"
+                @update:modelValue="pagechange"
+                :page-size="pageSize"
+                :total="filteredTotal"
             />
         </div>
     </div>
@@ -321,7 +309,7 @@
     opacity: .95; 
     font-weight: 600;
 }
-/* 原價（刪除線） */
+/* 原價（刪除線）*/
 .old-price {
     text-align: center;
     font-size: 14px;
@@ -365,7 +353,12 @@
     transform: translateY(1px); 
 }
 @keyframes pop { 
-    from { transform: scale(.96); opacity: .6 } to { transform: none; opacity: 1 } 
+    from { 
+        transform: scale(.96); opacity: .6 
+    } 
+    to { 
+        transform: none; opacity: 1 
+    } 
 }
 // 分頁
 .pager{
@@ -379,7 +372,213 @@
     z-index: 1;
 }
 
-@media screen and (max-width: 433px) {
+//------------------斷點----------------------------
+@media screen and (max-width: 1201px) {
+    /* 右側內容在 flex 版面不被子元素撐寬 */
+    .content{
+        min-width: 0;
+    }
+    /* 產品容器：改成流體寬 + 左右留白，杜絕橫向卷軸 */
+    .products{
+        width: 100%;
+        max-width: 100%;
+        min-height: auto;
+        padding: 0 12px;
+        box-sizing: border-box;
+        overflow-x: hidden;
+    }
+    /* 卡片排版：自動填滿，每張至少 ~220px，常見視窗約 3 欄 */
+    .flex{
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 16px;
+    }
+    .card{
+        padding: 8px;
+        border-radius: 12px;
+    }
+    /* 縮略圖 */
+    .thumb{
+        width: 100%;
+        max-width: none;
+        aspect-ratio: 4 / 3;
+        padding: 8px;
+    }
+    /* 文案微調 */
+    .title{ 
+        font-size: 15px; 
+    }
+    .price{ 
+        font-size: 15px; 
+    }
+    .old-price{ 
+        font-size: 13px; 
+    }
+    /* 按鈕區：維持兩欄，縮一點高度/字級 */
+    .actions{ 
+        gap: 8px; 
+    }
+    .btn{
+        padding: 10px 0;
+        font-size: 14px;
+    }
+    /* 分頁置中、可換行 */
+    .pager{
+        max-width: 100%;
+        padding: 0 12px;
+    }
+    .pager :deep(.el-pagination){
+        flex-wrap: wrap;
+        row-gap: 6px;
+    }
+}
+
+@media screen and (max-width: 901px) {
+    /* 右側內容避免被子元素撐寬 */
+    .content{ 
+        min-width: 0;
+    }
+    /* 產品容器：流體寬 + 小一點左右留白 */
+    .products{
+        width: 100%;
+        max-width: 100%;
+        padding: 0 10px;
+        box-sizing: border-box;
+        overflow-x: hidden;
+    }
+    /* 卡片排版：視寬度自動 2–3 欄 */
+    .flex{
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 14px;
+    }
+    .card{
+        padding: 8px;
+        border-radius: 12px;
+    }
+    /* 縮略圖：滿寬，內距再少一點 */
+    .thumb{
+        width: 100%;
+        max-width: none;
+        aspect-ratio: 4 / 3;
+        padding: 6px;
+    }
+    /* 文字與價格微縮；標題保持 2 行省略 */
+    .title{
+        font-size: 14px;
+        line-height: 1.35;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;        /* 實際生效的行數限制 */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .price{ 
+        font-size: 14px; 
+    }
+    .old-price{ 
+        font-size: 12px; 
+    }
+    /* 按鈕區：兩欄並排但更緊湊 */
+    .actions{ 
+        gap: 6px; 
+    }
+    .btn{
+        padding: 8px 0;
+        font-size: 13px;
+    }
+    /* 分頁：全寬置中、可換行 */
+    .pager{
+        max-width: 100%;
+        padding: 0 10px;
+    }
+    .pager :deep(.el-pagination){
+        flex-wrap: wrap;
+        row-gap: 4px;
+        font-size: 12px;
+    }
+}
+
+@media screen and (max-width: 651px) {
+    /* 右側內容避免被子元素撐寬 */
+    .content{ 
+        min-width: 0;
+    }
+    /* 容器：流體寬 + 小一點左右留白 */
+    .products{
+        width: 95%;
+        max-width: 95%;
+        margin: 0 auto;
+        padding: 0 8px;
+        box-sizing: border-box;
+        overflow-x: hidden;
+    }
+    /* 卡片排版 */
+    .flex{
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 12px;
+    }
+    .card{
+        padding: 8px;
+        border-radius: 10px;
+        gap: 8px;
+    }
+    /* 縮略圖：滿寬，內距更小 */
+    .thumb{
+        width: 100%;
+        max-width: none;
+        aspect-ratio: 4 / 3;
+        padding: 4px;
+    }
+    .thumb img{
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+    }
+    /* 文字區微縮 */
+    .title{ 
+        font-size: 13px;
+        line-height: 1.35;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-top: 5px;
+    }
+    .price{ 
+        font-size: 13px; 
+    }
+    .old-price{ 
+        font-size: 12px; 
+    }
+    /* 按鈕：維持兩欄但更緊湊 */
+    .actions{ 
+        gap: 6px; 
+    }
+    .btn{
+        padding: 8px 0;
+        font-size: 13px;
+    }
+    /* 分頁：全寬置中、可換行 */
+    .pager{
+        max-width: 100%;
+        padding: 0 8px;
+    }
+    .pager :deep(.el-pagination){
+        flex-wrap: wrap;
+        row-gap: 4px;
+        font-size: 12px;
+    }
+    .pager :deep(.el-pagination .el-pager li),
+    .pager :deep(.el-pagination .btn-prev),
+    .pager :deep(.el-pagination .btn-next){
+        min-width: 26px;
+        height: 40px;
+        line-height: 26px;
+    }
+}
+
+@media screen and (max-width: 432px) {
     .products{
         width: 100%;
         height: auto;
