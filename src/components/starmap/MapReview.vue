@@ -171,8 +171,10 @@ onUnmounted( ()=>{
 
 //評論彈窗
 .map-reviewBox {
-    width: min(90vw, 1200px);  
-    max-height: 90vh;  
+    width: min(90vw, 1200px); 
+    height: min(90vh, 880px);
+    // max-height: 90vh;  
+    
     // padding: clamp(20px, 3vw, 40px); 
 
     // border: 2px solid $primaryColor-500;

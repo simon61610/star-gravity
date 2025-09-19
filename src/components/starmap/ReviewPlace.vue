@@ -160,6 +160,7 @@ function submit(){
 
 .mapreview-writePlace{
     width: 430px;
+    height: min(90%, 640px) ;
     max-height: 90%;
     border: 2px solid $primaryColor-100;
     border-radius: 10px;

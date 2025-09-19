@@ -150,13 +150,16 @@
 <template>
     <!-----右邊內容-------->
     <div class="personal-form">
+        <h3 class="rowName">暱稱：</h3>
         <div class="row">
             <input :value="member.name" type="text" class="rowline" style="font-size: 18px" placeholder="我的名字" disabled />
         </div>
+        <h3 class="rowName">聯絡電話：</h3>
         <div class="row">
             <input v-model="member.phone" type="tel" class="rowline" style="font-size: 18px" placeholder="我的電話" />
         </div>
         <!----縣市鄉鎮-------->
+        <h3 class="rowName">聯絡地址：</h3>
         <div class="personal-city">
             <div class="select">
                 <select v-model="member.city" class="select-city" required @change="onCityChange">
@@ -200,6 +203,13 @@
     height: 50px;
     box-sizing: border-box;
 }
+
+//input框標題
+.rowName{
+    font-size: $pcChFont-H4;
+    color: $FontColor-white;
+}
+
 // 縣市區域大小
 .personal-city{
     display: flex;
