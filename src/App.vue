@@ -83,25 +83,44 @@
 
 	<style lang="scss">
 	@import '@/assets/styles/main.scss';
-	body:not(.admin-layout) .frontend-layout,
-	body:not(.admin-layout) .frontend-layout * {
-	cursor: none !important;
-	}
-	// .frontend-layout,
-	// .frontend-layout * {
-	// cursor: none !important;
-	// }
+/* 桌機前台：隱藏系統游標，只顯示假游標 */
+		body:not(.admin-layout) {
+		cursor: none !important; // 把系統游標徹底藏掉
+		}
 
-	// body.admin-layout {
-	// cursor: auto !important;
-	// }
-	@include respond("md2")  {
-		body {
-			cursor: auto; /* 手機就回復原本游標 */
+		/* 手機 ≤800px：恢復系統游標，隱藏假游標 */
+		@include respond("md2") {
+		body:not(.admin-layout) {
+			cursor: auto !important; // 系統游標回來
 		}
 
 		.cursor {
-			display: none; /* 隱藏假的游標元素 */
+			display: none; // 假游標隱藏
 		}
-	}
+		}
+
+		/* 後台：永遠系統游標 */
+		body.admin-layout {
+		cursor: auto !important;
+		}
+	// body:not(.admin-layout) .frontend-layout,
+	// body:not(.admin-layout) .frontend-layout * {
+	// cursor: none !important;
+	// }
+	
+	// @include respond("md2")  {
+	// 	 	body:not(.admin-layout) .frontend-layout a,
+	// 		body:not(.admin-layout) .frontend-layout button {
+	// 			cursor: pointer !important;
+	// 		}
+
+	// 		body:not(.admin-layout) .frontend-layout input,
+	// 		body:not(.admin-layout) .frontend-layout textarea {
+	// 			cursor: text !important;
+	// 		}
+
+	// 		.cursor {
+	// 			display: none;
+	// 		}
+	// 		}
 	</style>
