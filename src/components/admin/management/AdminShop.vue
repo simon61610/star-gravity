@@ -15,7 +15,7 @@ const admin = useAuthStore()
 const props = defineProps({
   search: { type: String, default: '' }
 })
-import AdminConfirm from '@/components/common/AdminConfirm.vue';
+import Confirm from '@/components/common/Confirm.vue';
 
 // ==========================================================
 
@@ -341,7 +341,7 @@ const doSave = async () => {
 
 // 點擊「儲存」按鈕時 -> 開啟確認視窗
 const save = () => {
-    
+
     // 檢查是否都有輸入
     if( !name.value || category_name.value === 'null' || !description.value || !promotion.value || !original_price.value || !discount.value || !introduction.value){
         alert("請輸入完整商品資料")
@@ -389,7 +389,7 @@ const handleCancelSave = () => {
 
 
 <template>
-    <AdminConfirm
+    <Confirm
         :show="showConfirm"
         title="確認儲存"
         message="確定要儲存這筆商品資料嗎？"

@@ -4,7 +4,7 @@
 
     const props = defineProps({
     show: { type: Boolean, default: false },
-    title: { type: String, default: '確認操作' },
+    title: { type: String, default: '確認' },
     message: { type: String, default: '是否確定要繼續？' }
     })
 

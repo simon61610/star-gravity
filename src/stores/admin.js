@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import axios from 'axios'
 
 //  這裡只要改 true/false，就能切換 (主要為測試開發使用 正式要false)
-const USE_FAKE = true 
+const USE_FAKE = false
 
 export const useAuthStore = defineStore("admin",()=>{
     const isLoggedIn = ref(false)  //確認登入狀態 預設登出
