@@ -22,7 +22,7 @@ export const useAuthStore = defineStore("admin",()=>{
         }
 
         //正式部屬呼叫PHP
-        const res =  await axios.get(import.meta.env.VITE_AJAX_URL+'admin/admincheck.php',{withCredentials: true})  //withCredentials: true 請求這個網址時要帶上cookie
+        const res =  await axios.get(import.meta.env.VITE_AJAX_URL+'Admin/admincheck.php',{withCredentials: true})  //withCredentials: true 請求這個網址時要帶上cookie
 
         isLoggedIn.value = res.data.success === true
         currentUser.value = res.data.user || null
@@ -42,7 +42,7 @@ export const useAuthStore = defineStore("admin",()=>{
         }
 
 
-        const res = await axios.post(import.meta.env.VITE_AJAX_URL+'admin/adminlogin.php',{ username, password },{ withCredentials: true })
+        const res = await axios.post(import.meta.env.VITE_AJAX_URL+'Admin/adminlogin.php',{ username, password },{ withCredentials: true })
 
         if(res.data.success){
             await checkSession()
@@ -65,7 +65,7 @@ export const useAuthStore = defineStore("admin",()=>{
 
 
 
-        const res = await axios.post(import.meta.env.VITE_AJAX_URL+'admin/adminlogout.php',{},{ withCredentials: true })
+        const res = await axios.post(import.meta.env.VITE_AJAX_URL+'Admin/adminlogout.php',{},{ withCredentials: true })
 
         //如果登出成功
         if(res.data.success){
