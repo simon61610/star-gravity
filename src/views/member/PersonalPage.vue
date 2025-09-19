@@ -296,12 +296,12 @@
         max-width: 100%;
         display: grid;
         grid-template-columns: 240px 1fr;  /* 左：側欄固定寬；右：內容自適應 */
-        gap: 32px;                         /* 間距縮小一點 */
+        gap: 15px;                         /* 間距縮小一點 */
         padding: 40px 16px 60px;           /* 兩側加內距，避免貼邊 */
         box-sizing: border-box;
     }
     .sidebar{
-        margin-left: 0;                    /* 移除 100px，避免在窄桌機撐寬 */
+        margin-left: 50px;                    /* 移除 100px，避免在窄桌機撐寬 */
         padding-top: 12px;
     }
     .avatar-uploader{
@@ -359,6 +359,12 @@
 
     .personal { 
         overflow-x: hidden; 
+        height: auto;
+        min-height: calc(100vh - 80px);
+        padding-bottom: 40px;
+        // 背景色
+        background: $primaryColor-900;
+        background-size: cover; 
     }
     /* 頭像 */
     .avatar-uploader {
@@ -420,19 +426,6 @@
         padding: 10px 0;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 @media screen and (max-width: 433px) {
     .personal{
