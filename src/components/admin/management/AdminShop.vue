@@ -15,6 +15,7 @@ const admin = useAuthStore()
 const props = defineProps({
   search: { type: String, default: '' }
 })
+import Confirm from '@/components/common/Confirm.vue';
 
 // ==========================================================
 
@@ -241,43 +242,14 @@ const resetForm = () => {
 // 控制儲存狀態
 const isSaving = ref(false)
 
-const save = async () => {
+// 控制確認視窗
+const showConfirm = ref(false)
+
+const doSave = async () => {
     if(isSaving.value) return
     isSaving.value = true
     
     try {
-        // 檢查是否都有輸入
-        if( !name.value || category_name.value === 'null' || !description.value || !promotion.value || !original_price.value || !discount.value || !introduction.value){
-            alert("請輸入完整商品資料")
-            // isSaving.value = false
-            return
-        }
-    
-        // 檢查至少一張圖片
-        /* let hasImage = false
-        for(let i = 0; i < imagesPreview.value.length; i++){
-            if(imagesPreview.value[i] !== null){
-                hasImage = true
-                break
-            }
-        } */
-    
-        // 檢查圖片都要有
-        let hasImage = true
-        for(let i = 0; i < imagesPreview.value.length; i++){
-            if(imagesPreview.value[i] === null){
-                hasImage = false
-                break
-            }
-        }
-    
-        if(!hasImage){
-            alert('請上傳完整的三張商品照片')
-            // isSaving.value = false
-            return
-        }
-    
-        
         // 用 FormData 儲存
         const formData = new FormData()
     
@@ -365,15 +337,66 @@ const save = async () => {
     } finally {
         isSaving.value = false
     }
-    
+}
 
-} 
+// 點擊「儲存」按鈕時 -> 開啟確認視窗
+const save = () => {
 
+    // 檢查是否都有輸入
+    if( !name.value || category_name.value === 'null' || !description.value || !promotion.value || !original_price.value || !discount.value || !introduction.value){
+        alert("請輸入完整商品資料")
+        // isSaving.value = false
+        return
+    }
+
+    // 檢查至少一張圖片
+    /* let hasImage = false
+    for(let i = 0; i < imagesPreview.value.length; i++){
+        if(imagesPreview.value[i] !== null){
+            hasImage = true
+            break
+        }
+    } */
+
+    // 檢查圖片都要有
+    let hasImage = true
+    for(let i = 0; i < imagesPreview.value.length; i++){
+        if(imagesPreview.value[i] === null){
+            hasImage = false
+            break
+        }
+    }
+
+    if(!hasImage){
+        alert('請上傳完整的三張商品照片')
+        // isSaving.value = false
+        return
+    }
+
+    showConfirm.value = true
+}
+
+// 確認後才呼叫 doSave()
+const handleConfirmSave = async () => {
+    showConfirm.value = false
+    await doSave()
+}
+const handleCancelSave = () => {
+    showConfirm.value = false
+}
 
 </script>
 
 
 <template>
+    <Confirm
+        :show="showConfirm"
+        title="確認儲存"
+        message="確定要儲存這筆商品資料嗎？"
+        @confirm="handleConfirmSave"
+        @cancel="handleCancelSave"
+    />
+
     <AdminTable :columns="columns" :data="Shoptable" :search="props.search">
         <template #編輯="{ row, $index }">
             <el-button size="small" @click="handleEdit(row, $index)"> 
