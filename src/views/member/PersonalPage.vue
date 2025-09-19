@@ -326,6 +326,12 @@
     /* <=901px：兩欄佈局、縮小間距、移除側邊距，避免撐寬 */
     .personal {
         overflow-x: hidden; /* 保險 */
+        height: auto;
+        min-height: calc(100vh - 80px);
+        padding-bottom: 40px;
+        // 背景色
+        background: $primaryColor-900;
+        background-size: cover; 
     }
     .leftright{
         display: grid;                     /* 由 flex 換成 grid 比較好控欄寬 */
