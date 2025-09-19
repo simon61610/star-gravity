@@ -10,6 +10,7 @@
     // const emit = defineEmits(['close'])
 
     const goLogin = () => {
+
         router.push({
             path: "/loginfirst",
             query: { redirect: loginPrompt.redirectPath } // 帶參數導回原本的頁面
@@ -48,7 +49,7 @@
         justify-content: center;
         align-items: center;
 
-        z-index: 5000;
+        z-index: 100;
 
         .box {
             padding: 24px;

@@ -60,7 +60,6 @@
     display: flex;
     gap: 10px;
     color: $primaryColor-500;
-    
 }
 .idx{
     font-size: $pcEngFont-numberTitle;
@@ -74,11 +73,11 @@
 }
 .container-five h2::before,
 .container-five h2::after{
-  content: "";
-  position: absolute;
-  left: 0; right: 0;      /* 線寬 = 文字寬 + padding */
-  height: 2px;            /* 線的粗細 */
-  background: rgba(255,255,255,.25); /* 線的顏色（可調） */
+    content: "";
+    position: absolute;
+    left: 0; right: 0;      /* 線寬 = 文字寬 + padding */
+    height: 2px;            /* 線的粗細 */
+    background: rgba(255,255,255,.25); /* 線的顏色（可調） */
 }
 .container-five h2::before{ 
     top: -6px; 
@@ -133,6 +132,95 @@
     line-height: $linHeight-p;
 }
 
+//-------------------------斷點開始----------------------------------------------
+/* 斷點901 */
+@media screen and (max-width:901px) {
+
+    .cards {
+        flex-wrap: wrap;             // 允許換行
+        justify-content: center;     // 卡片置中
+        margin-left: 0;              // 移除左邊固定空間
+        gap: 20px;
+    }
+    .cardall {
+        width: 45%;                  // 兩張並排
+        height: auto;                // 高度隨內容
+        min-width: 220px;            // 避免太小
+    }
+    .cardall img {
+        height: auto;                // 圖片高度自適應
+    }
+    .area {
+        position: absolute;          // 繼續覆蓋在圖片上
+        inset: 0;
+        padding: 10px;
+        display: flex;               // 直向排列文字
+        flex-direction: column;
+        justify-content: center;   // 文字靠下疊
+        text-align: center;
+        background: linear-gradient(180deg, rgba(0,0,0,.5), rgba(0,0,0,.35));
+    }
+    .area h4 {
+        margin: 0 0 8px;
+        font-size: $pcChFont-H4;
+    }
+    .area p {
+        font-size: $pcChFont-p;
+        line-height: 1.5;
+    }
+}
+
+/* 斷點651 */
+@media screen and (max-width:652px) {
+
+    .cards {
+        margin-left: 0;                 /* 移除桌機的左偏移 */
+        display: flex;
+        gap: 15px;
+        padding: 0 12px 12px;           /* 內距避免貼邊 */
+        scroll-snap-type: x mandatory;  /* 片片對齊停駐 */
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain; /* 阻擋外層跟著滾 */
+    }
+    .cardall {
+        flex: 0 0 220px;                /* 卡片寬度（可調 200–260）*/
+        height: 300px;                  /* 固定比例高度（可調） */
+        scroll-snap-align: start;       /* 每張卡片對齊左側 */
+        border-radius: 16px;
+    }
+    /* 若想用比例自適應高度，改用下面這行、並移除上面的固定 height
+        .cardall { aspect-ratio: 3 / 4; }
+    */
+    .cardall img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    /* 文字仍在圖上，略縮字級，以免擠 */
+    .area {
+        padding: 12px;
+        background: linear-gradient(180deg, rgba(0,0,0,.5), rgba(0,0,0,.35));
+    }
+    .area h4 { 
+        font-size: 1rem; 
+        margin: 8px 0; 
+    }
+    .area p { 
+        font-size: .85rem; 
+        line-height: 1.5; 
+    }
+    /* 可選：細化滑動條外觀（支援度取決於瀏覽器） */
+    .cards::-webkit-scrollbar { 
+        height: 6px; 
+    }
+    .cards::-webkit-scrollbar-thumb { 
+        background: rgba(255,255,255,.2); 
+        border-radius: 3px; 
+    }
+
+}
+
+/* 斷點430 */
 @media screen and (max-width: 433px) {
     /* 整體容器：讓卡片可以左右滑動 */
     .cards {

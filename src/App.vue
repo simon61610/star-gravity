@@ -13,8 +13,10 @@
 		import StarryLoader from '@/components/common/StarryLoader.vue'
 		import loaderKit from '@/composables/loaderState' 
 		import axios from 'axios';
-
+		import { useRoute } from "vue-router"
+		import CursorStar from "@/components/CursorStar.vue"
 		const { loader } = loaderKit 
+		const route = useRoute()
 		const defaultPalette = {                                  // 預設配色（未指定時使用）
 			bg:'#050a18', star:'#cfe3ff',                           // 背景 / 星點
 			accent:'#88aaff', accent2:'#8bf5ff',                    // 外環漸層兩端
@@ -28,15 +30,17 @@
 		// -------會員-----------------------------------------
 		// 只要重新整理或重新開啟網站，就能在一開始檢查會員狀態
 		import { useRouter } from 'vue-router'
-		import { onMounted } from 'vue'
+		import { onMounted,computed } from 'vue'
 		import { useMemberStore } from './stores/member';
 		const member = useMemberStore()
 		const router = useRouter()
-
-		onMounted(async () => {
+		const showCursor = computed(() => {
+		return isDesktop.value && route.meta.layout !== "backend"
+		})
+			onMounted(async () => {
 			// 每次進站先「補回」localStorage 裡的使用者資料
 			member.hydrate()
-
+	
 			// 有 token 才向後端驗證；沒有 token 就維持未登入（不要亂登出）
 			if (member.token) {
 				const v = await member.verifyToken()
@@ -66,16 +70,57 @@
 		:features="loader.features || { pulsar:true, rings:true, moon:true }" 
 		:logo-text="loader.logoText"                          
 		/>
-		<div v-show ="!loader.active">
+		<div v-show ="!loader.active" class="frontend-layout">
 			<Header  v-if="$route.meta.layout !== 'backend' && $route.meta?.layout !== 'index'" />   <!--只要不是 backend 也不是 index，才顯示-->
 			
 			<router-view/>
 			
 			<Footer  v-if="$route.meta.layout !== 'backend' && $route.meta?.layout !== 'index'"/>  
 		</div>
-
-		
+		<div class="custom-cursor" ref="cursor"></div>
+		<CursorStar v-if="$route.meta.layout !== 'backend' || $route.name === 'AdminLoginPage'"/>
 	</template>
 
-	<style>
+	<style lang="scss">
+	@import '@/assets/styles/main.scss';
+/* 桌機前台：隱藏系統游標，只顯示假游標 */
+		body:not(.admin-layout) {
+		cursor: none !important; // 把系統游標徹底藏掉
+		}
+
+		/* 手機 ≤800px：恢復系統游標，隱藏假游標 */
+		@include respond("md2") {
+		body:not(.admin-layout) {
+			cursor: auto !important; // 系統游標回來
+		}
+
+		.cursor {
+			display: none; // 假游標隱藏
+		}
+		}
+
+		/* 後台：永遠系統游標 */
+		body.admin-layout {
+		cursor: auto !important;
+		}
+	// body:not(.admin-layout) .frontend-layout,
+	// body:not(.admin-layout) .frontend-layout * {
+	// cursor: none !important;
+	// }
+	
+	// @include respond("md2")  {
+	// 	 	body:not(.admin-layout) .frontend-layout a,
+	// 		body:not(.admin-layout) .frontend-layout button {
+	// 			cursor: pointer !important;
+	// 		}
+
+	// 		body:not(.admin-layout) .frontend-layout input,
+	// 		body:not(.admin-layout) .frontend-layout textarea {
+	// 			cursor: text !important;
+	// 		}
+
+	// 		.cursor {
+	// 			display: none;
+	// 		}
+	// 		}
 	</style>

@@ -196,14 +196,14 @@
     gap: 20px;
 }
 .rowline{
-    width: 800px;
+    width: 710px;
     height: 50px;
     box-sizing: border-box;
 }
 // 縣市區域大小
 .personal-city{
     display: flex;
-    width: 100%;
+    width: 88%;
     gap: 24px;
 }
 .select-city{
@@ -219,7 +219,7 @@
 .actions{
     display: flex;
     justify-content: flex-end;
-    width: 780px;
+    width: 700px;
 }
 .save{
     background-color: $primaryColor-500;
@@ -236,6 +236,161 @@
     font-size: $pcChFont-small; 
     color: $FontColor-white;
 }
+
+// ------------------斷點---------------------------------
+@media screen and (max-width: 1201px) {
+
+    .personal-form{
+        gap: 16px;
+        padding-right: 8px;
+    }
+    /* 輸入框：由固定 710px → 全寬，避免撐出橫捲 */
+    .rowline{
+        width: 100%;
+        height: 50px;     /* 與原本一致 */
+        font-size: 16px;
+        box-sizing: border-box;
+    }
+    /* 縣市/鄉鎮 */
+    .personal-city{
+        display: flex;
+        flex-wrap: wrap;  /* 寬度不夠就換行 */
+        gap: 16px;
+        width: 100%;
+    }
+    .personal-city .select{
+        flex: 1 1 340px;  /* 起碼 340px，空間夠可放大 */
+        min-width: 0;     /* 防止子項撐寬容器 */
+    }
+    .select-city{
+        width: 340px;     
+        height: 50px;     
+        max-width: 100%;  /* 容器更窄時最多跟容器等寬 */
+        box-sizing: border-box;
+    }
+    /* 動作列：由固定 700px → 全寬 */
+    .actions{
+        width: 100%;
+        justify-content: flex-end;
+    }
+    .save{
+        width: 100px;
+        height: 40px;
+    }
+}
+
+@media screen and (max-width: 901px) {
+
+    .personal-form{
+        padding-top: 5px;
+        padding-right: 5px;
+        gap: 15px;
+    }
+    .rowline{
+        width: 100%;          /* 原本 800px → 改全寬 */
+        height: 46px;
+        font-size: 16px;
+    }
+    .personal-city{
+        display: grid;        /* 原本 flex → 改 grid 兩欄避免相加超寬 */
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        width: 100%;
+    }
+    .personal-city .select {
+        min-width: 0;          /* ← 防止 grid 子項撐寬 */
+    } 
+    .select-city{
+        width: 100%;
+        height: 46px;
+        box-sizing: border-box;
+        font-size: 16px;     
+    }
+    .select-city option {
+        font-size: 14px !important;   /* 比原本的複合選擇器更有力 */
+        line-height: 1.4;              /* 避免每列過高（部分瀏覽器會吃） */
+    }
+    .actions{
+        width: 100%;                   /* 原本 780px → 全寬 */
+        justify-content: flex-end;
+    }
+    .save{
+        width: 120px;                  /* 按鈕自身大小可維持 */
+        height: 40px;
+    }
+}
+
+@media screen and (max-width: 651px) {
+
+    .personal-form{
+        gap: 14px;
+    }
+    /* 輸入框全寬、降低高度 */
+    .rowline{
+        width: 100%;
+        height: 44px;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+    /* 縣市/鄉鎮：單欄直排，避免兩欄總寬超出 */
+    .personal-city{
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+        width: 100%;
+    }
+    .select-city{
+        width: 100%;
+        height: 44px;
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+    /* 動作列全寬；手機上讓按鈕吃滿一行較好點擊 */
+    .actions{
+        width: 100%;
+        justify-content: stretch;
+    }
+    .save{
+        width: 100%;
+        height: 44px;
+        font-size: 16px;
+        border-radius: 999px;
+    }
+    .hint{ 
+        display: block; 
+        margin-top: 6px; 
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @media screen and (max-width: 433px) {
     .personal-form{

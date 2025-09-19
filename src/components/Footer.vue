@@ -39,17 +39,18 @@ import  logo from '@/assets/logos/logo.svg'
 
             <section class="footer-right-box">
                 <ul class="footer-right-one">
-                    <li>觀星初學指南</li>
-                    <li>天文快訊</li>
-                    <li>星視野</li>
-                    <li>星據點</li>
+                    <router-link to="/about" class="router-link"><li>觀星初學指南</li></router-link>
+                    <router-link to="/Newpage" class="router-link"><li>天文快訊</li></router-link>
+                    <router-link to="/gamesky" class="router-link"><li>星視野</li></router-link>
+                    <router-link to="/mapfirst" class="router-link"><li>星據點</li></router-link>
                 </ul>
 
                 <ul class="footer-right-two">
-                    <li>星遊戲</li>
-                    <li>星星活動</li>
-                    <li>星空小舖</li>
-                    <li>關注我們</li>
+                    <router-link to="/gamehome" class="router-link"><li>星遊戲</li></router-link>
+                    <router-link to="/events" class="router-link"><li>星星活動</li></router-link>
+                    <router-link to="/shop" class="router-link"><li>星空小舖</li></router-link>
+                    <!-- <li>關注我們</li> -->
+                     <router-link to="/privacy-policy" class="router-link"><li>隱私權政策</li></router-link>
                 </ul>
             </section>
             
@@ -68,6 +69,18 @@ import  logo from '@/assets/logos/logo.svg'
 
 <style scoped lang="scss">
 @import '@/assets/styles/main.scss';
+
+.router-link {
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+
+      li:hover {
+        color: orange;
+      }
+  }
+
+
 .footer {
   color: white;
   background-color: black;

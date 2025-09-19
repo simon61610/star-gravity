@@ -7,7 +7,9 @@ export const useLoginPromptStore = defineStore('loginPrompt', () => {
     const afterLoginAction = ref(null) // 儲存登入後要執行的動作(例如: 地點組件可以打開到評論)
 
     const open = (path = window.location.pathname , action = null) => {
-        redirectPath.value = path
+        let cleanedPath = path.replace(/^\/tjd102\/g1/, '')
+        
+        redirectPath.value = cleanedPath.startsWith('/') ? cleanedPath : '/' + cleanedPath
         isOpen.value = true
         afterLoginAction.value = action //儲存login當下的地點ID資訊
     }

@@ -307,7 +307,7 @@
         
                 // 傳遞資料到完成頁
                 const order_id = res.data.order_id
-                router.push({
+                router.replace({
                     path: '/cartpage/cartsuccess',
                     query: { 
                         order_id, 

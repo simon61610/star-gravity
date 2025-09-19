@@ -66,7 +66,7 @@ const handleEdit = (index, row) => { //偵測編輯按鈕編輯哪個資料
                               v-bind="scope"></slot> <!------col.slot 定義欄位------->
                                   <!-- 如果是 checkbox 欄位 -->
                                   <el-checkbox
-                                    v-else-if="col.type === 'checkbox'"
+                                    v-else-if="col.type == 'checkbox'"
                                     v-model="scope.row[col.prop]"
                                     :true-label="1"
                                     :false-label="0"

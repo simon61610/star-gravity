@@ -426,8 +426,6 @@ onMounted(()=>{
 })
 onUnmounted(()=>{
 
-
-
     window.removeEventListener('scroll', controlScroll)
 })
 
@@ -512,6 +510,7 @@ onUnmounted(()=>{
 .wrapper{
     overflow: hidden;
     background-color: $bgColor-shop;
+     
 }
 .special-effects{
     min-height: 400vh; 

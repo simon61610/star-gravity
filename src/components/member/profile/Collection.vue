@@ -198,8 +198,8 @@
                         <img v-if="p.photo" :src="p.photo" :alt="p.title || '商品圖片'">
                     </div>
         
-                    <div class="down" @click="goProduct(p.id)">
-                        <div class="titleprice">
+                    <div class="down">
+                        <div class="titleprice" @click="goProduct(p.id)">
                             <h3 class="title">{{ p.title }}</h3>
                             <p class="price">{{ formatTWD(p.price) }}</p>
                             <!-- 原價高於顯示價才顯示刪除線 -->
@@ -302,6 +302,7 @@
     flex-direction: column;
     align-items: center;
     gap: 4px;
+    cursor: pointer;
 }
 .title { 
     margin: 0;

@@ -5,6 +5,8 @@ import { useMemberStore } from '@/stores/member'
 import bus from '@/composables/useMitt'
 // import products from '@/data/products'
 import  logo from '@/assets/logos/logo.svg'
+import Confirm from './common/Confirm.vue'
+
 const emit = defineEmits(['open'])
 const active = ref(false)
 const route = useRoute()
@@ -12,6 +14,14 @@ const currentActive = ref(null)
 const navbarRef = ref(null) // 選單容器的 ref
 const router = useRouter()
 const memberStore = useMemberStore()
+
+const showLogoutConfirm = ref(false)
+
+const handleLogout = () => {
+  memberStore.logout()
+  router.replace('/loginfirst')
+  showLogoutConfirm.value = false
+}
 
 
 
@@ -111,6 +121,15 @@ watch(
 
 
 <template>
+  <!-- 登出確認框 -->
+  <Confirm
+    :show="showLogoutConfirm"
+    message="您確定要登出嗎？"
+    @confirm="handleLogout"
+    @cancel="showLogoutConfirm = false"
+  />
+
+
   <div class="navbar-container" @click="currentActive = null">
     <nav class="navbar " @click.stop >
         <div class="wrapper" :class="{active:active}">
@@ -143,7 +162,7 @@ watch(
                         </router-link>
                     </li>
                     <li class="icon-item" @click="clearActive">
-                        <button class="icon-btn" @click="memberStore.logout(); router.replace('/loginfirst')" aria-label="登出">
+                        <button class="icon-btn" @click="showLogoutConfirm = true" aria-label="登出">
                             <i class="fa-solid fa-arrow-right-from-bracket fa-lg"></i>
                         </button>
                     </li>
