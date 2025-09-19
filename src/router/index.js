@@ -43,6 +43,9 @@ import ShopHomePage from '@/views/shop/ShopHomePage.vue'
 import ShopCategoryPage from '@/views/shop/ShopCategoryPage.vue'
 import ShopProductPage from '@/views/shop/ShopProductPage.vue'
 
+// ------------------ 隱私權政策 ------------------
+import PrivacyPage from '@/views/privacy/PrivacyPage.vue'
+
 
 // ------------------ 會員 member  ------------------
 import ForgetPage from '@/views/member/ForgetPage.vue'
@@ -148,6 +151,9 @@ const routes = [
     {path: 'cartsuccess', name: 'cartsuccess', component: () => import('@/components/shop/cart/CartSuccess.vue')},
   ]
 },
+
+// ------------------ 隱私權政策 ------------------
+{ path: '/privacy-policy', name: 'privacy-policy', component: PrivacyPage },
 
 
 // ------------------ 會員 member  ------------------

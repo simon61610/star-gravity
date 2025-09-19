@@ -49,7 +49,8 @@ import  logo from '@/assets/logos/logo.svg'
                     <li>星遊戲</li>
                     <li>星星活動</li>
                     <li>星空小舖</li>
-                    <li>關注我們</li>
+                    <!-- <li>關注我們</li> -->
+                     <router-link to="/privacy-policy" class="router-link"><li>隱私權政策</li></router-link>
                 </ul>
             </section>
             
@@ -68,6 +69,17 @@ import  logo from '@/assets/logos/logo.svg'
 
 <style scoped lang="scss">
 @import '@/assets/styles/main.scss';
+
+.router-link {
+      text-decoration: none;
+      color: inherit;
+
+      li:hover {
+        color: orange;
+      }
+  }
+
+
 .footer {
   color: white;
   background-color: black;
