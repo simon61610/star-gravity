@@ -360,48 +360,65 @@
     .personal { 
         overflow-x: hidden; 
     }
-    /* 改成單欄直排 */
+    /* 頭像 */
+    .avatar-uploader {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto;
+    }
+    /* 容器改直向排列 */
     .leftright{
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 16px;
-        padding: 20px 12px 40px;
+        display: flex;
+        flex-direction: column;   /* 由左右 → 上下 */
+        gap: 12px;
+        padding: 12px;
+        box-sizing: border-box;
     }
+    /* 選單區在上方 */
     .sidebar{
-        margin-left: 0;
-        padding-top: 0;
+        order: 1;
+        margin-left: 0;           /* 取消原本的 100px 左外距 */
+        padding-top: 8px;
+        width: 100%;
     }
-    .avatar-uploader{
-        width: 72px;
-        height: 72px;
-        margin: 0 auto 8px;   /* 置中 */
+    /* 內容（表格）在下方 */
+    .content{
+        order: 2;
+        width: 100%;
+        min-width: 0;             /* 重要：避免內容把版面撐出橫捲 */
     }
-    /* 選單改為單欄、增加觸控空間 */
+    /* 表格外層（你的各種 table wrapper）全寬且只在自身橫捲 */
+    .order-table-wrapper,
+    .event-table-wrapper{
+        width: 100% !important;
+        max-width: 100%;
+        padding: 0;
+        overflow-x: hidden;       /* 頁面不橫捲 */
+    }
+    .order-table-box,
+    .event-table-box{
+        overflow-x: auto;         /* 需要時由表格區塊自己橫捲 */
+        -webkit-overflow-scrolling: touch;
+    }
+    /* 選單兩排：上 3 個、下 2 個 */
     .menu{
-        padding: 4px 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        padding: 8px 100px;
+        justify-content: center;
     }
+    .menu li{ 
+        flex: 0 0 30%;    /* 第 1～3 個 */
+    }   
+    .menu li:nth-child(n+4){ 
+        flex-basis: 25%;         /* 第 4、5 個 */
+    }  
     .menu .menu-link{
-        font-size: 16px;
-        padding: 10px 0;
+        display: block;
         text-align: center;
+        padding: 10px 0;
     }
-    /* 內容區避免被子元素撐出水平卷軸 */
-    .content{ 
-        min-width: 0; 
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 

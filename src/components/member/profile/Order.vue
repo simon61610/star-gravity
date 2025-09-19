@@ -114,7 +114,8 @@
 
 // 右側表格
 .order-table-wrapper{
-   width: 800px;
+//    width: 800px;
+    width: min(100%, 800px);
 
     ::v-deep(.el-table__header th){    //表格頭
       background-color: $primaryColor-500;
@@ -175,7 +176,7 @@
     }
 }
 
-@media screen and (max-width: 901px) {
+@media screen and (max-width: 900px) {
     /* 外層流體寬，兩側再收一點內距 */
     order-table-wrapper{
         width: 100% !important;

@@ -29,7 +29,6 @@
         { label: '報名時間', prop: 'registration_date'},
         { label: '報名編號', prop: 'registration_number'},
         { label: '活動名稱', prop: 'event_name' },
-        // { label: '日期&時間', prop: 'event_date' },
         { label: '活動地點', prop: 'event_place' },
         { label: '狀態', prop: 'event_status'},
     ]
@@ -58,7 +57,6 @@
 
     // 若資料量變動，回到第一頁（可保險）
     watch(dataSource, () => { eventPage.value = 1 })
-
 
     //-------------連接後端--------------------
     const getMemberEvents = async (memberId) => {
@@ -116,7 +114,8 @@
 
 // 右側表格
 .event-table-wrapper{
-   width: 800px;
+//    width: 800px;
+    width: min(100%, 800px);
 
     ::v-deep(.el-table__header th){    //表格頭
       background-color: $primaryColor-500;
@@ -137,6 +136,158 @@
     width: 800px;
     justify-content: center;  
     padding-top: 10px;
+}
+
+//--------------------斷點------------------------------
+@media screen and (max-width: 1201px) {
+    /* 外層容器：流體寬，避免整頁橫捲 */
+    .event-table-wrapper{
+        width: 100% !important;
+        max-width: 100%;
+        padding: 0 12px;
+        box-sizing: border-box;
+        overflow-x: hidden;
+    }
+    /* 表格盒：僅此層可水平捲動 */
+    .event-table-box{
+        width: 100% !important;
+        max-width: none;
+        margin: 0 auto;
+        overflow-x: auto;                 /* 關鍵：只讓表格這塊出現橫向卷軸 */
+        -webkit-overflow-scrolling: touch;
+    }
+    /* 保底：強制表格至少有一定總寬，才看得到橫捲 */
+    .event-table-box :deep(.el-table__header),
+    .event-table-box :deep(.el-table__body){
+        min-width: 900px;                 /* 依需要調整；也可不寫，交給各欄 minWidth 決定 */
+    }
+     /* 小一點字級與內距 */
+    .event-table-wrapper :deep(.el-table__header th),
+    .event-table-wrapper :deep(.el-table__cell){
+        font-size: 14px;
+        padding: 10px 8px;
+        white-space: nowrap;              /* 不換行，交由橫捲 */
+    }
+    /* 分頁：全寬置中，可換行 */
+    .pager{
+        width: 100% !important;
+        display: flex;
+        justify-content: center;
+        padding-top: 10px;
+        box-sizing: border-box;
+    }
+    .pager :deep(.el-pagination){
+        flex-wrap: wrap;
+        row-gap: 6px;
+    }
+}
+
+@media screen and (max-width: 901px) {
+    /* 外層：流體寬、避免整頁橫捲 */
+    .event-table-wrapper{
+        width: 100% !important;
+        max-width: 100%;
+        padding: 0 10px;
+        box-sizing: border-box;
+        overflow-x: hidden;
+    }
+    /* 表格容器：只在這層出水平卷軸 */
+    .event-table-box{
+        width: 100% !important;
+        max-width: none;
+        margin: 0 auto;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    /* 保底最小總寬，需橫捲時才看得到捲軸 */
+    .event-table-box :deep(.el-table__header),
+    .event-table-box :deep(.el-table__body) { 
+        min-width: 820px; 
+    }
+    /* 表頭/儲存格：再縮一階，內容不換行 */
+    .event-table-wrapper :deep(.el-table__header th),
+    .event-table-wrapper :deep(.el-table__cell){
+        font-size: 13px;
+        padding: 8px 6px;
+        white-space: nowrap;
+    }
+    /* 列高稍降，讓表格更緊湊 */
+    .event-table-wrapper :deep(.el-table__row){
+        height: 44px;
+    }
+    /* 分頁：全寬置中並允許換行 */
+    .pager{
+        width: 100% !important;
+        display: flex;
+        justify-content: center;
+        padding-top: 8px;
+        box-sizing: border-box;
+    }
+    .pager :deep(.el-pagination){
+        flex-wrap: wrap;
+        row-gap: 6px;
+    }
+}
+
+@media screen and (max-width: 651px) {
+    /* 外層：流體寬，頁面不橫捲 */
+    .event-table-wrapper{
+        width: 100% !important;
+        max-width: 100%;
+        padding: 0 8px;
+        box-sizing: border-box;
+        overflow-x: hidden;
+    }
+    /* 只讓表格區塊能水平捲動 */
+    .event-table-box{
+        width: 100% !important;
+        max-width: none;
+        margin: 0 auto;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    /* 保底最小總寬以觸發橫捲 */
+    .event-table-box :deep(.el-table__header),
+    .event-table-box :deep(.el-table__body){ 
+        min-width: 780px; 
+    }
+    /* 表頭/儲存格更緊湊，內容不換行 */
+    .event-table-wrapper :deep(.el-table__header th),
+    .event-table-wrapper :deep(.el-table__cell){
+        font-size: 12px;
+        padding: 6px 6px;
+        white-space: nowrap;
+    }
+    /* 長字省略，避免把列撐高 */
+    .event-table-wrapper :deep(.cell){
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 160px;   /* 需要更緊可以再調小 */
+    }
+    /* 行高再降一點 */
+    .event-table-wrapper :deep(.el-table__row){
+        height: 40px;
+    }
+    /* 分頁：全寬置中，可換行、縮小尺寸 */
+    .pager{
+        width: 100% !important;
+        display: flex;
+        justify-content: center;
+        padding-top: 6px;
+        box-sizing: border-box;
+    }
+    .pager :deep(.el-pagination){
+        flex-wrap: wrap;
+        row-gap: 4px;
+        font-size: 12px;
+    }
+    .pager :deep(.el-pagination .el-pager li),
+    .pager :deep(.el-pagination .btn-prev),
+    .pager :deep(.el-pagination .btn-next){
+        min-width: 26px;
+        height: 26px;
+        line-height: 26px;
+    }
 }
 
 @media screen and (max-width: 433px) {
