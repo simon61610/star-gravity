@@ -23,6 +23,7 @@
 
     /* ========== Pinia ========== */
     import { useMemberStore } from '@/stores/member'
+    import { useLoginPromptStore } from '@/stores/loginPrompt'
 
     /* ========== 資料 ========== */
     import { cateList } from '@/composables/useProductsCate';
@@ -33,7 +34,8 @@
     /* ========== 共用 ========== */
     const route = useRoute()
     const memberStore = useMemberStore()
-    const showLoginPrompt = ref(false)
+    // const showLoginPrompt = ref(false)
+    const loginPrompt = useLoginPromptStore()
 
     // 商品資料
     const product = ref(null)
@@ -122,8 +124,9 @@
     const isFollow = ref(false)
     const followProduct = async () => {
         if(!memberStore.isAuthed){
-            showLoginPrompt.value = true
+            // showLoginPrompt.value = true
             // alert('請先登入會員')
+            loginPrompt.open(route.fullPath)
             return
         }
 
@@ -185,7 +188,7 @@
 
 <template>
     <shopToast />
-    <LoginPrompt v-if="showLoginPrompt" @close="showLoginPrompt = false"/>
+    <LoginPrompt />
 
     <section class="product-page">
         <ShopBanner />
