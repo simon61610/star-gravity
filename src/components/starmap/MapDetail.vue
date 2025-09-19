@@ -208,10 +208,10 @@ const locationId = ref('')  //用來賦值父組件過來的selectedLocationId
                             
                         </div>
 
-                        <div class="trait3">
+                        <!-- <div class="trait3">
                             <h5>揪團活動：</h5>
                             <p>敬請期待</p>
-                        </div>
+                        </div> -->
                     </div>
 
                     <!-- 4. google map -->
@@ -281,7 +281,8 @@ const locationId = ref('')  //用來賦值父組件過來的selectedLocationId
 // 地點彈窗
 .map-contentBox{
     width: min(90vw, 1200px);  
-    max-height: 90vh;  
+    height: min(90vh, 880px);
+    // max-height: 90vh;  
     padding: clamp(20px, 3vw, 40px);  
 
     border: 2px solid $primaryColor-500;
@@ -348,9 +349,15 @@ const locationId = ref('')  //用來賦值父組件過來的selectedLocationId
 }
 
 //第一排
-.mapbox-Up-row1, .mapbox-Up-row2{
+.mapbox-Up-row1{
     display: flex;
     // flex-wrap: wrap; 
+    gap: 20px;
+    align-items: flex-start;
+    box-sizing: border-box;
+}
+.mapbox-Up-row2{
+    display: flex;
     gap: 20px;
     align-items: flex-start;
     box-sizing: border-box;
@@ -616,6 +623,18 @@ const locationId = ref('')  //用來賦值父組件過來的selectedLocationId
 //     width: 18px;
 //     transform: rotate(180deg);
 // }
+@media screen and (max-width:1150px){
+    .mapbox-Up-row1{
+        flex-wrap: wrap;
+
+        .map-detail-weather{
+            flex-wrap: nowrap;
+            justify-content:start;
+        }
+
+    }
+}
+
 @media screen and (max-width:901px){
     .mapbox-Up-row1{
         flex-direction: column;
@@ -630,6 +649,10 @@ const locationId = ref('')  //用來賦值父組件過來的selectedLocationId
     .mapbox-Up-row2{
         flex-direction: column;
     }
+    .map-detail-weather{
+        flex-wrap: wrap;
+
+    }
 }
 @media screen and (max-width:430px) {
     .mapbox-Up-row1, .mapbox-Up-row2{
@@ -637,7 +660,7 @@ const locationId = ref('')  //用來賦值父組件過來的selectedLocationId
         gap: 36px;
     }
     .map-detail-weather{
-        flex-wrap: nowrap;
+        flex-direction: column;
         gap: 8px;
 
     }
@@ -645,7 +668,7 @@ const locationId = ref('')  //用來賦值父組件過來的selectedLocationId
         font-size: 14px;
     }
     .live-weather{
-        font-size: 24px;
+        font-size: 36px;
     }
 
     .map-detial-trait{

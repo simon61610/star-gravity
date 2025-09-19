@@ -62,14 +62,14 @@ watch(filteredLocationList, (newFilteredList) => {
 
 // ========== 生命週期 ==========
 onMounted(() => {
+    window.addEventListener('resize', handleResize)
+
     region.value = '全台'
     placeholder.value = ''
 
     if( !isMobile.value ){
         setMap()
     }
-
-    window.addEventListener('resize', handleResize)
 })
 
 onUnmounted(()=>{
@@ -80,24 +80,24 @@ onUnmounted(()=>{
     }
 })
 
-// ========== 視窗大小變化 ==========
+// ========== 視窗大小變化事件 ==========
 function handleResize (){
+    // 取得當前視窗變化是否為手機大小(true false)  視窗小於430為true
     const newIsMobile = window.innerWidth <= 430
 
-    // 從桌面版切換到手機版
+    // 從桌面版(isMobile為false) 切換到手機版(newIsMobile為true)
     if (!isMobile.value && newIsMobile) {
+        isMobile.value = newIsMobile
         if (map) {
             map.remove()
             map = null
             marklist = []
         }
-    }
-    // 從手機版切換到桌面版
-    else if (isMobile.value && !newIsMobile) {
+    }else if (isMobile.value && !newIsMobile) {   // 從手機版切換到桌面版
+        isMobile.value = newIsMobile
         setMap()
     }
     
-    isMobile.value = newIsMobile
 }
 
 // ========== 地圖相關方法 ==========
