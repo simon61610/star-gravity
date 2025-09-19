@@ -101,7 +101,7 @@
         
         if(res.data.success){
             // 跳轉報名成功頁面
-            router.push({
+            router.replace({
                 path: '/eventsuccess',
                 query: {
                     registration_number: res.data.registration_number
