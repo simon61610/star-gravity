@@ -40,7 +40,7 @@
     align-items:center;
     justify-content:center;
     background:rgba(0,0,0,.4);
-    z-index: 200;
+    z-index: 500;
 
     .confirm-box {
         background: $primaryColor-900;

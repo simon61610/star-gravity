@@ -16,10 +16,19 @@ const router = useRouter()
 const memberStore = useMemberStore()
 
 const showLogoutConfirm = ref(false)
+//登出黑名單 有下面這些名字的登出後都直接切回登入頁 不確定購物車要不要登入
+const blackList = ['cartpage', 'membercenter', 'AdminLoginPage']
 
 const handleLogout = () => {
   memberStore.logout()
-  router.replace('/loginfirst')
+
+  // console.log(route.path)  
+  for( let i=0 ; i<blackList.length ; i++  ){
+    if( route.path.includes(blackList[i]) ){
+        router.replace('/loginfirst')
+    }
+  }
+
   showLogoutConfirm.value = false
 }
 
