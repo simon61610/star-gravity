@@ -136,6 +136,145 @@
     padding-top: 10px;
 }
 
+//-------------------斷點--------------------------
+@media screen and (max-width: 1201px) {
+    /* 外層改為流體寬 */
+    .order-table-wrapper{
+        width: 100% !important;
+        max-width: 100%;
+        padding: 0 12px;              /* 兩側留一點內距 */
+        box-sizing: border-box;
+    }
+    /* 表格盒：允許水平捲動 */
+    .order-table-box{
+        width: 100% !important;
+        max-width: none;
+        margin: 0 auto;
+        overflow-x: auto;             /* 關鍵：內容過寬就出現捲軸 */
+        -webkit-overflow-scrolling: touch;
+    }
+     /* Element Plus 表格在小螢幕的字級/內距微縮 */
+    .order-table-wrapper :deep(.el-table__header th),
+    .order-table-wrapper :deep(.el-table__cell){
+        font-size: 14px;              /* 從 16px 稍微縮小 */
+        padding: 10px 8px;
+        white-space: nowrap;          /* 欄位不換行，交給水平捲動處理 */
+    }
+    /* 分頁條置中、流體寬 */
+    .pager{
+        width: 100% !important;       /* 原本 800px → 全寬 */
+        display: flex;
+        justify-content: center;
+        padding-top: 10px;
+        box-sizing: border-box;
+    }
+    /* 分頁很多時允許換行 */
+    .pager :deep(.el-pagination){
+        flex-wrap: wrap;
+        row-gap: 6px;
+    }
+}
+
+@media screen and (max-width: 901px) {
+    /* 外層流體寬，兩側再收一點內距 */
+    order-table-wrapper{
+        width: 100% !important;
+        max-width: 100%;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+    /* 表格容器：出水平捲軸，避免整頁橫捲 */
+    .order-table-box{
+        width: 100% !important;
+        max-width: none;
+        margin: 0 auto;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    /* 表頭/儲存格：字級與內距再縮、內容不換行 */
+    .order-table-wrapper :deep(.el-table__header th),
+    .order-table-wrapper :deep(.el-table__cell){
+        font-size: 13px;
+        padding: 8px 6px;
+        white-space: nowrap;
+    }
+    /* 列高略降一些 */
+    .order-table-wrapper :deep(.el-table__row){
+        height: 44px;
+    }
+    /* 分頁：全寬置中，項目可換行 */
+    .pager{
+        width: 100% !important;
+        display: flex;
+        justify-content: center;
+        padding-top: 8px;
+        box-sizing: border-box;
+    }
+    .pager :deep(.el-pagination){
+        flex-wrap: wrap;
+        row-gap: 6px;
+    }
+}
+
+@media screen and (max-width: 651px) {
+    /* 外層流體寬，左右內距更窄 */
+    .order-table-wrapper{
+        width: 100% !important;
+        max-width: 100%;
+        padding: 0 8px;
+        box-sizing: border-box;
+    }
+    /* 表格容器：只在這一層出水平捲軸 */
+    .order-table-box{
+        width: 100% !important;
+        max-width: none;
+        margin: 0 auto;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    /* 表頭/儲存格：再縮一階，內容不換行 */
+    .order-table-wrapper :deep(.el-table__header th),
+    .order-table-wrapper :deep(.el-table__cell){
+        font-size: 12px;
+        padding: 6px 6px;
+        white-space: nowrap;
+    }
+    /* 長字省略，避免列高被撐大 */
+    .order-table-wrapper :deep(.cell){
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 160px;   /* 視需要可調整 */
+    }
+    /* 列高再降一點 */
+    .order-table-wrapper :deep(.el-table__row){
+        height: 40px;
+    }
+    /* 分頁：全寬置中，元件縮小並允許換行 */
+    .pager{
+        width: 100% !important;
+        display: flex;
+        justify-content: center;
+        padding-top: 6px;
+        box-sizing: border-box;
+    }
+    .pager :deep(.el-pagination){
+        flex-wrap: wrap;
+        row-gap: 4px;
+        font-size: 12px;
+    }
+    .pager :deep(.el-pagination .el-pager li),
+    .pager :deep(.el-pagination .btn-prev),
+    .pager :deep(.el-pagination .btn-next){
+        min-width: 26px;
+        height: 26px;
+        line-height: 26px;
+    }
+}
+
+
+
+
+
 @media screen and (max-width: 433px) {
     .order-table-wrapper{
         width: 100%;
