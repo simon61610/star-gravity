@@ -11,6 +11,7 @@ export const useLoginPromptStore = defineStore('loginPrompt', () => {
         
         redirectPath.value = cleanedPath.startsWith('/') ? cleanedPath : '/' + cleanedPath
         isOpen.value = true
+
         afterLoginAction.value = action //儲存login當下的地點ID資訊
     }
 

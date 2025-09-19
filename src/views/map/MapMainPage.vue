@@ -177,12 +177,11 @@ onMounted(async ()=>{
             //延遲一下再打開 確保資料抓完
             setTimeout(()=>{
                 showReview()
-            }, 500)
+            }, 300)
         }
         //清除儲存的資料
         loginPrompt.clearAction()
     }
-
 
 })
 

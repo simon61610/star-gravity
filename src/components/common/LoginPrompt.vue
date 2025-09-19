@@ -20,6 +20,7 @@
 
     const cancel = () => {
         loginPrompt.close()
+        loginPrompt.clearAction() //按取消也要順便把暫存的地點ID清掉
     }
 
 </script>
