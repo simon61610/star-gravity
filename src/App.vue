@@ -95,7 +95,7 @@
 	// body.admin-layout {
 	// cursor: auto !important;
 	// }
-	@include respond("xs")  {
+	@include respond("md2")  {
 		body {
 			cursor: auto; /* 手機就回復原本游標 */
 		}
