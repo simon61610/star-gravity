@@ -22,7 +22,7 @@ include '../pdo.php';
 //     return '';
 // }
 
-// $auth = getAuthorizationHeader();
+$auth = getAuthorizationHeader();
 $token = '';
 // // 如果有帶 "Bearer " 開頭 → 取出後面的 token
 // if (strpos($auth, 'Bearer ') === 0) {
