@@ -132,7 +132,7 @@ onUnmounted(()=>{
 const getEventLists = async ()=>{
     try{
         const resp = await axios.get( import.meta.env.VITE_AJAX_URL + "map/getEventLists.php" )
-        console.log(resp.data);
+        //console.log(resp.data);
         activities.value = resp.data;
 
     }catch(error){
