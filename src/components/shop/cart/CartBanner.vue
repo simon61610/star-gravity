@@ -32,10 +32,25 @@
             justify-content: center;
             gap: 20px;
             padding-bottom: 32px;
+            // border: 1px solid red;
+
+            @include respond('sm'){
+                padding-top: 20px;
+                padding-bottom: 20px;
+
+                .m-eng {
+                    font-size: 60px;
+                }
+            }
+
+            @include respond('xs'){
+                flex-direction: column;
+                gap: 12px;
+            }
         }
     }
 
-    @media screen and (max-width: 431px) {
+    /* @media screen and (max-width: 431px) {
         .cart-banner {
             .title-box {
                 padding-top: 20px;
@@ -49,7 +64,7 @@
                 }
             }
         }
-    }
+    } */
 
 
 </style>
