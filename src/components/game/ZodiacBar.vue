@@ -150,9 +150,6 @@ const zodiacInfo = ref([
 <style scoped lang="scss">
 @import '@/assets/styles/main.scss';
 /* --- 版面 --- */
-@import '@/assets/styles/main.scss';
-
-/* --- 版面 --- */
 .zodiac-tittle {
   padding: 0 100px;
 
@@ -184,8 +181,10 @@ const zodiacInfo = ref([
 
     .zodiac {
       padding: 0;
+      
 
       .zodiac__list {
+        
         display: flex;
         overflow-x: auto;
         flex-direction: row;
@@ -195,11 +194,11 @@ const zodiacInfo = ref([
 }
 
 .zodiac {
+  
   width: 100%;
   display: grid;
-  grid-template-columns: auto 1fr auto; /* 左 標題 / 中 清單 / 右 控制 */
+  grid-template-columns:  1fr; /* 左 標題 / 中 清單 / 右 控制 */
   align-items: center;
-  gap: 24px 32px;
   padding: 10px 0px;
   color: #fff;
 
@@ -226,12 +225,14 @@ const zodiacInfo = ref([
 
 /* --- 中間清單 --- */
 .zodiac__list {
+  max-width: 1200px;
+  width: 100%;
   list-style: none;
   display: grid;
   grid-template-columns: repeat(6, minmax(140px, 1fr)); /* 桌機 6 欄 */
-  gap: 20px 32px;
+  gap: 20px;
   padding: 0;
-  margin: 0;
+  margin: 0 auto;
 
   // ≤1151px
   @media (max-width: 1151px) {
@@ -246,8 +247,10 @@ const zodiacInfo = ref([
 }
 
 .zodiac__item {
+  
   display: grid;
   grid-template-columns: 44px 1fr; /* icon 44px */
+  justify-content: center;
   align-items: center;
   gap: 5px;
   min-width: 140px;

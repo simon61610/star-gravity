@@ -9,7 +9,7 @@ import icon4 from "@/assets/images/home/mascot04.svg"
 import icon5 from "@/assets/images/home/mascot05.svg"
 // Props，讓元件更靈活
 const props = defineProps({
-  size: { type: Number, default: 40 },          // 星星大小
+  size: { type: Number, default: 30 },          // 星星大小
   icon: { type: String, default: "/star.svg" }, // 星星圖片路徑
   glowColor: { type: String, default: "yellow" } // 光暈顏色
 })

@@ -18,10 +18,8 @@ const props = defineProps({
   
 })
 
-onMounted(() => {
-  console.log('子層 bg 預設值:', props.bg)
-})
 
+const animationId = ref(0) // 新增一個動畫版本號
 const isAnimating = ref(false) //控制星座動畫顯示開關
 const show = ref() 
 
@@ -44,13 +42,19 @@ function drawNext() {
 
 async function drawAllLinesStepByStep() {
   isAnimating.value = true //開始線條動畫
+  const myId = ++animationId.value // 啟動時記住自己的 id
 
   while (currentStep.value < props.lines.length) {   //如果線條還沒跑完 
+    // 如果已經不是最新的動畫 → 立刻中斷
+    if (myId !== animationId.value) return
     currentStep.value++   //持續跑
-    await new Promise(resolve => setTimeout(resolve, 500)) // 每 200ms 畫一條
+    await new Promise(resolve => setTimeout(resolve, 500)) // 每 500ms 畫一條
   }
 
-  isAnimating.value = false //跑完停止
+  if (myId === animationId.value){
+    isAnimating.value = false //跑完停止
+  }
+ 
 }
 
 
@@ -59,6 +63,8 @@ async function drawAllLinesStepByStep() {
 const resetLines = () => {
   isAnimating.value = false;
    currentStep.value = 0
+   //切換星座的時候把舊動畫「失效化」
+   animationId.value++
    console.log('currentStep.value')
 }
 
@@ -87,7 +93,7 @@ watch(
     void nextTick(() => {   // 等 DOM 更新
       show.value = true  // 馬上淡入
     })
-
+    resetLines()
     isAnimating.value = false //星點資訊變化了關閉樣式
     currentStep.value = 0 
   
