@@ -240,25 +240,64 @@ const placeTags = [
         background-image: url(/images/events/event-bg.png);
         background-size: cover;
         padding-bottom: 60px;
+
+        @include respond('md2'){
+            padding:0 16px 40px;
+        }
         
         .eventhome-banner {
             padding: 40px 16px 0;
-            // border: 1px solid red;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 120px;
+            gap: 80px;
+            
+            @include respond('sm'){
+                flex-direction: column;
+                gap: 40px;
+            }
+            
             .banner-content {
                 color: $primaryColor-500;
-                h1 {}
+                // border: 1px solid red;
+                h1 {
+                    @include respond('md'){
+                        font-size: 100px;
+                    }
+                    @include respond('sm'){
+                        font-size: 140px;
+                    }
+                    @include respond('xs'){
+                        font-size: 80px;
+                    }
+                }
+                
                 h2 {
                     font-weight: bold;
+                    @include respond('md'){
+                        font-size: 32px;
+                    }
+                    @include respond('sm'){
+                        font-size: 48px;
+                    }
+                    @include respond('xs'){
+                        font-size: 32px;
+                    }
                 }
             }
             img {
                 display: block;
                 // border: 1px solid red;
                 align-self: flex-end;
+                width: 28vw;
+
+                @include respond('md2'){
+                    align-self: auto;
+                    // width: 60vw;
+                }
+                @include respond('sm'){
+                    width: 40vw;
+                }
             }
         }
 
@@ -269,6 +308,10 @@ const placeTags = [
             background-color: $primaryColor-900;
             border-radius: 20px;
 
+            @include respond('md2'){
+                padding: 24px 24px;
+            }
+
             
             .container {
                 display: flex;
@@ -276,6 +319,10 @@ const placeTags = [
                 gap: 60px;
                 max-width: 1040px;
                 margin: 0 auto;
+
+                @include respond('md2'){
+                    gap: 40px;
+                }
                 // 選擇活動類型
                 .event-type {
                     display: flex;
@@ -284,6 +331,10 @@ const placeTags = [
                     // border: 1px solid green;
                     border-bottom: 1px solid white;
                     padding-bottom: 60px;
+
+                    @include respond('md2'){
+                        padding-bottom: 40px;
+                    }
     
                     .select-title {
                         text-align: center;
@@ -291,12 +342,19 @@ const placeTags = [
                         color: white;
                         font-weight: bold;
                     }
-    
-    
+                    
+                    
                     .event-box {
                         // border: 1px solid red;
                         display: flex;
                         justify-content: space-between;
+                        
+                        @include respond('md2'){
+                            display: flex;
+                            flex-wrap: wrap;
+                            justify-content: auto;
+                            gap: 20px;
+                        }
                         
                         .event-select {
                             opacity: .3;
@@ -304,14 +362,24 @@ const placeTags = [
                             border-radius: 999px;
                             cursor: pointer;
                             transition: all .3s ease;
-                            
 
+                            @include respond('sm'){
+                                width: 45%;
+                            }
+                            
+                            
                             &.active {
                                 opacity: 1;
                             }
 
                             img {
                                 display: block;
+                                
+                                @include respond('md2'){
+                                    display: block;
+                                    width: 100%;
+                                    object-fit: cover;
+                                }
                             }
                         }
                     }
@@ -326,6 +394,11 @@ const placeTags = [
                     gap: 28px;
                     // max-width: 1040px;
                     margin: 0 auto;
+
+                    @include respond('xs'){
+                        width: 100%;
+                        gap: 16px;
+                    }
     
                     // header
                     header {
@@ -336,6 +409,12 @@ const placeTags = [
                             margin-bottom: 28px;
                         }
                         .event-ctrl{
+                            
+                            @include respond('xs'){
+                                padding-bottom: 20px;
+                                overflow: scroll;
+                            }
+
                             .place-tags{
                                 display: flex;
                                 gap: 12px;
@@ -349,6 +428,10 @@ const placeTags = [
                                     border-radius: 999px;
                                     cursor: pointer;
                                     transition: background-color .3s ease;
+
+                                    @include respond('xs'){
+                                        flex-shrink: 0;
+                                    }
 
                                     &.active {
                                         border: 1px solid $secondaryColor-orange;
@@ -369,6 +452,14 @@ const placeTags = [
                         justify-content: flex-start;
                         gap: 40px;
 
+                        @include respond('xs'){
+                            flex-wrap: nowrap;
+                            justify-content: flex-start;
+                            gap: 20px;
+                            overflow: scroll;
+                            padding-bottom: 20px;
+                        }
+
                         .no-event {
                             width: 100%;
                             text-align: center;
@@ -382,6 +473,17 @@ const placeTags = [
                             width: 320px;
                             border-radius: 24px;
                             overflow: hidden;
+
+                            @include respond('md2'){
+                                width: 280px;
+                            }
+
+                            @include respond('xs'){
+                                flex-shrink: 0;
+                                width: 300px;
+                                overflow: hidden;
+                            }
+
                             img {
                                 display: block;
                                 height: 200px;
@@ -439,111 +541,4 @@ const placeTags = [
 
         }
     }
-
-    @media screen and (max-width: 431px) {
-        .eventhome-section {
-            
-            padding:0 16px 40px;
-            
-            .eventhome-banner {
-                flex-direction: column;
-                gap: 40px;
-                .banner-content {
-                    h1 {
-                        font-size: 88px;
-                    }
-                    h2 {
-                    }
-                }
-                img {
-                    align-self: auto;
-                    width: 60vw;
-                }
-            }
-
-            .main {
-                padding: 24px 24px;
-                .container {
-                    gap: 40px;
-                    // 選擇活動類型
-                    .event-type {
-                        padding-bottom: 40px;
-        
-                        .select-title {}
-        
-                        .event-box {
-                            display: flex;
-                            flex-wrap: wrap;
-                            justify-content: auto;
-                            gap: 20px;
-                            .event-select {
-                                width: 45%;
-            
-                                img {
-                                    display: block;
-                                    width: 100%;
-                                    object-fit: cover;
-                                }
-                            }
-                        }
-                    }
-        
-                    // 活動項目區
-                    .event-list-section {
-                        width: 100%;
-                        gap: 16px;
-                        // header
-                        header {
-                            h2 {
-                            }
-                            .event-ctrl{
-                                padding-bottom: 20px;
-                                overflow: scroll;
-                                .place-tags{
-                                    .tag {
-                                        flex-shrink: 0;
-                                    }
-                                }
-                                .select-date {}
-                            }
-                        }
-        
-                        // 活動項目卡片區
-                        .event-list {
-                            flex-wrap: nowrap;
-                            justify-content: flex-start;
-                            gap: 20px;
-                            overflow: scroll;
-                            padding-bottom: 20px;
-                            .event-card {
-                                flex-shrink: 0;
-                                width: 300px;
-                                overflow: hidden;
-                                img {
-                                }
-                                .card-content {
-                                    .date {
-                                    }
-                                    .event-name {
-                                    }
-                                    .address {
-                                        .fa-location-dot {
-                                        }
-                                        p {
-                                        }
-                                    }
-                                    .tags {
-                                        .place-tag {}
-                                        .type-tag {}
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
 </style>

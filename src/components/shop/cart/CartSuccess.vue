@@ -166,6 +166,10 @@
                 text-align: center;
                 line-height: 1.2;
                 font-size: $pcChFont-H1;
+
+                @include respond('sm'){
+                    font-size: 24px;
+                }
             }
             .member-center{
                 font-size: $pcChFont-H4;
@@ -337,6 +341,7 @@
             @include respond('sm'){
                 flex-direction: column;
                 align-items: stretch;
+                gap: 20px;
             }
 
             .back-home, .back-shop {

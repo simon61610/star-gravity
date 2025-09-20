@@ -154,7 +154,7 @@ try {
         $address,
         $gender,
         $imagePath ?: null,    
-        'normal',
+        '正常',
         $hash     
     ]);
 

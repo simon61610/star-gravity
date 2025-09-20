@@ -242,172 +242,250 @@
         flex-direction: column;
         gap: 40px;
 
+        @include respond('md2'){
+            padding-bottom: 40px;
+            gap: 20px;
+        }
+
         // 圖片選擇區
         .pic-container {
             // border: 1px solid red;
-            
             img {
                 display: block;
                 object-fit: cover;
             }
             .selected-pic {
                 width: 100%;
-                height: 28vw;
+                // border: 1px solid red;
                 margin-bottom: 40px;
+
+                @include respond('md2'){
+                    margin-bottom: 20px;
+                }
             }
+
             .pic-box {
-                // border: 1px solid green;
                 display: flex;
                 justify-content: center;
                 gap: 20px;
 
+                @include respond('xs'){
+                    width: 100%;
+                    overflow: scroll;
+                    justify-content: flex-start;
+                    gap: 8px;
+                }
+
                 li {
                     cursor: pointer;
                     transition: all .5s ease;
-
+                    
                     &.active {
                         opacity: .3;
                     }
-
+                    
                     &:hover {
                         opacity: .8;
                     }
-
+                    
                     img {
                         width: 240px;
                         aspect-ratio: 3 / 1;
                         object-fit: cover;
                         display: block;
+
+                        @include respond('md2'){
+                            width: 140px;
+                        }
                     }
                 }
-
             }
         }
+    }
 
+    // 活動內容區
+    .container {
+        // border: 1px solid red;
+        max-width: 1200px;
+        width: 100%;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 60px;
 
-        // 活動內容區
-        .container {
+        @include respond('md2'){
+            gap: 40px;
+        }
+
+        main {
+            box-sizing: border-box;
+            background-color: #fff;
             max-width: 1200px;
-            margin: 0 auto;
+            width: 100%;
+            border-radius: 24px;
+            padding: 40px;
             display: flex;
             flex-direction: column;
-            gap: 60px;
-            main {
-                background-color: #fff;
-                max-width: 1200px;
-                margin: 0 auto;
-                border-radius: 24px;
-                padding: 48px;
+            gap: 32px;
+
+            @include respond('md2'){
+                border-radius: 0;
+                padding: 24px 32px;
+            }
+
+            @include respond('xs'){
+                padding: 24px 20px;
+            }
+
+            // 活動標題
+            .title-box {
+                .tags {
+                    margin-bottom: 12px;
+                    display: flex;
+                    gap: 12px;
+
+                    @include respond('md2'){
+                        margin-bottom: 16px;
+                    }
+
+                    .type-tag, .place-tag {
+                        padding: 8px 24px;
+                        background-color: #ccc;
+                        border-radius: 999px;
+                    }
+                }
+                h1 {
+                    line-height: 1.2;
+                    font-size: 36px;
+                    @include respond('md2'){
+                        font-size: 32px;
+                    }
+                }
+            }
+
+            // 活動資訊
+            .info-box {
                 display: flex;
                 flex-direction: column;
-                gap: 32px;
-    
-                // 活動標題
-                .title-box {
-                    .tags {
-                        margin-bottom: 12px;
-                        display: flex;
-                        gap: 12px;
-    
-    
-                        .type-tag, .place-tag {
-                            padding: 8px 24px;
-                            background-color: #ccc;
-                            border-radius: 999px;
-                        }
-                    }
-                    h1 {
-                        line-height: 1.2;
-                        font-size: 36px;
-                    }
+                gap: 60px;
+                align-items: flex-start;
+                // border: 1px solid red;
+
+                @include respond('md2'){
+                    gap: 40px;
                 }
-    
-                // 活動資訊
-                .info-box {
+
+                .event-info {
+                    box-sizing: border-box;
+                    // border: 1px solid red;
+                    // flex-grow: 1;
                     display: flex;
-                    flex-direction: column;
-                    gap: 60px;
-                    align-items: center;
-    
-                    .event-info {
+                    gap: 40px;
+                    padding: 20px;
+                    border: 1px solid #ccc;
+                    width: 100%;
+
+                    @include respond('md2'){
+                        width: 100%;
+                        flex-direction: column;
+                        padding: 0;
+                        border: none;
+                        gap: 24px;
+                        padding-bottom: 32px;
+                        border-bottom: 1px solid #ccc;
+                    }
+
+                    .box {
+                        // border: 1px solid red;
                         flex-grow: 1;
-                        display: flex;
-                        gap: 40px;
-                        padding: 24px;
-                        border: 1px solid #ccc;
-    
-                        .box {
-                            flex-grow: 1;
-                            width: 220px;
-                            .title {
-                                display: flex;
-                                gap: 8px;
-                                font-size: $pcChFont-H3;
-                                margin-bottom: 16px;
-                            }
-                            p {
-                                font-size: $pcChFont-H4;
-                                color: #888;
-                                line-height: 1.5;
-                            }
-    
-                            // 分隔線
-                            &:not(:first-child) {
-                                padding-left: 24px;
-                                border-left: 1px solid #ccc;
-                                
-                            }
+                        flex-shrink: 1;
+                        flex-basis: 0%;
+
+                        @include respond('md2'){
+                            // width: 100%;
+                            // box-sizing: border-box;
+                            padding-left: 24px;
+                            border-left: 1px solid #ccc;
                         }
-                    }
-    
-    
-                    // 報名按鈕
-                    .apply-btn-box {
-                        .btn {
-                            font-size: 28px;
-                            background-color: $secondaryColor-orange;
-                            color: white;
-                            padding: 16px 24px;
-                            border-radius: 999px;
-                            cursor: pointer;
-    
-                            &:hover {
-                                background-color: $primaryColor-900;
-                            }
+
+                        .title {
+                            display: flex;
+                            gap: 8px;
+                            font-size: $pcChFont-H3;
+                            margin-bottom: 16px;
                         }
+                        p {
+                            font-size: $pcChFont-H4;
+                            color: #888;
+                            line-height: 1.5;
+                        }
+
+                        // 分隔線
+                        &:not(:first-child) {
+                            padding-left: 24px;
+                            border-left: 1px solid #ccc;
+                            
+                        }
+
+                        
                     }
-    
+
                 }
-    
-                // 活動介紹
-                .intro-box {
-                    h2 {
-                        font-weight: bold;
+
+                // 報名按鈕
+                .apply-btn-box {
+                    align-self: center;
+                    .btn {
                         font-size: 28px;
-                        margin-bottom: 24px;
+                        background-color: $secondaryColor-orange;
+                        color: white;
+                        padding: 16px 24px;
+                        border-radius: 999px;
+                        cursor: pointer;
+
+                        @include respond('md2'){
+                            padding: 12px 20px;
+                        }
+
+                        &:hover {
+                            background-color: $primaryColor-900;
+                        }
                     }
-                    p {
-                        font-size: 20px;
-                        line-height: 1.5;
-                    }
+                }
+
+            }
+            // 活動介紹
+            .intro-box {
+                h2 {
+                    font-weight: bold;
+                    font-size: 28px;
+                    margin-bottom: 24px;
+                }
+                p {
+                    font-size: 20px;
+                    line-height: 1.5;
                 }
             }
-            // 回活動頁按鈕
-            .back-btn {
-                width: 400px;
-                text-align: center;
-                background-color: $secondaryColor-orange;
-                font-size: 24px;
-                border-radius: 999px;
-                color: white;
-                padding: 16px;
-                cursor: pointer;
-                margin: 0 auto;
+
+        }
+        // 回活動頁按鈕
+        .back-btn {
+            width: 400px;
+            text-align: center;
+            background-color: $secondaryColor-orange;
+            font-size: 24px;
+            border-radius: 999px;
+            color: white;
+            padding: 16px;
+            cursor: pointer;
+            margin: 0 auto;
+
+            @include respond('md2'){
+                width: 80vw;
             }
         }
-
     }
-    
+
     // 查無
     .no-event {
         font-size: 32px;
@@ -415,6 +493,10 @@
         background-color: $primaryColor-900;
         padding: 160px;
         text-align: center;
+
+        @include respond('md2'){
+            padding: 52px;
+        }
 
         p {
             margin-top: 16px;
@@ -424,114 +506,5 @@
             }
         }
     }
-
-
-
-    @media screen and (max-width: 431px) {
-        .event-detail {
-            padding-bottom: 40px;
-            gap: 20px;
-
-            // 圖片選擇區
-            .pic-container {
-                img {
-                }
-                .selected-pic {
-                    margin-bottom: 20px;
-                }
-                .pic-box {
-                    width: 100%;
-                    overflow: scroll;
-                    justify-content: flex-start;
-                    gap: 8px;
-                    img {
-                        width: 160px;
-                    }
-                }
-            }
-
-
-            // 活動內容區
-            .container {
-                // border: 1px solid red;
-                gap: 40px;
-                main {
-                    border-radius: 0;
-                    padding: 24px 32px;
-        
-                    // 活動標題
-                    .title-box {
-                        .tags {
-                            margin-bottom: 16px;
-                            .type-tag, .place-tag {
-                            }
-                        }
-                        h1 {
-                            font-size: 32px;
-                        }
-                    }
-        
-                    // 活動資訊
-                    .info-box {
-                        flex-direction: column;
-                        gap: 32px;
-
-                        .event-info {
-                            width: 100%;
-                            flex-direction: column;
-                            padding: 0;
-                            border: none;
-                            gap: 24px;
-                            padding-bottom: 32px;
-                            border-bottom: 1px solid #ccc;
-        
-                            .box {
-                                width: 100%;
-                                box-sizing: border-box;
-                                .title {}
-                                p {}
-        
-                                // 分隔線
-                                &:not(:first-child) {}
-
-                                padding-left: 24px;
-                                border-left: 1px solid #ccc;
-                            }
-                        }
-        
-        
-                        // 報名按鈕
-                        .apply-btn-box {
-                            .btn {
-                                padding: 12px 20px;
-                                &:hover {}
-                            }
-                        }
-                    }
-        
-                    // 活動介紹
-                    .intro-box {
-                        h2 {}
-                        p {}
-                    }
-                }
-                // 回活動頁按鈕
-                .back-btn {
-                    width: 80vw;
-                }
-            }
-
-        }
-
-
-        .no-event {
-            padding: 52px;
-            p {
-                &:hover {
-                }
-            }
-        }
-    }
-    
 
 </style>
