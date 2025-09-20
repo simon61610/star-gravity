@@ -55,105 +55,133 @@
 
 <style scoped lang="scss">
     @import '@/assets/styles/main.scss';
-    
+
     .hero {
         position: relative;
-        // border: 1px solid blue;
+        // border: 1px solid red;
 
-        // ----- 輪播區 -----
+        .pagination {
+            z-index: 10;
+            position: absolute;
+            left: 12vw;
+            bottom: 2vw;
+            width: 80px;
+        }
+
+        // --- 輪播區 ---
         .swiper-hero {
+            // outline: 1px solid red;
             width: 100%;
+            height: 100%;
             aspect-ratio: 17 / 7;
+        }
+        
+        @include respond('sm'){
+            aspect-ratio: 16 / 9;
+        }
 
-            // 輪播圖 + 文字
-            .slide {
-                position: relative;
+        .slide {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            
+            .bg {
+                position: absolute;
+                width: 100%;
+                object-fit: cover;
+                display: block;
+            }
+
+            // 漸層遮罩
+            .mask {
+                position: absolute;
                 width: 100%;
                 height: 100%;
-                .bg {
-                    position: absolute;
-                    width: 100%;
-                    height: 100%;
-                    display: block;
-                    object-fit: cover;
-                }
-                .mask {
-                    position: absolute;
-                    width: 100%;
-                    height: 100%;
-                    background-image: linear-gradient(
-                        90deg, 
-                        hsl(0, 0%, 0%, .5) 30%, 
-                        hsl(0, 0%, 0%, .35) 50%, 
-                        hsl(0, 0%, 0%, 0));
-                }
+                background-image: linear-gradient(
+                90deg,
+                hsl(0, 0%, 0%, .5) 30%,
+                hsl(0, 0%, 0%, .35) 50%,
+                hsl(0, 0%, 0%, 0)
+                );
+            }
 
+            // 文字區
+            .content {
+                left: 10vw;
+                top: 20%;
+                transform: (-50%);
+                // border: 1px solid blue;
+                width: 36vw;
+                color: white;
+                position: absolute;
+            }
+            h1 {
+                font-size: clamp(20px, 4vw, 40px);
+                font-weight: bold;
+                line-height: 1.2;
+                margin-bottom: 20px;
+            }
+            h2 {
+                font-size: clamp(14px, 2.5vw, 20px);
+                line-height: 1.5;
+                margin-bottom: 4vw;
+            }
+            .btn {
+                font-size: $pcChFont-H4;
+                background-color: $primaryColor-500;
+                width: 160px;
+                padding: 12px;
+                border-radius: 999px;
+                text-align: center;
+                cursor: pointer;
+
+                &:hover {
+                    background: $secondaryColor-orange;
+                }
+            }
+
+            // 平板 / 中型螢幕
+            @include respond('lg'){
                 .content {
-                    color: white;
-                    position: absolute;
-                    // border: 1px solid red;
-                    width: 560px;
-                    left: 10vw;
-                    bottom: 10vw;
+                    width: 50%;
+                    left: 8vw;
+                }
+                h1 {
+                    // font-size: 28px;
+                    margin-bottom: 12px;
+                }
+                h2 {
+                    // font-size: 20px;
+                    margin-bottom: 16px;
+                }
+                .btn {
+                    font-size: 16px;
+                    width: 120px;
+                    padding: 10px;
+                }
+            }
+            
+            // 手機
+            @include respond('sm'){
+                .content {
+                    width: 80%;
+                    left: 6vw;
+
                     h1 {
-                        font-size: 44px;
-                        line-height: 1.2;
-                        margin-bottom: 20px;
-                        font-weight: bold;
+                        // font-size: 20px;
+                        margin-bottom: 8px;
                     }
                     h2 {
-                        font-size: $pcChFont-H2;
-                        line-height: 1.5;
-                        margin-bottom: 80px;
+                        margin-bottom: 8px;
                     }
                     .btn {
-                        font-size: $pcChFont-H4;
-                        width: 160px;
-                        padding: 12px;
-                        border-radius: 999px;
-                        background-color: $primaryColor-500;
-                        text-align: center;
-                        cursor: pointer;
-
-                        &:hover {
-                            background: $secondaryColor-orange;
-                        }
-
-                    }
-                }
-
-                @media screen and (max-width: 431px) {
-
-                    .content {
-                        width: 80%;
-                        h1 {
-                            font-size: 16px;
-                            margin-bottom: 8px;
-                        }
-                        h2 {
-                            font-size: 16px;
-                            margin-bottom: 12px;
-                        }
-                        .btn {
-                            font-size: 14px;
-                            width: 100px;
-                            padding: 8px;
-                        }   
+                        font-size: 14px;
+                        width: 100px;
+                        padding: 8px;
                     }
                 }
             }
         }
-
-        // ----- 圓點點 -----
-        .pagination {
-            z-index: 10;
-            position: absolute;
-            left: 10vw;
-            bottom: 2vw;
-            width: 100px;
-        }
     }
-
-    
 </style>
 
