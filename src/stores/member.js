@@ -167,15 +167,15 @@ export const useMemberStore = defineStore('Member', () => {
     } */
 
     function hydrate() {
-    const storageUser = localStorage.getItem('user')
-    const storageToken = localStorage.getItem('token')
+        const storageUser = localStorage.getItem('user')
+        const storageToken = localStorage.getItem('token')
 
-    if (storageUser) {
-        user.value = JSON.parse(storageUser)
-    }
-    if (storageToken) {
-        token.value = storageToken
-    }
+        if (storageUser) {
+            user.value = JSON.parse(storageUser)
+        }
+        if (storageToken) {
+            token.value = storageToken
+        }
     }
 
     return {
