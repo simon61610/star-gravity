@@ -243,6 +243,12 @@
         flex-wrap: wrap;
         gap: 40px;
 
+        @include respond('sm'){
+            padding: 0 16px;
+            gap: 16px;
+            justify-content: center;
+        }
+
         .item__card {
             // border: 1px solid red;
             max-width: 200px;
@@ -250,12 +256,22 @@
             text-align: center;
             padding: 4px;
 
+            @include respond('sm'){
+                max-width: 45%;
+                // border: 1px solid red;
+            }
+
             &__img {
                 margin-bottom: 16px;
                 display: block;
                 width: 200px;
                 height: 200px;
                 object-fit: cover;
+
+                @include respond('sm'){
+                    width: 100%;
+                    height: auto;
+                }
             }
             &__text {
                 padding: 0 16px;
@@ -275,6 +291,18 @@
                     color: #ccc;
                     text-decoration: line-through;
                     margin-bottom: 16px;
+                }
+
+                @include respond('sm'){
+                    &--name {
+                        font-size: 16px;
+                    }
+                    &--spe-price {
+                        font-size: 14px;
+                    }
+                    &--price {
+                        font-size: 14px;
+                    }
                 }
             }
             
@@ -302,40 +330,6 @@
                     cursor: not-allowed;
                 }
             }
-        }
-    }
-
-
-    @media screen and (max-width: 431px) {
-        .product-items {
-            padding: 0 16px;
-            gap: 16px;
-            justify-content: center;
-
-            .item__card {
-                max-width: 45%;
-                // border: 1px solid red;
-
-                &__img {
-                    width: 100%;
-                    height: auto;
-                }
-                &__text {
-                    &--name {
-                        font-size: 16px;
-                    }
-                    &--spe-price {
-                        font-size: 14px;
-                    }
-                    &--price {
-                        font-size: 14px;
-                    }
-                }
-            }
-        }
-
-        .pagination {
-            // border: 1px solid red;
         }
     }
 </style>

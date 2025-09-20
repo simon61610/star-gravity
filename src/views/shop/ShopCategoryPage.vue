@@ -99,7 +99,6 @@
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        
         display: flex;
         justify-content: center;
         align-items: center;
@@ -108,11 +107,29 @@
         bottom: 20px;
         display: none;
         z-index: 20;
+    }
 
+    @include respond('sm'){
+        .m-list {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            // display: none;
+            z-index: 10;
+            background-color: $primaryColor-500;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            height: 100%;
+            transition: right .3s ease;
+        }
+        .m-list.open {
+            right: 0;
+        }
     }
 
 
-    @media screen and (max-width: 431px) {
+    /* @media screen and (max-width: 431px) {
 
         .m-list {
             position: fixed;
@@ -135,5 +152,5 @@
         .m-cate-btn {
             display: flex;
         }
-    }
+    } */
 </style>
