@@ -48,12 +48,25 @@
 
 
 <style scoped lang="scss">
+    @import '@/assets/styles/main.scss';
+
     .tool-bar-section {
         padding-right: 12px;
         // border: 1px solid red;
         display: flex;
         justify-content: space-between;
         margin-bottom: 36px;
+
+        @include respond('sm'){
+            padding-right: 0px;
+            padding: 0 16px;
+            // border: 1px solid red;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: center;
+            gap: 32px;
+        }
+
         .search-box {
             box-sizing: border-box;
             display: flex;
@@ -62,6 +75,11 @@
             border-radius: 999px;
             width: 176px;
             padding: 8px 8px;
+            
+            @include respond('sm'){
+                width: 100%;
+            }
+
             input {
                 // flex: 1;
                 border: none;
@@ -90,6 +108,11 @@
             display: flex;
             gap: 32px;
 
+            @include respond('sm'){
+                flex-direction: column;
+                gap: 32px;
+            }
+
             select {
                 width: 200px;
                 background-color: transparent;
@@ -101,64 +124,18 @@
                 // border: 1px solid red;
                 outline: none;
                 cursor: pointer;
+
+                @include respond('sm'){
+                    width: 100%;
+                    padding-bottom: 12px;
+                }
                 
                 option {
                     color: #000;
                 }
             }
-            
             .price-orderby{}
             .qty-orderby{}
         }
     }
-
-    @media screen and (max-width: 431px){
-        .tool-bar-section {
-            padding-right: 0px;
-            padding: 0 16px;
-            // border: 1px solid red;
-            flex-direction: column;
-            align-items: stretch;
-            justify-content: center;
-            gap: 32px;
-            .search-box {
-                width: 100%;
-                input {}
-                .search-btn {
-                    cursor: pointer;
-                    i {}
-                    &:hover {
-                        i {}
-                    }
-                }
-
-            }
-            .select-box{
-                flex-direction: column;
-                gap: 32px;
-
-                select {
-                    width: 100%;
-                    background-color: transparent;
-                    font-size: 20px;
-                    color: white;
-                    // border: 1px solid green;
-                    padding-bottom: 12px;
-                    border-bottom: 1px solid #ccc;
-                    outline: none;
-                    cursor: pointer;
-                    
-                    option {
-                        color: #000;
-                    }
-                }
-                
-                .price-orderby{}
-                .qty-orderby{}
-            }
-        }
-    }
-
-
-
 </style>
