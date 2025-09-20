@@ -344,6 +344,11 @@
         // --------- 上方: 購物清單 ---------
         .cart-list {
             padding-bottom: 60px;
+
+            @include respond('md'){
+                padding-bottom: 24px;
+            }
+
             h1 {
                 font-size: $pcChFont-H4;
                 font-weight: bold;
@@ -355,44 +360,77 @@
             }
             .items{
                 .item{
+                    // border: 1px solid red;
                     padding: 16px 0;
                     border-bottom: 2px solid #ccc;
 
                     // border: 1px solid red;
                     display: flex;
                     align-items: center;
+                    gap: 20px;
                     &__img { // 圖片
                         display: block;
                         width: 80px;
                         height: 80px;
                         object-fit: cover;
                         border: 1px solid #ccc;
+                        margin-right: 20px;
                     }
                     &__info { // 商品名稱與金額
+                        // border: 1px solid blue;
                         display: flex;
-                        gap: 20px;
+                        gap: 24px;
                         align-items: center;
                         // border: 1px solid red;
                         flex-grow: 1;
 
+                        @include respond('md'){
+                            align-items: flex-start;
+                            flex-direction: column;
+                        }
 
                         &__name {
-                            padding-left: 40px;
+                            // border: 1px solid orange;
+                            width: 280px;
                             font-size: $pcChFont-H4;
                             line-height: 1.2;
+                            margin-right: 20px;
+
+                            @include respond('md'){
+                                width: 100%;
+                            }
                         }
                         &__price {
+                            // border: 1px solid orange;
                             display: flex;
+                            // width: 100px;
                             // border: 1px solid blue;
                             flex-grow: 1;
-                            justify-content: space-around;
-                            // gap: 32px;
+                            justify-content: space-between;
                             align-items: center;
+
+                            @include respond('md'){
+                                width: 100%;
+                            }
+                            
+                            @include respond('sm'){
+                                flex-direction: column;
+                                align-items: flex-start;
+                                gap: 20px;
+                            }
+
                             .price-per-item {
+                                width: 160px;
+                                // border: 1px solid red;
                                 display: flex;
                                 gap: 12px;
                                 flex-direction: column;
                                 text-align: center;
+
+                                @include respond('md'){
+                                    text-align: left;
+                                }
+
                                 .price {
                                     text-decoration: line-through;
                                     color: #888;
@@ -402,10 +440,17 @@
                                 }
                             }
                             .qty-ctrl {
+                                width: 120px;
+                                // border: 1px solid red;
                                 display: flex;
                                 flex-direction: column;
                                 gap: 12px;
                                 align-items: center;
+
+                                @include respond('md'){
+                                    align-items: flex-start;
+                                }
+
                                 .stock {
                                     font-size: 16px;
 
@@ -426,8 +471,16 @@
                                 }
                             }
                             .price-subtotal {
+                                text-align: center;
+                                width: 140px;
+                                margin-right: 20px;
                                 // border: 1px solid red;
-                                width: 200px;
+                                // border: 1px solid red;
+                                // width: 200px;
+
+                                @include respond('md'){
+                                    text-align: left;
+                                }
                             }
                         }
                     }
@@ -478,6 +531,13 @@
         .guide-box {
             display: flex;
             justify-content: space-between;
+
+            @include respond('md'){
+                flex-direction: column;
+                justify-content: space-between;
+                gap: 16px;
+            }
+
             // 訂購說明
             &__guide, &__order {
                 padding: 20px;
@@ -491,6 +551,12 @@
 
             &__guide{
                 flex-basis: 460px;
+
+                @include respond('md'){
+                flex-basis: auto;
+
+                }
+
                 h2 {}
                 ul {
                     display: flex;
@@ -510,6 +576,10 @@
                 flex-basis: 460px;
                 background-color: #F0F0F0;
                 border-radius: 28px;
+
+                @include respond('md'){
+                    flex-basis: auto;
+                }
                 h2 {}
                 .order-cal {
                     display: flex;
@@ -553,107 +623,4 @@
             }
         }
     }
-
-    @media screen and (max-width: 431px){
-        .checkout-section {
-        // --------- 上方: 購物清單 ---------
-        .cart-list {
-            padding-bottom: 12px;
-            h1 {}
-            .items{
-                .item{
-                    gap: 20px;
-                    &__img { // 圖片
-                    }
-                    &__info { // 商品名稱與金額
-                        align-items: flex-start;
-                        flex-direction: column;
-                        &__name {
-                            padding-left: 12px;
-                        }
-                        &__price {
-                            padding-left: 12px;
-                            align-items: start;
-                            flex-direction: column;
-                            gap: 12px;
-                            .price-per-item {
-                                .price {
-                                }
-                                .spe-price {
-                                }
-                            }
-                            .qty-ctrl {
-                                align-items: flex-start;
-                                margin-bottom: 12px;
-                                .stock {
-                                    span {
-                                    }
-                                }
-
-                                .num {
-                                }
-                            }
-                            .price-subtotal {
-                                font-size: 20px;
-                            }
-                        }
-                    }
-                    &__del-btn { // 刪除按鈕
-                        &:hover {
-                        }
-                    }
-                }
-            }
-        }
-
-        // --------- 下方: 說明與訂單金額 ---------
-        .guide-box {
-            flex-direction: column;
-            justify-content: space-between;
-            gap: 16px;
-            // 訂購說明
-            &__guide, &__order {
-                h2 {
-                }
-            }
-
-            &__guide{
-                flex-basis: auto;
-                h2 {}
-                ul {
-                    li{
-                    }
-                }
-            }
-
-            // 訂單資訊
-            &__order{
-                flex-basis: auto;
-                h2 {}
-                .order-cal {
-                    .cal-box {
-                        p {
-
-                            &:last-child{
-                            }
-                        }
-                    }
-                    .goto-pay-btn, .shop-btn {
-                    }
-                    .goto-pay-btn {
-                        &:hover {
-                        }   
-                    }
-                    .shop-btn {
-                    }
-                }
-            }
-        }
-    }
-
-
-
-
-    }
-
 </style>
