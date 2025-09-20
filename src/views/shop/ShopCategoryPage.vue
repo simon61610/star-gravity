@@ -130,32 +130,11 @@
         // 👉 補這段
         .m-cate-btn {
             display: flex;
+            cursor: pointer;
+            // transition: all .3s ease;
+            &:hover {
+                background-color: $primaryColor-900;
+            }
         }
     }
-
-
-    /* @media screen and (max-width: 431px) {
-
-        .m-list {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            // display: none;
-            z-index: 10;
-            background-color: $primaryColor-500;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            height: 100%;
-            transition: right .3s ease;
-        }
-
-        .m-list.open {
-            right: 0;
-        }
-
-        .m-cate-btn {
-            display: flex;
-        }
-    } */
 </style>
