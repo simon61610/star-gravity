@@ -58,7 +58,7 @@
 
     .hero {
         position: relative;
-        border: 1px solid red;
+        // border: 1px solid red;
 
         .pagination {
             z-index: 10;
