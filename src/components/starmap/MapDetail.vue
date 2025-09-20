@@ -48,12 +48,22 @@ function getWeatherIcon(weather) {
 }
 
 //事件監聽
-    //關閉彈窗
+//關閉彈窗
 function closeModel(){
+    const reviewList = document.querySelector('.map-contentInsideBox')
+    if (reviewList) {
+        reviewList.scrollTo({ top: 0 })
+    }
+
     emit('closeModel')
 }
    //開啟更多評論
 function showReview(){
+    const reviewList = document.querySelector('.map-contentInsideBox')
+    if (reviewList) {
+        reviewList.scrollTo({ top: 0 })
+    }
+
     emit('showReview')   
     // console.log(fourReviewList.value); 
 }

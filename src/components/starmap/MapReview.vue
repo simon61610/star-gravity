@@ -12,9 +12,19 @@ const memberStore = useMemberStore()
 const emit = defineEmits(['closeModel', 'backToDetail','writeReview' , 'show' ])
 
 function closeModel(){
+    const list = document.querySelector('.mapreview-list')
+    if( list ){
+        list.scrollTo({ top: 0 })
+    }
+
     emit('closeModel')
 }
 function backToDetail(){
+    const list = document.querySelector('.mapreview-list')
+    if( list ){
+        list.scrollTo({ top: 0 })
+    }
+
     emit('backToDetail')
 }
 function writeReview(){
