@@ -244,6 +244,12 @@
         padding-top: 32px;
         border-top: 1px solid #ccc;
 
+        @include respond('sm'){
+            flex-direction: column-reverse;
+            gap: 16px;
+            align-items: center;
+        }
+
         .previous-btn, .next-btn {
             cursor: pointer;
         }
@@ -260,38 +266,15 @@
             color: white;
             background-color: $secondaryColor-orange;
             text-align: center;
+
+            @include respond('sm'){
+                width: 80vw;
+            }
             &:hover {
                 background-color: $primaryColor-900;
             }
         }
     }
 }
-
-
-@media screen and (max-width: 431px) {
-    
-    .registration-section {
-        .btn-box {
-            flex-direction: column-reverse;
-            gap: 16px;
-            align-items: center;
-
-            .previous-btn, .next-btn {
-            }
-            .previous-btn {
-            }
-            .next-btn {
-                width: 80vw;
-            }
-        }
-    }
-}
-
-
-
-
-
-
-
 
 </style>

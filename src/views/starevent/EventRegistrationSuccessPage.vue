@@ -64,6 +64,14 @@
         align-items: center;
         gap: 40px;
 
+        @include respond('sm'){
+            padding: 20px 24px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
         // ----- 報名成功文字 -----
         .show-success {
             display: flex;
@@ -75,6 +83,10 @@
                 img {
                     display: inline-block;
                     margin-bottom: 20px;
+
+                    @include respond('sm'){
+                        width: 100px;
+                    }
                 }
                 h2 {
                     font-weight: bold;
@@ -83,7 +95,13 @@
                 }
             }
             .order-number {
+                text-align: center;
+                line-height: 1.2;
                 font-size: $pcChFont-H1;
+
+                @include respond('sm'){
+                    font-size: 24px;
+                }
             }
             .member-center{
                 font-size: $pcChFont-H4;
@@ -100,16 +118,38 @@
 
         // ----- 按鈕 -----
         .btn-box {
+            width: 100%;
             font-size: $pcChFont-H4;
             display: flex;
             justify-content: center;
             gap: 60px;
+            box-sizing: border-box;
+            padding: 0 16px;
+            // border: 1px solid red;
+
+            @include respond('md'){
+                gap: 40px;
+            }
+
+            @include respond('sm'){
+                flex-direction: column;
+                align-items: stretch;
+                gap: 20px;
+            }
+
             .back-home, .back-shop {
                 padding: 12px 0;
                 width: 320px;
                 border-radius: 999px;
                 text-align: center;
                 cursor: pointer;
+
+                @include respond('md') {
+                    width: 260px;
+                }
+                @include respond('sm') {
+                    width: 100%;
+                }
             }
             .back-home {
                 color: #888;
@@ -124,53 +164,4 @@
             }
         }
     }
-
-
-    @media screen and (max-width: 431px) {
-        .success-section {
-            padding: 20px 24px 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 40px;
-
-            // ----- 報名成功文字 -----
-            .show-success {
-                .success-icon {
-                    img {
-                        width: 100px;
-                    }
-                    h2 {
-                    }
-                }
-                .order-number {
-                    font-size: 24px;
-                }
-                .member-center{
-                    span {
-                    }
-                }
-
-            }
-
-            // ----- 按鈕 -----
-            .btn-box {
-                flex-direction: column;
-                gap: 20px;
-                .back-home, .back-shop {
-                    flex-basis: 100%;
-                }
-                .back-home {
-                }
-                .back-shop {
-                }
-            }
-        }
-
-
-
-
-    }
-
-
 </style>
