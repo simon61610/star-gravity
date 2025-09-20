@@ -126,6 +126,11 @@
         .m-list.open {
             right: 0;
         }
+
+        // 👉 補這段
+        .m-cate-btn {
+            display: flex;
+        }
     }
 
 
