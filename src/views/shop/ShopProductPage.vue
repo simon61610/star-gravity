@@ -305,10 +305,27 @@
 
             display: flex;
             gap: 40px; 
+
+            @include respond('md'){
+                padding: 20px 24px;
+                flex-direction: column;
+                gap: 20px; 
+            }
     
             // ---------- 左：商品圖片 ----------
             .product-gallery {
                 // border: 1px solid green;
+
+                @include respond('md'){
+                    // border: 1px solid blue;
+                    display: flex;
+                    justify-content: center;
+                    gap: 20px;
+                }
+
+                @include respond('sm'){
+                    display: block;
+                }
                 
                 // 商品照片
                 &__pic {
@@ -319,6 +336,11 @@
                         height: auto;
                         object-fit: cover;
                         aspect-ratio: 1 / 1;
+
+                        @include respond('md'){
+                            max-width: auto;
+                            width: 100%;
+                        }
                     }
                 }
     
@@ -327,6 +349,13 @@
                     // border: 1px solid red;
                     display: flex;
                     gap: 20px;
+
+                    @include respond('md'){
+                        flex-direction: column;
+                    }
+                    @include respond('sm'){
+                        flex-direction: row;
+                    }
 
                     li {
                         cursor: pointer;
@@ -347,6 +376,10 @@
                             height: auto;
                             object-fit: cover;
                             aspect-ratio: 1 / 1;
+
+                            @include respond('md'){
+                                max-width: 80px;
+                            }
                         }
                     }
                 }
@@ -365,6 +398,14 @@
                     font-size: $pcChFont-H1;
                     font-weight: bold;
                     line-height: 1.2;
+                }
+
+                @include respond('md'){
+                    gap: 16px;
+                    
+                    &__title {
+                        font-size: 28px;
+                    }
                 }
 
                 .detail-text {
@@ -428,6 +469,11 @@
                         text-align: center;
                         cursor: pointer;
 
+                        @include respond('md'){
+                            font-size: 20px;
+                            padding: 12px 0;
+                        }
+
                         i {
                             margin-right: 12px;
                         }
@@ -480,6 +526,11 @@
             font-size: 52px;
             padding: 20px;
             color: white;
+
+            @include respond('md'){
+                font-size: 28px;
+            }
+
             .back-cate {
                 padding-top: 20px;
                 cursor: pointer;
@@ -491,11 +542,11 @@
     }
 
 
-    @media screen and (max-width: 431px) {
+    /* @include respond('md2') {
         .product-page {
         // ------------------- 上方 -------------------
             .container {
-                padding: 20px 16px;
+                padding: 20px 24px;
                 flex-direction: column;
                 gap: 20px; 
         
@@ -568,7 +619,7 @@
                 }
             }
         }
-    }
+    } */
 
 
 </style>
