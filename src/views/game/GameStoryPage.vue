@@ -175,25 +175,25 @@ import puzzle from '@/assets/images/games/GameCardPage/game-card_puzzle.jpg'
 // ===== 推薦商品：隨機挑一個 =====
 const PRODUCTS = [
   {
-    id: 1,
+    id: 24,
     title: '星座許願球',
     desc: '搭配三段情境光，床頭夜燈、告白禮、升學與生日祝福，都能承載你的願望。',
     img: divination_ball
   },
   {
-    id: 2,
+    id: 23,
     title: '星空能量蠟燭',
     desc: '結合香氛與星座能量，點燃時釋放守護力量，陪伴你度過專注或療癒時刻。',
     img: candle
   },
   {
-    id: 3,
+    id: 22,
     title: '占星書籤組',
     desc: '十二星座金屬書籤，陪你在知識的宇宙裡航行。',
     img: bookmark
   },
   {
-    id: 4,
+    id: 25,
     title: '星空拼圖',
     desc: '完成後拼出整片夜空，動手拼湊也像在整理思緒。',
     img: puzzle
