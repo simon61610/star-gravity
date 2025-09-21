@@ -2,19 +2,6 @@
 
 include '../pdo.php';
 
-// header('Content-Type: application/json; charset=utf-8');
-
-// 簡化 CORS，允許所有本機請求
-// header('Access-Control-Allow-Origin: http://localhost:5173');
-// header('Access-Control-Allow-Credentials: true');
-// header('Access-Control-Allow-Methods: POST, OPTIONS');
-// header('Access-Control-Allow-Headers: Content-Type, X-Requested-With, Authorization');
-
-// 預檢請求直接結束，避免被下面的「僅允許 POST」誤擋
-// if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
-//     exit;
-// };
-
 // 僅允許 POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   echo json_encode(['ok' => false, 'message' => '請用 POST 提交'], JSON_UNESCAPED_UNICODE);
@@ -52,80 +39,6 @@ if ($errors) {
 
 // 圖片上傳
 $imagePath = ''; // 預設空字串
-// if (!empty($_FILES['image']) && is_uploaded_file($_FILES['image']['tmp_name'])) 
-// 先檢查是否有檔案、是否上傳成功
-// if (!empty($_FILES['image'])) {
-//   $f = $_FILES['image'];
-
-//     // 上傳 error code
-//     if (!isset($f['error']) || $f['error'] !== UPLOAD_ERR_OK) {
-//     http_response_code(422);
-//     echo json_encode(['ok' => false, 'message' => '圖片上傳失敗（error code: ' . ($f['error'] ?? 'unknown') . '）'], JSON_UNESCAPED_UNICODE);
-//     exit;
-//     }
-    // 確認檔案是以 HTTP POST 上傳
-//     if (!is_uploaded_file($f['tmp_name'])) {
-//     http_response_code(422);
-//     echo json_encode(['ok' => false, 'message' => '非法的上傳來源'], JSON_UNESCAPED_UNICODE);
-//     exit;
-//     }
-
-//     // 檔案大小限制：2MB
-//     if ($f['size'] > 2 * 1024 * 1024) {
-//         http_response_code(422);
-//         echo json_encode(['ok' => false, 'message' => '圖片大小不可超過 2MB'], JSON_UNESCAPED_UNICODE);
-//         exit;
-//     }
-//     // 檔案 MIME
-//     $finfo = finfo_open(FILEINFO_MIME_TYPE);
-//     $mime  = finfo_file($finfo, $f['tmp_name']);
-//     finfo_close($finfo);
-
-//     $allowed = ['image/jpeg','image/png','image/webp'];
-//     if (!in_array($mime, $allowed, true)) {
-//         http_response_code(422);
-//         echo json_encode(['ok' => false, 'message' => '僅允許 JPG/PNG/WebP 圖片'], JSON_UNESCAPED_UNICODE);
-//         exit;
-//     }
-//     // 目的資料夾（相對於這支 PHP）
-//   $uploadDir = __DIR__ . '/uploads';
-//   if (!is_dir($uploadDir)) {
-//     if (!mkdir($uploadDir, 0775, true) && !is_dir($uploadDir)) {
-//       http_response_code(500);
-//       echo json_encode(['ok' => false, 'message' => '無法建立上傳資料夾'], JSON_UNESCAPED_UNICODE);
-//       exit;
-//     }
-// }
-// 產生不重複檔名
-// $ext = match ($mime) {
-//     'image/jpeg' => '.jpg',
-//     'image/png'  => '.png',
-//     'image/webp' => '.webp',
-//     default      => ''
-// };
-// if ($mime === 'image/jpeg')      $ext = '.jpg';
-// elseif ($mime === 'image/png')   $ext = '.png';
-// elseif ($mime === 'image/webp')  $ext = '.webp';
-// else                             $ext = '';
-// try{
-//     $basename  = bin2hex(random_bytes(8)) . $ext;
-// } catch (Exception $e) {
-//     $basename = uniqid('', true) . $ext;
-// }
-// $fullpath  = $uploadDir . '/' . $basename;
-
-// if (!move_uploaded_file($f['tmp_name'], $fullpath)) {
-//     http_response_code(500);
-//     echo json_encode(['ok' => false, 'message' => '圖片儲存失敗'], JSON_UNESCAPED_UNICODE);
-//     exit;
-//   }
-//   // 存相對路徑（提供給前端顯示）
-//     //   $imagePath = '/PDO/Member/uploads/' . $basename;
-//     $publicUploadsBase = '/uploads';
-//     $imagePath = rtrim($publicUploadsBase, '/') . '/' . $basename;
-// }
-
-
 
 try {
     // 檢查 Email 是否重複
