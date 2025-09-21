@@ -134,12 +134,14 @@
             products.value = lists.map((r, i) => {
                 const sale  = Number(r.sale_price ?? 0)
                 const original  = Number(r.original_price ?? 0)
+                const hasDiscount = original > 0 && sale > 0 && sale < original
                 return {
                     id: r.ID ?? i + 1,
                     title: r.name ?? '未命名商品',
                     sale_price: sale,
                     original_price: original,
                     price: sale > 0 ? sale : original,     // 顯示/存入購物車用的售價
+                    hasDiscount,
                     photo: toImageUrl(r.photo_url),
                     stock: Number(r.stock ?? 0),
                     is_active: Number(r.is_active ?? 0)
@@ -190,10 +192,16 @@
                         <div class="titleprice" @click="goProduct(p.id)">
                             <h3 class="title">{{ p.title }}</h3>
                             <p class="price">{{ formatTWD(p.price) }}</p>
-                            <!-- 原價高於顯示價才顯示刪除線 -->
-                            <p class="old-price" v-if="p.original_price && p.price < p.original_price">
+                            <!-- 有折扣：顯示刪除線原價；無折扣：顯示「此商品無折價」 -->
+                            <p class="old-price" v-if="p.hasDiscount">
                                 {{ formatTWD(p.original_price) }}
                             </p>
+                            <p class="no-discount" v-else>
+                                此商品無折價
+                            </p>
+                            <!-- <p class="old-price" v-if="p.original_price && p.price < p.original_price">
+                                {{ formatTWD(p.original_price) }}
+                            </p> -->
                         </div>
             
                         <div class="actions">
@@ -317,6 +325,16 @@
     opacity: .6;
     text-decoration: line-through;
     margin-top: -2px;
+}
+/* 無折價 */
+.no-discount{
+    text-align: center;
+    font-size: 14px;
+    color: $FontColor-white;
+    opacity: .45;
+    margin-top: -2px;
+    /* 讓高度完全一致，也可以固定高度 */
+    min-height: 18px;
 }
 /* 按鈕 */
 .actions { 
