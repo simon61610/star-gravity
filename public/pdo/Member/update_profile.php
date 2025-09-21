@@ -14,7 +14,7 @@ session_start();
 $memberID = isset($_SESSION['memberID']) ? (int)$_SESSION['memberID'] : 0;
 
 // 兩者都沒有 → 視為未登入
-if ($uid === 0) {
+if ($memberID === 0) {
   echo json_encode(['success' => false, 'message' => '尚未登入'], JSON_UNESCAPED_UNICODE);
   exit;
 }
@@ -72,7 +72,7 @@ try {
     'success' => $ok,
     'message' => $ok ? '已更新' : '更新失敗',
     'rows'    => $st->rowCount(),
-    'debug'   => ['uid'=>$uid, 'got'=>$data]
+    'debug'   => ['memberID'=>$memberID, 'got'=>$data]
   ], JSON_UNESCAPED_UNICODE);
 
   } catch (PDOException $e) {

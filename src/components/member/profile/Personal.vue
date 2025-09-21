@@ -1,6 +1,8 @@
 <script setup>
     import { ref, onMounted, reactive, computed } from 'vue'
     import axios from 'axios'
+    import shopToast from '@/components/common/shopToast.vue'
+    import { showToast } from '@/composables/useToast'
 
     // API 根路徑 (來自 .env)
     const API_BASE = import.meta.env.VITE_AJAX_URL + "Member/"
@@ -108,16 +110,27 @@
     /* ---- 儲存（更新到資料庫；不再動 localStorage） ---- */
     async function save () {
         if (!canSave.value) { 
-            alert('請把欄位填完整'); return 
+            // alert('請把欄位填完整'); 
+            showToast('請把欄位填完整', { 
+                type: 'error', duration: 2000 
+            })
+            return 
         }
         // 送出前再次檢查手機格式（與註冊一致）
         if (!isValidTWPhone(member.phone)) {
-            alert('聯絡電話須為 09 開頭的 10 碼數字')
+            // alert('聯絡電話須為 09 開頭的 10 碼數字')
+            showToast('電話需為 09 開頭的 10 碼', { 
+                type: 'error', duration: 2000 
+            })
             return
         }
         const token = localStorage.getItem(LS_TOKEN)
         if (!token) { 
-            alert('登入已過期，請重新登入'); window.location.href='/loginfirst'; 
+            // alert('登入已過期，請重新登入'); window.location.href='/loginfirst'; 
+            showToast('登入已過期，請重新登入', { 
+                type: 'error', duration: 2200 
+            })
+            window.location.href='/loginfirst';
             return 
         }
         saving.value = true
@@ -134,11 +147,13 @@
         )
 
             // 後端任一種皆可：{ ok: true } 或 { success: true }
-            alert('已儲存！')
+            // alert('已儲存！')
+            showToast('已儲存！', { type: 'success', duration: 1800 })
             const now = new Date()
             savedAt.value = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0')
         } catch (e) {
-            alert(e?.message || '更新失敗')
+            // alert(e?.message || '更新失敗')
+            showToast(e?.message || '更新失敗', { type: 'error', duration: 2200 })
         } finally {
             saving.value = false
         }
@@ -151,6 +166,8 @@
 <template>
     <!-----右邊內容-------->
     <div class="personal-form">
+        <shopToast />
+        
         <h3 class="rowName">暱稱：</h3>
         <div class="row">
             <input :value="member.name" type="text" class="rowline" style="font-size: 18px" placeholder="我的名字" disabled />
