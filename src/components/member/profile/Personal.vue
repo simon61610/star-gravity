@@ -32,6 +32,9 @@
         member.name.trim() && member.phone.trim() &&
         member.city && member.area && member.address.trim()
     )
+
+    // 台灣手機格式驗證
+    const isValidTWPhone = (v) => /^09\d{8}$/.test((v ?? '').trim())
         
     // 縣市區域選單
     const cities = ref([])
@@ -49,13 +52,6 @@
     }
 
     onMounted(async() => {
-        // 用 token 判斷是否登入
-        // const token = localStorage.getItem(LS_TOKEN)
-        // if(!token) {
-        //     alert('請先登入')
-        //     window.location.href = "/loginfirst"   // 登出後跳轉到登入頁
-        //     return
-        // }
 
         // 載入城市/區域 JSON
         try {
@@ -114,6 +110,11 @@
         if (!canSave.value) { 
             alert('請把欄位填完整'); return 
         }
+        // 送出前再次檢查手機格式（與註冊一致）
+        if (!isValidTWPhone(member.phone)) {
+            alert('聯絡電話須為 09 開頭的 10 碼數字')
+            return
+        }
         const token = localStorage.getItem(LS_TOKEN)
         if (!token) { 
             alert('登入已過期，請重新登入'); window.location.href='/loginfirst'; 
@@ -156,8 +157,21 @@
         </div>
         <h3 class="rowName">聯絡電話：</h3>
         <div class="row">
-            <input v-model="member.phone" type="tel" class="rowline" style="font-size: 18px" placeholder="我的電話" />
+            <input
+              v-model="member.phone"
+              type="tel"
+              class="rowline"
+              style="font-size: 18px"
+              placeholder="我的電話"
+              inputmode="numeric"          
+              pattern="^09\\d{8}$"         
+              maxlength="10"               
+              @input="member.phone = member.phone.replace(/\\D/g,'').slice(0,10)"  
+            />
         </div>
+        <!-- <div class="row">
+            <input v-model="member.phone" type="tel" class="rowline" style="font-size: 18px" placeholder="我的電話" />
+        </div> -->
         <!----縣市鄉鎮-------->
         <h3 class="rowName">聯絡地址：</h3>
         <div class="personal-city">

@@ -1,13 +1,6 @@
 <?php
 
-// header('Content-Type: application/json; charset=utf-8');
-
 include '../pdo.php';
-
-// 處理預檢請求
-// if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-//   exit; 
-// }
 
 // 只允許 POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -17,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // 同時支援 Session / Token
 session_start();
-// $uid = (int)($_SESSION['memberID'] ?? 0);
+
 $memberID = isset($_SESSION['memberID']) ? (int)$_SESSION['memberID'] : 0;
 
 // 兩者都沒有 → 視為未登入
@@ -40,7 +33,7 @@ $city    = trim($data['city'] ?? '');
 $area    = trim($data['area'] ?? '');
 $address = trim($data['address'] ?? '');
 
-// 簡單必填檢查（你要的可以自行放寬/加強）
+// 簡單必填檢查
 if ($name === '' || $phone === '') {
   echo json_encode([
     'success' => false,
@@ -49,6 +42,15 @@ if ($name === '' || $phone === '') {
   ], JSON_UNESCAPED_UNICODE);
   exit;
 }
+
+// 台灣手機格式（09 開頭 + 共 10 碼
+if (!preg_match('/^09\\d{8}$/', $phone)) {
+  echo json_encode([
+    'success' => false,
+    'message' => '電話格式不正確（需為 09 開頭的 10 碼）'
+  ], JSON_UNESCAPED_UNICODE);
+  exit;
+};
 
 // 更新當前登入會員資料
 try {
