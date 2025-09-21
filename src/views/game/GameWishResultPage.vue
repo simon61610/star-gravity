@@ -11,26 +11,30 @@
     <!-- Phase B：最終結果（照設計稿） -->
     <section v-else class="wall" aria-label="許願牆最終結果">
       <div class="card">
-        <!-- 外內兩圈「星點」 -->
-        <div class="ring ring--outer"></div>
-        <div class="ring ring--inner"></div>
 
-        <h2 class="card__title">{{ finalTitle }}</h2>
-        <p class="card__desc">
-          {{ finalText }}
-        </p>
+        <!-- 外圈 shape 覆蓋圖（依使用者選的圖案） -->
+        <img v-if="ringSrc" :src="ringSrc" alt="" class="ring ring--shape" />
+
+     
+        <!-- 願望摘要（從 localStorage 讀取） -->
+        <section class="wish-summary" v-if="latest">
+          <h3 class="wish-summary__title">你的心願</h3>
+          <p class="wish-summary__name">by {{ latest.name }}</p>
+          <blockquote class="wish-summary__text">{{ latest.wish }}</blockquote>
+
+        </section>
+        <section class="wish-summary wish-summary--empty" v-else>
+          <p>找不到剛剛的願望內容 🥲</p>
+        </section>
 
         <div class="socials" role="group" aria-label="分享">
           <a href="#" class="icon" aria-label="Facebook" @click.prevent="doShare('facebook')">
-            <!-- FB -->
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 9H16V6h-2.5C11.6 6 11 7.2 11 8.7V10H9v3h2v5h3v-5h2.2l.3-3H14v-1c0-.6.2-1 .9-1Z" fill="currentColor"/></svg>
           </a>
           <a href="#" class="icon" aria-label="Instagram" @click.prevent="doShare('instagram')">
-            <!-- IG -->
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3h8a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H8Zm4 3.5A4.5 4.5 0 1 1 7.5 13 4.5 4.5 0 0 1 12 8.5Zm0 2A2.5 2.5 0 1 0 14.5 13 2.5 2.5 0 0 0 12 10.5Zm5.25-3.25a.75.75 0 1 1-.75.75.75.75 0 0 1 .75-.75Z" fill="currentColor"/></svg>
           </a>
           <a href="#" class="icon" aria-label="複製連結" @click.prevent="doShare('link')">
-            <!-- Link -->
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.6 13.4a1 1 0 0 1 0-1.4l3-3a4 4 0 1 1 5.7 5.7l-1.8 1.8a4 4 0 0 1-5.7 0 .999.999 0 1 1 1.4-1.4 2 2 0 0 0 2.8 0l1.8-1.8a2 2 0 0 0-2.8-2.8l-3 3a1 1 0 0 1-1.4 0ZM13.4 10.6a1 1 0 0 1 0 1.4l-3 3a4 4 0 1 1-5.7-5.7l1.8-1.8a4 4 0 0 1 5.7 0 .999.999 0 1 1-1.4 1.4 2 2 0 0 0-2.8 0L5.2 9.7a2 2 0 0 0 2.8 2.8l3-3a1 1 0 0 1 1.4 0Z" fill="currentColor"/></svg>
           </a>
         </div>
@@ -46,7 +50,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 const route = useRoute()
 
-/* ========= 資產自動載入（避免路徑打錯） ========= */
+/* ========= 資產自動載入 ========= */
 const pickOne = (pool, suffixes = []) => {
   const keys = Object.keys(pool)
   for (const s of suffixes) {
@@ -56,7 +60,7 @@ const pickOne = (pool, suffixes = []) => {
   return ''
 }
 
-// 動畫階段素材（可選）
+// 動畫階段素材
 const transitFiles = import.meta.glob('/src/assets/images/games/GameWishTransitPage/*', {
   eager: true, import: 'default'
 })
@@ -93,23 +97,55 @@ const phase = ref('anim') // 'anim' | 'final'
 onMounted(() => setTimeout(() => { phase.value = 'final' }, ANIM_MS))
 
 const bgUrl = computed(() => phase.value === 'anim' ? animBg : (finalBg.value || animBg))
-const bgStyle = computed(() => bgUrl.value ? `url(${bgUrl.value})` : 'linear-gradient(180deg,#091430,#0b0f26)')
+const bgStyle = computed(() =>
+  bgUrl.value
+    ? `url(${bgUrl.value})`
+    : 'linear-gradient(180deg,#091430,#0b0f26)'
+)
 
-/* ========= 文案：可由 query 帶入 ========= */
+/* ========= 文案 ========= */
 const finalTitle = computed(() => String(route.query.title || '願望'))
 const finalText  = computed(() =>
   String(route.query.text || 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout...')
 )
 
-/* ========= 分享（可先做連結複製） ========= */
-const doShare = async (type) => {
+/* ========= 願望資料（localStorage） ========= */
+const STORAGE_LATEST = 'wishWallLatest'
+const latest = ref(null)
+
+onMounted(() => {
+  try {
+    latest.value = JSON.parse(localStorage.getItem(STORAGE_LATEST) || 'null')
+  } catch (e) {
+    latest.value = null
+  }
+})
+
+const shapeLabel = computed(() => {
+  switch (latest.value?.shape) {
+    case 'heart':   return '愛心'
+    case 'square':  return '方形'
+    case 'circle':  return '圓形'
+    case 'droplet': return '水滴'
+    default:        return '—'
+  }
+})
+
+/* ========= 外圈 shape 影像（依使用者選擇） ========= */
+const ringFiles = import.meta.glob(
+  '/src/assets/images/games/GameWishResultPage/ring-*.{png,svg,jpg,jpeg}',
+  { eager: true, import: 'default' }
+)
+const ringSrc = computed(() => {
+  const key = (latest.value?.shape || '').toLowerCase() // heart/square/circle/droplet
+  if (!key) return ''
+  const hit = Object.keys(ringFiles).find(p => p.toLowerCase().includes(`ring-${key}.`))
+  return hit ? ringFiles[hit] : ''
+})
+
+/* ========= 分享 ========= */
+const doShare = async () => {
   const url = location.href
-  if (type === 'link') {
-    await navigator.clipboard?.writeText(url)
-    alert('連結已複製！')
-    return
-    }
-  // 先簡化：其他按鈕同樣複製
   await navigator.clipboard?.writeText(url)
   alert('連結已複製！')
 }
@@ -120,7 +156,6 @@ const doShare = async (type) => {
   min-height:100vh; position:relative; overflow:hidden; color:#fff;
   background: var(--bg) center/cover no-repeat;
   transition: background-image .6s ease;
-
   &.anim { display:grid; place-items:center; text-align:center; }
   &.final{ display:grid; place-items:center; }
 }
@@ -144,7 +179,7 @@ const doShare = async (type) => {
 
 .card{
   position:relative;
-  width: min(78vw, 560px); aspect-ratio: 1 / 1;   /* 正方形卡片 */
+  width: min(78vw, 560px); aspect-ratio: 1 / 1;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   padding: clamp(16px, 3vw, 28px);
   border-radius: 24px;
@@ -155,11 +190,10 @@ const doShare = async (type) => {
   animation: rise .6s ease both .05s;
 }
 
-/* 星點圓環（兩圈） */
+/* 星點圓環（兩圈 + shape 覆蓋） */
 .ring{
   position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-  border-radius:50%;
-  pointer-events:none;
+  border-radius:50%; pointer-events:none;
   filter: drop-shadow(0 0 8px rgba(255,255,255,.25));
 }
 .ring--outer{
@@ -171,6 +205,11 @@ const doShare = async (type) => {
   width: 62%; aspect-ratio:1/1;
   border: 2px dotted rgba(255,255,255,.28);
   opacity:.8;
+}
+/* 外圈 shape 覆蓋層 */
+.ring--shape{
+  width:82%; aspect-ratio:1/1; object-fit:contain;
+  opacity:.95; filter:none; z-index:1;
 }
 
 /* 內容 */
@@ -187,8 +226,18 @@ const doShare = async (type) => {
   text-align:center; margin: 0 0 16px;
 }
 
+/* 願望摘要 */
+.wish-summary {
+  margin-top: 6px; text-align: center;
+  &__title { font-weight:800; letter-spacing:.2em; margin-bottom:6px; font-size: clamp(16px, 2.2vw, 18px); text-shadow: 0 2px 8px rgba(0,0,0,.25); }
+  &__name { opacity:.85; margin-bottom:4px; font-size:14px; }
+  &__text { white-space: pre-wrap; line-height:1.8; font-size:16px; margin:0 auto; max-width:40ch; text-shadow:0 1px 6px rgba(0,0,0,.25); }
+  &__shape { margin-top:6px; opacity:.85; font-size:14px; }
+}
+.wish-summary--empty { opacity:.8; }
+
 /* 社群按鈕 */
-.socials{ display:flex; gap: 14px; margin: 8px 0 18px; }
+.socials{ display:flex; gap: 14px; margin: 10px 0 18px; }
 .icon{
   --s: 38px;
   width: var(--s); height: var(--s); display:grid; place-items:center;

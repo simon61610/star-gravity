@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 28.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 1440 816.9" style="enable-background:new 0 0 1440 816.9;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:url(#SVGID_1_);}
+	.st1{fill:url(#SVGID_00000146484071976035752820000004503793410004994233_);}
+	.st2{clip-path:url(#SVGID_00000131327933652597589230000013143826305554751667_);}
+	.st3{opacity:0.83;}
+	.st4{fill:#FFFFFF;}
+	.st5{fill:#CDBADA;}
+	.st6{fill:#153A53;}
+	.st7{fill:none;}
+</style>
+<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="3833.1975" y1="4873.5459" x2="3833.1975" y2="6638.4263" gradientTransform="matrix(-1 0 0 -1 6639 6450.7798)">
+	<stop  offset="1.198743e-03" style="stop-color:#894A98"/>
+	<stop  offset="0.12" style="stop-color:#7D4797;stop-opacity:0.881"/>
+	<stop  offset="0.4797" style="stop-color:#5F4095;stop-opacity:0.521"/>
+	<stop  offset="0.7857" style="stop-color:#4C3C93;stop-opacity:0.2145"/>
+	<stop  offset="1" style="stop-color:#453A93;stop-opacity:0"/>
+</linearGradient>
+<polygon class="st0" points="2067.8,168.2 3543.8,168.2 3543.8,966 2067.8,966 "/>
+<radialGradient id="SVGID_00000018195820859717373530000015317456509340874405_" cx="1713.4274" cy="1059.7703" r="1308.0762" gradientTransform="matrix(1.0345 0 0 0.8401 1074.288 68.8805)" gradientUnits="userSpaceOnUse">
+	<stop  offset="0" style="stop-color:#374A9C"/>
+	<stop  offset="1" style="stop-color:#0B1430"/>
+</radialGradient>
+<rect x="2071" y="58.6" style="fill:url(#SVGID_00000018195820859717373530000015317456509340874405_);" width="1469.7" height="904.3"/>
+<g>
+	<defs>
+		<rect id="SVGID_00000029034344915712830500000007256696050379132045_" x="2070.9" y="116" width="1467.6" height="850.1"/>
+	</defs>
+	<clipPath id="SVGID_00000161612624022152167470000002879881232108814211_">
+		<use xlink:href="#SVGID_00000029034344915712830500000007256696050379132045_"  style="overflow:visible;"/>
+	</clipPath>
+	<g id="bright-light-black-background.tif" style="clip-path:url(#SVGID_00000161612624022152167470000002879881232108814211_);">
+		
+			<image style="overflow:visible;" width="6240" height="4160" id="bright-light-black-background_00000130645130997531510090000008191829439470877325_" xlink:href="5500C10505D92EDC.png"  transform="matrix(0.2329 0 0 0.2329 2753.6736 464.8379)">
+		</image>
+	</g>
+	
+		<g id="bright-light-black-background.tif_00000147905509119403939670000005089047782063751076_" style="clip-path:url(#SVGID_00000161612624022152167470000002879881232108814211_);">
+		
+			<image style="overflow:visible;" width="6240" height="4160" id="bright-light-black-background_00000163070936031620112710000001381744412296446336_" xlink:href="5500C10505D92EDD.png"  transform="matrix(-0.2176 -8.324605e-02 8.324605e-02 -0.2176 2627.3979 1803.9084)">
+		</image>
+	</g>
+</g>
+<g class="st3">
+	
+		<image style="overflow:visible;" width="999" height="678" xlink:href="5500C10505D92EDB.png"  transform="matrix(1 0 0 1 2261 335.9)">
+	</image>
+</g>
+<g class="st3">
+	
+		<image style="overflow:visible;" width="999" height="678" xlink:href="5500C10505D92EE4.png"  transform="matrix(1 0 0 1 2410 153.9)">
+	</image>
+</g>
+<polygon class="st4" points="2414.7,394.8 2389.7,401.6 2410.2,386.7 2394.3,377.3 2419.2,377.3 2433.2,355.3 2430.3,375 
+	2454.6,369.6 2433.1,385.7 2453.3,391.3 2425.9,393.1 2415.8,415.6 "/>
+<polygon class="st4" points="3292.3,635.3 3305.8,640.5 3292.4,646.5 3291.3,659.4 3282.5,649.2 3268.2,653.7 3275.5,639.3 
+	3267.8,627.8 3281.8,630.8 3290.3,621.1 "/>
+<g>
+	<path class="st4" d="M3346.3,607.9c0-0.7,1-1.5,1-2.1c0.1-1.2,0.5-2.2,1.1-3.2c1.8-2.8,5.5-4.7,8.2-6.8c0.3-0.3,0.7-0.5,1-0.8
+		c1.3-1.1,2.4-2.6,3.6-4c2.3-2.6,4.7-4.7,8.1-5.1c5.3-0.6,10.4,1.9,14.8,7.2c3.3,4,4.7,9.2,4.7,14.8s-1.9,10.3-5.6,14
+		c-0.5,0.5-1.1,1-1.7,1.5c-3.4,2.5-7.5,3.4-12.3,3.4c-4.5,0-8.4-0.5-11.8-3C3352.6,620.2,3346.3,614.6,3346.3,607.9z"/>
+	<path class="st5" d="M3346.3,607.9c0-0.7,1-1.5,1-2.1c0.1-1.2,0.5-2.2,1.1-3.2c1.9-1.5,4.2-2.8,5.8-4.3c0.8-0.7,1.6-1.6,2.4-2.5
+		c1.5-1.7,2.9-3.5,4.6-4.8c1.4-1.1,2.9-1.8,4.8-1.8c5.6,0,11.2,3.6,14.8,7.2c3.7,3.7,4.7,9.2,4.7,14.8c0,4.7-1.3,8.8-3.9,12.2
+		c-3.4,2.5-7.5,3.4-12.3,3.4c-4.5,0-8.4-0.5-11.8-3C3352.6,620.2,3346.3,614.6,3346.3,607.9z"/>
+	<path class="st6" d="M3364.7,615.7c0-2.2,1.7-3.9,3.9-3.9c2.2,0,3.9,1.7,3.9,3.9c0,2.2-1.7,3.9-3.9,3.9
+		C3366.4,619.6,3364.7,617.8,3364.7,615.7z"/>
+	<path class="st6" d="M3376.9,615.1c0-1.2,1-2.2,2.2-2.2c1.2,0,2.2,1,2.2,2.2c0,1.2-1,2.2-2.2,2.2
+		C3377.9,617.3,3376.9,616.3,3376.9,615.1z"/>
+</g>
+<g>
+	<defs>
+		<path id="SVGID_00000164503626082710490480000000099726440506870149_" d="M2081.3,959l-2.4-823.1l1405.5-5.6V959H2081.3z
+			 M2373,197.5"/>
+	</defs>
+	<clipPath id="SVGID_00000029029854935716021000000002476061202981374344_">
+		<use xlink:href="#SVGID_00000164503626082710490480000000099726440506870149_"  style="overflow:visible;"/>
+	</clipPath>
+</g>
+<path class="st7" d="M2095.2,948.3l-2.5-823.1l1440-5.6v828.7H2095.2z M2394.1,186.8"/>
+</svg>

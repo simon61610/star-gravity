@@ -40,33 +40,6 @@ function initVanta(){
 
 }
 
-// onMounted(() => {     //掛載vanta特效
-
-//     vantaEffect.value = window.VANTA.NET({
-//       el: vantaRef.value,
-//       mouseControls: true,
-//       touchControls: true,
-//       gyroControls: false,
-//       backgroundColor: 0x0a0f1f,
-//       scale: 1.0,
-//       scaleMobile: 1.0,
-//       speed: 0,
-//       points: 18.0,
-//       color: 0xd9c6cf,
-//       maxDistance: 1.0,
-//       spacing: 16.0,
-
-      
-//     })
-
-
-//   container = vantaRef.value //定義容器
-//   if (container) {
-//     meteorInterval = setInterval(createMeteor, 1000) // 300ms 一顆
-//   }
-  
-// })
-
 
 
 // 「清理」函式，同時給路由切換與元件卸載呼叫
@@ -78,7 +51,7 @@ function cleanup() {
   if (vantaEffect.value && typeof vantaEffect.value.destroy === 'function') {
     try { vantaEffect.value.destroy() } 
     catch (e) {
-      console.error('vanta特效清除失敗')
+      console.debug('vantaEffect cleanup failed', e)
     }
     vantaEffect.value = null
   }

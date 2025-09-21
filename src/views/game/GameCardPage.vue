@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed, nextTick, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 // ===== 圖片（請改成你的實際檔案）=====
@@ -14,7 +14,7 @@ import frontHealth from '@/assets/images/games/GameCardPage/front-health.svg'
 import frontWealth from '@/assets/images/games/GameCardPage/front-wealth.svg'
 import frontStudy  from '@/assets/images/games/GameCardPage/front-study.svg'
 
-// 類別 → 正面圖（目前先都用同一張；有五款圖時把對應值換掉）
+// 類別 → 正面圖
 const FRONT_OF_TYPE = {
   love:   frontLove,
   career: frontCareer,
@@ -95,8 +95,26 @@ const pickRandomAvailableType = () => {
   return remaining[r]
 }
 
+// —— 底部提示顯示控制（已上移） —— //
+const showHint = ref(true)
+// 往上抬升提示距離（單位：px）— 想再高就把 120 調大
+const HINT_RAISE = 120
+const hintStyle = computed(() => ({
+  left: '50%',
+  top: (DECK.y - HINT_RAISE) + 'px', // 原本是 DECK.y - 48
+  transform: `translateX(calc(-50% + ${(CENTER.offsetX || -90)}px))`
+}))
+watch(pickedIndexes, (arr) => {
+  if (arr.length > 0) showHint.value = false
+})
+
+const router = useRouter()
+
 // 點擊：指派隨機類別（不可與已抽重複）→ 移到槽位 → 翻面
 const onPick = async (idx) => {
+  // 先隱藏提示
+  showHint.value = false
+
   const card = cards.value[idx]
   if (!canPickMore.value) return
   if (card.place === 'slot' || card.flipped) return
@@ -119,8 +137,6 @@ const onPick = async (idx) => {
   await nextTick()
   setTimeout(() => { card.flipped = true }, 600) // 與 CSS transition 對齊
 }
-
-const router = useRouter()
 
 // 抽滿後前往結果頁（route name = 'gamestory'）
 const goResult = () => {
@@ -169,6 +185,22 @@ const goResult = () => {
         {{ ctaText }}
       </button>
 
+      <!-- 無障礙朗讀提示（螢幕閱讀器） -->
+      <p class="sr-only" aria-live="polite">
+        {{ isFull ? '已抽滿三張，點「查看占卜結果」' : '請點擊下方任一張卡片開始抽牌' }}
+      </p>
+
+      <!-- 底部引導提示（會在第一次抽牌後自動消失） -->
+      <div
+        v-if="showHint && canPickMore"
+        class="deck-hint"
+        :style="hintStyle"
+        role="status"
+      >
+        <span class="deck-hint__arrow">▼</span>
+        <span class="deck-hint__text">點擊下方卡片抽牌</span>
+      </div>
+
       <!-- 卡片 -->
       <button
         v-for="(c, idx) in cards"
@@ -176,6 +208,7 @@ const goResult = () => {
         class="card"
         type="button"
         :style="styleFor(c, idx)"
+        :data-place="c.place"
         :aria-pressed="c.flipped ? 'true' : 'false'"
         @click="onPick(idx)"
       >
@@ -201,7 +234,6 @@ const goResult = () => {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  
 }
 
 /* 舞台固定寬高、背景鋪滿 */
@@ -209,8 +241,6 @@ const goResult = () => {
   position: relative;
   background: no-repeat center / cover;
   overflow: hidden;
-
-
 }
 
 /* CTA 置中（依背景微調） */
@@ -233,7 +263,6 @@ const goResult = () => {
 
 /* 卡片（絕對定位，動畫用 top/transform） */
 .card {
-  
   -webkit-appearance: none;
   appearance: none;
   background: none;
@@ -266,7 +295,60 @@ const goResult = () => {
   object-fit: cover;
   backface-visibility: hidden;
   border-radius: 12px;
-  
 }
 .card-front { transform: rotateY(180deg); }
+
+/* 無障礙：僅供螢幕閱讀器讀取 */
+.sr-only {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
+
+/* 底部提示泡泡 */
+.deck-hint {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(38, 38, 75, .92);
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1;
+  box-shadow: 0 6px 16px rgba(0,0,0,.25);
+  pointer-events: none;       /* 讓點擊不被擋到卡片 */
+  animation: hintFloat 1.6s ease-in-out infinite;
+  z-index: 1200;
+}
+.deck-hint__arrow {
+  font-size: 18px;
+  animation: arrowBounce 1s ease-in-out infinite;
+}
+.deck-hint__text { opacity: .95; letter-spacing: .02em; }
+
+@keyframes hintFloat {
+  0%, 100% { transform: translateY(0) translateX(var(--hx, 0)); }
+  50%      { transform: translateY(-6px) translateX(var(--hx, 0)); }
+}
+@keyframes arrowBounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(3px); }
+}
+
+/* 只有還能抽牌時，讓底部牌列卡片有微幅吸睛動畫 */
+.card[data-place="deck"] {
+  transition: top .6s ease, transform .6s ease, box-shadow .2s ease;
+}
+.scene :is(.deck-hint) ~ .card[data-place="deck"] {
+  animation: cardNudge 1.8s ease-in-out infinite;
+}
+@keyframes cardNudge {
+  0%, 100% { transform: translateX(var(--tx, 0)) rotate(var(--rot, 0deg)); }
+  50%      { transform: translateX(var(--tx, 0)) translateY(-6px) rotate(var(--rot, 0deg)); }
+}
 </style>

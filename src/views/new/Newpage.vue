@@ -19,7 +19,7 @@ async function fetchAll() {
         // 第一步：只檢查 updated
     const check = await axios.get(import.meta.env.VITE_AJAX_URL + "news/checckat.php")
     if (check.data.updated_at !== uptime.value) {
-        console.log("偵測到更新，重新抓資料")
+        console.debug("偵測到更新，重新抓資料")
          // 第二步：真的有更新 → 打完整 API
         const res = await axios.get(import.meta.env.VITE_AJAX_URL + "news/newssearch.php")
         articles.value = res.data
@@ -27,7 +27,7 @@ async function fetchAll() {
         // 更新本地的 updated
         uptime.value = check.data.updated_at
         }else {
-        console.log("資料無變動，不打完整 API")
+        console.debug("資料無變動，不打完整 API")
         }
     } catch (error) {
       console.error("資料抓取失敗")
@@ -67,7 +67,7 @@ const filterArticles = computed(()=>{
     const showArticles = computed(()=>{
         const start = (currentPage.value - 1) * pageSize.value  //從第X頁的第X筆開始 例如:第一頁會從(1-1)*4 第0筆資料開始 
         const end = start + pageSize.value //一共幾筆
-        console.log(` 目前第${currentPage.value}頁 顯示${start} 到 ${end-1}筆`) //驗證用而已
+        console.debug(` 目前第${currentPage.value}頁 顯示${start} 到 ${end-1}筆`) //驗證用而已
         return filterArticles.value.slice(start, start + pageSize.value)  // 保險使用 slice複製陣列 [開始,結束] 確保資料不會因為切頁被刪除回不去
     })
 

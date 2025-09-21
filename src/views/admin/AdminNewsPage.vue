@@ -23,7 +23,7 @@
     
     // 子層新增成功時 → 父層更新資料
     function handleAdded() {
-        console.log("子層新增成功");  
+        console.debug("子層新增成功");  
    // Newstable.value.push(newData) 0910改掉測試
     }
    

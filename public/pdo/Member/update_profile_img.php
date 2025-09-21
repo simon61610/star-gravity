@@ -14,9 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // 取得登入會員 ID
 session_start();
-// $uid = (int)($_SESSION['memberID'] ?? 0);
+
 // 只相信 Session，切勿用前端傳來的 memberID
-// $memberID = isset($_SESSION['memberID']) ? (int)$_SESSION['memberID'] : 0;
 $memberID = isset($_SESSION['memberID']) ? (int)$_SESSION['memberID'] : 0;   // 安全：不再讀 POST 的 memberID
 
 if ($memberID === 0) {
@@ -69,7 +68,7 @@ if (!in_array($mime, $allow, true)) {
     exit;
 }
 
-// 依 MIME 決定副檔名（不信任原檔名）
+// 依 MIME 決定副檔名
 $ext = ($mime === 'image/png') ? 'png' : (($mime === 'image/webp') ? 'webp' : 'jpg');
 
 
@@ -101,21 +100,9 @@ if (!@move_uploaded_file($file['tmp_name'], $destPath)) {
   exit;
 };
 
-// // + 存到 DB 的字串一律「相對路徑」且不以 `/` 開頭（前端用 new URL() 補全
+// 存到 DB 的字串一律「相對路徑」且不以 `/` 開頭（前端用 new URL() 補全
 // 注意大小寫：Member/uploadImages/...
 $imagePath = 'Member/uploadImages/' . $fname;
-
-//建立SQL
-// $sqlImg = "UPDATE Member 
-//               SET image=:image 
-//               WHERE ID=:id";
-// $statementImg = $pdo -> prepare($sqlImg);
-// $statementImg -> bindParam(":image", $imagePath);
-
-// $statementImg->bindParam(":id", $memberID);
-
-// // 執行新增圖片
-// $statementImg -> execute();
 
 // 先查舊圖，待會更新成功後刪除
 $st = $pdo->prepare('SELECT image 
@@ -139,13 +126,22 @@ if (!$ok) {
 };
 
 // 刪除舊檔（安全範圍內、且不是剛上傳的同一檔）
-if ($oldRel) {
-  $oldAbs   = __DIR__ . '/' . preg_replace('#^/#','', $oldRel); // ~ 允許舊資料含先導 `/`，這裡統一處理 
-  $safeBase = realpath($saveDir);                                // 只允許刪除 uploadImages/ 內的檔案
-  $oldReal  = file_exists($oldAbs) ? realpath($oldAbs) : null;
-  $newReal  = realpath($destPath);
-  if ($safeBase && $oldReal && strpos($oldReal, $safeBase) === 0 && $oldReal !== $newReal) {
-    @unlink($oldReal);               // 實際刪除舊檔（且不等於新檔
+// if ($oldRel) {
+//   $oldAbs   = __DIR__ . '/' . preg_replace('#^/#','', $oldRel); // ~ 允許舊資料含先導 `/`，這裡統一處理 
+//   $safeBase = realpath($saveDir);                                // 只允許刪除 uploadImages/ 內的檔案
+//   $oldReal  = file_exists($oldAbs) ? realpath($oldAbs) : null;
+//   $newReal  = realpath($destPath);
+//   if ($safeBase && $oldReal && strpos($oldReal, $safeBase) === 0 && $oldReal !== $newReal) {
+//     @unlink($oldReal);               // 實際刪除舊檔（且不等於新檔
+//   }
+// };
+
+// 刪除舊檔
+if (!empty($oldRel)) {
+  // 直接取舊圖檔名接在目前上傳資料夾，避免產生 Member/Member/... 的錯誤實體路徑
+  $oldAbs = $saveDir . basename($oldRel);  // 例如：/path/to/Member/uploadImages/xxx.jpg
+  if (is_file($oldAbs)) { 
+    @unlink($oldAbs); 
   }
 };
 
