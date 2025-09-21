@@ -345,7 +345,7 @@
         .cart-list {
             padding-bottom: 60px;
 
-            @include respond('md'){
+            @include respond('lg'){
                 padding-bottom: 24px;
             }
 
@@ -384,7 +384,7 @@
                         // border: 1px solid red;
                         flex-grow: 1;
 
-                        @include respond('md'){
+                        @include respond('lg'){
                             align-items: flex-start;
                             flex-direction: column;
                         }
@@ -396,7 +396,7 @@
                             line-height: 1.2;
                             margin-right: 20px;
 
-                            @include respond('md'){
+                            @include respond('lg'){
                                 width: 100%;
                             }
                         }
@@ -409,7 +409,7 @@
                             justify-content: space-between;
                             align-items: center;
 
-                            @include respond('md'){
+                            @include respond('lg'){
                                 width: 100%;
                             }
                             
@@ -427,7 +427,7 @@
                                 flex-direction: column;
                                 text-align: center;
 
-                                @include respond('md'){
+                                @include respond('lg'){
                                     text-align: left;
                                 }
 
@@ -447,7 +447,7 @@
                                 gap: 12px;
                                 align-items: center;
 
-                                @include respond('md'){
+                                @include respond('lg'){
                                     align-items: flex-start;
                                 }
 
@@ -478,7 +478,7 @@
                                 // border: 1px solid red;
                                 // width: 200px;
 
-                                @include respond('md'){
+                                @include respond('lg'){
                                     text-align: left;
                                 }
                             }
