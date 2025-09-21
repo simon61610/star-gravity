@@ -2,7 +2,7 @@
 
 星引力 (Star Gravity)— 為初學者打造的觀星資訊與社群平台
 
-提供天文新聞、觀星活動、星圖地圖與觀星商城，幫助新手快速進入觀星世界。  
+提供天文新聞、觀星活動、星圖地圖與觀星商城等等，幫助新手快速理解如何觀星，一起走進星世界。  
 
 ---
 
@@ -12,6 +12,7 @@
 - [使用技術 (Tech-Stack)](#-使用技術-tech-stack)
 - [專案架構 (Project-Structure)](#-專案架構-project-structure)
 - [安裝與使用 (Installation--Usage)](#-安裝與使用-installation--usage)
+- [截圖展示 (Screenshots)](#-截圖展示-screenshots)
 - [未來規劃 (Roadmap)](#-未來規劃-roadmap)
 - [授權 (License)](#-授權-license)
 
@@ -24,7 +25,7 @@
 - 建立 **活動報名系統**，讓使用者能線上預約觀星活動。  
 - 設計 **商城頁面**，販售望遠鏡、觀星器材與周邊。  
 - 開發 **會員中心**，支援登入、收藏、點讚與留言互動。  
-- 整合 **後台管理系統**，方便管理文章、標籤、活動與會員。  
+- 整合 **後台管理系統**，方便管理文章、標籤、活動、商城、評論與會員等等。  
 - 練習團隊分工，涵蓋前端 UI/UX、後端 API、資料庫設計與 Git 版本控制。
 
 ---
@@ -132,12 +133,25 @@ npm install # mac 要加 sudo
 # 啟動開發伺服器
 npm run dev
 ```
+## 📷 截圖展示 (Screenshots)
+
+### 星視野 (Mockup)
+![星視野 Mockup](./src/assets/images/screenshots/GameSkyPageM.png)
+
+### 塔羅牌星占卜 (Mockup)
+![星視野 Mockup](./src/assets/images/screenshots/GameCardM.png)
+
+### 星星活動 (Mockup)
+![星星活動 Mockup](./src/assets/images/screenshots/ActivityM.png)
+
+
 
 ## 🗺 未來規劃 (Roadmap)
 ```bash
 - [ ] 串接綠界 API 
 - [ ] 串接第三方登入
 - [ ] 多語系支援 (中文 / 日文 / 英文)
+- [ ] 日夜模式切換
 ```
 
 ## 📜 授權 (License)
