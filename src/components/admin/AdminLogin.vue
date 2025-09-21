@@ -21,9 +21,9 @@ async function Login() {
 
   if (result.success == true) {
     // 登入成功
-    console.log('登入成功，準備跳轉', result)
+    console.debug('登入成功，準備跳轉', result)
     router.push({ name: 'AdminMemberPage' }) // 測試成功後導到後台首頁
-    console.log('當前路由：', router.currentRoute.value)
+    console.debug('當前路由：', router.currentRoute.value)
   } else {
     // 登入失敗
     console.log('登入失敗', result)

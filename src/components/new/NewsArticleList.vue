@@ -43,7 +43,7 @@ onMounted(()=>{
             article.liked = res.data.liked;
             })
             .catch((err)=>{
-            console.log(err,'查詢失敗')
+            console.debug(err,'查詢失敗')
             })
         })
 
