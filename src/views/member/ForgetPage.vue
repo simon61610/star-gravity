@@ -8,6 +8,7 @@
     const router = useRouter()
     const email = ref('')
     const loading = ref(false)
+    const message = ref('')
     
     // email檢查
     const isValidEmail = (v) => /\S+@\S+\.\S+/.test(v)
@@ -23,67 +24,31 @@
             return
         }
 
-        loading.value = true
+        checkEmailCurrent()
 
-        try {
-        // 🔑 呼叫後端 API (你需要自己在 PHP 寫一個 /api/auth/forgot 接口)
-        const res = await axios.post('/api/auth/forgot', { email: email.value })
-        
-        // 後端回應統一用訊息，不管 email 存不存在
-        if (res.data?.ok) {
-        ElMessage.success('驗證碼已發送，請檢查您的信箱')
-        // 跳到輸入驗證碼的頁面，例如 /loginfirst/forgot-step2
-            router.push({
-                path: '/loginfirst/forgot-step2',
-                query: { email: email.value }
-            })
-        }   else {
-                ElMessage.error(res.data?.msg || '傳送失敗，請稍後再試')
-            }
-        } catch (e) {
-            console.error(e)
-            ElMessage.error('系統錯誤，請稍後再試')
-        } finally {
-            loading.value = false
-        }
-
-
-
-
-
-
-
+        // loading.value = true
     }    
 
 
-
-
-
-
-
-    // async function sendData() {
-    //     if (!isValidEmail(email.value)) {
-    //         ElMessage ? ElMessage.error('請輸入有效的 Email') : alert('請輸入有效的 Email')
-    //         return
-    //     }
-    //     loading.value = true
-    //     try {
-    //         await axios.post('/api/auth/forgot', { email: email.value })
-    //         await new Promise((r) => setTimeout(r, 500)) // 模擬呼叫
-
-    //         router.push({
-    //             path: '/loginfirst/forgot',
-    //             query: { sent: '1', email: email.value }
-    //         })
-
-    //         // 帶著參數到 ForgotPage，進頁後會彈出「驗證碼已發送」
-    //         // router.push({ path: '/forgot', query: { sent: '1', email: email.value } })
-    //     } catch (e) {
-    //         ElMessage ? ElMessage.error('傳送失敗，請稍後再試') : alert('傳送失敗，請稍後再試')
-    //     } finally {
-    //         loading.value = false
-    //     }
-    // }
+    //驗證碼彈跳
+    const alertIsShow = ref(false)
+    function alertCancel(){
+        alertIsShow.value =false
+    }
+    const checkEmailCurrent = async()=>{
+        try{   
+            const res = await axios.post(import.meta.env.VITE_AJAX_URL + 'Member/checkEmailCurrent.php',
+                { email: email.value }
+            )
+            console.log(123);
+            console.log(res.data.exist);
+            message.value = res.data.message
+            alertIsShow.value = true            
+        }catch(error){
+            console.log("取資料失敗");
+        }
+        alertIsShow.value = true
+    }
 
 </script>
 
@@ -102,6 +67,16 @@
                 <button class="btn" type="button" @click="sendData" :disabled="loading">傳送</button>
             </div>
         </div>
+
+        <!-- 重設密碼彈跳窗 -->
+        <section class="alert-prompt" v-if="alertIsShow">
+            <div class="box">
+                <h3>{{message}}</h3>
+                <div class="btns">
+                    <button @click="alertCancel">確認</button>
+                </div>
+            </div>
+        </section>
         
 </template>
 
@@ -150,6 +125,45 @@
     width: 222px;
     height: 45px;
 }
+
+//重設密碼彈跳窗
+.alert-prompt {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        background: rgba(0,0,0,0.5);
+        justify-content: center;
+        align-items: center;
+
+        z-index: 600;  //至少要500 地點那邊才跳得出來
+
+        .box {
+            padding: 24px;
+            background-color: $primaryColor-900;
+            border-radius: 12px;
+            text-align: center;
+
+            h3 {
+                margin-bottom: 40px;
+                font-size: 24px;
+                color: white;
+            }
+            .btns {
+                display: flex;
+                justify-content: center;
+                gap: 20px;
+                button {
+                    font-size: 16px;
+                    border: none;
+                    background-color: $secondaryColor-orange;
+                    color: white;
+                    padding: 8px 20px;
+                    cursor: pointer;
+                    border-radius: 999px;
+                }
+            }
+        }
+    }
 
 @media screen and (max-width: 433px) {
     .all{
