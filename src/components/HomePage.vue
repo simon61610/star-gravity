@@ -128,8 +128,9 @@ onMounted(()=>{
         })
     
         gsap.set(sea, {
-            x: '0%',     
-            y: '50%',      
+            // x: '0%',     
+            // y: '50%', 
+            bottom: '-100%',     
             opacity: 0
         })
     
@@ -212,7 +213,8 @@ onMounted(()=>{
             ease: "power2.out"
         }, 1)
         .to(sea, {
-            y: '0%',
+            // y: '0%',
+            bottom: '-1%',
             opacity: 1,
             duration: 1,
             ease: "power2.out"
@@ -235,7 +237,7 @@ onMounted(()=>{
         }, 2.5)
         .to(towerMountain, {
             right:0,
-            bottom:0,
+            bottom:-5,
             opacity: 1,
             duration: 1.5,
             ease: "power2.out"
@@ -381,7 +383,8 @@ onMounted(()=>{
         }, 2.2)
         .to(towerMountain, {
             right: '0%',
-            bottom: '0%',
+            // bottom: '0%',
+            bottom: -5,
             opacity: 1,
             duration: 2,
             ease: "power2.out"

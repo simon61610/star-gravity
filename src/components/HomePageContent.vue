@@ -327,6 +327,7 @@ const getFirstImage = (imageData) => {
     width: 100%;
     height: 105vh;
     background-image: url(@/assets/images/home/index-bg02.svg);
+    // object-fit: cover;
 
     position: relative;
 }
