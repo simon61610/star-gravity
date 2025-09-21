@@ -131,7 +131,7 @@ const textOf = (typeKey) => {
   return list[idx]
 }
 
-// 右側顯示的五條結果
+// 右側顯示的五條結果（全部）
 const allLines = computed(() =>
   ALL_TYPES.map(key => {
     const info = RESULT_META[key]
@@ -167,8 +167,6 @@ const BAR_COLOR = {
 }
 
 // ===== 推薦商品：隨機挑一個 =====
-// 你已經確認存在的一張圖：game-card_Divination ball.png
-// 其他圖片路徑請依你的實際專案替換；不存在時會顯示破圖但不影響功能
 const PRODUCTS = [
   {
     id: 1,
@@ -199,10 +197,9 @@ const PRODUCTS = [
 // 每次進頁面隨機選一個商品
 const pickedProduct = ref(PRODUCTS[Math.floor(Math.random() * PRODUCTS.length)])
 
-// 導向商品詳情（兩種路由寫法二擇一，這裡用你現有 path 風格）
+// 導向商品詳情
 const goBack = () => router.push({ name: 'gamecard' })
 const goProduct = () => {
-  // 若你有命名路由：router.push({ name: 'shop-product', params: { id: pickedProduct.value.id } })
   router.push(`/shop/category/product/${pickedProduct.value.id}`)
 }
 </script>
@@ -227,7 +224,7 @@ const goProduct = () => {
                :alt="`抽到的卡片－${RESULT_META[primaryType]?.label || '占卜卡'}`" />
         </aside>
 
-        <!-- 右：一次顯示五種結果 -->
+        <!-- 右：列出全部，並標示最高分為「最佳運勢」 -->
         <div class="result">
           <div class="lines">
             <div
@@ -237,9 +234,15 @@ const goProduct = () => {
               :class="{ 'is-max': line.percent === maxPercent }"
               :style="{ '--bar-color': BAR_COLOR[line.key] }"
             >
-              <div class="label">{{ line.label }}</div>
+              <div class="label">
+                {{ line.label }}
+                <span
+                  v-if="line.percent === maxPercent"
+                  class="best-tip"
+                  aria-label="最佳運勢"
+                >最佳運勢</span>
+              </div>
 
-              <!-- 長條 + 右側百分比 -->
               <div class="row" role="img" :aria-label="`${line.label}：${line.percent}%`">
                 <div class="bar">
                   <div class="bar__fill" :style="{ width: line.percent + '%' }"></div>
@@ -332,7 +335,6 @@ const goProduct = () => {
    卡片區（RWD 不壓字 版本）
    =========================== */
 .cards {
-  /* 桌機尺寸與位置參數 */
   --card-w: 200px;
   --card-h: 320px;
   --back-x: 40px;
@@ -345,7 +347,7 @@ const goProduct = () => {
   position: relative;
   padding-top: 12px;
 
-  /* 關鍵：保留高度，避免覆蓋到下面的文字 */
+  /* 保留高度避免覆蓋下方 */
   min-height: calc(var(--card-h) + var(--front-y) + 24px);
 
   .card {
@@ -371,7 +373,7 @@ const goProduct = () => {
   }
 }
 
-/* 手機版：置中疊放，並調整尺寸與高度保留 */
+/* 手機版：置中疊放 */
 @media (max-width: 900px) {
   .cards {
     --card-w: 200px;
@@ -402,7 +404,7 @@ const goProduct = () => {
   gap: 24px;
 }
 
-/* 五條說明 + 進度條 */
+/* 全部列出，最高標記 */
 .lines {
   padding: 20px 20px 12px;
   border-radius: 16px;
@@ -414,6 +416,19 @@ const goProduct = () => {
   font-weight: 700;
   margin-bottom: 10px;
   color: #5C4B90;
+}
+
+/* 最高分徽章 */
+.best-tip {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 800;
+  border-radius: 999px;
+  background: #EDD848;   /* 與最高分進度條同色 */
+  color: #5C4B90;
+  vertical-align: middle;
 }
 
 /* 長條 + 百分比並排 */
@@ -433,12 +448,10 @@ const goProduct = () => {
 
   &__fill {
     height: 100%;
-    background: #EDD848;   /* 預設填充色 */
+    background: #cab1c9;   /* 預設填充色 */
     transition: width 0.4s ease;
   }
 }
-
-
 
 /* 右側百分比數字 */
 .val {
@@ -451,12 +464,12 @@ const goProduct = () => {
   margin-bottom: 8px;
 }
 
-/* 最高分的那一條（可並列）進度條換色 */
+/* 最高分進度條換色（可並列） */
 .line.is-max .bar__fill {
-  background: #cab1c9;  /* 你想要的顏色，這裡可改 */
+  background: #EDD848;
 }
 
-/* 推薦商品卡（隨機顯示 pickedProduct） */
+/* 推薦商品卡 */
 .product {
   display: grid;
   grid-template-columns: 1fr 220px;
@@ -533,8 +546,7 @@ const goProduct = () => {
     padding: 10px 250px;
     @media (max-width: 430px) {
       padding: 10px 100px;
-   
-  }
+    }
   }
   &--ghost:hover {
     background: $FontColor-white;
