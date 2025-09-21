@@ -68,6 +68,7 @@ const handleEdit = (index, row) => { //偵測編輯按鈕編輯哪個資料
                                   <el-checkbox
                                     v-else-if="col.type == 'checkbox'"
                                     v-model="scope.row[col.prop]"
+                                    :model-value="Number(scope.row[col.prop])"
                                     :true-label="1"
                                     :false-label="0"
                                     @change="$emit('checkbox-change', scope.row)"
