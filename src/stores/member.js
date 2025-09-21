@@ -58,12 +58,17 @@ export const useMemberStore = defineStore('Member', () => {
             body: JSON.stringify({ token: token.value })
             // body: JSON.stringify({})   // 有些伺服器要求 POST 不能是空 body
         })
-        // 後端建議固定回 200，內容長這樣：
-        // { valid: true,  user: {...} }  或  { valid: false, reason: 'expired' }
+        
         const data = await res.json().catch(() => ({}))
 
+        // 若後端也可能回「停權」代碼，就直接登出（不看任何數字狀態碼）
+        if (data?.code === 'SUSPENDED') {
+            logout()
+            return { ok: false, reason: 'suspended' }
+        }
+
         if (data?.valid === true) {
-            // 可選：後端若回 user，就同步更新
+            // 後端若回 user，就同步更新
             if (data.user) {
                 user.value = data.user
                 localStorage.setItem('user', JSON.stringify(data.user))
@@ -93,10 +98,25 @@ export const useMemberStore = defineStore('Member', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
                 credentials: 'include' // 讓 PGPSESSID cookie 帶上去
-            })                                                            // 成功時把 user、token 同步存到 store + localStorage
-            const data = await res.json()
-            if(!data.success) throw new Error(data.message || '登入失敗')
-            
+            })                                                            
+            // const data = await res.json()
+            // if(!data.success) throw new Error(data.message || '登入失敗')
+
+            // 簡化：只看 JSON
+            const data = await res.json().catch(() => ({}))
+
+            // 停權：只判斷字串代碼
+            if (data?.code === 'SUSPENDED') {
+                const msg = data?.message || '此帳號已被停權，請洽客服人員'
+                return { ok: false, code: 'SUSPENDED', message: msg, error: msg }
+            }
+
+            // 一般登入失敗
+            if (data?.success !== true) {
+                const msg = data?.message || '登入失敗'
+                return { ok: false, error: msg, message: data?.message }
+            }
+
             // 後端回傳需要含 user 與 token
             user.value = data.user
             token.value = data.token
@@ -104,7 +124,8 @@ export const useMemberStore = defineStore('Member', () => {
             localStorage.setItem('user', JSON.stringify(data.user))
             return { ok: true, data }                                  // 成功：把 user、token 存進 store 與 localStorage，讓重新整理也記得
         } catch (err) {
-            return { ok: false, error: err.message || String(err) }
+            // return { ok: false, error: err.message || String(err) }
+            return { ok: false, error: err?.message || '系統繁忙，請稍後再試' }
         } finally {
             loading.value = false     // 送出 loading = true，等結束 finally 設回 false。
         }
@@ -157,15 +178,6 @@ export const useMemberStore = defineStore('Member', () => {
     }
 
     // 網頁重新整理後，呼叫 hydrate() 就能把 user 從 localStorage 補回來
-    /* function hydrate() {
-        const raw = localStorage.getItem('user')
-        if (raw) {
-            try {
-                user.value = JSON.parse(raw)
-            } catch {}
-        }
-    } */
-
     function hydrate() {
         const storageUser = localStorage.getItem('user')
         const storageToken = localStorage.getItem('token')

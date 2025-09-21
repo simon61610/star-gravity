@@ -2,11 +2,15 @@
     import { useRoute, useRouter } from 'vue-router'
     import { ref, computed, onMounted } from 'vue'
     import { useMemberStore } from '@/stores/member'
+    import shopToast from '@/components/common/shopToast.vue'         
+    import { showToast } from '@/composables/useToast'
 
     const router = useRouter()
     const route = useRoute()
     const memberStore = useMemberStore()
     memberStore.hydrate()
+
+    const errMsg = ref('')  // 錯誤訊息顯示用
 
     // localStorage key：只存 token（是否登入就看有沒有 token）
     // const LS_TOKEN = 'token'
@@ -44,16 +48,17 @@
     /* 按下確認才會執行 */
     const handleSubmit = async () => {
         if (!emailRe.test(email.value)) {
-            alert('請輸入有效的 Email')
+            showToast('請輸入有效的 Email')
             return
         }
         if (pwd1.value.length < MIN_PWD_LEN) {
-            alert(`密碼至少 ${MIN_PWD_LEN} 碼`)
+            showToast(`密碼至少 ${MIN_PWD_LEN} 碼`) 
             return
         }
         if (captcha.value.trim().toUpperCase() !== captchaCode.value.trim().toUpperCase()) {
-            alert('驗證碼錯誤')
+            showToast('驗證碼錯誤')  
             refreshCode()  // 驗證碼錯誤就刷新
+            errMsg.value = '驗證碼錯誤'
             return
         }
 
@@ -64,12 +69,27 @@
             email: email.value,
             password: pwd1.value,
         })
-    
-        if (!res.ok) {
-            alert(res.error || '登入失敗')
+
+        // 停權
+        if (res?.code === 'SUSPENDED') {
+            const msg = res?.error || res?.message || '此帳號已被停權，請洽客服人員'
+            // alert(msg)
+            showToast(msg)
+            errMsg.value = msg
+            refreshCode()
+            return
+        }
+
+        // 其他登入失敗
+        if (!res?.ok) {
+            const msg = res?.error || res?.message || '登入失敗'
+            // alert(msg)
+            showToast(msg)
+            errMsg.value = msg
             refreshCode() // 失敗就重產驗證碼
             return
         }
+        errMsg.value = ''    // 成功時清空錯誤訊息
         
         // 登入成功 → 導回原頁或預設頁
         const back = route.query.redirect || '/membercenter/personal'
@@ -88,6 +108,8 @@
 
 <template>     
     <div class="login-all" >
+        <shopToast />
+
         <div class="login-one decTitle--big" v-if="isAuthBg">
             <h2>LOGIN</h2>
         </div>
@@ -129,7 +151,6 @@
                 <div class="forget-area">
                     <!--登入按鈕 -->
                     <button class="login-btn" type="submit" :disabled="loading">確認</button>
-    
                     <!--忘記密碼 --> 
                     <div class="forgot">
                         <RouterLink class="forget-link"   to="/loginfirst/forget">忘記密碼?</RouterLink>

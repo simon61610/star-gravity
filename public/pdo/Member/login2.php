@@ -25,31 +25,24 @@ $stmt = $pdo->prepare($sql);
 $stmt->bindValue(':email', $email);
 $stmt->bindValue(':password', $password);
 $stmt->execute();
-// $stmt->bindValue( ":email" , $data["email"]);
-// $stmt->bindValue( ":password" , $data["password"]);
 
 // $member = $stmt->fetchAll();
 $member = $stmt->fetch(PDO::FETCH_ASSOC); // 直接拿一筆關聯陣列
-
-// if( !empty($member) ){
-//     echo json_encode([
-//         'success' => true,
-//         'message' => '登入成功',
-//         'user' => $member
-//     ]);
-// }else{
-//     echo json_encode([
-//         'success' => false,
-//         'message' => '帳號密碼輸入錯誤'
-//     ]);
-//     exit;
-    
-// }
 
 if(!$member) {
     echo json_encode([
         'success' => false,
         'message' => '帳號密碼輸入錯誤'
+    ]);
+    exit;
+};
+
+// 被停權者不得登入，資料表欄位是 Member.account_status（值：'正常' / '停權'）
+if (isset($member['account_status']) && $member['account_status'] === '停權') {
+    echo json_encode([
+        'success' => false,
+        'code'    => 'SUSPENDED',
+        'message' => '此帳號已被停權，請洽客服人員'
     ]);
     exit;
 };
@@ -95,7 +88,7 @@ if (!$ok) {
     exit;
 };
 
-// 回傳前「保險」清空緩衝，避免 BOM/多餘輸出破壞 JSON（若沒開輸出緩衝會無事）
+// 回傳前「保險」清空緩衝，避免 BOM/多餘輸出破壞 JSON
 while (ob_get_level()) { 
     ob_end_clean(); 
 } 
@@ -116,10 +109,5 @@ echo json_encode([
     ]
 ]);
 exit;
-
-
-
-
-
 
 ?>
