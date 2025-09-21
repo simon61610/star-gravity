@@ -166,31 +166,37 @@ const BAR_COLOR = {
   study:  '#EDD848',
 }
 
+// ===== 卡面：依主要結果換圖（先用通用卡面，可改成五張）=====
+import divination_ball from '@/assets/images/games/GameCardPage/game-card_Divination ball.png'
+import candle from '@/assets/images/games/GameCardPage/game-card_Candle.png'
+import bookmark from '@/assets/images/games/GameCardPage/game-card_book.png'
+import puzzle from '@/assets/images/games/GameCardPage/game-card_puzzle.jpg'
+
 // ===== 推薦商品：隨機挑一個 =====
 const PRODUCTS = [
   {
     id: 1,
     title: '星座許願球',
     desc: '搭配三段情境光，床頭夜燈、告白禮、升學與生日祝福，都能承載你的願望。',
-    img: '/src/assets/images/games/GameCardPage/game-card_Divination ball.png'
+    img: divination_ball
   },
   {
     id: 2,
     title: '星空能量蠟燭',
     desc: '結合香氛與星座能量，點燃時釋放守護力量，陪伴你度過專注或療癒時刻。',
-    img: '/src/assets/images/games/GameCardPage/game-card_Candle.png'
+    img: candle
   },
   {
     id: 3,
     title: '占星書籤組',
     desc: '十二星座金屬書籤，陪你在知識的宇宙裡航行。',
-    img: '/src/assets/images/games/GameCardPage/game-card_book.png'
+    img: bookmark
   },
   {
     id: 4,
     title: '星空拼圖',
     desc: '完成後拼出整片夜空，動手拼湊也像在整理思緒。',
-    img: '/src/assets/images/games/GameCardPage/game-card_puzzle.jpg'
+    img: puzzle
   }
 ]
 
