@@ -1,16 +1,16 @@
 <script setup>
     import { ref, onMounted, reactive, computed, watch } from 'vue'
-    import { ElMessage } from 'element-plus'
+    // import { ElMessage } from 'element-plus'
     import { useRouter } from 'vue-router'
     import axios from 'axios'
     import { useMemberStore } from '@/stores/member'
+    import shopToast from '@/components/common/shopToast.vue'
+    import { showToast } from '@/composables/useToast'
 
     // 狀態
     const router  = useRouter()  
-    // const loading = ref(false)
-    const loading = computed(() => useMemberStore().loading)
-    // const loading = computed(() => memberStore.loading)
     const memberStore = useMemberStore()
+    const loading = memberStore.loading
 
     // 密碼
     const pwd1 = ref('')  
@@ -24,7 +24,11 @@
     const email = ref('')
     const captcha = ref('')
 
-    // 台灣手機格式驗證：09 開頭 + 共 10 碼
+    // Email + 密碼長度
+    const MIN_PWD_LEN = 6
+    const emailRe = /\S+@\S+\.\S+/
+
+    // 手機格式驗證：09 開頭 + 共 10 碼
     const isValidTWPhone = (v) => /^09\d{8}$/.test((v ?? '').trim())
 
     // 註冊後，把 email 暫存起來，登入頁會自動帶入
@@ -36,24 +40,24 @@
 
     // 可送出：密碼一致 + 最基本欄位都有
     const canSubmit = computed(() => (
-        pwd1.value.length >= 6 &&
-        pwd2.value.length >= 6 &&
+        pwd1.value.length >= MIN_PWD_LEN &&
+        pwd2.value.length >= MIN_PWD_LEN &&
         pwd1.value === pwd2.value &&
         !!name.value.trim() &&
         !!phone.value.trim() &&
-        isValidTWPhone(phone.value) &&      // 格式必須通過
+        isValidTWPhone(phone.value) &&      
         !!gender.value &&
         !!member.city &&
         !!member.area &&
         !!address.value.trim() &&
-        !!email.value.trim()
+        emailRe.test(email.value)
     ))
 
-    // 新增：如果不能按，這裡會說明第一個沒過的原因
+    // 如果不能按，這裡會說明第一個沒過的原因
     const whyDisabled = computed(() => {
         if (loading.value) return '正在送出中'
-        if (pwd1.value.length < 6) return '密碼至少 6 碼'
-        if (pwd2.value.length < 6) return '確認密碼至少 6 碼'
+        if (pwd1.value.length < MIN_PWD_LEN) return `密碼至少 ${MIN_PWD_LEN} 碼`
+        if (pwd2.value.length < MIN_PWD_LEN) return `確認密碼至少 ${MIN_PWD_LEN} 碼`
         if (pwd1.value !== pwd2.value) return '兩次密碼不一致'
         if (!name.value.trim()) return '缺姓名'
         if (!phone.value.trim()) return '缺電話'
@@ -63,6 +67,7 @@
         if (!member.area) return '缺鄉鎮'
         if (!address.value.trim()) return '缺地址'
         if (!email.value.trim()) return '缺信箱'
+        if (!emailRe.test(email.value)) return '請輸入有效的 Email'
         return ''
     })
 
@@ -74,7 +79,6 @@
     onMounted(async () => {
         captchaCode.value = genCode()   
 
-        // =============================
         let res = await axios.get(import.meta.env.VITE_PUBLIC_URL +'JSON_CSV_XML/CityCountyData.json')  
 
         cities.value = res.data
@@ -83,23 +87,43 @@
     // 送出：改為呼叫後端 PHP
     const handleRegister = async () => {
     
-        console.log('[submit]', { canSubmit: canSubmit.value, phone: phone.value, why: whyDisabled.value }) 
+        console.log('[submit]', { 
+            canSubmit: canSubmit.value, 
+            phone: phone.value,
+            why: whyDisabled.value 
+        }) 
+
+        // 先檢查 Email 與密碼長度
+        if (!emailRe.test(email.value)) {
+            showToast('請輸入有效的 Email')
+            return
+        }
+
+        if (pwd1.value.length < MIN_PWD_LEN || pwd2.value.length < MIN_PWD_LEN) {
+          showToast(`密碼至少 ${MIN_PWD_LEN} 碼`)
+          return
+        }
+
+        if (pwd1.value !== pwd2.value) {
+            showToast('兩次密碼不一致')
+            return
+        }
 
         if (!canSubmit.value) {
            // 用你已經有的 whyDisabled 告知第一個不通過的原因
-           ElMessage.error(whyDisabled.value || '欄位未完成或格式不正確')
-           return
+            showToast(whyDisabled.value || '欄位未完成或格式不正確')
+            return
         }
 
         // 送出前再保險一次驗證手機格式
         if (!isValidTWPhone(phone.value)) {
-          ElMessage.error('電話須為 09 開頭的 10 碼數字')
-          return
+            showToast('電話須為 09 開頭的 10 碼數字')
+            return
         }
 
         // 驗證碼（不分大小寫）
         if (captcha.value.trim().toUpperCase() !== captchaCode.value.trim().toUpperCase()) {
-            ElMessage.error('驗證碼錯誤')
+            showToast('驗證碼錯誤')
             captcha.value = ''
             captchaCode.value = genCode()
             return
@@ -126,12 +150,12 @@
 
             // 註冊成功 → 儲存 email 供登入頁自動帶入
             localStorage.setItem(LS_REGISTER_EMAIL, email.value.trim())
-            ElMessage.success('註冊成功，請重新登入')
+            showToast('註冊成功，請重新登入')
             router.replace('/loginfirst')
             return
 
         } catch (err) {
-            ElMessage.error(err?.message || '伺服器發生錯誤')
+            showToast(err?.message || '伺服器發生錯誤')
         } finally {
             // loading.value = false
         }
@@ -155,6 +179,7 @@
 
 <template>      
     <div class="register-all">
+        <shopToast />
 
         <div class="second-area">
             <form @submit.prevent="handleRegister" novalidate>
@@ -173,9 +198,8 @@
                         maxlength="10"               
                         @input="phone = phone.replace(/\D/g,'').slice(0,10)"  
                     />
-                    <!-- <input type="text" class="phone-1" placeholder="請輸入電話" v-model="phone" required /> -->
                 </div>
-                <!------勾選性別--------->
+                <!-- 勾選性別 -->
                 <div class="gender-group">
                    <label>
                         <input type="radio" value="男性" v-model="gender" />男性
@@ -187,7 +211,7 @@
                         <input type="radio" value="第三性" v-model="gender" />第三性
                    </label>
                </div>
-               <!------選擇縣市--------->
+               <!-- 選擇縣市 -->
                 <div class="join-city">
                     <div class="select">
                         <select v-model="member.city" class="select-city" required>
@@ -202,15 +226,22 @@
                         </select>
                     </div>
                 </div>
-               <!------選擇區域--------->
+               <!-- 選擇區域 -->
                <div class="adress">
                     <input type="text" class="adress-2" placeholder="請輸入地址" v-model="address" required />
                 </div>
-               <!------信箱--------->
-               <div class="email">
-                    <input type="email" class="email-2" placeholder="請輸入信箱" v-model="email" required />
+               <!-- 信箱 -->
+                <div class="email">
+                    <input
+                        type="email"
+                        class="email-2"
+                        placeholder="請輸入信箱"
+                        v-model="email"
+                        required
+                        inputmode="email" 
+                    />
                 </div>
-                <!----密碼----->
+                <!-- 密碼 -->
                 <div class="password-area">
                     <div class="area1">
                         <el-input
