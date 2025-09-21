@@ -11,7 +11,7 @@ const prodSlides = [
     },
     {
         img: tripod,
-        title: '戶外型腳架 輕便可調式設計',
+        title: 'Luna 旅行型腳架 穩固伸縮式設計',
         desc: '專為戶外觀星與拍攝設計，高度可調整，穩固耐用，輕鬆攜帶',
         ctaLink: '待修改'
     },
