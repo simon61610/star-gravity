@@ -35,7 +35,7 @@ function writeReview(){
         emit('writeReview')
     }else{
         // console.log("未登入")
-        showToast('請先登入!')
+        // showToast('請先登入!')
         emit('show')
         // console.log(memberStore.user.name)
     }
