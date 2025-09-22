@@ -50,8 +50,11 @@ function showall(){
   width: 100%;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  
 }
 .sky{
+  
   width: 100%;  
   background-size: 100% 100%;
   background-image: url(@/assets/images/games/GameSkyPage/gamesky_bg.svg);
@@ -59,6 +62,7 @@ function showall(){
   background-size: cover;          /* 填滿容器 */
   background-position:center;     /* 置中對齊 */
   overflow-x: hidden;
+  overflow-y: hidden;           /* 這裡也補上 */
   
 }
 

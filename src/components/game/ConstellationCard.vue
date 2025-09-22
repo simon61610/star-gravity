@@ -123,7 +123,7 @@ const activeTab = ref('intro')
 .scene {
   position: relative;
   width: 100%;
-  min-height: 588px;
+  min-height: 540px;
   overflow: hidden;
 
   @media (max-width: 1097px) {
@@ -194,7 +194,7 @@ const activeTab = ref('intro')
   left: 168px;
   top: 55px;
   width: 280px;
-  height: 450px;
+  height: 400px;
   background: rgba(15, 22, 46, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 16px;
@@ -322,6 +322,7 @@ const activeTab = ref('intro')
   .figure-box {
     position: relative;
     width: 100%;
+    height: 500px;
     aspect-ratio: 10 / 4;
     overflow: hidden;
 
