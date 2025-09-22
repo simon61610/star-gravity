@@ -41,7 +41,10 @@
                     <div class="content">
                         <h1>{{ slide.title }}</h1>
                         <h2>{{ slide.desc }}</h2>
-                        <p class="btn">查看商品</p>
+                        <RouterLink :to="slide.ctaLink" class="router-link">
+                            <p class="btn">查看商品</p>
+                        </RouterLink>
+                        
                     </div>
                 </div>
             </SwiperSlide>
@@ -55,6 +58,11 @@
 
 <style scoped lang="scss">
     @import '@/assets/styles/main.scss';
+
+    .router-link {
+        text-decoration: none;
+        color: white;
+    }
 
     .hero {
         position: relative;
