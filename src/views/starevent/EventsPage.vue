@@ -485,8 +485,8 @@ const placeTags = [
                             }
 
                             img {
-                                display: block;
                                 height: 200px;
+                                display: block;
                                 width: 100%;
                                 object-fit: cover;
                             }
