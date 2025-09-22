@@ -228,7 +228,7 @@
         flex-direction: column;
         align-items: stretch;
         gap: 16px;
-        width: 100%;
+        width: 92%;
         margin-left: 0;
         border-radius: 20px;
     }

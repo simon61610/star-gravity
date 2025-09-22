@@ -844,7 +844,7 @@ const getFirstImage = (imageData) => {
         top: 35%;
     }
     .begining-text{
-        width: 430px;
+        width: max(90vw, 100%);
         padding: 24px;
         box-sizing: border-box;
         top: auto;
@@ -926,6 +926,7 @@ const getFirstImage = (imageData) => {
     // }
     .home-contentBlock .home-activity .activity-list .list-singleInfo{
         min-width: 85vw;
+        // width: 100%;
     }
 
 
