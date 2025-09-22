@@ -10,9 +10,6 @@
 
     <!-- 4) 流星 -->
     <div class="comet">
-      <img v-if="tail" :src="tail" alt="" class="comet__tail" />
-      <div v-else class="comet__tail--css"></div>
-
       <img v-if="star" :src="star" alt="" class="comet__star" />
       <div v-else class="comet__star--css"></div>
     </div>
@@ -63,19 +60,18 @@ function goNext () {
   --t-star:   1.10s;
   --t-title:  2.00s;
 
-  /* ⭐ 路徑：靠上置中（右上 → 左下） */
-  --star-start-left: 68vw;   /* 起點靠右、接近中線 */
-  --star-start-top:  22vh;   /* 更靠上 */
-  --star-end-left:   32vw;   /* 終點靠左、接近中線 */
-  --star-end-top:    40vh;   /* 中上區域 */
-  --star-rotate:     -14deg; /* 與路徑一致的傾斜角 */
-  --star-dir:        -1;     /* 從右往左，水平翻轉 */
+  --star-start-left: 68vw;
+  --star-start-top:  22vh;
+  --star-end-left:   32vw;
+  --star-end-top:    40vh;
+  --star-rotate:     -14deg;
+  --star-dir:        -1;
 
   min-height:100vh; position:relative; overflow:hidden;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  background-color: #000; /* 安全底色，圖載入前顯示 */
+  background-color: #000;
   color:#fff;
 }
 
@@ -108,7 +104,7 @@ function goNext () {
   top:  var(--star-start-top);
   width: 260px; height: 72px;
   transform: rotate(var(--star-rotate)) scaleX(var(--star-dir));
-  transform-origin: left center; /* 以尾巴起點為基準旋轉/翻轉 */
+  transform-origin: left center;
   opacity:0;
   animation: cometMove var(--dur-star) ease-out var(--t-star) forwards;
   pointer-events:none;
@@ -134,18 +130,86 @@ function goNext () {
 }
 .title--stub{ font: 700 28px/1.2 "Segoe UI", system-ui; letter-spacing:.12em }
 
-/* 6) 下一頁箭頭 */
+/* 6) 下一頁箭頭：發光 + 光圈擴散 */
 .next{
   position:absolute; right:24px; bottom:24px;
   display:flex; align-items:center; gap:8px;
   padding:10px 14px; border-radius:999px; border:1px solid rgba(255,255,255,.35);
   background: rgba(0,0,0,.2); color:#fff; cursor:pointer;
-  opacity:0; animation: fadeIn var(--dur-fade) ease-out calc(var(--t-title) + .3s) forwards, breathe 2.4s ease-in-out infinite 1.6s;
+
+  --ripple-size: 140px;
+  --ripple-color: rgba(255,235,180,.35);
+
+  box-shadow:
+    0 0 10px rgba(255,255,255,.35),
+    0 0 20px rgba(255,220,120,.25),
+    inset 0 0 8px rgba(255,255,255,.12);
+  text-shadow: 0 0 6px rgba(255,255,255,.5);
+
+  opacity:0;
+  animation:
+    fadeIn var(--dur-fade) ease-out calc(var(--t-title) + .3s) forwards,
+    breathe 2.4s ease-in-out infinite 1.6s,
+    glowPulse 2.4s ease-in-out infinite 1.6s;
 }
+
+.next::before{
+  content:"";
+  position:absolute; inset:-18px;
+  border-radius: inherit;
+  pointer-events:none;
+  background: radial-gradient(ellipse at center,
+              rgba(255,230,150,.35) 0%,
+              rgba(255,230,150,.18) 35%,
+              rgba(255,230,150,0) 70%);
+  filter: blur(8px);
+  opacity:0;
+  animation: halo 2.4s ease-in-out infinite 1.6s;
+}
+
+/* Hover 光圈 */
+.next::after{
+  content:"";
+  position:absolute;
+  left:50%; top:50%;
+  width: var(--ripple-size);
+  height: var(--ripple-size);
+  transform: translate(-50%,-50%) scale(.6);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle,
+    rgba(255,255,255,.55) 0%,
+    var(--ripple-color) 35%,
+    rgba(255,255,255,0) 60%);
+  filter: blur(2px);
+}
+.next:hover::after,
+.next:focus-visible::after{
+  animation: rippleOut 900ms ease-out;
+}
+.next:active::after{
+  animation: rippleTap 500ms ease-out;
+}
+
+.next:hover,
+.next:focus-visible{
+  border-color: rgba(255,255,255,.6);
+  box-shadow:
+    0 0 12px rgba(255,255,255,.55),
+    0 0 26px rgba(255,230,160,.45),
+    inset 0 0 10px rgba(255,255,255,.18);
+  transform: translateZ(0) scale(1.04);
+}
+.next:focus-visible{
+  outline: 2px solid rgba(255,240,200,.6);
+  outline-offset: 2px;
+}
+
 .next svg{ width:22px; height:22px }
 .next__txt{ font-size:14px; letter-spacing:.1em }
 
-/* 關鍵影格 */
+/* 動畫 keyframes */
 @keyframes fadeIn { from{opacity:0} to{opacity:1} }
 @keyframes fadeUp  { from{opacity:0; transform:translateX(-50%) translateY(10px)} to{opacity:1; transform:translateX(-50%) translateY(0)} }
 @keyframes cometMove{
@@ -154,8 +218,41 @@ function goNext () {
   100% { left: var(--star-end-left); top: var(--star-end-top); opacity:0 }
 }
 @keyframes breathe { 0%,100%{transform:translateZ(0) scale(1)} 50%{transform:translateZ(0) scale(1.05)} }
+@keyframes glowPulse{
+  0%,100%{
+    box-shadow:
+      0 0 10px rgba(255,255,255,.35),
+      0 0 20px rgba(255,220,120,.25),
+      inset 0 0 8px rgba(255,255,255,.12);
+  }
+  50%{
+    box-shadow:
+      0 0 16px rgba(255,255,255,.55),
+      0 0 36px rgba(255,230,160,.45),
+      inset 0 0 12px rgba(255,255,255,.18);
+  }
+}
+@keyframes halo{
+  0%,100%{ opacity:.18; transform: scale(1) }
+  50%    { opacity:.42; transform: scale(1.06) }
+}
+@keyframes rippleOut{
+  0%   { opacity:.60; transform: translate(-50%,-50%) scale(.6) }
+  70%  { opacity:.16 }
+  100% { opacity:0;   transform: translate(-50%,-50%) scale(1.6) }
+}
+@keyframes rippleTap{
+  0%   { opacity:.75; transform: translate(-50%,-50%) scale(.55) }
+  60%  { opacity:.18 }
+  100% { opacity:0;   transform: translate(-50%,-50%) scale(1.45) }
+}
 
+@media (hover: none), (pointer: coarse){
+  .next:hover::after{ animation: none }
+}
 @media (prefers-reduced-motion: reduce){
   .layer.window,.layer.people,.comet,.layer.title,.next{ animation:none !important; opacity:1 !important }
+  .next::before{ animation:none !important; opacity:.24 }
+  .next::after{ animation:none !important; opacity:.18; transform: translate(-50%,-50%) scale(1.1) }
 }
 </style>

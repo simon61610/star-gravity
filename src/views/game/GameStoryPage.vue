@@ -526,15 +526,15 @@ const goProduct = () => {
   }
 }
 
-/* 按鈕 */
+/* ===== 按鈕（更新：修正返回鍵 RWD） ===== */
 .btn {
   display: inline-grid;
   place-items: center;
-  padding: 10px 123px;
   border-radius: 999px;
   font-weight: 700;
   border: 1px solid transparent;
   cursor: pointer;
+  padding: 10px 24px;
 
   &--gold {
     color: $primaryColor-900;
@@ -545,14 +545,18 @@ const goProduct = () => {
     background-color: $primaryColor-900;
   }
 
+  /* 返回鍵專用：小螢幕滿版且不爆版，桌面回自適應 */
   &--ghost {
     background: transparent;
-    border-color:$FontColor-white;
+    border-color: $FontColor-white;
     color: $FontColor-white;
-    padding: 10px 250px;
-    @media (max-width: 430px) {
-      padding: 10px 100px;
-    }
+
+    inline-size: 100%;
+    max-inline-size: 520px;              /* 上限避免過長 */
+    padding-block: 10px;
+    padding-inline: clamp(16px, 8vw, 40px);
+    text-align: center;
+    white-space: nowrap;
   }
   &--ghost:hover {
     background: $FontColor-white;
@@ -560,9 +564,19 @@ const goProduct = () => {
   }
 }
 
+/* Footer 區：置中返回鍵、提供左右留白 */
 .footer {
   display: grid;
   place-items: center;
   margin-top: 20px;
+  padding-inline: 16px;
+
+  /* 桌面寬度時，返回鍵不一定要滿版 */
+  @media (min-width: 900px) {
+    .btn--ghost {
+      inline-size: auto;                      /* 回到自適應寬 */
+      padding-inline: clamp(24px, 6vw, 250px);
+    }
+  }
 }
 </style>

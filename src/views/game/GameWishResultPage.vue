@@ -154,7 +154,7 @@ const doShare = async () => {
 <style scoped lang="scss">
 .result{
   min-height:100vh; position:relative; overflow:hidden; color:#fff;
-  background: var(--bg) center/cover no-repeat;
+  background: url('@/assets/images/games/GameWishResultPage/WishPageUniver-bg.png') center/cover no-repeat;
   transition: background-image .6s ease;
   &.anim { display:grid; place-items:center; text-align:center; }
   &.final{ display:grid; place-items:center; }
@@ -183,7 +183,7 @@ const doShare = async () => {
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   padding: clamp(16px, 3vw, 28px);
   border-radius: 24px;
-  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.5));
   border: 1px solid rgba(255,255,255,.25);
   backdrop-filter: blur(8px);
   box-shadow: 0 16px 48px rgba(0,0,0,.35);
