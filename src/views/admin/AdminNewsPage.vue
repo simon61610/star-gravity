@@ -34,7 +34,7 @@
 <template>
     <div class="Admin-home-wapper">
         <header>
-            <AdminHeader/>
+           
         </header>
         
         
@@ -52,8 +52,6 @@
                 <AdminNews :search="store.keyword" ref="articleRef" @added= 'handleAdded'/>
 
             </div>
-
-            <AdminSidebar/>
         </main>
  
     </div>

@@ -44,7 +44,7 @@
 <template>
     <div class="Admin-home-wapper">
         <header>
-            <AdminHeader/>
+          
         </header>
         
         
@@ -62,8 +62,6 @@
                 <AdminActivity ref="childRef" :search="store.keyword"  @added="eventTable.push($event)" @updated="handleUpdate($event)"  :eventTable = "eventTable" :location= "location" @refresh="refreshTable" /> <!--這裡要用ref建立子層實例(接彈窗資料)-->
 
             </div>
-
-            <AdminSidebar/>
         </main>
  
     </div>

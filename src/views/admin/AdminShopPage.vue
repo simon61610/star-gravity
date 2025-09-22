@@ -34,7 +34,7 @@
 <template>
     <div class="Admin-home-wapper">
         <header>
-            <AdminHeader/>
+            
         </header>
         
         
@@ -71,7 +71,7 @@
             </div> 
             -->
 
-            <AdminSidebar/>
+          
         </main>
  
     </div>

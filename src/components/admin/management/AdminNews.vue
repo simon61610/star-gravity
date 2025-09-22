@@ -315,7 +315,7 @@ function confirmUpdate(selected) {
   
   console.log('=== SAVE DEBUG ===')
   // 內文字數檢查
-  if (!selected.content || selected.content.trim().length < 50) {
+  if (!selected_article.content || selected_article.content.trim().length < 50) {
     ElMessage.error("內文至少需要 50 個字")
     return
   }

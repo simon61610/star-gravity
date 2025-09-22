@@ -11,7 +11,7 @@
 <template>
     <div class="Admin-home-wapper">
         <header>
-            <AdminHeader/>
+     
         </header>
         
         
@@ -26,8 +26,6 @@
                 <AdminComment :search="search"/>
 
             </div>
-
-            <AdminSidebar/>
         </main>
  
     </div>

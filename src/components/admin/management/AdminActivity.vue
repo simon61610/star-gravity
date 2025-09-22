@@ -38,6 +38,13 @@ const props = defineProps({
   location: {type: Array,default: () => [] }
 })
 
+// 禁止選擇今天以前的日期
+const disabledDate = (time) => {
+  const today = new Date();
+  today.setHours(0,0,0,0); // 今天 00:00:00
+  return time.getTime() < today.getTime();
+};
+
 //儲存checkbox顯示狀態
 function updateHighlight(row) {
   activityAPI('update', row) // 把整個 row 傳回去
@@ -509,11 +516,20 @@ defineExpose({ handleEdit, handleadd }) // 父層可呼叫新增/編輯
               :default-time="defaultTime"
               :show-seconds="true"
               range-separator="~"
+              :disabled-date="disabledDate"
             />
           </div>
         </div>
 
         <!-- 類別 / tag -->
+         <div class="Admin-Activity-tag">
+          <h1>活動tag</h1>
+          <label><input type="radio" name="activitytag" value="流星雨" v-model="selected_activity.tag" />流星雨</label>
+          <label><input type="radio" name="activitytag" value="月相"   v-model="selected_activity.tag" />月相</label>
+          <label><input type="radio" name="activitytag" value="星座"   v-model="selected_activity.tag" />星座</label>
+          <label><input type="radio" name="activitytag" value="銀河"   v-model="selected_activity.tag" />銀河</label>
+        </div>
+
         <div class="Admin-Activity-type">
           <h1>活動類別</h1>
           <label><input type="radio" name="activityType" value="高山觀測" v-model="selected_activity.category" />高山觀測</label>
@@ -522,13 +538,7 @@ defineExpose({ handleEdit, handleadd }) // 父層可呼叫新增/編輯
           <label><input type="radio" name="activityType" value="天文台"   v-model="selected_activity.category" />天文台</label>
         </div>
 
-        <div class="Admin-Activity-tag">
-          <h1>活動tag</h1>
-          <label><input type="radio" name="activitytag" value="流星雨" v-model="selected_activity.tag" />流星雨</label>
-          <label><input type="radio" name="activitytag" value="月相"   v-model="selected_activity.tag" />月相</label>
-          <label><input type="radio" name="activitytag" value="星座"   v-model="selected_activity.tag" />星座</label>
-          <label><input type="radio" name="activitytag" value="銀河"   v-model="selected_activity.tag" />銀河</label>
-        </div>
+        
 
         <!-- 費用 / 截止日 / 內容 -->
         <div class="Admin-Activity-fee">
@@ -549,7 +559,7 @@ defineExpose({ handleEdit, handleadd }) // 父層可呼叫新增/編輯
         <div class="Admin-Activity-deadline">
           <h1>報名截止日</h1>
           <div>
-            <el-date-picker v-model="selected_activity.event_deadline" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" />
+            <el-date-picker v-model="selected_activity.event_deadline" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" :disabled-date="disabledDate" />
           </div>
         </div>
 
