@@ -18,7 +18,7 @@
         bus.emit('priceOrder', priceOrder.value)
     }
     const doQtyChange = () => {
-        bus.emit('qtyChanege', qtyPerPage.value)
+        bus.emit('qtyChange', Number(qtyPerPage.value))
     }
 </script>
 

@@ -38,15 +38,15 @@
         priceOrder.value = order || ""
         currentPage.value = 1
     })
-    bus.on('qtyChanege', (qty) => {
-        pageSize.value = qty || 16
+    bus.on('qtyChange', (qty) => {
+        pageSize.value = Number(qty) || 16
         currentPage.value = 1
     })
 
     onUnmounted(() => {
         bus.off('searchKeyword')
         bus.off('priceOrder')
-        bus.off('qtyChanege')
+        bus.off('qtyChange')
     })
 
     /* ========== AJAX: 抓取商品資料 ========== */
