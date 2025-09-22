@@ -337,14 +337,15 @@
                     img {
                         display: block;
                         margin-bottom: 20px;
-                        max-width: 480px;
+                        width: 480px;
                         height: auto;
                         object-fit: cover;
                         aspect-ratio: 1 / 1;
 
                         @include respond('md'){
                             max-width: auto;
-                            width: 100%;
+                            // width: 100%;
+                            width: 320px;
                         }
                     }
                 }
