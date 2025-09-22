@@ -32,6 +32,7 @@ import logo from '@/assets/logos/logo-admin.svg';
 
 
 <style scoped lang="scss">
+@import '@/assets/styles/main.scss';
 header{
 text-align: center;
 width: 100%;
@@ -48,6 +49,11 @@ margin-bottom: 100px
 .main{
     display: flex;
     gap:200px;
+    @include respond("sm"){
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
     .front,
     .back {
         display: flex;
@@ -63,7 +69,7 @@ margin-bottom: 100px
         height: 200px;
         animation: twinkle 2s infinite alternate ease-in;
         text-decoration: none;
-
+    
 
         clip-path: polygon(
         50% 0%,
@@ -82,6 +88,10 @@ margin-bottom: 100px
         transform: scale(1.2) rotate(10deg);
         filter: brightness(1.3);
         }
+        @include respond("sm"){
+        width: 150px;
+        height: 150px;
+    }
     }
 
   .front {
@@ -104,33 +114,10 @@ margin-bottom: 100px
         }
     }
 }
-    // margin-top: 60px;
-    // display: flex;
-    // gap: 250px;
-    // .front,
-    // .Back{
-    // width: 200px;  /* 添加寬度 */
-    // height: 200px; /* 添加高度 */
-    // background-color: #285c96;  
-    // clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-    // display: flex;
-    // justify-content: center;
-    // align-items: center;
-    // color: aliceblue;
-    // font-size: 20px;
-         
-    //     &:hover {
-    //     transform: scale(1.1);
-    //     filter: brightness(1.2);
-
-    //     }
-        
-    // }
-
+    
         
 
 footer{
-            
 display: flex;
 width: 100%;
 height: auto;
@@ -143,6 +130,10 @@ margin-bottom: 20px;
     padding: 20px;
     font-size: 16px;
     margin-top: 150px;
+    @include respond("sm"){
+    
+        font-size: 14px;
+        margin-top: 0px;}
     }
 }
         
