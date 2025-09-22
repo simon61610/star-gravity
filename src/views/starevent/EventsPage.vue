@@ -487,6 +487,7 @@ const placeTags = [
                             img {
                                 display: block;
                                 height: 200px;
+                                width: 100%;
                                 object-fit: cover;
                             }
                             .card-content {
