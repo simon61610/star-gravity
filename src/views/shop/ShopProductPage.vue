@@ -45,12 +45,17 @@
     // 已選分類
     const selectedCate = ref(null)
 
+    // 讀取狀態
+    const isLoading = ref(true)
+
     onMounted(async () => {
         /* ========== 功能: 抓出商品資料 ========== */
         const res = await axios.get(import.meta.env.VITE_AJAX_URL + 'starshop/client/products_get.php')
         // console.log(res.data);
         product.value = res.data.find(p => p.ID == route.params.id)
         // console.log(product.value)
+
+        isLoading.value = false
 
         /* 
         ID : 1 
@@ -193,7 +198,7 @@
     <section class="product-page">
         <ShopBanner />
         <Breadcrumbs :selected-cate="selectedCate"/>
-        <div class="container" v-if="product">
+        <div class="container" v-if="!isLoading && product">
             <!-- 左：商品圖片 -->
             <div class="product-gallery">
                 <div class="product-gallery__pic">
@@ -269,7 +274,7 @@
 
 
         <!-- 下方商品介紹 -->
-        <div class="product-info" v-if="product">
+        <div class="product-info" v-if="!isLoading && product">
             <ProdIntro 
             :product-name = "product.name"
             :product-intro = "product.introduction"
@@ -277,7 +282,7 @@
         </div>
 
         <!-- 沒有這個商品編號時會出現如下 -->
-        <div class="no-product" v-else>
+        <div class="no-product" v-else-if="!isLoading && !product">
             <p>查無此商品</p>
             <p class="back-cate">
                 <router-link to="/shop/category" class="router-link">點擊回到商品分類</router-link>

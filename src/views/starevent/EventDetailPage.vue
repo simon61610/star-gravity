@@ -34,6 +34,8 @@
 
     const currentPic = ref('')
 
+    const isLoading = ref(true)
+
     onMounted(async () => {
 
         const res = await axios.get(import.meta.env.VITE_AJAX_URL + 'activity/client/activityget_one.php?id=' + route.params.id)
@@ -67,6 +69,8 @@
        if(eventData.value){
            currentPic.value = eventData.value.image[0] // 第一張
        }
+
+       isLoading.value = false
     })
 
 
@@ -115,7 +119,7 @@
     <shopToast />
     <LoginPrompt />
 
-    <section class="event-detail" v-if="eventData">
+    <section class="event-detail" v-if="!isLoading && eventData">
 
         <!-- 圖片選擇區 -->
         <div class="pic-container">
@@ -218,7 +222,7 @@
         </div>
 
     </section>
-    <div v-else class="no-event">
+    <div v-else-if="!isLoading && !eventData" class="no-event">
         無活動資料
         <router-link to="/events" class="router-link">
             <p>回到活動頁面</p>
