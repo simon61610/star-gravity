@@ -34,31 +34,11 @@ function showAllLines() {
 
 
 const zodiacInfo = ref([
-  { 
+    { 
     id:'Aries',
     eng: "Aries",
     ch:"牡羊座" ,
     imgurl: Aries,
-  },
-  { 
-    id: "Aquarius",
-    eng: "Aquarius",
-    ch: "水瓶座",
-    imgurl: Aquarius,
-  },
-
-  { 
-    id:'Pisces',
-    eng: "Pisces",
-    ch: "雙魚座",
-    imgurl: Pisces,
-  },
-
-  { 
-    id:"Capricorn",
-    eng: "Capricorn",
-    ch: "摩羯座",
-    imgurl: Capricorn,
   },
   { 
     id:'Taurus',
@@ -72,14 +52,12 @@ const zodiacInfo = ref([
     ch: "雙子座",
     imgurl: Gemini,
   },
-
   { 
     id:'Cancer',
     eng: "Cancer",
     ch:"巨蟹座" ,
     imgurl: Cancer,
   },
-
   { 
     id:'Leo',
     eng: "Leo",
@@ -109,6 +87,24 @@ const zodiacInfo = ref([
     eng: "Sagittarius",
     ch:"射手座" ,
     imgurl: Sagittarius,
+  },
+  { 
+    id:"Capricorn",
+    eng: "Capricorn",
+    ch: "摩羯座",
+    imgurl: Capricorn,
+  },
+  { 
+    id: "Aquarius",
+    eng: "Aquarius",
+    ch: "水瓶座",
+    imgurl: Aquarius,
+  },
+  { 
+    id:'Pisces',
+    eng: "Pisces",
+    ch: "雙魚座",
+    imgurl: Pisces,
   },
 ])
 
