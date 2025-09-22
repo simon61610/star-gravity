@@ -177,6 +177,7 @@ const goResult = () => {
       <!-- 整合版 CTA：未抽滿顯示提示；抽滿變成「查看占卜結果」可點擊 -->
       <button
         class="cta"
+        :class="{ 'is-ready': isFull }"
         :style="{ '--center-offset': CENTER.offsetX + 'px' }"
         type="button"
         :disabled="!isFull"
@@ -260,6 +261,53 @@ const goResult = () => {
   z-index: 1000; /* 確保不被卡片蓋住 */
 }
 .cta:disabled { opacity: .6; cursor: default; }
+
+/* === 可點擊狀態：柔和脈動發光 === */
+.cta.is-ready {
+  cursor: pointer;
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, .35),
+    0 0 16px rgba(114, 129, 255, .45),
+    0 0 34px rgba(114, 129, 255, .35);
+  text-shadow: 0 1px 0 rgba(0,0,0,.25);
+  animation: ctaGlow 1.8s ease-in-out infinite;
+}
+
+/* 滑過或鍵盤聚焦時更亮 */
+.cta.is-ready:hover,
+.cta.is-ready:focus-visible {
+  box-shadow:
+    0 10px 22px rgba(0, 0, 0, .4),
+    0 0 22px rgba(132, 146, 255, .6),
+    0 0 44px rgba(132, 146, 255, .5);
+  transform: translateX(calc(-50% + var(--center-offset, 0px))) scale(1.02);
+  outline: none;
+}
+
+/* 脈動發光動畫 */
+@keyframes ctaGlow {
+  0%, 100% {
+    box-shadow:
+      0 8px 18px rgba(0, 0, 0, .35),
+      0 0 10px rgba(114, 129, 255, .35),
+      0 0 22px rgba(114, 129, 255, .28);
+    transform: translateX(calc(-50% + var(--center-offset, 0px))) scale(1);
+  }
+  50% {
+    box-shadow:
+      0 10px 22px rgba(0, 0, 0, .4),
+      0 0 18px rgba(132, 146, 255, .55),
+      0 0 36px rgba(132, 146, 255, .45);
+    transform: translateX(calc(-50% + var(--center-offset, 0px))) scale(1.015);
+  }
+}
+
+/* 動畫減量偏好：停用動畫但保留微光 */
+@media (prefers-reduced-motion: reduce) {
+  .cta.is-ready {
+    animation: none;
+  }
+}
 
 /* 卡片（絕對定位，動畫用 top/transform） */
 .card {
