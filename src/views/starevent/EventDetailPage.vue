@@ -257,6 +257,8 @@
             img {
                 display: block;
                 object-fit: cover;
+                aspect-ratio: 32 / 9;
+                width: 100%;
             }
             .selected-pic {
                 width: 100%;
