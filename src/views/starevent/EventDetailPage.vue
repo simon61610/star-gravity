@@ -145,7 +145,7 @@
                 <div class="title-box">
                     <div class="tags">
                         <div class="type-tag"># {{ eventData.category }}</div>
-                        <div class="place-tag"># {{ eventData.event_place }}</div>
+                        <div class="place-tag"># {{ eventData.tag }}</div>
                     </div>
                     <h1>{{ eventData.event_name }}</h1>
                     <!-- <p>觀看人次</p> -->
