@@ -18,13 +18,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td>-1</td><td>非常非常亮</td><td>非常明顯，都市也可見</td></tr>
-                        <tr><td>0</td><td>非常亮</td><td>都市夜空清楚可見</td></tr>
-                        <tr><td>1</td><td>亮</td><td>普遍可見</td></tr>
-                        <tr><td>2</td><td>稍亮</td><td>光害少時可見</td></tr>
-                        <tr><td>3</td><td>稍暗</td><td>鄉村可見，都市較難</td></tr>
-                        <tr><td>4</td><td>更暗</td><td>幾乎看不見</td></tr>
-                        <tr><td>5</td><td>超暗</td><td>需在無光害地區觀看</td></tr>
+                        <tr><td>-1</td><td class="bright">非常非常亮</td><td class="bright-1">非常明顯，都市也可見</td></tr>
+                        <tr><td>0</td><td class="bright">非常亮</td><td class="bright-1">都市夜空清楚可見</td></tr>
+                        <tr><td>1</td><td class="bright">亮</td><td class="bright-1">普遍可見</td></tr>
+                        <tr><td>2</td><td class="bright">稍亮</td><td class="bright-1">光害少時可見</td></tr>
+                        <tr><td>3</td><td class="bright">稍暗</td><td class="bright-1">鄉村可見，都市較難</td></tr>
+                        <tr><td>4</td><td class="bright">更暗</td><td class="bright-1">幾乎看不見</td></tr>
+                        <tr><td>5</td><td class="bright">超暗</td><td class="bright-1">需在無光害地區觀看</td></tr>
                     </tbody>
 
                 </table>
@@ -260,6 +260,12 @@
         display: table;              /* 維持表格語意 */
         width: 100%;
         table-layout: fixed;
+    }
+    .bright{
+        width: 100px;
+    }
+    .bright-1{
+        width: 90px;
     }
 }
 
