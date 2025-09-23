@@ -1,7 +1,9 @@
 <?php
 include("../pdo.php");
 
-$sql = ' SELECT * from Member ' ;
+$sql = ' SELECT * from Member
+         order by ID desc  
+' ;
 
 $statement = $pdo->prepare( $sql);
 $statement->execute();
