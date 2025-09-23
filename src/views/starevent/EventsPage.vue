@@ -199,8 +199,8 @@ const placeTags = [
                                     <span v-if="event.max_joiners && event.registration_count >= event.max_joiners">（已額滿）</span>
                                 </div>
                                 <h3 class="tags">
-                                    <div class="type-tag"># {{ event.category }}</div>
-                                    <div class="place-tag"># {{ event.event_place }}</div>
+                                    <div class="type-tag"># {{ event.tag }}</div>
+                                    <div class="place-tag"># {{ event.category }}</div>
                                 </h3>
                             </div>
                         </RouterLink>
@@ -485,8 +485,9 @@ const placeTags = [
                             }
 
                             img {
-                                display: block;
                                 height: 200px;
+                                display: block;
+                                width: 100%;
                                 object-fit: cover;
                             }
                             .card-content {
